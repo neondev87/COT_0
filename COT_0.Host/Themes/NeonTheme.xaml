@@ -1,0 +1,175 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Paleta dark morado / neón -->
+    <Color x:Key="NeonColor">#C77DFF</Color>
+    <Color x:Key="PinkColor">#FF2E88</Color>
+    <SolidColorBrush x:Key="NeonBrush" Color="{StaticResource NeonColor}"/>
+    <SolidColorBrush x:Key="PinkBrush" Color="{StaticResource PinkColor}"/>
+    <SolidColorBrush x:Key="PanelBrush" Color="#CC140A1F"/>
+    <SolidColorBrush x:Key="InputBrush" Color="#0D0614"/>
+    <SolidColorBrush x:Key="TextBrush" Color="#EDE6F5"/>
+    <SolidColorBrush x:Key="MutedBrush" Color="#8A7A9E"/>
+
+    <LinearGradientBrush x:Key="BackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#1A0730" Offset="0"/>
+        <GradientStop Color="#06020B" Offset="0.55"/>
+        <GradientStop Color="#240521" Offset="1"/>
+    </LinearGradientBrush>
+
+    <!-- Ventana base -->
+    <Style x:Key="NeonWindow" TargetType="Window">
+        <Setter Property="Background" Value="{StaticResource BackgroundBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+    </Style>
+
+    <!-- Fade-in al mostrarse -->
+    <Style x:Key="FadeIn" TargetType="FrameworkElement">
+        <Style.Triggers>
+            <Trigger Property="IsVisible" Value="True">
+                <Trigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.7"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.EnterActions>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Panel con borde neón -->
+    <Style x:Key="NeonPanel" TargetType="Border" BasedOn="{StaticResource FadeIn}">
+        <Setter Property="Background" Value="{StaticResource PanelBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource NeonBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="28"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect Color="{StaticResource NeonColor}" BlurRadius="30" ShadowDepth="0" Opacity="0.35"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Título con glow que late -->
+    <Style x:Key="GlowTitle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="40"/>
+        <Setter Property="FontWeight" Value="Black"/>
+        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="Foreground" Value="{StaticResource NeonBrush}"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect Color="{StaticResource NeonColor}" BlurRadius="12" ShadowDepth="0" Opacity="0.9"/>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <EventTrigger RoutedEvent="Loaded">
+                <BeginStoryboard>
+                    <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)"
+                                         From="8" To="28" Duration="0:0:1.6"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="Subtitle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource MutedBrush}"/>
+        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <Style x:Key="FieldLabel" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource PinkBrush}"/>
+        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Margin" Value="0,14,0,4"/>
+    </Style>
+
+    <!-- Botón neón con glow al pasar el mouse -->
+    <Style x:Key="NeonButton" TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="24,10"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Root" Background="#1E0B30" BorderBrush="{StaticResource NeonBrush}"
+                            BorderThickness="1.5" Padding="{TemplateBinding Padding}">
+                        <Border.Effect>
+                            <DropShadowEffect Color="{StaticResource NeonColor}" BlurRadius="8" ShadowDepth="0" Opacity="0.6"/>
+                        </Border.Effect>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Root" Property="Background" Value="#2E1048"/>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Root" Duration="0:0:0.2" To="26"
+                                                         Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)"/>
+                                        <DoubleAnimation Storyboard.TargetName="Root" Duration="0:0:0.2" To="1"
+                                                         Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.Opacity)"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Root" Duration="0:0:0.3"
+                                                         Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)"/>
+                                        <DoubleAnimation Storyboard.TargetName="Root" Duration="0:0:0.3"
+                                                         Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.Opacity)"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource PinkBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Root" Property="Opacity" Value="0.4"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Campos de texto oscuros (TextBox y PasswordBox comparten plantilla) -->
+    <ControlTemplate x:Key="NeonInputTemplate" TargetType="Control">
+        <Border x:Name="Frame" Background="{StaticResource InputBrush}" BorderBrush="#4A2A66" BorderThickness="1">
+            <ScrollViewer x:Name="PART_ContentHost" Margin="8,6"/>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                <Setter TargetName="Frame" Property="BorderBrush" Value="{StaticResource NeonBrush}"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="NeonInputBase" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Template" Value="{StaticResource NeonInputTemplate}"/>
+    </Style>
+
+    <Style TargetType="TextBox" BasedOn="{StaticResource NeonInputBase}">
+        <Setter Property="CaretBrush" Value="{StaticResource NeonBrush}"/>
+    </Style>
+
+    <Style TargetType="PasswordBox" BasedOn="{StaticResource NeonInputBase}">
+        <Setter Property="CaretBrush" Value="{StaticResource NeonBrush}"/>
+    </Style>
+
+</ResourceDictionary>

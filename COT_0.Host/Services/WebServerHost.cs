@@ -17,8 +17,18 @@ public class WebServerHost
         if (_app is not null) return;
 
         // ContentRoot = carpeta del exe (ahí están appsettings.json y wwwroot)
-        _app = WebApp.Create(url: Url, contentRoot: AppContext.BaseDirectory);
-        await _app.StartAsync();
+        var app = WebApp.Create(url: Url, contentRoot: AppContext.BaseDirectory);
+        try
+        {
+            await app.StartAsync();
+        }
+        catch
+        {
+            // Si falla (ej. puerto ocupado) queda listo para reintentar
+            await app.DisposeAsync();
+            throw;
+        }
+        _app = app;
     }
 
     public async Task StopAsync()

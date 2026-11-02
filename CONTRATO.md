@@ -104,3 +104,5 @@ Un solo `appsettings.json`, en `COT_0.Host/` (se copia a la salida y Web lo lee 
 ## Pedidos de cambio
 
 _(Anotar acá: agente, qué se necesita en Core y por qué.)_
+
+- **Agente A**: `IQrService` en Core (ej. `byte[] GeneratePng(string text)`), para cumplir "todo servicio con interfaz en Core". Hoy `QrService` se registra como clase concreta porque devuelve `BitmapImage` (WPF). Config nueva en `appsettings.json`: `Tunnel:CloudflaredPath`, `Tunnel:StartTimeoutSeconds`, `Qr:PixelsPerModule`.
