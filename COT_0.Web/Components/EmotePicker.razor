@@ -1,0 +1,25 @@
+@inject IEmoteService Emotes
+
+<div class="emote-picker">
+    <button type="button" class="emote-toggle" title="Emotes" @onclick="Toggle">☾</button>
+
+    @if (isOpen)
+    {
+        <div class="emote-panel">
+            @foreach (var emote in Emotes.GetEmotes())
+            {
+                <button type="button" class="emote-option" title="@emote.Token" @onclick="() => OnPick.InvokeAsync(emote)">
+                    <img class="emote" src="@emote.Url" alt="@emote.Token" />
+                </button>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public EventCallback<Emote> OnPick { get; set; }
+
+    private bool isOpen;
+
+    private void Toggle() => isOpen = !isOpen;
+}

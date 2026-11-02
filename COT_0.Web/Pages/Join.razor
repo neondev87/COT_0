@@ -1,7 +1,69 @@
 @page "/join"
 @rendermode InteractiveServer
+@inject IProfileService Profiles
+@inject IFlagService Flags
+@inject NavigationManager Nav
 
 <PageTitle>COT_0 · Unirse</PageTitle>
 
 @* Perfil del invitado: nombre, foto y bandera de facultad *@
-<h1>Join</h1>
+<div class="chat-bg join-page">
+    <EditForm Model="form" OnValidSubmit="JoinAsync" class="join-form">
+        <DataAnnotationsValidator />
+        <h1>Unirse al chat</h1>
+
+        <div class="join-photo">
+            <UserAvatar PhotoUrl="@form.PhotoUrl" Name="@form.Name" />
+            <label class="join-photo-label">
+                Foto de perfil
+                <InputFile OnChange="UploadPhotoAsync" accept="image/*" />
+            </label>
+        </div>
+
+        <label class="join-field">
+            Nombre
+            <InputText @bind-Value="form.Name" placeholder="Tu nombre" autocomplete="off" />
+        </label>
+        <ValidationMessage For="() => form.Name" />
+
+        <fieldset class="flag-picker">
+            <legend>Facultad</legend>
+            <InputRadioGroup @bind-Value="form.FacultyFlag">
+                @foreach (var flag in Flags.GetFlags())
+                {
+                    <label class="flag-option">
+                        <InputRadio Value="flag.Key" />
+                        <img class="flag" src="@flag.Url" alt="@flag.Label" />
+                        <span>@flag.Label</span>
+                    </label>
+                }
+            </InputRadioGroup>
+        </fieldset>
+
+        @if (error is not null)
+        {
+            <p class="join-error">@error</p>
+        }
+
+        <button type="submit" class="join-submit">Entrar</button>
+    </EditForm>
+</div>
+
+@code {
+    private readonly JoinForm form = new();
+    private string? error;
+
+    private async Task UploadPhotoAsync(InputFileChangeEventArgs e)
+    {
+        var result = await Profiles.SavePhotoAsync(e.File);
+        form.PhotoUrl = result.Value ?? form.PhotoUrl;
+        error = result.Error;
+    }
+
+    private async Task JoinAsync()
+    {
+        var result = await Profiles.CreateUserAsync(form);
+        error = result.Error;
+        if (result.Value is not null) Nav.NavigateTo($"/chat?u={result.Value.Id}");
+    }
+}

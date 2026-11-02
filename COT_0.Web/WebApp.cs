@@ -1,4 +1,4 @@
-using COT_0.Web.Hubs;
+using COT_0.Web.Services;
 
 namespace COT_0.Web;
 
@@ -23,8 +23,7 @@ public static class WebApp
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();
         builder.Services.AddSignalR();
-
-        // TODO (Agente B): registrar la implementación de IChatService como Singleton
+        builder.Services.AddChat(builder.Configuration, url);
 
         var app = builder.Build();
 
@@ -38,7 +37,7 @@ public static class WebApp
         app.UseAntiforgery();
 
         app.MapGet("/", () => Results.Redirect("/join"));
-        app.MapHub<ChatHub>("/chathub");
+        app.MapChat();
         app.MapRazorComponents<App>()
             .AddInteractiveServerRenderMode();
 
