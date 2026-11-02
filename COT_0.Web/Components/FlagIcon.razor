@@ -1,0 +1,10 @@
+@inject IFlagService Flags
+
+@if (!string.IsNullOrEmpty(Key))
+{
+    <img class="flag" src="@Flags.GetUrl(Key)" alt="@Key" title="@Key" />
+}
+
+@code {
+    [Parameter] public string? Key { get; set; }
+}

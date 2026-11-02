@@ -1,7 +1,70 @@
 @page "/chat"
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@implements IAsyncDisposable
+@inject IChatSession Session
+@inject IOptions<ChatOptions> Options
+@inject NavigationManager Nav
 
 <PageTitle>COT_0 · Chat</PageTitle>
 
 @* Chat grupal en tiempo real *@
-<h1>Chat</h1>
+<div class="chat-bg chat-page">
+    <aside class="user-list">
+        <h2>Conectados (@Session.Users.Count)</h2>
+        <ul>
+            @foreach (var user in Session.Users)
+            {
+                <li class="user-item">
+                    <UserAvatar PhotoUrl="@user.PhotoUrl" Name="@user.Name" />
+                    <span class="user-name">@user.Name</span>
+                    <FlagIcon Key="@user.FacultyFlag" />
+                </li>
+            }
+        </ul>
+    </aside>
+
+    <main class="chat-main">
+        <section class="msg-list">
+            @foreach (var message in Session.Messages)
+            {
+                <MessageItem @key="message.Id" Message="message" IsOwn="Session.IsOwn(message)" />
+            }
+        </section>
+
+        <form class="chat-input" @onsubmit="SendAsync">
+            <EmotePicker OnPick="InsertEmote" />
+            <input @bind="draft" @bind:event="oninput" maxlength="@Options.Value.MaxMessageLength"
+                   placeholder="Escribí un mensaje…" autocomplete="off" />
+            <button type="submit">Enviar</button>
+        </form>
+    </main>
+</div>
+
+@code {
+    [SupplyParameterFromQuery(Name = "u")]
+    public string? UserId { get; set; }
+
+    private string draft = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Session.Changed += OnSessionChanged;
+        if (!await Session.StartAsync(UserId)) Nav.NavigateTo("/join");
+    }
+
+    private async Task SendAsync()
+    {
+        await Session.SendAsync(draft);
+        draft = string.Empty;
+    }
+
+    private void InsertEmote(Emote emote) => draft += emote.Token;
+
+    private void OnSessionChanged() => _ = InvokeAsync(StateHasChanged);
+
+    public async ValueTask DisposeAsync()
+    {
+        Session.Changed -= OnSessionChanged;
+        await Session.StopAsync();
+    }
+}

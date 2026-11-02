@@ -1,0 +1,16 @@
+@* Foto de perfil; sin foto muestra la inicial *@
+@if (string.IsNullOrEmpty(PhotoUrl))
+{
+    <span class="avatar-glow avatar-initial" title="@Name">@Initial</span>
+}
+else
+{
+    <img class="avatar-glow" src="@PhotoUrl" alt="@Name" title="@Name" />
+}
+
+@code {
+    [Parameter] public string? PhotoUrl { get; set; }
+    [Parameter] public string? Name { get; set; }
+
+    private string Initial => string.IsNullOrWhiteSpace(Name) ? "?" : Name.Trim()[..1].ToUpperInvariant();
+}

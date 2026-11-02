@@ -1,0 +1,8 @@
+namespace COT_0.Web.Hubs;
+
+// Nombres de los eventos que el hub manda a los clientes
+public static class ChatEvents
+{
+    public const string MessageReceived = "MessageReceived";
+    public const string UsersChanged = "UsersChanged";
+}

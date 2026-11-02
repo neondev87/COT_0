@@ -1,0 +1,18 @@
+@inject IEmoteService Emotes
+
+@* Texto del mensaje con los códigos :emote: reemplazados por imágenes *@
+@foreach (var part in Emotes.Parse(Text))
+{
+    if (part.Emote is null)
+    {
+        @part.Text
+    }
+    else
+    {
+        <img class="emote" src="@part.Emote.Url" alt="@part.Emote.Token" title="@part.Emote.Token" />
+    }
+}
+
+@code {
+    [Parameter, EditorRequired] public string Text { get; set; } = string.Empty;
+}
