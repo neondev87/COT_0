@@ -1,10 +1,9 @@
-using System.Windows.Media;
-
 namespace COT_0.Host.ViewModels;
 
-// Fondo elegible del dashboard y la sala
-public abstract record BackgroundOption(string Label);
+// Fondo elegible del dashboard y la sala: un archivo de la carpeta de fondos
+public abstract record BackgroundOption(Uri Source);
 
-public record GradientBackground(string Label, Brush Brush) : BackgroundOption(Label);
+public record ImageBackground(Uri Source) : BackgroundOption(Source);
 
-public record VideoBackground(string Label, Uri Source) : BackgroundOption(Label);
+// Preview: momento del video que se muestra como miniatura
+public record VideoBackground(Uri Source, TimeSpan Preview) : BackgroundOption(Source);

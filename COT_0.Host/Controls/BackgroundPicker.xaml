@@ -5,13 +5,13 @@
              xmlns:vm="clr-namespace:COT_0.Host.ViewModels">
     <!-- Selector "Elige un fondo" (DataContext: BackgroundPickerViewModel). Clic fuera o Esc cierra -->
     <UserControl.Resources>
-        <DataTemplate DataType="{x:Type vm:GradientBackground}">
-            <Rectangle Fill="{Binding Brush}"/>
+        <DataTemplate DataType="{x:Type vm:ImageBackground}">
+            <Image Source="{Binding Source}" Stretch="UniformToFill"/>
         </DataTemplate>
 
-        <!-- Miniatura de video: primer cuadro en pausa -->
+        <!-- Miniatura de video: un fotograma de vista previa en pausa -->
         <DataTemplate DataType="{x:Type vm:VideoBackground}">
-            <MediaElement Source="{Binding Source}" LoadedBehavior="Pause" ScrubbingEnabled="True" IsMuted="True" Stretch="UniformToFill"/>
+            <controls:VideoThumbnail Source="{Binding Source}" PreviewPosition="{Binding Preview}" Stretch="UniformToFill"/>
         </DataTemplate>
     </UserControl.Resources>
 
@@ -93,12 +93,7 @@
                             <!-- Se solapan 60px como en el diseño -->
                             <Button Style="{StaticResource ThumbButton}" Margin="-60,0,0,0" CommandParameter="{Binding}"
                                     Command="{Binding DataContext.PickCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
-                                <Grid>
-                                    <ContentControl Content="{Binding}" Focusable="False"/>
-                                    <controls:SpacedText Text="{Binding Label}" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                         FontFamily="{StaticResource FontCondensedMedium}" FontSize="13" Spacing="0.3"
-                                                         Foreground="{StaticResource Text65Brush}"/>
-                                </Grid>
+                                <ContentControl Content="{Binding}" Focusable="False"/>
                             </Button>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

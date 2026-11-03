@@ -19,8 +19,11 @@
             </Style.Triggers>
         </Style>
 
-        <DataTemplate DataType="{x:Type vm:GradientBackground}">
-            <Rectangle Fill="{Binding Brush}" Style="{StaticResource BackgroundFadeIn}"/>
+        <DataTemplate DataType="{x:Type vm:ImageBackground}">
+            <Grid Style="{StaticResource BackgroundFadeIn}">
+                <Image Source="{Binding Source}" Stretch="UniformToFill"/>
+                <Rectangle Fill="{StaticResource VideoDimBrush}"/>
+            </Grid>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type vm:VideoBackground}">
