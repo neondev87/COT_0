@@ -1,0 +1,19 @@
+@* Escudo de facultad; si todavía no hay imagen muestra un marcador *@
+<span class="cot-shield @Class @(HasImage ? null : "cot-shield-empty")" aria-hidden="true">
+    @if (HasImage)
+    {
+        <img src="@Url" alt="" />
+    }
+    else
+    {
+        <Icon Name="image" Size="@IconSize" />
+    }
+</span>
+
+@code {
+    [Parameter] public string? Url { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter] public int IconSize { get; set; } = 18;
+
+    private bool HasImage => !string.IsNullOrEmpty(Url);
+}

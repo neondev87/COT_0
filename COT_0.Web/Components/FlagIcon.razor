@@ -1,10 +1,13 @@
 @inject IFlagService Flags
 
-@if (!string.IsNullOrEmpty(Key))
+@* Escudo chico junto al nombre; si la facultad no tiene imagen no muestra nada *@
+@if (!string.IsNullOrEmpty(Url))
 {
-    <img class="flag" src="@Flags.GetUrl(Key)" alt="@Key" title="@Key" />
+    <img class="flag" src="@Url" alt="@Key" title="@Key" />
 }
 
 @code {
     [Parameter] public string? Key { get; set; }
+
+    private string? Url => string.IsNullOrEmpty(Key) ? null : Flags.GetUrl(Key);
 }

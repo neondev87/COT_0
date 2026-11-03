@@ -1,0 +1,19 @@
+@* Campo de facultad: muestra la elegida y abre el panel *@
+<button type="button" class="cot-field" @onclick="OnOpen" aria-labelledby="@LabelId" aria-haspopup="dialog">
+    @if (Selected is null)
+    {
+        <span class="cot-field-empty">Toca para elegir tu facultad</span>
+    }
+    else
+    {
+        <FacultyShield Url="@Selected.Url" Class="cot-shield-sm" IconSize="12" />
+        <span class="cot-field-text">@Selected.Label</span>
+    }
+    <Icon Name="chevron" Class="cot-field-chev" />
+</button>
+
+@code {
+    [Parameter] public FlagOption? Selected { get; set; }
+    [Parameter] public string? LabelId { get; set; }
+    [Parameter] public EventCallback OnOpen { get; set; }
+}

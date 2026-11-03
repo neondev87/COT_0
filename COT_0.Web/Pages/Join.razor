@@ -3,6 +3,7 @@
 @implements IDisposable
 @inject IProfileService Profiles
 @inject IRoomService Room
+@inject IFlagService Flags
 @inject IOptions<ChatOptions> Options
 @inject NavigationManager Nav
 
@@ -41,7 +42,7 @@
 
             <div class="cot-group cot-group-last cot-rise cot-d3">
                 <span class="cot-label" id="cot-fac-label">FACULTAD</span>
-                <FacultyPicker @bind-Value="form.FacultyFlag" LabelId="cot-fac-label" />
+                <FacultyField Selected="SelectedFlag" LabelId="cot-fac-label" OnOpen="() => sheetOpen = true" />
             </div>
 
             @if (error is not null)
@@ -56,6 +57,8 @@
             <p class="cot-room">SALA #@Room.Code</p>
         }
     </EditForm>
+
+    <FacultySheet Flags="flags" Open="sheetOpen" Selected="@form.FacultyFlag" OnPick="PickFaculty" OnClose="() => sheetOpen = false" />
 </div>
 
 @code {
@@ -65,11 +68,23 @@
     private readonly JoinForm form = new();
     private string? error;
     private string? notice;
+    private IReadOnlyList<FlagOption> flags = [];
+    private bool sheetOpen;
+
+    private FlagOption? SelectedFlag => flags.FirstOrDefault(f => f.Key == form.FacultyFlag);
 
     protected override void OnInitialized()
     {
         notice = LeaveReason.ToNotice(Reason);
+        flags = Flags.GetFlags();
         Room.Changed += OnRoomChanged;
+    }
+
+    // Al elegir, el panel se cierra solo
+    private void PickFaculty(string key)
+    {
+        form.FacultyFlag = key;
+        sheetOpen = false;
     }
 
     private async Task UploadPhotoAsync(InputFileChangeEventArgs e)

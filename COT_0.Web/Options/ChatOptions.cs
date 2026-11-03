@@ -12,26 +12,35 @@ public class ChatOptions
     public string FlagsFolder { get; set; } = "img/flags";
     public string FlagExtension { get; set; } = ".png";
 
-    // Nombre visible de cada escudo (clave = nombre del archivo sin extensión)
+    // Las 26 facultades de la UANL: clave (= archivo del escudo, sin extensión) → nombre visible
     public Dictionary<string, string> FlagNames { get; set; } = new()
     {
+        ["agronomia"] = "Agronomía",
         ["arquitectura"] = "Arquitectura",
         ["artes-escenicas"] = "Artes Escénicas",
         ["artes-visuales"] = "Artes Visuales",
         ["ciencias-biologicas"] = "Ciencias Biológicas",
         ["ciencias-de-la-comunicacion"] = "Ciencias de la Comunicación",
+        ["ciencias-de-la-tierra"] = "Ciencias de la Tierra",
         ["ciencias-fisico-matematicas"] = "Ciencias Físico Matemáticas",
+        ["ciencias-forestales"] = "Ciencias Forestales",
         ["ciencias-politicas-y-rri"] = "Ciencias Políticas y RI",
         ["ciencias-quimicas"] = "Ciencias Químicas",
         ["derecho-y-criminologia"] = "Derecho y Criminología",
         ["economia"] = "Economía",
+        ["enfermeria"] = "Enfermería",
         ["facpya"] = "FACPYA",
         ["filosofia-y-letras"] = "Filosofía y Letras",
         ["fime"] = "FIME",
         ["ingenieria-civil"] = "Ingeniería Civil",
+        ["medicina"] = "Medicina",
+        ["medicina-veterinaria-y-zootecnia"] = "Medicina Veterinaria y Zootecnia",
         ["musica"] = "Música",
+        ["odontologia"] = "Odontología",
         ["organizacion-deportiva"] = "Organización Deportiva",
-        ["trabajo-social"] = "Trabajo Social",
+        ["psicologia"] = "Psicología",
+        ["salud-publica-y-nutricion"] = "Salud Pública y Nutrición",
+        ["trabajo-social"] = "Trabajo Social y Desarrollo Humano",
     };
 
     // Partículas de ceniza del fondo (semilla fija: siempre el mismo dibujo)
