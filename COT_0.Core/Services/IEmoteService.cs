@@ -1,6 +1,6 @@
-using COT_0.Web.Models;
+using COT_0.Core.Models;
 
-namespace COT_0.Web.Services;
+namespace COT_0.Core.Services;
 
 // Emotes de wwwroot/emotes y parseo de códigos :rana: en los mensajes
 public interface IEmoteService

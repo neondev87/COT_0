@@ -73,6 +73,23 @@ Estado del chat en memoria.
 - `Task<IReadOnlyList<User>> GetUsersAsync()` – conectados.
 - `Task<ChatMessage> AddMessageAsync(string userId, string text)` – crea el mensaje con los datos del autor.
 - `Task<IReadOnlyList<ChatMessage>> GetMessagesAsync(int max = 100)` – últimos mensajes, del más viejo al más nuevo.
+- `Task KickUserAsync(string userId)` – lo saca y dispara `UserKicked`.
+- `Task ClearAsync()` – borra usuarios e historial (al cerrar la sala).
+- `event Action? UsersChanged` – entra/sale/expulsado/vaciado. El Host lo escucha con `Dispatcher.Invoke`.
+- `event Action<User>? UserKicked` – Web le avisa al expulsado por el hub (evento `"Kicked"`).
+
+### `IRoomService` – implementa Web (`Services/RoomService.cs`, **Singleton**)
+Estado de la sala. El Host la abre/cierra; Web muestra el código y bloquea `/join` si está cerrada.
+- `string? Code` – código corto ("7F3K"), `null` si cerrada. Largo y caracteres en `Chat:RoomCodeLength` / `Chat:RoomCodeChars`.
+- `DateTime? OpenedAt` (UTC) · `bool IsOpen`
+- `void Open()` – genera código nuevo y marca la hora.
+- `Task CloseAsync()` – cierra y llama a `IChatService.ClearAsync()`.
+- `event Action? Changed`
+
+El Host obtiene `IChatService` e `IRoomService` del contenedor de la app web que levanta `WebServerHost` (son la misma instancia que usa el hub).
+
+### `IFlagService` / `IEmoteService` – implementa Web
+Movidas a Core junto con sus modelos `FlagOption`, `Emote`, `MessagePart` (`COT_0.Core.Models`).
 
 ### `ITunnelService` – implementa Agente A (`Services/CloudflareTunnelService.cs`)
 - `string? PublicUrl` – `https://xxxx.trycloudflare.com` o `null`.
@@ -106,6 +123,6 @@ Un solo `appsettings.json`, en `COT_0.Host/` (se copia a la salida y Web lo lee 
 _(Anotar acá: agente, qué se necesita en Core y por qué.)_
 
 - **Agente A**: `IQrService` en Core (ej. `byte[] GeneratePng(string text)`), para cumplir "todo servicio con interfaz en Core". Hoy `QrService` se registra como clase concreta porque devuelve `BitmapImage` (WPF). Config nueva en `appsettings.json`: `Tunnel:CloudflaredPath`, `Tunnel:StartTimeoutSeconds`, `Qr:PixelsPerModule`.
-- **Agente B → Agente 0**: las interfaces `IEmoteService`, `IFlagService`, `IAvatarStore` (y sus modelos `Emote`, `MessagePart`, `FlagOption`, `StoredAvatar`) viven por ahora en `COT_0.Web/Services` y `COT_0.Web/Models` porque Core es solo tuyo. Si querés, movelas a Core (no dependen de ASP.NET). `IProfileService` e `IChatSession` quedan en Web (usan `IBrowserFile` / SignalR client).
+- **Agente B → Agente 0** (hecho): `IEmoteService`, `IFlagService` y sus modelos pasaron a Core. `IAvatarStore`/`StoredAvatar` quedan en Web por ahora. `IProfileService` e `IChatSession` quedan en Web (usan `IBrowserFile` / SignalR client).
 - **Agente B → Agente A** (hecho en el merge): sección `"Chat"` en `COT_0.Host/appsettings.json` (todo tiene default, ver `COT_0.Web/Options/ChatOptions.cs`): `MaxNameLength`, `MaxMessageLength`, `HistorySize`, `MessagesOnJoin`, `TimeFormat`, `PhotoSize`, `MaxPhotoBytes`, etc.
 - **Agente B → Agente C**: banderas en `wwwroot/img/flags/{clave}.png`, emotes en `wwwroot/emotes/{codigo}.gif|png|webp` (el código `:rana:` sale del nombre del archivo; se leen al arrancar). Clases extra además de las pedidas: `.chat-page`, `.chat-main`, `.msg-list`, `.msg-body`, `.msg-header`, `.msg-author`, `.msg-time`, `.msg-text`, `.avatar-initial`, `.user-item`, `.user-name`, `.chat-input`, `.emote-picker`, `.emote-toggle`, `.emote-panel`, `.emote-option`, `.join-page`, `.join-form`, `.join-photo`, `.join-field`, `.flag-picker`, `.flag-option`, `.join-error`, `.join-submit`. Para que el chat quede scrolleado abajo sin JS: `.msg-list { display:flex; flex-direction:column; overflow-y:auto }` + `margin-top:auto` en el primer `.msg`, o pedime invertir el orden para usar `column-reverse`.

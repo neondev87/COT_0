@@ -13,15 +13,35 @@ public class InMemoryChatService(IOptions<ChatOptions> options) : IChatService
     private readonly List<ChatMessage> _messages = [];
     private readonly object _lock = new();
 
+    public event Action? UsersChanged;
+    public event Action<User>? UserKicked;
+
     public Task<User> AddUserAsync(User user)
     {
         _users[user.Id] = user;
+        UsersChanged?.Invoke();
         return Task.FromResult(user);
     }
 
     public Task RemoveUserAsync(string userId)
     {
-        _users.TryRemove(userId, out _);
+        if (_users.TryRemove(userId, out _)) UsersChanged?.Invoke();
+        return Task.CompletedTask;
+    }
+
+    public Task KickUserAsync(string userId)
+    {
+        if (!_users.TryRemove(userId, out var user)) return Task.CompletedTask;
+        UserKicked?.Invoke(user);
+        UsersChanged?.Invoke();
+        return Task.CompletedTask;
+    }
+
+    public Task ClearAsync()
+    {
+        _users.Clear();
+        lock (_lock) _messages.Clear();
+        UsersChanged?.Invoke();
         return Task.CompletedTask;
     }
 

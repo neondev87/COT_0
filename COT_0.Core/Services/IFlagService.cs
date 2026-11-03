@@ -1,6 +1,6 @@
-using COT_0.Web.Models;
+using COT_0.Core.Models;
 
-namespace COT_0.Web.Services;
+namespace COT_0.Core.Services;
 
 // Banderas de facultad de wwwroot/img/flags
 public interface IFlagService

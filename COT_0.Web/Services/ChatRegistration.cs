@@ -14,6 +14,7 @@ public static class ChatRegistration
         services.PostConfigure<ChatOptions>(o => o.ServerUrl = serverUrl);
 
         services.AddSingleton<IChatService, InMemoryChatService>();
+        services.AddSingleton<IRoomService, RoomService>();
         services.AddSingleton<IAvatarStore, InMemoryAvatarStore>();
         services.AddSingleton<IEmoteService, EmoteService>();
         services.AddSingleton<IFlagService, FlagService>();

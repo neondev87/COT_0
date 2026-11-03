@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
-using COT_0.Web.Models;
+using COT_0.Core.Models;
+using COT_0.Core.Services;
 using COT_0.Web.Options;
 using Microsoft.Extensions.Options;
 

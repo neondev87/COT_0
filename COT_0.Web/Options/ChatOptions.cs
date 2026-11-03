@@ -12,6 +12,9 @@ public class ChatOptions
     public string FlagsFolder { get; set; } = "img/flags";
     public string FlagExtension { get; set; } = ".png";
 
+    public int RoomCodeLength { get; set; } = 4;
+    public string RoomCodeChars { get; set; } = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
     public int MaxNameLength { get; set; } = 24;
     public int MaxMessageLength { get; set; } = 500;
     public int HistorySize { get; set; } = 200;
