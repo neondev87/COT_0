@@ -7,6 +7,10 @@
     <sys:Double x:Key="DesignHeight">720</sys:Double>
     <sys:Double x:Key="CaptionHeight">32</sys:Double>
     <sys:Double x:Key="CaptionButtonWidth">46</sys:Double>
+    <sys:Double x:Key="CaptionHitHeight">44</sys:Double>       <!-- área clicable de los botones de ventana -->
+    <sys:Double x:Key="MinHitSize">44</sys:Double>
+    <Thickness x:Key="BackLinkHitPadding">12,13</Thickness>
+    <Thickness x:Key="BackLinkHitMargin">-12,-13</Thickness>
 
     <!-- Login -->
     <sys:Double x:Key="LoginFormWidth">360</sys:Double>

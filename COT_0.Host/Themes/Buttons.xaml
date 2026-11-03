@@ -10,7 +10,10 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <ContentPresenter Margin="{TemplateBinding Padding}"/>
+                    <!-- Fondo transparente: toda el área es clicable, no solo el texto -->
+                    <Border Background="{TemplateBinding Background}">
+                        <ContentPresenter Margin="{TemplateBinding Padding}"/>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -114,6 +117,9 @@
     <!-- Link de texto (INICIO): se aclara y se corre 4px a la izquierda -->
     <Style x:Key="BackLinkButton" TargetType="Button" BasedOn="{StaticResource PlainButton}">
         <Setter Property="Foreground" Value="{StaticResource Text62Brush}"/>
+        <!-- Área clicable de 44px+: el padding agranda y el margen negativo lo compensa -->
+        <Setter Property="Padding" Value="{StaticResource BackLinkHitPadding}"/>
+        <Setter Property="Margin" Value="{StaticResource BackLinkHitMargin}"/>
         <Setter Property="RenderTransform">
             <Setter.Value>
                 <TranslateTransform/>
@@ -155,8 +161,8 @@
     </Style>
 
     <Style x:Key="KickButton" TargetType="Button" BasedOn="{StaticResource IconButton}">
-        <Setter Property="Width" Value="44"/>
-        <Setter Property="Height" Value="44"/>
+        <Setter Property="Width" Value="{StaticResource MinHitSize}"/>
+        <Setter Property="Height" Value="{StaticResource MinHitSize}"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
