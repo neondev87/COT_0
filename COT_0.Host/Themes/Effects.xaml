@@ -1,0 +1,98 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Login: fondo, placa detrás del formulario, viñeta, niebla y barrido -->
+    <RadialGradientBrush x:Key="LoginBackgroundBrush" Center="0.5,0.35" GradientOrigin="0.5,0.35" RadiusX="0.8" RadiusY="0.75">
+        <GradientStop Color="#1B1B1C" Offset="0"/>
+        <GradientStop Color="#0F0F10" Offset="0.52"/>
+        <GradientStop Color="#070707" Offset="1"/>
+    </RadialGradientBrush>
+    <SolidColorBrush x:Key="LoginShadeBrush" Color="#59060606"/>
+    <RadialGradientBrush x:Key="LoginPlateBrush" RadiusX="0.34" RadiusY="0.52">
+        <GradientStop Color="#D1060606" Offset="0"/>
+        <GradientStop Color="#8C060606" Offset="0.55"/>
+        <GradientStop Color="#00060606" Offset="1"/>
+    </RadialGradientBrush>
+    <RadialGradientBrush x:Key="VignetteBrush" RadiusX="0.75" RadiusY="0.75">
+        <GradientStop Color="#00000000" Offset="0.4"/>
+        <GradientStop Color="#CC000000" Offset="1"/>
+    </RadialGradientBrush>
+    <RadialGradientBrush x:Key="FogABrush">
+        <GradientStop Color="#17787879" Offset="0"/>
+        <GradientStop Color="#00787879" Offset="0.7"/>
+    </RadialGradientBrush>
+    <RadialGradientBrush x:Key="FogBBrush">
+        <GradientStop Color="#14646466" Offset="0"/>
+        <GradientStop Color="#00646466" Offset="0.7"/>
+    </RadialGradientBrush>
+    <LinearGradientBrush x:Key="SweepBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#00FFFFFF" Offset="0"/>
+        <GradientStop Color="#04FFFFFF" Offset="0.5"/>
+        <GradientStop Color="#00FFFFFF" Offset="1"/>
+    </LinearGradientBrush>
+
+    <!-- Scanlines: 1px claro cada 3px -->
+    <DrawingBrush x:Key="ScanlineBrush" TileMode="Tile" Viewport="0,0,3,3" ViewportUnits="Absolute" Stretch="None">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="#00000000" Geometry="M0,0 H3 V3 H0 Z"/>
+                <GeometryDrawing Brush="#04FFFFFF" Geometry="M0,0 H3 V1 H0 Z"/>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+
+    <!-- Brillo que cruza el avatar de la firma -->
+    <LinearGradientBrush x:Key="AeroBrush" StartPoint="0,0" EndPoint="1,0.6">
+        <GradientStop Color="#00FFFFFF" Offset="0.3"/>
+        <GradientStop Color="#4DFFFFFF" Offset="0.45"/>
+        <GradientStop Color="#00FFFFFF" Offset="0.6"/>
+    </LinearGradientBrush>
+
+    <!-- Punto con pulso (sala activa / en vivo) -->
+    <Style x:Key="PulseDot" TargetType="ContentControl">
+        <Setter Property="IsHitTestVisible" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ContentControl">
+                    <Grid Width="{StaticResource PulseDotSize}" Height="{StaticResource PulseDotSize}">
+                        <Ellipse x:Name="Ring" Fill="{StaticResource AccentBrush}" Opacity="0.7" RenderTransformOrigin="0.5,0.5">
+                            <Ellipse.RenderTransform>
+                                <ScaleTransform/>
+                            </Ellipse.RenderTransform>
+                        </Ellipse>
+                        <Ellipse Fill="{StaticResource AccentBrush}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                    <DoubleAnimation Storyboard.TargetName="Ring" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                     To="{StaticResource PulseRingScale}" Duration="{StaticResource PulseHalfDuration}" EasingFunction="{StaticResource SineInOut}"/>
+                                    <DoubleAnimation Storyboard.TargetName="Ring" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                     To="{StaticResource PulseRingScale}" Duration="{StaticResource PulseHalfDuration}" EasingFunction="{StaticResource SineInOut}"/>
+                                    <DoubleAnimation Storyboard.TargetName="Ring" Storyboard.TargetProperty="Opacity"
+                                                     To="0" Duration="{StaticResource PulseHalfDuration}" EasingFunction="{StaticResource SineInOut}"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Rombo separador de los pies -->
+    <Style x:Key="Diamond" TargetType="Rectangle">
+        <Setter Property="Width" Value="4"/>
+        <Setter Property="Height" Value="4"/>
+        <Setter Property="Fill" Value="{StaticResource AccentBrush}"/>
+        <Setter Property="Margin" Value="10,0"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <RotateTransform Angle="45"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

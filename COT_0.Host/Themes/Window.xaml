@@ -1,0 +1,90 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:COT_0.Host.Controls">
+
+    <!-- Ventana sin borde: WindowChrome, sin AllowsTransparency -->
+    <Style x:Key="ChromeWindowStyle" TargetType="Window">
+        <Setter Property="WindowStyle" Value="None"/>
+        <Setter Property="Background" Value="{StaticResource WindowBackgroundBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+        <Setter Property="FontFamily" Value="{StaticResource FontBarlow}"/>
+        <Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="WindowChrome.WindowChrome">
+            <Setter.Value>
+                <WindowChrome CaptionHeight="32" ResizeBorderThickness="6" GlassFrameThickness="0"
+                              CornerRadius="0" UseAeroCaptionButtons="False"/>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <!-- Maximizada, Windows saca la ventana unos px fuera de pantalla -->
+            <Trigger Property="WindowState" Value="Maximized">
+                <Setter Property="BorderThickness" Value="7"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Botón de la barra (46×32) -->
+    <Style x:Key="CaptionButton" TargetType="Button">
+        <Setter Property="Width" Value="{StaticResource CaptionButtonWidth}"/>
+        <Setter Property="Height" Value="{StaticResource CaptionHeight}"/>
+        <Setter Property="Foreground" Value="{StaticResource Text60Brush}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}">
+                        <Path Data="{TemplateBinding Tag}" Style="{StaticResource CaptionIconPath}"
+                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{StaticResource CaptionHoverBrush}"/>
+                            <Setter Property="Foreground" Value="{StaticResource WhiteBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CaptionCloseButton" TargetType="Button" BasedOn="{StaticResource CaptionButton}">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="controls:CaptionBar">
+        <Setter Property="Height" Value="{StaticResource CaptionHeight}"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Panel.ZIndex" Value="5"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:CaptionBar">
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                            <Button Style="{StaticResource CaptionButton}" Tag="{StaticResource IconMinimize}"
+                                    Command="{x:Static SystemCommands.MinimizeWindowCommand}"/>
+                            <Button x:Name="MaximizeButton" Style="{StaticResource CaptionButton}" Tag="{StaticResource IconMaximize}"
+                                    Command="{x:Static SystemCommands.MaximizeWindowCommand}"/>
+                            <Button Style="{StaticResource CaptionCloseButton}" Tag="{StaticResource IconClose}"
+                                    Command="{x:Static SystemCommands.CloseWindowCommand}"/>
+                        </StackPanel>
+                        <controls:SpacedText Text="{TemplateBinding Title}" Margin="16,0,0,0" VerticalAlignment="Center"
+                                             FontFamily="{StaticResource FontCinzel}" FontSize="11" Spacing="0.3"
+                                             Foreground="{StaticResource Text60Brush}"/>
+                    </DockPanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="ShowMaximize" Value="False">
+                            <Setter TargetName="MaximizeButton" Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

@@ -1,0 +1,166 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:COT_0.Host.Controls">
+
+    <!-- Botón sin aspecto propio (links, áreas clicables) -->
+    <Style x:Key="PlainButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentPresenter Margin="{TemplateBinding Padding}"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ENTRAR: borde claro; con hover, capa de acento que aparece en .3s y flecha que avanza 4px -->
+    <Style x:Key="LoginButton" TargetType="Button">
+        <Setter Property="Height" Value="{StaticResource ButtonHeight}"/>
+        <Setter Property="Foreground" Value="{StaticResource LightBrush}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <Border Background="{StaticResource ButtonBrush}" BorderBrush="{StaticResource Light50Brush}" BorderThickness="1" CornerRadius="2"/>
+                        <Border x:Name="Hover" Background="{StaticResource AccentHoverBrush}" BorderBrush="{StaticResource AccentBrush}"
+                                BorderThickness="1" CornerRadius="2" Opacity="0"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <controls:SpacedText Text="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
+                                                 FontFamily="{StaticResource FontBarlowMedium}" FontSize="14" Spacing="0.28"
+                                                 VerticalAlignment="Center"/>
+                            <Viewbox Width="20" Height="20" Margin="14,0,0,0">
+                                <Viewbox.RenderTransform>
+                                    <TranslateTransform x:Name="ArrowShift"/>
+                                </Viewbox.RenderTransform>
+                                <Path Data="{StaticResource IconArrowRight}" Style="{StaticResource IconPath}" StrokeThickness="1.2"/>
+                            </Viewbox>
+                        </StackPanel>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource WhiteBrush}"/>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="1" Duration="{StaticResource ColorDuration}"/>
+                                        <DoubleAnimation Storyboard.TargetName="ArrowShift" Storyboard.TargetProperty="X" To="4" Duration="{StaticResource ColorDuration}"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="0" Duration="{StaticResource ColorDuration}"/>
+                                        <DoubleAnimation Storyboard.TargetName="ArrowShift" Storyboard.TargetProperty="X" To="0" Duration="{StaticResource ColorDuration}"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- COPIAR: claro con esquina superior izquierda cortada -->
+    <Style x:Key="CopyButton" TargetType="Button">
+        <Setter Property="Height" Value="{StaticResource RoomFieldHeight}"/>
+        <Setter Property="Padding" Value="22,0"/>
+        <Setter Property="Foreground" Value="{StaticResource DarkInkBrush}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <!-- El polígono se pasa del tamaño: solo importa el corte de 12px -->
+                        <Grid.Clip>
+                            <PathGeometry Figures="M12,0 L2000,0 L2000,2000 L0,2000 L0,12 Z"/>
+                        </Grid.Clip>
+                        <Border Background="{StaticResource CardFaceBrush}"/>
+                        <Border x:Name="Hover" Background="{StaticResource AccentBrush}" Opacity="0"/>
+                        <ContentPresenter Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource WhiteBrush}"/>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="1" Duration="{StaticResource InputDuration}"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="0" Duration="{StaticResource InputDuration}"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Link de texto (INICIO): se aclara y se corre 4px a la izquierda -->
+    <Style x:Key="BackLinkButton" TargetType="Button" BasedOn="{StaticResource PlainButton}">
+        <Setter Property="Foreground" Value="{StaticResource Text62Brush}"/>
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <TranslateTransform/>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource WhiteBrush}"/>
+                <Trigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.X" To="-4" Duration="{StaticResource ColorDuration}"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.X" To="0" Duration="{StaticResource ColorDuration}"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.ExitActions>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Botón de icono (expulsar, nota musical) -->
+    <Style x:Key="IconButton" TargetType="Button" BasedOn="{StaticResource PlainButton}">
+        <Setter Property="Foreground" Value="{StaticResource Light50Brush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="Transparent" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="KickButton" TargetType="Button" BasedOn="{StaticResource IconButton}">
+        <Setter Property="Width" Value="44"/>
+        <Setter Property="Height" Value="44"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

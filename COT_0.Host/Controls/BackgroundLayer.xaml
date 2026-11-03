@@ -1,0 +1,40 @@
+<UserControl x:Class="COT_0.Host.Controls.BackgroundLayer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:COT_0.Host.Controls"
+             xmlns:vm="clr-namespace:COT_0.Host.ViewModels"
+             IsHitTestVisible="False" ClipToBounds="True">
+    <!-- Fondo compartido de dashboard y sala (DataContext: BackgroundPickerViewModel) -->
+    <UserControl.Resources>
+        <!-- Cada fondo nuevo aparece en .9s -->
+        <Style x:Key="BackgroundFadeIn" TargetType="FrameworkElement">
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="{StaticResource BackgroundFadeDuration}"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <DataTemplate DataType="{x:Type vm:ImageBackground}">
+            <Grid Style="{StaticResource BackgroundFadeIn}">
+                <Image Source="{Binding Source}" Stretch="UniformToFill"/>
+                <Rectangle Fill="{StaticResource VideoDimBrush}"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:VideoBackground}">
+            <Grid Style="{StaticResource BackgroundFadeIn}">
+                <controls:LoopingVideo Source="{Binding Source}" Stretch="UniformToFill"/>
+                <Rectangle Fill="{StaticResource VideoDimBrush}"/>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource WindowBackgroundBrush}">
+        <ContentControl Content="{Binding Selected}" Focusable="False"/>
+    </Grid>
+</UserControl>

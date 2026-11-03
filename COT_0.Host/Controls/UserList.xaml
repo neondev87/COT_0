@@ -1,0 +1,65 @@
+<UserControl x:Class="COT_0.Host.Controls.UserList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:COT_0.Host.Controls">
+    <!-- Lista de conectados: host fijo arriba + invitados (DataContext: RoomViewModel) -->
+    <Border Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4">
+        <DockPanel>
+            <Border DockPanel.Dock="Top" Height="40" Padding="24,0,64,0" BorderBrush="{StaticResource PanelBorderBrush}" BorderThickness="0,0,0,1">
+                <Grid>
+                    <controls:SpacedText Text="{DynamicResource Text.Room.ColumnUser}" Style="{StaticResource ColumnHeaderText}" HorizontalAlignment="Left"/>
+                    <controls:SpacedText Text="{DynamicResource Text.Room.ColumnConnected}" Style="{StaticResource ColumnHeaderText}" HorizontalAlignment="Right"/>
+                </Grid>
+            </Border>
+
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False">
+                <StackPanel>
+                    <!-- Host -->
+                    <Border Style="{StaticResource UserRow}">
+                        <DockPanel>
+                            <Border Style="{StaticResource Avatar}" Background="{StaticResource AvatarTone0Brush}" BorderBrush="{StaticResource AccentBrush}">
+                                <TextBlock Text="{DynamicResource Text.Room.HostInitials}" Style="{StaticResource InitialsText}"/>
+                            </Border>
+                            <Border DockPanel.Dock="Right" Width="44"/>
+                            <TextBlock DockPanel.Dock="Right" Text="{DynamicResource Text.Room.HostSince}" Margin="16,0"
+                                       VerticalAlignment="Center" Style="{StaticResource InterText}" Foreground="{StaticResource Light60Brush}"/>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{DynamicResource Text.Room.HostName}" Style="{StaticResource InterText}" FontSize="14"
+                                           FontWeight="Medium" Foreground="{StaticResource LightBrush}"/>
+                                <TextBlock Text="{DynamicResource Text.Room.HostRole}" Style="{StaticResource InterText}" Margin="0,3,0,0"/>
+                            </StackPanel>
+                        </DockPanel>
+                    </Border>
+
+                    <!-- Invitados -->
+                    <ItemsControl ItemsSource="{Binding Users}" AlternationCount="5" Focusable="False">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource UserRow}">
+                                    <DockPanel>
+                                        <Border Style="{StaticResource GuestAvatar}">
+                                            <TextBlock Text="{Binding Initials}" Style="{StaticResource InitialsText}"/>
+                                        </Border>
+                                        <Button DockPanel.Dock="Right" Style="{StaticResource RowKickButton}" CommandParameter="{Binding}"
+                                                Command="{Binding DataContext.KickCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                                            <Viewbox Width="16" Height="16">
+                                                <Path Data="{StaticResource IconKick}" Style="{StaticResource IconPath}" StrokeThickness="1.25"/>
+                                            </Viewbox>
+                                        </Button>
+                                        <TextBlock DockPanel.Dock="Right" Text="{Binding Since}" Margin="16,0" VerticalAlignment="Center"
+                                                   Style="{StaticResource InterText}" Foreground="{StaticResource Light60Brush}"/>
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Name}" Style="{StaticResource InterText}" FontSize="14" FontWeight="Medium"
+                                                       Foreground="{StaticResource LightBrush}" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Text="{DynamicResource Text.Room.GuestRole}" Style="{StaticResource InterText}" Margin="0,3,0,0"/>
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+        </DockPanel>
+    </Border>
+</UserControl>
