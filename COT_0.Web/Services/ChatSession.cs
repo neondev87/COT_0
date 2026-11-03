@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using COT_0.Core.Models;
 using COT_0.Core.Services;
 using COT_0.Web.Hubs;
+using COT_0.Web.Models;
 using COT_0.Web.Options;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Options;
@@ -21,6 +22,7 @@ public sealed class ChatSession(IChatService chat, IOptions<ChatOptions> options
     public IReadOnlyList<User> Users { get; private set; } = [];
 
     public event Action? Changed;
+    public event Action<string>? Ended;
 
     public async Task<bool> StartAsync(string? userId)
     {
@@ -35,6 +37,8 @@ public sealed class ChatSession(IChatService chat, IOptions<ChatOptions> options
         _connection = new HubConnectionBuilder().WithUrl(_options.HubUrl).Build();
         _connection.On<ChatMessage>(ChatEvents.MessageReceived, OnMessageReceived);
         _connection.On<List<User>>(ChatEvents.UsersChanged, OnUsersChanged);
+        _connection.On(ChatEvents.Kicked, () => Ended?.Invoke(LeaveReason.Kicked));
+        _connection.On(ChatEvents.RoomClosed, () => Ended?.Invoke(LeaveReason.RoomClosed));
 
         await _connection.StartAsync();
         await _connection.InvokeAsync(nameof(ChatHub.Join), userId);

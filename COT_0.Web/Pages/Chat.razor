@@ -2,42 +2,47 @@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @implements IAsyncDisposable
 @inject IChatSession Session
+@inject IRoomService Room
 @inject IOptions<ChatOptions> Options
 @inject NavigationManager Nav
 
 <PageTitle>COT_0 · Chat</PageTitle>
 
-@* Chat grupal en tiempo real *@
-<div class="chat-bg chat-page">
-    <aside class="user-list">
-        <h2>Conectados (@Session.Users.Count)</h2>
-        <ul>
-            @foreach (var user in Session.Users)
-            {
-                <li class="user-item">
-                    <UserAvatar PhotoUrl="@user.PhotoUrl" Name="@user.Name" />
-                    <span class="user-name">@user.Name</span>
-                    <FlagIcon Key="@user.FacultyFlag" />
-                </li>
-            }
-        </ul>
-    </aside>
+@* Chat grupal en tiempo real (pensado primero para celular) *@
+<div class="cot-screen chat-page">
+    <Backdrop />
 
-    <main class="chat-main">
-        <section class="msg-list">
-            @foreach (var message in Session.Messages)
-            {
-                <MessageItem @key="message.Id" Message="message" IsOwn="Session.IsOwn(message)" />
-            }
-        </section>
+    <header class="chat-top">
+        <CotLogo Class="cot-brand-sm" />
+        <span class="chat-room">SALA #@Room.Code</span>
+        <button type="button" class="chat-users-btn" @onclick="OpenUsers" aria-haspopup="dialog" aria-label="Conectados">
+            <Icon Name="users" /> @Session.Users.Count
+        </button>
+    </header>
 
-        <form class="chat-input" @onsubmit="SendAsync">
-            <EmotePicker OnPick="InsertEmote" />
-            <input @bind="draft" @bind:event="oninput" maxlength="@Options.Value.MaxMessageLength"
-                   placeholder="Escribí un mensaje…" autocomplete="off" />
-            <button type="submit">Enviar</button>
-        </form>
-    </main>
+    <div class="chat-body">
+        <main class="msg-scroll">
+            <div class="msg-stack">
+                @if (Session.Messages.Count == 0)
+                {
+                    <p class="msg-empty">Todavía no hay mensajes. Rompé el silencio.</p>
+                }
+                @foreach (var message in Session.Messages)
+                {
+                    <MessageItem @key="message.Id" Message="message" IsOwn="Session.IsOwn(message)" />
+                }
+            </div>
+        </main>
+
+        <UserPanel Users="Session.Users" IsOpen="usersOpen" OnClose="CloseUsers" />
+    </div>
+
+    <form class="chat-input" @onsubmit="SendAsync">
+        <EmotePicker OnPick="InsertEmote" />
+        <input class="cot-input chat-text" @bind="draft" @bind:event="oninput" maxlength="@Options.Value.MaxMessageLength"
+               placeholder="Escribí un mensaje…" autocomplete="off" aria-label="Mensaje" />
+        <button type="submit" class="cot-btn chat-send" aria-label="Enviar"><Icon Name="arrow" Size="20" Class="arr" /></button>
+    </form>
 </div>
 
 @code {
@@ -45,10 +50,12 @@
     public string? UserId { get; set; }
 
     private string draft = string.Empty;
+    private bool usersOpen;
 
     protected override async Task OnInitializedAsync()
     {
         Session.Changed += OnSessionChanged;
+        Session.Ended += OnSessionEnded;
         if (!await Session.StartAsync(UserId)) Nav.NavigateTo("/join");
     }
 
@@ -60,11 +67,18 @@
 
     private void InsertEmote(Emote emote) => draft += emote.Token;
 
+    private void OpenUsers() => usersOpen = true;
+
+    private void CloseUsers() => usersOpen = false;
+
     private void OnSessionChanged() => _ = InvokeAsync(StateHasChanged);
+
+    private void OnSessionEnded(string reason) => _ = InvokeAsync(() => Nav.NavigateTo($"/join?reason={reason}"));
 
     public async ValueTask DisposeAsync()
     {
         Session.Changed -= OnSessionChanged;
+        Session.Ended -= OnSessionEnded;
         await Session.StopAsync();
     }
 }

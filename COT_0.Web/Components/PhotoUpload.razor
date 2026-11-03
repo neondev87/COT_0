@@ -1,0 +1,24 @@
+@* Botón de foto con vista previa; la subida la hace ProfileService desde la página *@
+<label class="cot-upload">
+    <span class="cot-av">
+        @if (string.IsNullOrEmpty(PhotoUrl))
+        {
+            <span class="cot-av-empty"><Icon Name="user" Size="28" /></span>
+        }
+        else
+        {
+            <img class="cot-av-img" src="@PhotoUrl" alt="Vista previa de tu foto" />
+        }
+    </span>
+    <span class="cot-upload-text">
+        <span class="cot-upbtn"><Icon Name="upload" Size="16" />SUBIR FOTO</span>
+        <span class="cot-hint cot-only-desk">JPG o PNG · cuadrada se ve mejor</span>
+        <span class="cot-hint cot-only-mob">Cámara o galería</span>
+    </span>
+    <InputFile class="cot-file" accept="image/*" OnChange="OnChange" aria-label="Subir foto de perfil" />
+</label>
+
+@code {
+    [Parameter] public string? PhotoUrl { get; set; }
+    [Parameter] public EventCallback<InputFileChangeEventArgs> OnChange { get; set; }
+}

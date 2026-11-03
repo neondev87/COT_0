@@ -5,24 +5,21 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services;
 
+// Facultades de Chat:FlagNames; el escudo sale de wwwroot/img/flags/{clave}.png si existe
 public class FlagService(IWebHostEnvironment env, IOptions<ChatOptions> options) : IFlagService
 {
     private readonly ChatOptions _options = options.Value;
 
     public IReadOnlyList<FlagOption> GetFlags() =>
-        env.WebRootFileProvider.GetDirectoryContents(_options.FlagsFolder.Trim('/'))
-            .Where(f => !f.IsDirectory && f.Name.EndsWith(_options.FlagExtension, StringComparison.OrdinalIgnoreCase))
-            .Select(f => Path.GetFileNameWithoutExtension(f.Name))
-            .Order()
-            .Select(key => new FlagOption(key, ToLabel(key), GetUrl(key)))
+        _options.FlagNames
+            .Select(f => new FlagOption(f.Key, f.Value, GetUrl(f.Key)))
+            .OrderBy(f => f.Label, StringComparer.CurrentCulture)
             .ToList();
 
-    public string GetUrl(string key) => $"{_options.FlagsFolder.Trim('/')}/{key}{_options.FlagExtension}";
-
-    // "ciencias-exactas" -> "Ciencias exactas"
-    private static string ToLabel(string key)
+    // Vacía si todavía no hay imagen (la vista muestra un marcador)
+    public string GetUrl(string key)
     {
-        var text = key.Replace('-', ' ').Replace('_', ' ');
-        return text.Length == 0 ? text : char.ToUpperInvariant(text[0]) + text[1..];
+        var path = $"{_options.FlagsFolder.Trim('/')}/{key}{_options.FlagExtension}";
+        return env.WebRootFileProvider.GetFileInfo(path).Exists ? path : string.Empty;
     }
 }

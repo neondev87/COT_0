@@ -1,0 +1,185 @@
+/* Base COT_0: colores, fondo ASCII, ceniza, logo, inputs y botones */
+:root {
+    --accent: #B3122E;
+    --fg: #E6E6E6;
+    --fg-dim: rgba(230, 230, 230, .65);
+    --fg-mute: rgba(230, 230, 230, .45);
+    --line: rgba(230, 230, 230, .28);
+    --panel: rgba(10, 10, 11, .62);
+    --edge: rgba(255, 255, 255, .08);
+    --sheet: #121213;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; background: #080808; color: var(--fg); font-family: 'Barlow', sans-serif; }
+a { color: var(--fg); }
+a:hover { color: #fff; }
+button, input { font: inherit; color: inherit; }
+
+@keyframes cotAsh { 0% { transform: translate3d(0, 0, 0); opacity: 0 } 10% { opacity: var(--o, .3) } 90% { opacity: var(--o, .3) } 100% { transform: translate3d(var(--dx, 30px), -110vh, 0); opacity: 0 } }
+@keyframes cotFog { 0% { transform: translateX(-80px) } 100% { transform: translateX(90px) } }
+@keyframes cotSweep { 0% { transform: translateY(-140px) } 100% { transform: translateY(110vh) } }
+@keyframes cotRise { 0% { transform: translateY(18px); opacity: 0 } 100% { transform: translateY(0); opacity: 1 } }
+@keyframes cotBlink { 0%, 49% { opacity: 1 } 50%, 100% { opacity: 0 } }
+@keyframes cotAero { 0%, 15% { transform: translateX(-100%) } 60%, 100% { transform: translateX(100%) } }
+
+/* Pantalla y fondo */
+.cot-screen {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
+    background: radial-gradient(ellipse 80% 75% at 50% 35%, #1b1b1c 0%, #0f0f10 52%, #070707 100%);
+}
+.cot-backdrop { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.cot-backdrop > * { position: absolute; inset: 0; }
+.cot-bg-img {
+    background: url(../img/bg-ascii.png) center / cover no-repeat;
+    mix-blend-mode: screen;
+    opacity: .25;
+    filter: grayscale(1) brightness(.7);
+}
+.cot-bg-dim { background: rgba(6, 6, 6, .4); }
+.cot-backdrop > .cot-fog {
+    inset: auto;
+    left: -20%;
+    bottom: -120px;
+    width: 140%;
+    height: 380px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(120, 120, 122, .09) 0%, transparent 70%);
+    filter: blur(30px);
+    animation: cotFog 34s ease-in-out infinite alternate;
+}
+.cot-vignette { background: radial-gradient(ellipse 75% 75% at 50% 50%, transparent 40%, rgba(0, 0, 0, .8) 100%); }
+.cot-scanlines { background: repeating-linear-gradient(0deg, rgba(255, 255, 255, .016) 0, rgba(255, 255, 255, .016) 1px, transparent 1px, transparent 3px); }
+.cot-backdrop > .cot-sweep {
+    bottom: auto;
+    height: 120px;
+    background: linear-gradient(180deg, transparent, rgba(255, 255, 255, .015), transparent);
+    animation: cotSweep 14s linear infinite;
+}
+.cot-ash {
+    position: absolute;
+    bottom: -20px;
+    left: var(--x);
+    width: var(--s);
+    height: var(--s);
+    border-radius: 50%;
+    background: #9a9a9a;
+    filter: blur(.4px);
+    animation: cotAsh var(--dur) linear var(--delay) infinite;
+    will-change: transform, opacity;
+}
+
+/* Animación de entrada escalonada */
+.cot-rise { animation: cotRise .9s cubic-bezier(.2, .8, .2, 1) both; }
+.cot-d1 { animation-delay: .1s; }
+.cot-d2 { animation-delay: .18s; }
+.cot-d3 { animation-delay: .26s; }
+.cot-d4 { animation-delay: .34s; }
+
+/* Logo */
+.cot-brand { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.cot-logo { margin: 0; font-family: 'Cinzel', serif; font-weight: 700; font-size: 52px; line-height: 1; letter-spacing: .08em; color: var(--fg); }
+.cot-cursor { color: var(--accent); animation: cotBlink 1.2s steps(1) infinite; }
+.cot-tagline {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: .4em;
+    color: rgba(230, 230, 230, .62);
+}
+.cot-rule { width: 26px; height: 1px; background: linear-gradient(90deg, transparent, var(--accent)); }
+.cot-rule-end { background: linear-gradient(90deg, var(--accent), transparent); }
+.cot-brand-sm .cot-logo { font-size: 26px; }
+
+/* Textos y campos */
+.cot-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 500; font-size: 12px; letter-spacing: .32em; color: var(--fg-dim); }
+.cot-input {
+    width: 100%;
+    height: 54px;
+    padding: 0 16px;
+    background: rgba(255, 255, 255, .04);
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    color: var(--fg);
+    font-family: 'Barlow', sans-serif;
+    font-size: 16px;
+    letter-spacing: .02em;
+    outline: none;
+}
+.cot-input::placeholder { color: rgba(230, 230, 230, .4); }
+.cot-input:focus { border-bottom-color: var(--accent); background: rgba(255, 255, 255, .055); }
+.cot-input.invalid { border-bottom-color: var(--accent); }
+
+.cot-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
+    height: 50px;
+    background: rgba(10, 10, 10, .55);
+    border: 1px solid rgba(230, 230, 230, .5);
+    border-radius: 2px;
+    color: var(--fg);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: .28em;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .15s ease;
+}
+.cot-btn .arr { transition: transform .3s ease; }
+.cot-btn:hover, .cot-btn:focus-visible { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, rgba(10, 10, 10, .6)); color: #fff; outline: none; }
+.cot-btn:hover .arr, .cot-btn:focus-visible .arr { transform: translateX(4px); }
+.cot-btn:active { transform: scale(.98); border-color: var(--accent); }
+
+/* Avatar con brillo "aero" */
+.cot-av {
+    position: relative;
+    overflow: hidden;
+    width: 84px;
+    height: 84px;
+    flex: none;
+    border-radius: 14px;
+    background: #1c1c24;
+    border: 1px solid rgba(255, 255, 255, .12);
+}
+.cot-av::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, .3) 50%, transparent 70%);
+    transform: translateX(-100%);
+    animation: cotAero 6s ease-in-out infinite;
+    will-change: transform;
+}
+.cot-av-img { width: 100%; height: 100%; display: block; object-fit: cover; border-radius: inherit; }
+.cot-av-empty { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--fg-mute); }
+
+.cot-only-desk { display: none; }
+
+/* Base pensada para celular; desde laptop, más grande y con más aire */
+@media (max-width: 600px) {
+    .cot-bg-dim { background: rgba(6, 6, 6, .45); }
+    .cot-vignette { background: radial-gradient(ellipse 90% 70% at 50% 45%, transparent 35%, rgba(0, 0, 0, .8) 100%); }
+}
+
+@media (min-width: 601px) {
+    .cot-only-mob { display: none; }
+    .cot-only-desk { display: inline; }
+    .cot-logo { font-size: 64px; }
+    .cot-tagline { gap: 14px; letter-spacing: .45em; }
+    .cot-rule { width: 30px; }
+    .cot-input { height: 48px; padding: 0 14px; background: rgba(255, 255, 255, .035); }
+    .cot-av { width: 88px; height: 88px; }
+}

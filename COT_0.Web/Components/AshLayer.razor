@@ -1,0 +1,16 @@
+@inject IOptions<ChatOptions> Options
+
+@* Ceniza que sube; posiciones fijas por semilla (Chat:AshSeed / Chat:AshCount) *@
+<div class="cot-ash-layer">
+    @foreach (var particle in particles)
+    {
+        <span class="cot-ash" style="@particle.Style"></span>
+    }
+</div>
+
+@code {
+    private IReadOnlyList<AshParticle> particles = [];
+
+    protected override void OnInitialized() =>
+        particles = AshParticle.Generate(Options.Value.AshSeed, Options.Value.AshCount);
+}

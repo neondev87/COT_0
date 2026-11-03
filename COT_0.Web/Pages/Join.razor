@@ -1,57 +1,91 @@
 @page "/join"
 @rendermode InteractiveServer
+@implements IDisposable
 @inject IProfileService Profiles
+@inject IRoomService Room
 @inject IFlagService Flags
+@inject IOptions<ChatOptions> Options
 @inject NavigationManager Nav
 
-<PageTitle>COT_0 · Unirse</PageTitle>
+<PageTitle>COT_0 · Únete a la sala</PageTitle>
 
-@* Perfil del invitado: nombre, foto y bandera de facultad *@
-<div class="chat-bg join-page">
-    <EditForm Model="form" OnValidSubmit="JoinAsync" class="join-form">
+@* Perfil del invitado: nombre, foto y facultad *@
+<div class="cot-screen cot-center join-page">
+    <Backdrop />
+
+    <EditForm Model="form" OnValidSubmit="JoinAsync" class="cot-card">
         <DataAnnotationsValidator />
-        <h1>Unirse al chat</h1>
+        <CotLogo Subtitle="ÚNETE A LA SALA" Class="cot-rise cot-card-head" />
 
-        <div class="join-photo">
-            <UserAvatar PhotoUrl="@form.PhotoUrl" Name="@form.Name" />
-            <label class="join-photo-label">
-                Foto de perfil
-                <InputFile OnChange="UploadPhotoAsync" accept="image/*" />
-            </label>
-        </div>
-
-        <label class="join-field">
-            Nombre
-            <InputText @bind-Value="form.Name" placeholder="Tu nombre" autocomplete="off" />
-        </label>
-        <ValidationMessage For="() => form.Name" />
-
-        <fieldset class="flag-picker">
-            <legend>Facultad</legend>
-            <InputRadioGroup @bind-Value="form.FacultyFlag">
-                @foreach (var flag in Flags.GetFlags())
-                {
-                    <label class="flag-option">
-                        <InputRadio Value="flag.Key" />
-                        <img class="flag" src="@flag.Url" alt="@flag.Label" />
-                        <span>@flag.Label</span>
-                    </label>
-                }
-            </InputRadioGroup>
-        </fieldset>
-
-        @if (error is not null)
+        @if (!Room.IsOpen)
         {
-            <p class="join-error">@error</p>
+            <p class="cot-notice cot-rise cot-d1">La sala está cerrada. Esperá a que el anfitrión la abra y volvé a escanear el QR.</p>
         }
+        else
+        {
+            @if (notice is not null)
+            {
+                <p class="cot-notice cot-rise">@notice</p>
+            }
 
-        <button type="submit" class="join-submit">Entrar</button>
+            <div class="cot-group cot-rise cot-d1">
+                <label for="cot-name" class="cot-label">NOMBRE DE USUARIO</label>
+                <InputText id="cot-name" class="cot-input" @bind-Value="form.Name" placeholder="cómo te verán en el chat"
+                           maxlength="@Options.Value.MaxNameLength" autocomplete="nickname" />
+                <ValidationMessage For="() => form.Name" />
+            </div>
+
+            <div class="cot-group cot-rise cot-d2">
+                <span class="cot-label">FOTO DE PERFIL</span>
+                <PhotoUpload PhotoUrl="@form.PhotoUrl" OnChange="UploadPhotoAsync" />
+            </div>
+
+            <div class="cot-group cot-group-last cot-rise cot-d3">
+                <span class="cot-label" id="cot-fac-label">FACULTAD</span>
+                <FacultyField Selected="SelectedFlag" LabelId="cot-fac-label" OnOpen="() => sheetOpen = true" />
+            </div>
+
+            @if (error is not null)
+            {
+                <p class="cot-error">@error</p>
+            }
+
+            <div class="cot-cta-bar cot-rise cot-d4">
+                <button type="submit" class="cot-btn">ENTRAR AL CHAT <Icon Name="arrow" Size="20" Class="arr" /></button>
+            </div>
+
+            <p class="cot-room">SALA #@Room.Code</p>
+        }
     </EditForm>
+
+    <FacultySheet Flags="flags" Open="sheetOpen" Selected="@form.FacultyFlag" OnPick="PickFaculty" OnClose="() => sheetOpen = false" />
 </div>
 
 @code {
+    [SupplyParameterFromQuery(Name = "reason")]
+    public string? Reason { get; set; }
+
     private readonly JoinForm form = new();
     private string? error;
+    private string? notice;
+    private IReadOnlyList<FlagOption> flags = [];
+    private bool sheetOpen;
+
+    private FlagOption? SelectedFlag => flags.FirstOrDefault(f => f.Key == form.FacultyFlag);
+
+    protected override void OnInitialized()
+    {
+        notice = LeaveReason.ToNotice(Reason);
+        flags = Flags.GetFlags();
+        Room.Changed += OnRoomChanged;
+    }
+
+    // Al elegir, el panel se cierra solo
+    private void PickFaculty(string key)
+    {
+        form.FacultyFlag = key;
+        sheetOpen = false;
+    }
 
     private async Task UploadPhotoAsync(InputFileChangeEventArgs e)
     {
@@ -66,4 +100,8 @@
         error = result.Error;
         if (result.Value is not null) Nav.NavigateTo($"/chat?u={result.Value.Id}");
     }
+
+    private void OnRoomChanged() => _ = InvokeAsync(StateHasChanged);
+
+    public void Dispose() => Room.Changed -= OnRoomChanged;
 }

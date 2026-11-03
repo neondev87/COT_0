@@ -1,0 +1,17 @@
+@* Logo COT_0 con cursor parpadeante y subtítulo opcional *@
+<div class="cot-brand @Class">
+    <h1 class="cot-logo">COT<span class="cot-cursor">_</span>0</h1>
+    @if (Subtitle is not null)
+    {
+        <div class="cot-tagline">
+            <span class="cot-rule"></span>
+            <span>@Subtitle</span>
+            <span class="cot-rule cot-rule-end"></span>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string? Subtitle { get; set; }
+    [Parameter] public string? Class { get; set; }
+}
