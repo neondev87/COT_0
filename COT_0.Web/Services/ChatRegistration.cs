@@ -20,6 +20,7 @@ public static class ChatRegistration
         services.AddSingleton<IFlagService, FlagService>();
         services.AddScoped<IProfileService, ProfileService>();
         services.AddScoped<IChatSession, ChatSession>();
+        services.AddHostedService<ChatBroadcaster>();
         return services;
     }
 

@@ -7,7 +7,8 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services;
 
-public class ProfileService(IChatService chat, IAvatarStore avatars, IOptions<ChatOptions> options) : IProfileService
+public class ProfileService(IChatService chat, IRoomService room, IAvatarStore avatars, IOptions<ChatOptions> options)
+    : IProfileService
 {
     private readonly ChatOptions _options = options.Value;
 
@@ -33,6 +34,9 @@ public class ProfileService(IChatService chat, IAvatarStore avatars, IOptions<Ch
 
     public async Task<OperationResult<User>> CreateUserAsync(JoinForm form)
     {
+        if (!room.IsOpen)
+            return OperationResult<User>.Fail("La sala está cerrada.");
+
         var name = form.Name.Trim();
         if (name.Length == 0)
             return OperationResult<User>.Fail("Elegí un nombre.");

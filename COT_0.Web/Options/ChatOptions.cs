@@ -12,6 +12,32 @@ public class ChatOptions
     public string FlagsFolder { get; set; } = "img/flags";
     public string FlagExtension { get; set; } = ".png";
 
+    // Nombre visible de cada escudo (clave = nombre del archivo sin extensión)
+    public Dictionary<string, string> FlagNames { get; set; } = new()
+    {
+        ["arquitectura"] = "Arquitectura",
+        ["artes-escenicas"] = "Artes Escénicas",
+        ["artes-visuales"] = "Artes Visuales",
+        ["ciencias-biologicas"] = "Ciencias Biológicas",
+        ["ciencias-de-la-comunicacion"] = "Ciencias de la Comunicación",
+        ["ciencias-fisico-matematicas"] = "Ciencias Físico Matemáticas",
+        ["ciencias-politicas-y-rri"] = "Ciencias Políticas y RI",
+        ["ciencias-quimicas"] = "Ciencias Químicas",
+        ["derecho-y-criminologia"] = "Derecho y Criminología",
+        ["economia"] = "Economía",
+        ["facpya"] = "FACPYA",
+        ["filosofia-y-letras"] = "Filosofía y Letras",
+        ["fime"] = "FIME",
+        ["ingenieria-civil"] = "Ingeniería Civil",
+        ["musica"] = "Música",
+        ["organizacion-deportiva"] = "Organización Deportiva",
+        ["trabajo-social"] = "Trabajo Social",
+    };
+
+    // Partículas de ceniza del fondo (semilla fija: siempre el mismo dibujo)
+    public int AshSeed { get; set; } = 31;
+    public int AshCount { get; set; } = 20;
+
     public int RoomCodeLength { get; set; } = 4;
     public string RoomCodeChars { get; set; } = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 

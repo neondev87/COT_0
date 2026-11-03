@@ -1,0 +1,72 @@
+@inject IFlagService Flags
+
+@* Campo de facultad + panel que sube desde abajo con buscador y grilla de escudos *@
+<button type="button" class="cot-field" @onclick="Open" aria-labelledby="@LabelId" aria-haspopup="dialog">
+    @if (Selected is null)
+    {
+        <span class="cot-field-empty">Toca para elegir tu facultad</span>
+    }
+    else
+    {
+        <img class="cot-shield cot-shield-sm" src="@Selected.Url" alt="" />
+        <span class="cot-field-text">@Selected.Label</span>
+    }
+    <Icon Name="chevron" Class="cot-field-chev" />
+</button>
+
+<div class="cot-scrim @OpenClass" @onclick="Close"></div>
+<div class="cot-sheet @OpenClass" role="dialog" aria-label="Elige tu facultad">
+    <div class="cot-sheet-grip"><span></span></div>
+    <div class="cot-sheet-head">
+        <span class="cot-sheet-title">ELIGE TU FACULTAD</span>
+        <button type="button" class="cot-x" @onclick="Close" aria-label="Cerrar"><Icon Name="close" /></button>
+    </div>
+    <div class="cot-search-box">
+        <Icon Name="search" Class="cot-search-icon" />
+        <input class="cot-search" type="search" placeholder="Buscar facultad" aria-label="Buscar facultad"
+               @bind="query" @bind:event="oninput" />
+    </div>
+    <div class="cot-sheet-body">
+        <div class="cot-fac-grid">
+            @foreach (var flag in Filtered)
+            {
+                <button type="button" class="cot-fac @(flag.Key == Value ? "sel" : null)" @key="flag.Key"
+                        aria-pressed="@(flag.Key == Value)" @onclick="() => PickAsync(flag)">
+                    <span class="ring"></span>
+                    <img class="cot-shield" src="@flag.Url" alt="" />
+                    <span class="cot-fac-name">@flag.Label</span>
+                </button>
+            }
+        </div>
+        @if (Filtered.Count == 0)
+        {
+            <p class="cot-empty">No hay facultades con ese nombre</p>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public EventCallback<string?> ValueChanged { get; set; }
+    [Parameter] public string? LabelId { get; set; }
+
+    private IReadOnlyList<FlagOption> flags = [];
+    private string query = string.Empty;
+    private bool isOpen;
+
+    private FlagOption? Selected => flags.FirstOrDefault(f => f.Key == Value);
+    private IReadOnlyList<FlagOption> Filtered => FlagSearch.Filter(flags, query);
+    private string? OpenClass => isOpen ? "on" : null;
+
+    protected override void OnInitialized() => flags = Flags.GetFlags();
+
+    private void Open() => isOpen = true;
+
+    private void Close() => isOpen = false;
+
+    private async Task PickAsync(FlagOption flag)
+    {
+        isOpen = false;
+        await ValueChanged.InvokeAsync(flag.Key);
+    }
+}

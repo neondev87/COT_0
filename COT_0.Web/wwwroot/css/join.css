@@ -1,0 +1,169 @@
+/* /join: tarjeta, subida de foto, campo de facultad y panel inferior */
+.cot-center { display: flex; align-items: center; justify-content: center; padding: 48px 20px; }
+
+.cot-card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 460px;
+    padding: 56px 52px;
+    background: var(--panel);
+    border: 1px solid var(--edge);
+    border-radius: 4px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+.cot-card-head { margin-bottom: 40px; }
+.cot-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+.cot-group-last { margin-bottom: 36px; }
+
+.validation-message, .cot-error { margin: 0; font-size: 13px; color: #e0566c; }
+.cot-error { margin: -16px 0 20px; }
+.cot-notice {
+    margin: 0 0 28px;
+    padding: 12px 14px;
+    border-left: 2px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--fg);
+}
+.cot-room {
+    margin: 28px 0 0;
+    text-align: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: .3em;
+    color: rgba(230, 230, 230, .55);
+}
+
+/* Foto */
+.cot-upload { position: relative; display: flex; align-items: center; gap: 18px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.cot-upload:hover .cot-av, .cot-upload:focus-within .cot-av { border-color: rgba(255, 255, 255, .35); }
+.cot-upload-text { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.cot-upbtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    height: 44px;
+    padding: 0 16px;
+    border: 1px solid rgba(230, 230, 230, .35);
+    border-radius: 2px;
+    font-size: 13px;
+    letter-spacing: .14em;
+    transition: border-color .25s, transform .15s ease;
+}
+.cot-upload:hover .cot-upbtn, .cot-upload:focus-within .cot-upbtn { border-color: var(--accent); }
+.cot-upload:active .cot-upbtn { transform: scale(.97); }
+.cot-hint { font-size: 12px; color: rgba(230, 230, 230, .55); }
+.cot-file { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+
+/* Campo que abre el panel de facultades */
+.cot-field {
+    width: 100%;
+    height: 48px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, .035);
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    font-size: 16px;
+    text-align: left;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .15s ease, border-color .25s;
+}
+.cot-field:active { transform: scale(.985); }
+.cot-field:focus-visible { outline: none; border-bottom-color: var(--accent); }
+.cot-field-empty { flex: 1; color: var(--fg-mute); }
+.cot-field-text { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cot-field-chev { flex: none; color: rgba(230, 230, 230, .6); }
+
+/* Panel inferior (también lo usa la lista de conectados del chat) */
+.cot-scrim { position: fixed; inset: 0; z-index: 20; background: rgba(0, 0, 0, .6); opacity: 0; pointer-events: none; transition: opacity .3s ease; }
+.cot-scrim.on { opacity: 1; pointer-events: auto; }
+.cot-sheet {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 21;
+    max-width: 560px;
+    height: min(660px, 85dvh);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    background: var(--sheet);
+    border-top: 1px solid var(--edge);
+    border-radius: 18px 18px 0 0;
+    transform: translateY(102%);
+    transition: transform .38s cubic-bezier(.22, 1, .36, 1);
+    will-change: transform;
+}
+.cot-sheet.on { transform: translateY(0); }
+.cot-sheet-grip { display: flex; justify-content: center; padding-top: 10px; }
+.cot-sheet-grip span { width: 40px; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, .2); }
+.cot-sheet-head { display: flex; align-items: center; justify-content: space-between; padding: 6px 8px 0 20px; }
+.cot-sheet-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: .22em; }
+.cot-x { width: 44px; height: 44px; border: 0; background: transparent; color: rgba(230, 230, 230, .7); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.cot-x:hover { color: #fff; }
+
+.cot-search-box { position: relative; padding: 8px 20px 14px; }
+.cot-search-icon { position: absolute; left: 34px; top: 23px; color: rgba(230, 230, 230, .5); pointer-events: none; }
+.cot-search {
+    width: 100%;
+    height: 48px;
+    padding: 0 16px 0 44px;
+    background: rgba(255, 255, 255, .05);
+    border: 1px solid var(--edge);
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color .2s;
+}
+.cot-search::placeholder { color: rgba(230, 230, 230, .42); }
+.cot-search:focus { border-color: rgba(255, 255, 255, .25); }
+
+.cot-sheet-body { flex: 1; min-height: 0; overflow-y: auto; padding: 4px 20px 28px; }
+.cot-fac-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.cot-fac {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-height: 128px;
+    padding: 14px 6px 12px;
+    background: rgba(255, 255, 255, .025);
+    border: 1px solid rgba(255, 255, 255, .06);
+    border-radius: 10px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .15s ease, border-color .2s;
+}
+.cot-fac:hover { border-color: rgba(255, 255, 255, .18); }
+.cot-fac:active { transform: scale(.95); }
+.cot-fac:focus-visible { outline: none; border-color: rgba(255, 255, 255, .3); }
+.cot-fac .ring { position: absolute; inset: -1px; border: 1px solid var(--accent); border-radius: 10px; opacity: 0; transition: opacity .2s ease; pointer-events: none; box-shadow: 0 0 14px -4px var(--accent); }
+.cot-fac.sel .ring { opacity: 1; }
+.cot-fac-name { font-size: 11.5px; line-height: 1.25; text-align: center; color: rgba(230, 230, 230, .85); }
+.cot-shield { width: 52px; height: 60px; flex: none; object-fit: contain; }
+.cot-shield-sm { width: 26px; height: 30px; }
+.cot-empty { margin: 32px 0 0; text-align: center; font-size: 14px; color: rgba(230, 230, 230, .55); }
+
+/* Celular: sin tarjeta, botón fijo abajo */
+@media (max-width: 600px) {
+    .cot-center { display: block; padding: 72px 20px 120px; }
+    .cot-card { max-width: 400px; margin: 0 auto; padding: 0; background: transparent; border: 0; -webkit-backdrop-filter: none; backdrop-filter: none; }
+    .cot-card-head { margin-bottom: 44px; }
+    .cot-group, .cot-group-last { margin-bottom: 28px; }
+    .cot-upload { gap: 16px; }
+    .cot-upbtn { height: 48px; padding: 0 18px; font-size: 14px; }
+    .cot-field { height: 58px; background: rgba(255, 255, 255, .04); }
+    .cot-cta-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; padding: 28px 20px 26px; background: linear-gradient(180deg, rgba(8, 8, 8, 0) 0%, rgba(8, 8, 8, .92) 40%, #080808 100%); }
+    .cot-cta-bar .cot-btn { height: 58px; background: rgba(14, 14, 15, .85); border-color: rgba(230, 230, 230, .55); font-size: 15px; letter-spacing: .26em; }
+    .cot-room { margin-top: 32px; }
+}

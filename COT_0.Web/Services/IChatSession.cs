@@ -11,6 +11,9 @@ public interface IChatSession : IAsyncDisposable
 
     event Action? Changed;
 
+    // El invitado tiene que salir del chat; el string es un LeaveReason
+    event Action<string>? Ended;
+
     Task<bool> StartAsync(string? userId);
     Task SendAsync(string text);
     bool IsOwn(ChatMessage message);

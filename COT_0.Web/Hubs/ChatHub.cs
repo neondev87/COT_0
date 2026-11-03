@@ -5,7 +5,8 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Hubs;
 
-// Hub del chat grupal, mapeado en Chat:HubPath (/chathub)
+// Hub del chat grupal, mapeado en Chat:HubPath (/chathub).
+// La lista de usuarios y los avisos de expulsión los manda ChatBroadcaster.
 public class ChatHub(IChatService chat, IOptions<ChatOptions> options) : Hub
 {
     private const string UserIdKey = "userId";
@@ -16,13 +17,14 @@ public class ChatHub(IChatService chat, IOptions<ChatOptions> options) : Hub
 
         user.ConnectionId = Context.ConnectionId;
         Context.Items[UserIdKey] = userId;
-        await BroadcastUsersAsync();
     }
 
     public async Task SendMessage(string text)
     {
         if (!Context.Items.TryGetValue(UserIdKey, out var value) || value is not string userId)
             throw new HubException("Primero hay que unirse al chat.");
+        if (await chat.GetUserAsync(userId) is null)
+            throw new HubException("Ya no estás en la sala.");
 
         var clean = text.Trim();
         if (clean.Length == 0) return;
@@ -38,16 +40,9 @@ public class ChatHub(IChatService chat, IOptions<ChatOptions> options) : Hub
         {
             // Solo si sigue siendo su conexión actual (puede haber recargado la página)
             var user = await chat.GetUserAsync(userId);
-            if (user?.ConnectionId == Context.ConnectionId)
-            {
-                await chat.RemoveUserAsync(userId);
-                await BroadcastUsersAsync();
-            }
+            if (user?.ConnectionId == Context.ConnectionId) await chat.RemoveUserAsync(userId);
         }
 
         await base.OnDisconnectedAsync(exception);
     }
-
-    private async Task BroadcastUsersAsync() =>
-        await Clients.All.SendAsync(ChatEvents.UsersChanged, await chat.GetUsersAsync());
 }

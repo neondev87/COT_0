@@ -1,0 +1,27 @@
+@* Conectados: panel desde abajo en celular, columna fija en escritorio *@
+<div class="cot-scrim user-scrim @OpenClass" @onclick="OnClose"></div>
+<aside class="cot-sheet user-panel @OpenClass" aria-label="Conectados">
+    <div class="cot-sheet-grip"><span></span></div>
+    <div class="cot-sheet-head">
+        <span class="cot-sheet-title">CONECTADOS · @Users.Count</span>
+        <button type="button" class="cot-x user-close" @onclick="OnClose" aria-label="Cerrar"><Icon Name="close" /></button>
+    </div>
+    <ul class="user-list">
+        @foreach (var user in Users)
+        {
+            <li class="user-item" @key="user.Id">
+                <UserAvatar PhotoUrl="@user.PhotoUrl" Name="@user.Name" />
+                <span class="user-name">@user.Name</span>
+                <FlagIcon Key="@user.FacultyFlag" />
+            </li>
+        }
+    </ul>
+</aside>
+
+@code {
+    [Parameter, EditorRequired] public IReadOnlyList<User> Users { get; set; } = [];
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private string? OpenClass => IsOpen ? "on" : null;
+}
