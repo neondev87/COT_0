@@ -1,0 +1,22 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- TTF embebidos en Assets/Fonts (cada peso estático tiene su propio nombre de familia) -->
+    <FontFamily x:Key="FontBarlow">pack://application:,,,/Assets/Fonts/#Barlow</FontFamily>
+    <FontFamily x:Key="FontBarlowMedium">pack://application:,,,/Assets/Fonts/#Barlow Medium</FontFamily>
+    <FontFamily x:Key="FontBarlowSemiBold">pack://application:,,,/Assets/Fonts/#Barlow SemiBold</FontFamily>
+
+    <FontFamily x:Key="FontCondensedExtraLight">pack://application:,,,/Assets/Fonts/#Barlow Condensed ExtraLight</FontFamily>
+    <FontFamily x:Key="FontCondensedLight">pack://application:,,,/Assets/Fonts/#Barlow Condensed Light</FontFamily>
+    <FontFamily x:Key="FontCondensedMedium">pack://application:,,,/Assets/Fonts/#Barlow Condensed Medium</FontFamily>
+    <!-- Bold y Bold Italic -->
+    <FontFamily x:Key="FontCondensed">pack://application:,,,/Assets/Fonts/#Barlow Condensed</FontFamily>
+    <!-- ExtraBold Italic -->
+    <FontFamily x:Key="FontCondensedExtraBold">pack://application:,,,/Assets/Fonts/#Barlow Condensed ExtraBold</FontFamily>
+
+    <FontFamily x:Key="FontCinzel">pack://application:,,,/Assets/Fonts/#Cinzel</FontFamily>
+    <FontFamily x:Key="FontRedaction">pack://application:,,,/Assets/Fonts/#Redaction 50</FontFamily>
+    <FontFamily x:Key="FontMono">pack://application:,,,/Assets/Fonts/#JetBrains Mono</FontFamily>
+    <FontFamily x:Key="FontInter">pack://application:,,,/Assets/Fonts/#Inter</FontFamily>
+    <FontFamily x:Key="FontCormorant">pack://application:,,,/Assets/Fonts/#Cormorant Garamond</FontFamily>
+</ResourceDictionary>

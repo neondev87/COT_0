@@ -1,6 +1,7 @@
 using System.Windows;
 using COT_0.Core.Services;
 using COT_0.Host.Services;
+using COT_0.Host.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,21 +15,15 @@ public partial class App : Application
     {
         base.OnStartup(e);
         ShutdownMode = ShutdownMode.OnExplicitShutdown;
-        _services = BuildServices();
+
+        var configuration = LoadConfiguration();
+        TextResources.Load(configuration, Resources);
+        _services = BuildServices(configuration);
 
         await TryStartWebServerAsync();
 
-        var login = _services.GetRequiredService<LoginWindow>();
-        if (login.ShowDialog() != true)
-        {
-            Shutdown();
-            return;
-        }
-
-        var main = _services.GetRequiredService<MainWindow>();
-        MainWindow = main;
-        ShutdownMode = ShutdownMode.OnMainWindowClose;
-        main.Show();
+        _services.GetRequiredService<MusicService>().Start();
+        _services.GetRequiredService<WindowNavigator>().ShowLogin();
     }
 
     protected override async void OnExit(ExitEventArgs e)
@@ -43,23 +38,34 @@ public partial class App : Application
         base.OnExit(e);
     }
 
-    private static ServiceProvider BuildServices()
-    {
-        IConfiguration configuration = new ConfigurationBuilder()
-            .SetBasePath(AppContext.BaseDirectory)
-            .AddJsonFile("appsettings.json", optional: false)
-            .Build();
+    private static IConfiguration LoadConfiguration() => new ConfigurationBuilder()
+        .SetBasePath(AppContext.BaseDirectory)
+        .AddJsonFile("appsettings.json", optional: false)
+        .Build();
 
-        return new ServiceCollection()
-            .AddSingleton(configuration)
-            .AddSingleton<IAuthService, ConfigAuthService>()
-            .AddSingleton<ITunnelService, CloudflareTunnelService>()
-            .AddSingleton<WebServerHost>()
-            .AddSingleton<QrService>()
-            .AddTransient<LoginWindow>()
-            .AddTransient<MainWindow>()
-            .BuildServiceProvider();
-    }
+    private static ServiceProvider BuildServices(IConfiguration configuration) => new ServiceCollection()
+        .AddSingleton(configuration)
+        .AddSingleton<IAuthService, ConfigAuthService>()
+        .AddSingleton<ITunnelService, CloudflareTunnelService>()
+        .AddSingleton<WebServerHost>()
+        // Mismas instancias que usa el hub: salen del contenedor de la app web
+        .AddSingleton(sp => sp.GetRequiredService<WebServerHost>().Services.GetRequiredService<IChatService>())
+        .AddSingleton(sp => sp.GetRequiredService<WebServerHost>().Services.GetRequiredService<IRoomService>())
+        .AddSingleton<QrService>()
+        .AddSingleton<MusicService>()
+        .AddSingleton<DialogService>()
+        .AddSingleton<BackgroundCatalog>()
+        .AddSingleton<WindowNavigator>()
+        .AddSingleton<ScreenNavigator>()
+        .AddSingleton<BackgroundPickerViewModel>()
+        .AddSingleton<DashboardViewModel>()
+        .AddSingleton<RoomViewModel>()
+        .AddSingleton<MainViewModel>()
+        .AddTransient<SignatureViewModel>()
+        .AddTransient<LoginViewModel>()
+        .AddTransient<LoginWindow>()
+        .AddTransient<MainWindow>()
+        .BuildServiceProvider();
 
     // Servidor web en segundo plano; si falla acá, "Generar QR" lo reintenta y muestra el error
     private async Task TryStartWebServerAsync()

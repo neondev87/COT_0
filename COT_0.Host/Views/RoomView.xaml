@@ -1,0 +1,74 @@
+<UserControl x:Class="COT_0.Host.Views.RoomView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:COT_0.Host.Controls">
+    <!-- Sala activa (DataContext: RoomViewModel) -->
+    <Grid>
+        <!-- Encabezado -->
+        <Grid Margin="64,52,64,0" VerticalAlignment="Top">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <Button Style="{StaticResource BackLinkButton}" Command="{Binding BackCommand}" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
+                        <Viewbox Width="16" Height="16">
+                            <Path Data="{StaticResource IconArrowLeft}" Style="{StaticResource IconPath}" StrokeThickness="1.8"/>
+                        </Viewbox>
+                        <controls:SpacedText Text="{DynamicResource Text.Room.Back}" Margin="10,0,0,0" VerticalAlignment="Center"
+                                             FontFamily="{StaticResource FontCondensedMedium}" FontSize="14" Spacing="0.3"/>
+                    </StackPanel>
+                </Button>
+                <Rectangle Width="1" Height="22" Margin="28,0" Fill="{StaticResource Text20Brush}"/>
+                <controls:SpacedText Text="{DynamicResource Text.Room.Title}" Style="{StaticResource BoldCondensedText}"
+                                     FontSize="28" Spacing="0.16" Foreground="{StaticResource TextBrush}"/>
+                <controls:SpacedText Text="{Binding Code, StringFormat=#{0}}" Margin="28,0,0,0" VerticalAlignment="Center"
+                                     FontFamily="{StaticResource FontMono}" FontSize="13" Spacing="0.1" Foreground="{StaticResource Text62Brush}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <ContentControl Style="{StaticResource PulseDot}" VerticalAlignment="Center"/>
+                <controls:SpacedText Text="{DynamicResource Text.Room.Live}" Margin="12,0" VerticalAlignment="Center"
+                                     FontFamily="{StaticResource FontCondensedMedium}" FontSize="14" Spacing="0.32" Foreground="{StaticResource Text70Brush}"/>
+                <TextBlock Text="{Binding Elapsed}" Style="{StaticResource MonoText}" FontSize="14"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Columna izquierda: QR + URL -->
+        <controls:QrPanel Width="{StaticResource QrPanelSize}" Margin="64,124,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                          controls:EntryAnimation.OffsetX="-60" controls:EntryAnimation.Delay="{StaticResource Delay010}"
+                          controls:EntryAnimation.Ease="{StaticResource EaseOut}" controls:EntryAnimation.Duration="{StaticResource RoomEntryDuration}"/>
+
+        <!-- Columna derecha: contador + lista + cerrar -->
+        <Grid Margin="560,124,64,40" controls:EntryAnimation.OffsetX="40" controls:EntryAnimation.Delay="{StaticResource Delay025}"
+              controls:EntryAnimation.Ease="{StaticResource EaseOut}" controls:EntryAnimation.Duration="{StaticResource RoomEntryDuration}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Total, StringFormat={}{0:00}}" FontFamily="{StaticResource FontCondensedExtraLight}" FontSize="120"
+                           LineHeight="98.4" LineStackingStrategy="BlockLineHeight" Foreground="{StaticResource TextBrush}" VerticalAlignment="Bottom"/>
+                <StackPanel Margin="18,0,0,8" VerticalAlignment="Bottom">
+                    <Rectangle Width="32" Height="1" HorizontalAlignment="Left" Fill="{StaticResource AccentBrush}"/>
+                    <TextBlock Text="{DynamicResource Text.Room.Count}" Margin="0,8,0,0" FontFamily="{StaticResource FontCormorant}"
+                               FontWeight="Medium" FontSize="30" Foreground="{StaticResource LightBrush}"/>
+                </StackPanel>
+            </StackPanel>
+
+            <controls:UserList Grid.Row="1" Margin="0,18"/>
+
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                <controls:SpacedText Text="{DynamicResource Text.Room.CloseHint}" VerticalAlignment="Center" FontFamily="{StaticResource FontBarlow}"
+                                     FontSize="12" Spacing="0.04" Foreground="{StaticResource Text58Brush}"/>
+                <Button Style="{StaticResource CloseRoomButton}" Margin="22,0,0,0" Command="{Binding CloseRoomCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <Viewbox Width="18" Height="18">
+                            <Path Data="{StaticResource IconPower}" Style="{StaticResource IconPath}" StrokeThickness="1.8"/>
+                        </Viewbox>
+                        <controls:SpacedText Text="{DynamicResource Text.Room.Close}" Margin="12,0,0,0" Style="{StaticResource BoldCondensedText}"
+                                             FontSize="19" Spacing="0.3"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>
