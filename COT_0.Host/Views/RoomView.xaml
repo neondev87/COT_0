@@ -35,7 +35,7 @@
                           controls:EntryAnimation.OffsetX="-60" controls:EntryAnimation.Delay="{StaticResource Delay010}"
                           controls:EntryAnimation.Ease="{StaticResource EaseOut}" controls:EntryAnimation.Duration="{StaticResource RoomEntryDuration}"/>
 
-        <!-- Columna derecha: contador + lista + cerrar -->
+        <!-- Columna derecha: contador + lista + emotes + cerrar -->
         <Grid Margin="560,124,64,40" controls:EntryAnimation.OffsetX="40" controls:EntryAnimation.Delay="{StaticResource Delay025}"
               controls:EntryAnimation.Ease="{StaticResource EaseOut}" controls:EntryAnimation.Duration="{StaticResource RoomEntryDuration}">
             <Grid.RowDefinitions>
@@ -54,7 +54,14 @@
                 </StackPanel>
             </StackPanel>
 
-            <controls:UserList Grid.Row="1" Margin="0,18"/>
+            <Grid Grid.Row="1" Margin="0,18">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <controls:UserList/>
+                <controls:EmotePanel Grid.Column="1" Width="{StaticResource EmotePanelWidth}" Margin="16,0,0,0" DataContext="{Binding Emotes}"/>
+            </Grid>
 
             <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
                 <controls:SpacedText Text="{DynamicResource Text.Room.CloseHint}" VerticalAlignment="Center" FontFamily="{StaticResource FontBarlow}"

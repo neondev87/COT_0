@@ -2,6 +2,7 @@ using System.Windows;
 using COT_0.Core.Services;
 using COT_0.Host.Services;
 using COT_0.Host.ViewModels;
+using COT_0.Web.Services.Emotes;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -49,6 +50,7 @@ public partial class App : Application
         // Mismas instancias que usa el hub: salen del contenedor de la app web
         .AddSingleton(sp => sp.GetRequiredService<WebServerHost>().Services.GetRequiredService<IChatService>())
         .AddSingleton(sp => sp.GetRequiredService<WebServerHost>().Services.GetRequiredService<IRoomService>())
+        .AddSingleton(sp => sp.GetRequiredService<WebServerHost>().Services.GetRequiredService<IRoomEmotes>())
         .AddSingleton<RoomSession>()
         .AddSingleton<QrService>()
         .AddSingleton<ClockService>()
@@ -63,6 +65,7 @@ public partial class App : Application
         .AddSingleton<ScreenNavigator>()
         .AddSingleton<BackgroundPickerViewModel>()
         .AddSingleton<DashboardViewModel>()
+        .AddSingleton<EmotesViewModel>()
         .AddSingleton<RoomViewModel>()
         .AddSingleton<MainViewModel>()
         // Compartido por login y dashboard: mismo estado de música
