@@ -27,7 +27,8 @@ public class ChatHub(IChatService chat, IPresenceTracker presence, IOptions<Chat
         var user = await GetCurrentUserAsync();
 
         var clean = text.Trim();
-        if (clean.Length == 0) return;
+        // Vacío o con el texto reservado de las notas de voz (esas solo entran por IVoiceService)
+        if (clean.Length == 0 || VoiceNote.IsVoice(clean)) return;
         if (clean.Length > options.Value.MaxMessageLength) clean = clean[..options.Value.MaxMessageLength];
 
         await chat.AddMessageAsync(user.Id, clean);

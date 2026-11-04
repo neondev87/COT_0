@@ -1,0 +1,21 @@
+@* Nota de voz: play/pausa, progreso y duración. El estado (data-state) lo pone voice.js con los eventos del <audio> *@
+@if (Voice.Available)
+{
+    <div class="voice" data-duration="@VoiceFormat.Seconds(Voice.Duration)">
+        <button type="button" class="voice-play" aria-label="Reproducir o pausar la nota de voz">
+            <Icon Name="play" Size="18" Class="voice-icon-play" />
+            <Icon Name="pause" Size="18" Class="voice-icon-pause" />
+        </button>
+        <span class="voice-track"><span class="voice-fill"></span></span>
+        <span class="voice-time">@VoiceFormat.Duration(Voice.Duration)</span>
+        <audio preload="metadata" src="@Voice.Url"></audio>
+    </div>
+}
+else
+{
+    <span class="voice-gone">Nota de voz no disponible</span>
+}
+
+@code {
+    [Parameter, EditorRequired] public VoicePlayback Voice { get; set; } = default!;
+}

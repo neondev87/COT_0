@@ -1,4 +1,5 @@
 @inject IChatBrowser Browser
+@inject IVoiceService Voices
 
 @* Grupo de mensajes seguidos de un autor (encabezado + hora una vez) o un aviso del sistema *@
 @if (Group.IsSystem)
@@ -20,7 +21,14 @@ else
             </header>
             @foreach (var message in Group.Messages)
             {
-                <p class="msg-text msg-line" @key="message.Id"><MessageText Text="@message.Text" /></p>
+                if (Voices.Find(message) is { } voice)
+                {
+                    <div class="msg-line msg-voice" @key="message.Id"><VoiceBubble Voice="voice" /></div>
+                }
+                else
+                {
+                    <p class="msg-text msg-line" @key="message.Id"><MessageText Text="@message.Text" /></p>
+                }
             }
         </div>
     </article>

@@ -57,7 +57,10 @@
         <UserPanel Users="Session.Users" IsOpen="usersOpen" OnClose="CloseUsers" />
     </div>
 
-    <ChatComposer Draft="draft" OnSend="SendAsync" OnTyping="Session.NotifyTypingAsync" />
+    @if (Session.CurrentUser is { } author)
+    {
+        <ChatComposer Draft="draft" UserId="@author.Id" OnSend="SendAsync" OnTyping="Session.NotifyTypingAsync" />
+    }
 
     @if (profileOpen && Session.CurrentUser is { } user)
     {
