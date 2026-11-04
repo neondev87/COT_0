@@ -21,7 +21,4 @@ public class VoiceOptions
 
     // Frecuencia del WAV al convertir los WebM/Opus
     public int WavSampleRate { get; set; } = 24000;
-
-    // Píxeles a la izquierda para cancelar la grabación al soltar
-    public int CancelSlidePx { get; set; } = 96;
 }

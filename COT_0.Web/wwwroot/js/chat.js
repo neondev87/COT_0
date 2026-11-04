@@ -1,6 +1,6 @@
 // Interop mínimo del chat (no se puede hacer desde C#): Enter envía, scroll automático y aviso de mensajes nuevos
 window.cotChat = {
-    attach(page) {
+    attach(page, holdMs) {
         const scroll = page.querySelector('.msg-scroll');
         const pill = page.querySelector('.msg-new');
         const input = page.querySelector('.chat-text');
@@ -27,7 +27,28 @@ window.cotChat = {
         // El teclado del celular achica la pantalla: sigue pegado abajo
         new ResizeObserver(() => { if (atBottom) toBottom(false); }).observe(scroll);
 
+        // Mantener presionado un emote = clic derecho (Safari de iPhone no dispara contextmenu; Blazor lo atiende)
+        let hold = null;
+        const release = () => { clearTimeout(hold); hold = null; };
+        scroll.addEventListener('pointerdown', e => {
+            const emote = e.pointerType !== 'mouse' && e.target.closest('.emote');
+            if (!emote) return;
+            release();
+            hold = setTimeout(() => {
+                hold = null;
+                emote.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true }));
+            }, holdMs);
+        });
+        ['pointerup', 'pointercancel', 'contextmenu'].forEach(t => scroll.addEventListener(t, release, true));
+
         input.addEventListener('keydown', e => {
+            // Tab completa con la primera sugerencia de ":"
+            const suggestion = e.key === 'Tab' && !e.shiftKey && page.querySelector('.emote-panel.suggest .emote-option');
+            if (suggestion) {
+                e.preventDefault();
+                suggestion.click();
+                return;
+            }
             if (e.key !== 'Enter' || e.shiftKey || e.isComposing || e.keyCode === 229) return;
             e.preventDefault();
             // Directo al form: el botón puede seguir deshabilitado hasta que el servidor vea el texto

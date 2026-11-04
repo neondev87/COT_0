@@ -81,7 +81,7 @@ public class ProfileService(
 
     private string? ValidateName(string name)
     {
-        if (name.Length == 0) return "Elegí un nombre.";
+        if (name.Length == 0) return "Elige un nombre.";
         if (name.Length > _options.MaxNameLength) return $"El nombre puede tener hasta {_options.MaxNameLength} caracteres.";
         return null;
     }

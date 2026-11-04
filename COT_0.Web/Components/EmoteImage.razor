@@ -1,0 +1,22 @@
+@* Emote de 7TV desde el CDN: webp animado, primer cuadro si el sistema pide menos movimiento
+   y gif para navegadores sin webp. width/height reservan el lugar antes de que cargue *@
+<picture class="emote @(Large ? "emote-lg" : null)" title="@Emote.Name"
+         @oncontextmenu="OpenMenuAsync" @oncontextmenu:preventDefault="@OnMenu.HasDelegate">
+    @if (Sources.StillUrl is { } still && Emote.Animated)
+    {
+        <source media="(prefers-reduced-motion: reduce)" srcset="@still" type="@Sources.MimeType" />
+    }
+    <source srcset="@Sources.Url" type="@Sources.MimeType" />
+    <img src="@(Sources.FallbackUrl ?? Sources.Url)" alt="@Emote.Name" width="@Emote.Width" height="@Emote.Height"
+         loading="lazy" decoding="async" draggable="false" referrerpolicy="no-referrer" />
+</picture>
+
+@code {
+    [Parameter, EditorRequired] public RoomEmote Emote { get; set; } = default!;
+    [Parameter] public bool Large { get; set; }
+    [Parameter] public EventCallback<RoomEmote> OnMenu { get; set; }
+
+    private EmoteSources Sources => Large ? Emote.Large : Emote.Small;
+
+    private Task OpenMenuAsync() => OnMenu.HasDelegate ? OnMenu.InvokeAsync(Emote) : Task.CompletedTask;
+}

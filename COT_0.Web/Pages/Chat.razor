@@ -4,6 +4,7 @@
 @inject IChatSession Session
 @inject IChatBrowser Browser
 @inject IRoomService Room
+@inject IRoomEmotes Emotes
 @inject IOptions<ChatOptions> Options
 @inject NavigationManager Nav
 
@@ -40,7 +41,7 @@
                 <div class="msg-stack">
                     @if (Session.Groups.Count == 0)
                     {
-                        <p class="msg-empty">Todavía no hay mensajes. Rompé el silencio.</p>
+                        <p class="msg-empty">Todavía no hay mensajes. Rompe el silencio.</p>
                     }
                     @foreach (var group in Session.Groups)
                     {
@@ -67,6 +68,8 @@
         <ProfileEditor User="user" OnClose="CloseProfile" />
     }
 
+    <EmoteMenu Reporter="Session.CurrentUser" />
+
     @if (viewingImage is not null)
     {
         <ImageViewer Url="@viewingImage" OnClose="CloseImage" />
@@ -88,6 +91,8 @@
         draft = new MessageDraft(Options.Value.MaxMessageLength);
         Session.Changed += OnSessionChanged;
         Session.Ended += OnSessionEnded;
+        // El host quitó un emote o cambió el set: se vuelven a pintar todos los mensajes
+        Emotes.Changed += OnSessionChanged;
         if (!await Session.StartAsync(UserId)) Nav.NavigateTo("/join");
     }
 
@@ -129,6 +134,7 @@
     {
         Session.Changed -= OnSessionChanged;
         Session.Ended -= OnSessionEnded;
+        Emotes.Changed -= OnSessionChanged;
         await Session.StopAsync();
     }
 }

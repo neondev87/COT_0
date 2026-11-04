@@ -3,27 +3,20 @@ window.cotVoice = (() => {
     const errorCodes = { NotAllowedError: 'denied', SecurityError: 'denied', NotFoundError: 'nodevice', OverconstrainedError: 'nodevice', NotReadableError: 'busy' };
     const stopTracks = s => s.stream?.getTracks().forEach(t => t.stop());
 
-    // ---- Grabar: mantener presionado, soltar envía, deslizar a la izquierda cancela ----
+    // ---- Grabar: un toque empieza, otro toque envía, CANCELAR descarta; al llegar al límite se envía solo ----
     function attach(form, dotnet, config) {
         const mic = form.querySelector('.voice-mic');
+        // session: pidiendo permiso o grabando. busy: subiendo la nota (no se puede grabar ni enviar otra)
         let session = null;
+        let busy = false;
 
-        const slide = dx => {
-            form.style.setProperty('--voice-slide', `${dx}px`);
-            if (dx <= -config.cancelPx) form.dataset.voiceCancel = '';
-            else delete form.dataset.voiceCancel;
-        };
-
-        async function begin(e) {
-            if (session || e.button > 0) return;
-            e.preventDefault();
-            mic.setPointerCapture(e.pointerId);
-
+        async function begin() {
             if (!navigator.mediaDevices?.getUserMedia) return dotnet.invokeMethodAsync('OnFailed', window.isSecureContext ? 'unsupported' : 'insecure');
             const mime = window.MediaRecorder && config.mimeCandidates.find(t => MediaRecorder.isTypeSupported(t));
             if (!mime) return dotnet.invokeMethodAsync('OnFailed', 'unsupported');
 
-            const s = session = { startX: e.clientX, chunks: [] };
+            // getUserMedia dentro del toque: en iPhone ahí aparece el pedido de permiso
+            const s = session = { chunks: [] };
             try {
                 s.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             } catch (err) {
@@ -31,13 +24,16 @@ window.cotVoice = (() => {
                 return dotnet.invokeMethodAsync('OnFailed', errorCodes[err?.name] ?? 'error');
             }
 
-            // Soltó mientras se pedía el permiso: no se graba nada
-            if (s.released) {
-                stopTracks(s);
-                return dotnet.invokeMethodAsync('OnCancelled', true);
-            }
+            // Se canceló mientras se pedía el permiso: no se graba nada
+            if (s.cancelled) return stopTracks(s);
 
-            s.recorder = new MediaRecorder(s.stream, { mimeType: mime });
+            try {
+                s.recorder = new MediaRecorder(s.stream, { mimeType: mime });
+            } catch {
+                stopTracks(s);
+                session = null;
+                return dotnet.invokeMethodAsync('OnFailed', 'unsupported');
+            }
             s.recorder.ondataavailable = ev => { if (ev.data.size > 0) s.chunks.push(ev.data); };
             s.recorder.onstop = () => finish(s);
             s.recorder.start();
@@ -51,31 +47,38 @@ window.cotVoice = (() => {
             const s = session;
             if (!s) return;
             session = null;
-            s.released = true;
-            slide(0);
+            s.cancelled = !send;
             if (!s.recorder) return;
 
             clearTimeout(s.limit);
-            s.send = send;
+            busy = send;
             s.duration = Math.min(performance.now() - s.startedAt, config.maxMs);
             if (s.recorder.state !== 'inactive') s.recorder.stop();
         }
 
         // El Blob recién está completo en onstop
-        function finish(s) {
+        async function finish(s) {
             stopTracks(s);
-            if (!s.send) return dotnet.invokeMethodAsync('OnCancelled', false);
-            if (s.duration < config.minMs || !s.chunks.length) return dotnet.invokeMethodAsync('OnCancelled', true);
-
-            const blob = new Blob(s.chunks, { type: s.recorder.mimeType });
-            dotnet.invokeMethodAsync('OnRecorded', DotNet.createJSStreamReference(blob), Math.round(s.duration));
+            if (s.cancelled) return dotnet.invokeMethodAsync('OnCancelled', false);
+            try {
+                if (s.duration < config.minMs || !s.chunks.length) return await dotnet.invokeMethodAsync('OnCancelled', true);
+                const blob = new Blob(s.chunks, { type: s.recorder.mimeType });
+                // Espera a que C# termine de subir: hasta entonces se ignoran los toques
+                await dotnet.invokeMethodAsync('OnRecorded', DotNet.createJSStreamReference(blob), Math.round(s.duration));
+            } finally {
+                busy = false;
+            }
         }
 
-        mic.addEventListener('pointerdown', begin);
-        mic.addEventListener('pointermove', e => { if (session) slide(Math.max(-150, Math.min(0, e.clientX - session.startX))); });
-        mic.addEventListener('pointerup', () => end(!('voiceCancel' in form.dataset)));
-        mic.addEventListener('pointercancel', () => end(false));
-        mic.addEventListener('contextmenu', e => e.preventDefault());
+        function toggle() {
+            if (busy) return;
+            if (!session) return begin();
+            // Mientras se pide el permiso el toque no hace nada
+            if (session.recorder) end(true);
+        }
+
+        mic.addEventListener('click', toggle);
+        form.addEventListener('click', e => { if (e.target.closest('.voice-cancel')) end(false); });
         form.cotVoiceDetach = () => end(false);
     }
 

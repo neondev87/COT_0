@@ -58,7 +58,6 @@
 .msg-sys::after { transform: scaleX(-1); }
 .msg-sys time { opacity: .7; }
 
-.emote { height: 28px; vertical-align: middle; }
 .flag { width: 18px; height: 20px; flex: none; object-fit: contain; }
 .avatar-glow { width: 36px; height: 36px; flex: none; object-fit: cover; border-radius: 10px; background: #1c1c24; border: 1px solid rgba(255, 255, 255, .12); }
 .avatar-initial { display: inline-flex; align-items: center; justify-content: center; font-family: 'Cinzel', serif; font-weight: 700; font-size: 16px; color: var(--fg); }

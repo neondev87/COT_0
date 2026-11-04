@@ -1,25 +1,104 @@
-@inject IEmoteService Emotes
+@implements IDisposable
+@inject IRoomEmotes Emotes
+@inject IOptions<ChatOptions> Options
 
-<div class="emote-picker">
-    <button type="button" class="emote-toggle" title="Emotes" @onclick="Toggle">☾</button>
+@* Picker de emotes estilo Kick: se abre con la carita (con buscador) o al escribir ":" (sugerencias del texto).
+   Si 7TV no responde, el chat sigue igual y acá se avisa *@
+@if (Emotes.Status != EmoteSetStatus.Off)
+{
+    var results = Emotes.Search(isOpen ? search : Query, Options.Value.EmotePickerLimit);
+    var shown = preview is not null && results.Contains(preview) ? preview : results.FirstOrDefault();
+    var suggesting = !isOpen && Query is not null && results.Count > 0;
 
-    @if (isOpen)
-    {
-        <div class="emote-panel">
-            @foreach (var emote in Emotes.GetEmotes())
-            {
-                <button type="button" class="emote-option" title="@emote.Token" @onclick="() => OnPick.InvokeAsync(emote)">
-                    <img class="emote" src="@emote.Url" alt="@emote.Token" />
-                </button>
-            }
-        </div>
-    }
-</div>
+    <div class="emote-picker">
+        <button type="button" class="emote-toggle @(Emotes.Status == EmoteSetStatus.Ready ? null : "off")" @onclick="Toggle"
+                aria-expanded="@isOpen" aria-label="Emotes" title="Emotes">
+            <Icon Name="smile" Size="20" />
+        </button>
+
+        @if (isOpen)
+        {
+            <button type="button" class="emote-scrim" @onclick="Close" aria-label="Cerrar emotes" tabindex="-1"></button>
+        }
+        @if (isOpen || suggesting)
+        {
+            <div class="emote-panel @(suggesting ? "suggest" : null)" role="dialog" aria-label="Emotes" @onkeydown="OnKeyDown">
+                @if (isOpen)
+                {
+                    <label class="emote-search">
+                        <Icon Name="search" Size="16" />
+                        <input class="cot-input" type="search" placeholder="Buscar emote" @bind="search" @bind:event="oninput"
+                               autocomplete="off" aria-label="Buscar emote" />
+                    </label>
+                }
+
+                @if (Emotes.Status == EmoteSetStatus.Ready)
+                {
+                    @if (results.Count == 0)
+                    {
+                        <p class="emote-note">Sin resultados</p>
+                    }
+                    <div class="emote-grid">
+                        @foreach (var emote in results)
+                        {
+                            <button type="button" class="emote-option" @key="emote.Id" title="@emote.Name" aria-label="@emote.Name"
+                                    @onclick="() => PickAsync(emote, suggesting)" @onmouseover="() => preview = emote" @onfocus="() => preview = emote"
+                                    @onmousedown:preventDefault="suggesting">
+                                <EmoteImage Emote="emote" />
+                            </button>
+                        }
+                    </div>
+                    @if (shown is not null)
+                    {
+                        <div class="emote-preview" @key="shown.Id">
+                            <EmoteImage Emote="shown" Large />
+                            <span>@shown.Name</span>
+                        </div>
+                    }
+                }
+                else if (Emotes.Status == EmoteSetStatus.Loading)
+                {
+                    <p class="emote-note">Cargando emotes…</p>
+                }
+                else
+                {
+                    <p class="emote-note">Emotes no disponibles por ahora. El chat funciona igual.</p>
+                }
+            </div>
+        }
+    </div>
+}
 
 @code {
-    [Parameter] public EventCallback<Emote> OnPick { get; set; }
+    // Texto después de ":" en el mensaje (null si no se está escribiendo un emote)
+    [Parameter] public string? Query { get; set; }
+
+    // Desde la carita se agrega al final; desde ":" reemplaza lo que se estaba escribiendo
+    [Parameter] public EventCallback<RoomEmote> OnPick { get; set; }
+    [Parameter] public EventCallback<RoomEmote> OnComplete { get; set; }
 
     private bool isOpen;
+    private string search = string.Empty;
+    private RoomEmote? preview;
 
-    private void Toggle() => isOpen = !isOpen;
+    protected override void OnInitialized() => Emotes.Changed += OnEmotesChanged;
+
+    private void Toggle()
+    {
+        isOpen = !isOpen;
+        search = string.Empty;
+    }
+
+    private void Close() => isOpen = false;
+
+    private Task PickAsync(RoomEmote emote, bool fromQuery) => fromQuery ? OnComplete.InvokeAsync(emote) : OnPick.InvokeAsync(emote);
+
+    private void OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Escape") Close();
+    }
+
+    private void OnEmotesChanged() => _ = InvokeAsync(StateHasChanged);
+
+    public void Dispose() => Emotes.Changed -= OnEmotesChanged;
 }
