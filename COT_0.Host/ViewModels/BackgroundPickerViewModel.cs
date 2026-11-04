@@ -26,6 +26,13 @@ public partial class BackgroundPickerViewModel : ObservableObject
 
     public IReadOnlyList<BackgroundOption> Options { get; }
 
+    // Al salir: sin fondo, el video se descarga y suelta el archivo
+    public void Release()
+    {
+        IsOpen = false;
+        Selected = null;
+    }
+
     [RelayCommand]
     private void Open() => IsOpen = true;
 

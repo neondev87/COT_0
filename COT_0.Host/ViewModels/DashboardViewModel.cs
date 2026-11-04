@@ -17,6 +17,7 @@ public partial class DashboardViewModel : ObservableObject
     private readonly IAuthService _auth;
     private readonly ScreenNavigator _screens;
     private readonly WindowNavigator _windows;
+    private readonly IShutdownCoordinator _shutdown;
     private readonly DialogService _dialogs;
     private readonly ClockService _clock;
     private readonly IConfiguration _config;
@@ -46,7 +47,7 @@ public partial class DashboardViewModel : ObservableObject
 
     public DashboardViewModel(
         RoomSession session, IRoomService room, IChatService chat, IAuthService auth,
-        ScreenNavigator screens, WindowNavigator windows, DialogService dialogs,
+        ScreenNavigator screens, WindowNavigator windows, IShutdownCoordinator shutdown, DialogService dialogs,
         BackgroundPickerViewModel picker, SignatureViewModel signature, ClockService clock, IConfiguration config)
     {
         _session = session;
@@ -55,6 +56,7 @@ public partial class DashboardViewModel : ObservableObject
         _auth = auth;
         _screens = screens;
         _windows = windows;
+        _shutdown = shutdown;
         _dialogs = dialogs;
         _config = config;
         _culture = CultureInfo.GetCultureInfo(config["Ui:Culture"] ?? "es-AR");
@@ -112,7 +114,7 @@ public partial class DashboardViewModel : ObservableObject
     [RelayCommand]
     private async Task LogoutAsync()
     {
-        if (!await _session.ConfirmCloseAsync()) return;
+        if (!await _shutdown.LeaveRoomAsync()) return;
 
         _auth.Logout();
         Picker.CloseCommand.Execute(null);
