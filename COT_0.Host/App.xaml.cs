@@ -52,6 +52,7 @@ public partial class App : Application
         .AddSingleton(sp => sp.GetRequiredService<WebServerHost>().Services.GetRequiredService<IChatService>())
         .AddSingleton(sp => sp.GetRequiredService<WebServerHost>().Services.GetRequiredService<IRoomService>())
         .AddSingleton<QrService>()
+        .AddSingleton<ClockService>()
         .AddSingleton<MusicService>()
         .AddSingleton<DialogService>()
         .AddSingleton<BackgroundCatalog>()

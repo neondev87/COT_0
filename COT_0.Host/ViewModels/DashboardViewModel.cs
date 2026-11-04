@@ -1,6 +1,5 @@
 using System.Globalization;
 using System.Windows;
-using System.Windows.Threading;
 using COT_0.Core.Services;
 using COT_0.Host.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -20,6 +19,7 @@ public partial class DashboardViewModel : ObservableObject
     private readonly ScreenNavigator _screens;
     private readonly WindowNavigator _windows;
     private readonly DialogService _dialogs;
+    private readonly ClockService _clock;
     private readonly IConfiguration _config;
     private readonly CultureInfo _culture;
 
@@ -44,7 +44,7 @@ public partial class DashboardViewModel : ObservableObject
     public DashboardViewModel(
         WebServerHost webServer, ITunnelService tunnel, IRoomService room, IChatService chat, IAuthService auth,
         ScreenNavigator screens, WindowNavigator windows, DialogService dialogs,
-        BackgroundPickerViewModel picker, IConfiguration config)
+        BackgroundPickerViewModel picker, ClockService clock, IConfiguration config)
     {
         _webServer = webServer;
         _tunnel = tunnel;
@@ -59,9 +59,8 @@ public partial class DashboardViewModel : ObservableObject
         _qrSubtitle = Text("Dashboard:QrSubtitle");
         Picker = picker;
 
-        var clock = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-        clock.Tick += (_, _) => UpdateClock();
-        clock.Start();
+        _clock = clock;
+        clock.Tick += UpdateClock;
         UpdateClock();
 
         room.Changed += OnRoomStateChanged;
@@ -114,7 +113,7 @@ public partial class DashboardViewModel : ObservableObject
 
     private void UpdateClock()
     {
-        var now = DateTime.Now;
+        var now = _clock.Now;
         Time = now.ToString(_config["Ui:ClockFormat"], _culture);
         Seconds = now.ToString(_config["Ui:SecondsFormat"], _culture);
         Date = now.ToString(_config["Ui:DateFormat"], _culture).ToUpper(_culture);
