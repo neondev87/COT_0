@@ -51,6 +51,7 @@ public partial class App : Application
         // Mismas instancias que usa el hub: salen del contenedor de la app web
         .AddSingleton(sp => sp.GetRequiredService<WebServerHost>().Services.GetRequiredService<IChatService>())
         .AddSingleton(sp => sp.GetRequiredService<WebServerHost>().Services.GetRequiredService<IRoomService>())
+        .AddSingleton<RoomSession>()
         .AddSingleton<QrService>()
         .AddSingleton<ClockService>()
         .AddSingleton<MusicLibrary>()

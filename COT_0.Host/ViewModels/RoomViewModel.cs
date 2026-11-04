@@ -16,6 +16,7 @@ public partial class RoomViewModel : ObservableObject
     private readonly IRoomService _room;
     private readonly IChatService _chat;
     private readonly ITunnelService _tunnel;
+    private readonly RoomSession _session;
     private readonly QrService _qr;
     private readonly ScreenNavigator _screens;
     private readonly ClockService _clock;
@@ -39,12 +40,13 @@ public partial class RoomViewModel : ObservableObject
     [ObservableProperty]
     private int _total;
 
-    public RoomViewModel(IRoomService room, IChatService chat, ITunnelService tunnel, QrService qr,
+    public RoomViewModel(IRoomService room, IChatService chat, ITunnelService tunnel, RoomSession session, QrService qr,
         ScreenNavigator screens, ClockService clock, IConfiguration config)
     {
         _room = room;
         _chat = chat;
         _tunnel = tunnel;
+        _session = session;
         _qr = qr;
         _screens = screens;
         _clock = clock;
@@ -85,8 +87,7 @@ public partial class RoomViewModel : ObservableObject
     [RelayCommand]
     private async Task CloseRoomAsync()
     {
-        await _room.CloseAsync();
-        await _tunnel.StopAsync();
+        await _session.CloseAsync();
         _screens.ShowDashboard();
     }
 

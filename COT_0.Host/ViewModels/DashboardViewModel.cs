@@ -11,8 +11,7 @@ namespace COT_0.Host.ViewModels;
 // Dashboard: reloj, estado de la sala y menú (QR, fondo, manual, salir)
 public partial class DashboardViewModel : ObservableObject
 {
-    private readonly WebServerHost _webServer;
-    private readonly ITunnelService _tunnel;
+    private readonly RoomSession _session;
     private readonly IRoomService _room;
     private readonly IChatService _chat;
     private readonly IAuthService _auth;
@@ -22,6 +21,7 @@ public partial class DashboardViewModel : ObservableObject
     private readonly ClockService _clock;
     private readonly IConfiguration _config;
     private readonly CultureInfo _culture;
+    private bool _isOpening;
 
     [ObservableProperty]
     private string _time = string.Empty;
@@ -39,15 +39,17 @@ public partial class DashboardViewModel : ObservableObject
     private string _connectedText = string.Empty;
 
     [ObservableProperty]
-    private string _qrSubtitle;
+    private string _qrTitle = string.Empty;
+
+    [ObservableProperty]
+    private string _qrSubtitle = string.Empty;
 
     public DashboardViewModel(
-        WebServerHost webServer, ITunnelService tunnel, IRoomService room, IChatService chat, IAuthService auth,
+        RoomSession session, IRoomService room, IChatService chat, IAuthService auth,
         ScreenNavigator screens, WindowNavigator windows, DialogService dialogs,
         BackgroundPickerViewModel picker, SignatureViewModel signature, ClockService clock, IConfiguration config)
     {
-        _webServer = webServer;
-        _tunnel = tunnel;
+        _session = session;
         _room = room;
         _chat = chat;
         _auth = auth;
@@ -56,9 +58,9 @@ public partial class DashboardViewModel : ObservableObject
         _dialogs = dialogs;
         _config = config;
         _culture = CultureInfo.GetCultureInfo(config["Ui:Culture"] ?? "es-AR");
-        _qrSubtitle = Text("Dashboard:QrSubtitle");
         Picker = picker;
         Signature = signature;
+        UpdateQrCard();
 
         _clock = clock;
         clock.Tick += UpdateClock;
@@ -72,6 +74,7 @@ public partial class DashboardViewModel : ObservableObject
 
     public SignatureViewModel Signature { get; }
 
+    // Sin sala crea una; con sala activa vuelve a la existente
     [RelayCommand]
     private async Task GenerateQrAsync()
     {
@@ -80,13 +83,13 @@ public partial class DashboardViewModel : ObservableObject
             _screens.ShowRoom();
             return;
         }
+        if (_isOpening) return;
 
-        QrSubtitle = Text("Dashboard:QrBusy");
+        _isOpening = true;
+        UpdateQrCard();
         try
         {
-            await _webServer.StartAsync();
-            await _tunnel.StartAsync(WebServerHost.Url);
-            _room.Open();
+            await _session.OpenAsync();
             _screens.ShowRoom();
         }
         catch (Exception ex)
@@ -95,7 +98,8 @@ public partial class DashboardViewModel : ObservableObject
         }
         finally
         {
-            QrSubtitle = Text("Dashboard:QrSubtitle");
+            _isOpening = false;
+            UpdateQrCard();
         }
     }
 
@@ -106,12 +110,23 @@ public partial class DashboardViewModel : ObservableObject
     private void ShowManual() => _dialogs.ShowManual();
 
     [RelayCommand]
-    private void Logout()
+    private async Task LogoutAsync()
     {
+        if (!await _session.ConfirmCloseAsync()) return;
+
         _auth.Logout();
         Picker.CloseCommand.Execute(null);
         _screens.ShowDashboard();
         _windows.ShowLogin();
+    }
+
+    partial void OnIsRoomActiveChanged(bool value) => UpdateQrCard();
+
+    // Tarjeta 01: GENERAR QR o SALA según haya sala activa
+    private void UpdateQrCard()
+    {
+        QrTitle = Text(IsRoomActive ? "Dashboard:RoomTitle" : "Dashboard:QrTitle");
+        QrSubtitle = Text(_isOpening ? "Dashboard:QrBusy" : IsRoomActive ? "Dashboard:RoomSubtitle" : "Dashboard:QrSubtitle");
     }
 
     private void UpdateClock()
