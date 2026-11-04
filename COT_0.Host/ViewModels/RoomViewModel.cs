@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace COT_0.Host.ViewModels;
 
-// Sala activa: QR, URL, contador y lista de conectados
+// Sala activa: QR, URL, contador, lista de conectados y emotes
 public partial class RoomViewModel : ObservableObject
 {
     private readonly IRoomService _room;
@@ -41,8 +41,9 @@ public partial class RoomViewModel : ObservableObject
     private int _total;
 
     public RoomViewModel(IRoomService room, IChatService chat, ITunnelService tunnel, RoomSession session, QrService qr,
-        ScreenNavigator screens, ClockService clock, IConfiguration config)
+        ScreenNavigator screens, ClockService clock, IConfiguration config, EmotesViewModel emotes)
     {
+        Emotes = emotes;
         _room = room;
         _chat = chat;
         _tunnel = tunnel;
@@ -59,6 +60,8 @@ public partial class RoomViewModel : ObservableObject
     }
 
     public ObservableCollection<UserRowViewModel> Users { get; } = [];
+
+    public EmotesViewModel Emotes { get; }
 
     [RelayCommand]
     private void Back() => _screens.ShowDashboard();

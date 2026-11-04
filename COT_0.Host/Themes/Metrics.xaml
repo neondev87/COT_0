@@ -47,6 +47,9 @@
     <Thickness x:Key="SlantedButtonPadding">44,0</Thickness>    <!-- corte de 16px + 28px de aire -->
     <sys:Double x:Key="UserRowHeight">62</sys:Double>
     <sys:Double x:Key="AvatarSize">36</sys:Double>
+    <sys:Double x:Key="EmotePanelWidth">300</sys:Double>
+    <sys:Double x:Key="EmoteThumbSize">28</sys:Double>
+    <sys:Double x:Key="EmoteRowHeight">52</sys:Double>
     <sys:Double x:Key="PulseDotSize">9</sys:Double>
     <sys:Double x:Key="PulseRingScale">2.33</sys:Double>       <!-- 9px + 6px por lado -->
 
