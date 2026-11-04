@@ -68,6 +68,7 @@
         </ContentControl>
 
         <controls:BackgroundPicker DataContext="{Binding Picker}" Panel.ZIndex="4"/>
+        <controls:SongPicker DataContext="{Binding Songs}" Panel.ZIndex="5"/>
         <controls:CaptionBar Title="{DynamicResource Text.App.Name}"/>
     </Grid>
 </controls:ChromeWindow>

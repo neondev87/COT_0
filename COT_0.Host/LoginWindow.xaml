@@ -60,6 +60,8 @@
             <Rectangle Style="{StaticResource Diamond}"/>
             <controls:SpacedText Text="{DynamicResource Text.App.Version}" Style="{StaticResource FooterText}" Foreground="{StaticResource Light55Brush}"/>
         </StackPanel>
+
+        <controls:SongPicker DataContext="{Binding Signature.Songs}"/>
     </Grid>
 
     <controls:ChromeWindow.Triggers>

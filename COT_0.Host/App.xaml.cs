@@ -56,6 +56,8 @@ public partial class App : Application
         .AddSingleton<ClockService>()
         .AddSingleton<MusicLibrary>()
         .AddSingleton<MusicService>()
+        .AddSingleton<SongCatalog>()
+        .AddSingleton<SongPickerViewModel>()
         .AddSingleton<DialogService>()
         .AddSingleton<BackgroundCatalog>()
         .AddSingleton<WindowNavigator>()

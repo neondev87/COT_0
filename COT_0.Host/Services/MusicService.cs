@@ -14,7 +14,6 @@ public class MusicService : IDisposable
     private readonly MusicLibrary _library;
     private readonly string? _defaultFile;
     private IReadOnlyList<string> _tracks = [];
-    private string? _current;
     private int _failures;
 
     public MusicService(MusicLibrary library, IConfiguration configuration)
@@ -28,11 +27,17 @@ public class MusicService : IDisposable
         _player.MediaFailed += (_, _) =>
         {
             if (++_failures < _tracks.Count) PlayNext();
-            else _current = null;
+            else SetCurrent(null);
         };
     }
 
+    // Cambió la canción que suena (o dejó de sonar)
+    public event Action? TrackChanged;
+
     public bool IsAvailable => _tracks.Count > 0;
+
+    // Ruta de la canción que suena; null si no hay ninguna
+    public string? Current { get; private set; }
 
     // 0 a 100
     public double Volume
@@ -41,13 +46,27 @@ public class MusicService : IDisposable
         set => _player.Volume = Math.Clamp(value, 0, MaxVolume) / MaxVolume;
     }
 
+    public bool IsMuted
+    {
+        get => _player.IsMuted;
+        set => _player.IsMuted = value;
+    }
+
     // Relee la carpeta y, si no estaba sonando nada, empieza
     public void Start()
     {
         _library.EnsureFolder();
         _tracks = _library.GetTracks();
-        if (_current is not null || _tracks.Count == 0) return;
+        if (Current is not null || _tracks.Count == 0) return;
         Play(_tracks.FirstOrDefault(IsDefault) ?? _tracks[0]);
+    }
+
+    public void Play(string track)
+    {
+        _tracks = _library.GetTracks();
+        SetCurrent(track);
+        _player.Open(new Uri(Path.GetFullPath(track)));
+        _player.Play();
     }
 
     public void Dispose()
@@ -59,19 +78,18 @@ public class MusicService : IDisposable
     private void PlayNext()
     {
         _tracks = _library.GetTracks();
-        if (_tracks.Count == 0 || _current is null)
+        if (_tracks.Count == 0 || Current is null)
         {
-            _current = null;
+            SetCurrent(null);
             return;
         }
-        Play(MusicLibrary.NextAfter(_tracks, _current));
+        Play(MusicLibrary.NextAfter(_tracks, Current));
     }
 
-    private void Play(string track)
+    private void SetCurrent(string? track)
     {
-        _current = track;
-        _player.Open(new Uri(Path.GetFullPath(track)));
-        _player.Play();
+        Current = track;
+        TrackChanged?.Invoke();
     }
 
     private bool IsDefault(string track) =>

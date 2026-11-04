@@ -3,32 +3,30 @@
                     xmlns:controls="clr-namespace:COT_0.Host.Controls">
 
     <!-- Formas inclinadas de la sala y del selector -->
-    <PathGeometry x:Key="CloseButtonShape" Figures="M16,0 L260,0 L244,52 L0,52 Z"/>
     <PathGeometry x:Key="QrPanelShape" Figures="M28,0 L420,0 L420,392 L392,420 L0,420 L0,28 Z"/>
     <PathGeometry x:Key="ThumbShape" Figures="M94,0 L300,0 L206,340 L0,340 Z"/>
     <PathGeometry x:Key="ThumbInnerShape" Figures="M94,0 L296,0 L202,336 L0,336 Z"/>
 
-    <!-- CERRAR SALA: acento al 18% con borde interior; con hover se llena, brilla y se corre 6px -->
+    <!-- CERRAR SALA: acento al 18% con borde interior; con hover se llena, brilla y se corre 6px.
+         Mide según su contenido (mínimo CloseButtonWidth); el padding deja libre el corte inclinado -->
     <Style x:Key="CloseRoomButton" TargetType="Button">
         <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Padding" Value="{StaticResource SlantedButtonPadding}"/>
         <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Grid x:Name="Root" Width="{StaticResource CloseButtonWidth}" Height="{StaticResource RoomFieldHeight}" Background="Transparent">
+                    <Grid x:Name="Root" MinWidth="{StaticResource CloseButtonWidth}" Height="{StaticResource RoomFieldHeight}" Background="Transparent">
                         <Grid.RenderTransform>
                             <TranslateTransform/>
                         </Grid.RenderTransform>
                         <Grid.Effect>
                             <DropShadowEffect Color="{StaticResource AccentGlowColor}" BlurRadius="18" ShadowDepth="0" Opacity="0"/>
                         </Grid.Effect>
-                        <Grid Clip="{StaticResource CloseButtonShape}">
-                            <Border Background="{StaticResource AccentSoftBrush}"/>
-                            <Border x:Name="Hover" Background="{StaticResource AccentBrush}" Opacity="0"/>
-                            <!-- Trazo de 2px recortado por la forma = 1px interior -->
-                            <Path Data="{StaticResource CloseButtonShape}" Stroke="{StaticResource AccentBrush}" StrokeThickness="2"/>
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Grid>
+                        <controls:SlantedShape Slant="{StaticResource SlantedButtonCut}" Fill="{StaticResource AccentSoftBrush}"/>
+                        <controls:SlantedShape x:Name="Hover" Slant="{StaticResource SlantedButtonCut}" Fill="{StaticResource AccentBrush}" Opacity="0"/>
+                        <controls:SlantedShape Slant="{StaticResource SlantedButtonCut}" Stroke="{StaticResource AccentBrush}" StrokeThickness="1"/>
+                        <ContentPresenter Margin="{TemplateBinding Padding}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">

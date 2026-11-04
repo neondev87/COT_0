@@ -27,6 +27,13 @@
         </EllipseGeometry>
     </GeometryGroup>
 
+    <!-- Nota tachada (música silenciada) y lista de línea fina (selector de canciones) -->
+    <GeometryGroup x:Key="IconNoteMuted" FillRule="Nonzero">
+        <StaticResource ResourceKey="IconNote"/>
+        <LineGeometry StartPoint="4,4" EndPoint="20,20"/>
+    </GeometryGroup>
+    <Geometry x:Key="IconList">M9,6 H20 M9,12 H20 M9,18 H20 M4.5,6 H5 M4.5,12 H5 M4.5,18 H5</Geometry>
+
     <!-- Path de icono: trazo con el color del texto -->
     <Style x:Key="IconPath" TargetType="Path">
         <Setter Property="Width" Value="24"/>
