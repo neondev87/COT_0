@@ -44,7 +44,7 @@ public partial class DashboardViewModel : ObservableObject
     public DashboardViewModel(
         WebServerHost webServer, ITunnelService tunnel, IRoomService room, IChatService chat, IAuthService auth,
         ScreenNavigator screens, WindowNavigator windows, DialogService dialogs,
-        BackgroundPickerViewModel picker, ClockService clock, IConfiguration config)
+        BackgroundPickerViewModel picker, SignatureViewModel signature, ClockService clock, IConfiguration config)
     {
         _webServer = webServer;
         _tunnel = tunnel;
@@ -58,6 +58,7 @@ public partial class DashboardViewModel : ObservableObject
         _culture = CultureInfo.GetCultureInfo(config["Ui:Culture"] ?? "es-AR");
         _qrSubtitle = Text("Dashboard:QrSubtitle");
         Picker = picker;
+        Signature = signature;
 
         _clock = clock;
         clock.Tick += UpdateClock;
@@ -68,6 +69,8 @@ public partial class DashboardViewModel : ObservableObject
     }
 
     public BackgroundPickerViewModel Picker { get; }
+
+    public SignatureViewModel Signature { get; }
 
     [RelayCommand]
     private async Task GenerateQrAsync()

@@ -72,10 +72,14 @@
             </StackPanel>
         </Button>
 
-        <Grid x:Name="VolumeHost" Margin="69,-35,0,-7" Height="{StaticResource MinHitSize}" HorizontalAlignment="Left" Background="Transparent"
-              Visibility="{Binding IsMusicAvailable, Converter={StaticResource BoolToVisibility}}">
-            <StackPanel Orientation="Horizontal">
-                <Viewbox Width="20" Height="20" Margin="12,5,5,5">
+        <!-- Nota siempre visible. Con música: barra de volumen con hover. Sin música: clic → "SUBIR MÚSICA" -->
+        <Grid x:Name="VolumeHost" Margin="69,-35,0,-7" Height="{StaticResource MinHitSize}" HorizontalAlignment="Left" Background="Transparent">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Style="{StaticResource PlainButton}" Command="{Binding ToggleUploadCommand}" Padding="12">
+                <Viewbox Width="20" Height="20">
                     <Path Data="{StaticResource IconNote}" StrokeThickness="1.2" Width="24" Height="24"
                           StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round">
                         <Path.Style>
@@ -90,18 +94,29 @@
                         </Path.Style>
                     </Path>
                 </Viewbox>
-                <StackPanel Orientation="Horizontal" Margin="12,0,0,0" RenderTransformOrigin="0,0.5" Style="{StaticResource VolumeBarStyle}">
-                    <StackPanel.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform ScaleX="0.85"/>
-                            <TranslateTransform X="-10"/>
-                        </TransformGroup>
-                    </StackPanel.RenderTransform>
-                    <Slider Style="{StaticResource VolumeSlider}" Value="{Binding Volume}" VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding Volume, StringFormat={}{0:0}}" Margin="10,0,0,0" MinWidth="24" VerticalAlignment="Center"
-                               FontFamily="{StaticResource FontRedaction}" FontSize="13" Foreground="{StaticResource Light70Brush}"/>
-                </StackPanel>
+            </Button>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="5,0,0,0" RenderTransformOrigin="0,0.5">
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel" BasedOn="{StaticResource VolumeBarStyle}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsMusicAvailable}" Value="False">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <StackPanel.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="0.85"/>
+                        <TranslateTransform X="-10"/>
+                    </TransformGroup>
+                </StackPanel.RenderTransform>
+                <Slider Style="{StaticResource VolumeSlider}" Value="{Binding Volume}" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding Volume, StringFormat={}{0:0}}" Margin="10,0,0,0" MinWidth="24" VerticalAlignment="Center"
+                           FontFamily="{StaticResource FontRedaction}" FontSize="13" Foreground="{StaticResource Light70Brush}"/>
             </StackPanel>
+            <Button Grid.Column="1" Margin="5,0,0,0" HorizontalAlignment="Left" Style="{StaticResource MusicUploadButton}"
+                    Content="{DynamicResource Text.Music.Upload}" Command="{Binding UploadCommand}"/>
         </Grid>
     </StackPanel>
 

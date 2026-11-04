@@ -70,5 +70,9 @@
             <Rectangle Style="{StaticResource Diamond}"/>
             <controls:SpacedText Text="{DynamicResource Text.App.Version}" Style="{StaticResource FooterText}" Foreground="{StaticResource Text55Brush}"/>
         </StackPanel>
+
+        <!-- Firma con música, sobre el pie -->
+        <controls:SignatureBadge DataContext="{Binding Signature}" Margin="0,0,48,76"
+                                 HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
     </Grid>
 </UserControl>

@@ -53,6 +53,8 @@ public partial class App : Application
         .AddSingleton(sp => sp.GetRequiredService<WebServerHost>().Services.GetRequiredService<IRoomService>())
         .AddSingleton<QrService>()
         .AddSingleton<ClockService>()
+        .AddSingleton<MusicLibrary>()
+        .AddSingleton<VolumeStore>()
         .AddSingleton<MusicService>()
         .AddSingleton<DialogService>()
         .AddSingleton<BackgroundCatalog>()
@@ -62,7 +64,8 @@ public partial class App : Application
         .AddSingleton<DashboardViewModel>()
         .AddSingleton<RoomViewModel>()
         .AddSingleton<MainViewModel>()
-        .AddTransient<SignatureViewModel>()
+        // Compartido por login y dashboard: mismo estado de música
+        .AddSingleton<SignatureViewModel>()
         .AddTransient<LoginViewModel>()
         .AddTransient<LoginWindow>()
         .AddTransient<MainWindow>()
