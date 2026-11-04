@@ -1,11 +1,11 @@
-using System.ComponentModel;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace COT_0.Host.Services;
 
-// Cambia entre la ventana de login y la principal; si el usuario cierra una, se cierra la app
-public class WindowNavigator(IServiceProvider services, RoomSession session)
+// Cambia entre la ventana de login y la principal; si el usuario cierra una, se cierra la app.
+// Todo cierre del usuario (✕, Alt+F4, barra de tareas) pasa por el coordinador de cierre
+public class WindowNavigator(IServiceProvider services, IShutdownCoordinator shutdown)
 {
     private Window? _current;
 
@@ -30,13 +30,9 @@ public class WindowNavigator(IServiceProvider services, RoomSession session)
         previous.Close();
     }
 
-    // ✕ o Alt+F4 con sala activa: se cancela, se confirma y se cierra la sala antes de salir
-    private async void OnWindowClosing(object? sender, CancelEventArgs e)
+    private void OnWindowClosing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
-        if (!session.IsActive || sender is not Window window) return;
-
-        e.Cancel = true;
-        if (await session.ConfirmCloseAsync()) window.Close();
+        if (sender is Window window) shutdown.OnWindowClosing(window, e);
     }
 
     private void OnWindowClosed(object? sender, EventArgs e) => Application.Current.Shutdown();

@@ -69,6 +69,14 @@ public class MusicService : IDisposable
         _player.Play();
     }
 
+    // Al salir: corta el audio y suelta el archivo
+    public void Stop()
+    {
+        _player.Stop();
+        _player.Close();
+        SetCurrent(null);
+    }
+
     public void Dispose()
     {
         _player.Close();

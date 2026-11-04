@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace COT_0.Host.Services;
 
-// Ciclo de vida de la sala: servidor + túnel + sala, y confirmación al salir con sala activa
+// Ciclo de vida de la sala: servidor + túnel + sala, y la pregunta al salir con sala activa
 public class RoomSession(WebServerHost webServer, ITunnelService tunnel, IRoomService room,
     DialogService dialogs, IConfiguration configuration)
 {
@@ -18,22 +18,21 @@ public class RoomSession(WebServerHost webServer, ITunnelService tunnel, IRoomSe
 
     public async Task CloseAsync()
     {
-        if (room.IsOpen) await room.CloseAsync();
-        await tunnel.StopAsync();
+        await CloseRoomAsync();
+        await StopTunnelAsync();
     }
 
-    // true si se puede salir: no hay sala activa, o el host confirmó y ya se cerró
-    public async Task<bool> ConfirmCloseAsync()
+    // Saca a los invitados y vacía el chat
+    public async Task CloseRoomAsync()
     {
-        if (!IsActive) return true;
-
-        var confirmed = dialogs.Confirm(
-            configuration["Texts:ExitDialog:Message"] ?? string.Empty,
-            configuration["Texts:ExitDialog:Confirm"] ?? string.Empty,
-            configuration["Texts:ExitDialog:Cancel"] ?? string.Empty);
-        if (!confirmed) return false;
-
-        await CloseAsync();
-        return true;
+        if (room.IsOpen) await room.CloseAsync();
     }
+
+    public Task StopTunnelAsync() => tunnel.StopAsync();
+
+    // "Hay una sala activa. ¿Cerrar la sala y salir?"; true si el host confirmó
+    public bool ConfirmLeave() => dialogs.Confirm(
+        configuration["Texts:ExitDialog:Message"] ?? string.Empty,
+        configuration["Texts:ExitDialog:Confirm"] ?? string.Empty,
+        configuration["Texts:ExitDialog:Cancel"] ?? string.Empty);
 }

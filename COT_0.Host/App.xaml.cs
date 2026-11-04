@@ -4,6 +4,7 @@ using COT_0.Host.Services;
 using COT_0.Host.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace COT_0.Host;
 
@@ -26,15 +27,11 @@ public partial class App : Application
         _services.GetRequiredService<WindowNavigator>().ShowLogin();
     }
 
-    protected override async void OnExit(ExitEventArgs e)
+    // El cierre ordenado ya lo hizo ShutdownCoordinator; esto es la red de seguridad:
+    // Dispose mata cloudflared si sigue vivo y Kestrel termina con el proceso
+    protected override void OnExit(ExitEventArgs e)
     {
-        if (_services is not null)
-        {
-            var webServer = _services.GetRequiredService<WebServerHost>();
-            // Primero libera el túnel (mata cloudflared si sigue vivo), es sincrónico
-            _services.Dispose();
-            await webServer.StopAsync();
-        }
+        _services?.Dispose();
         base.OnExit(e);
     }
 
@@ -45,6 +42,7 @@ public partial class App : Application
 
     private static ServiceProvider BuildServices(IConfiguration configuration) => new ServiceCollection()
         .AddSingleton(configuration)
+        .AddLogging(logging => logging.AddConfiguration(configuration.GetSection("Logging")).AddDebug())
         .AddSingleton<IAuthService, ConfigAuthService>()
         .AddSingleton<ITunnelService, CloudflareTunnelService>()
         .AddSingleton<WebServerHost>()
@@ -60,6 +58,7 @@ public partial class App : Application
         .AddSingleton<SongPickerViewModel>()
         .AddSingleton<DialogService>()
         .AddSingleton<BackgroundCatalog>()
+        .AddSingleton<IShutdownCoordinator, ShutdownCoordinator>()
         .AddSingleton<WindowNavigator>()
         .AddSingleton<ScreenNavigator>()
         .AddSingleton<BackgroundPickerViewModel>()
