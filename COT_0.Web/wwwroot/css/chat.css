@@ -128,3 +128,54 @@
         backdrop-filter: blur(10px);
     }
 }
+
+/* Botón de perfil (arriba a la derecha): avatar con brillo diagonal */
+.chat-me {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .15s ease;
+}
+.chat-me:hover, .chat-me:focus-visible { border-color: var(--accent); outline: none; }
+.chat-me:active { transform: scale(.94); }
+.chat-me .avatar-initial { font-size: 17px; color: var(--fg); }
+
+/* Editar perfil: la pantalla de /join encima del chat */
+.profile-edit {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    overflow-x: hidden;
+    overflow-y: auto;
+    animation: cotFadeIn .25s ease both;
+}
+.cot-back {
+    position: fixed;
+    top: calc(14px + env(safe-area-inset-top));
+    left: 12px;
+    z-index: 12;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid rgba(230, 230, 230, .25);
+    border-radius: 2px;
+    color: rgba(230, 230, 230, .8);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .15s ease;
+}
+.cot-back:hover, .cot-back:focus-visible { border-color: var(--accent); color: #fff; outline: none; }
+.cot-back:hover .cot-icon { transform: translateX(-3px); }
+.cot-back .cot-icon { transition: transform .2s ease; }
+.cot-back:active { transform: scale(.94); }
+
+@keyframes cotFadeIn { 0% { opacity: 0 } 100% { opacity: 1 } }
+
+@media (min-width: 601px) {
+    .cot-back { top: 24px; left: 24px; }
+}

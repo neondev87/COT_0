@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 namespace COT_0.Web.Services;
 
 // Estado del chat en memoria (Singleton)
-public class InMemoryChatService(IOptions<ChatOptions> options) : IChatService
+public class InMemoryChatService(IOptions<ChatOptions> options) : IChatService, IUserEditor
 {
     private readonly ConcurrentDictionary<string, User> _users = new();
     private readonly List<ChatMessage> _messages = [];
@@ -21,6 +21,21 @@ public class InMemoryChatService(IOptions<ChatOptions> options) : IChatService
         _users[user.Id] = user;
         UsersChanged?.Invoke();
         return Task.FromResult(user);
+    }
+
+    public Task<User?> UpdateUserAsync(string userId, string name, string? photoUrl, string? facultyFlag)
+    {
+        if (!_users.TryGetValue(userId, out var user)) return Task.FromResult<User?>(null);
+
+        lock (_lock)
+        {
+            user.Name = name;
+            user.PhotoUrl = photoUrl;
+            user.FacultyFlag = facultyFlag;
+        }
+
+        UsersChanged?.Invoke();
+        return Task.FromResult<User?>(user);
     }
 
     public Task RemoveUserAsync(string userId)

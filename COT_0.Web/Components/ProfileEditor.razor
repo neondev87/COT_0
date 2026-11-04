@@ -1,0 +1,26 @@
+@inject IProfileService Profiles
+
+@* "Editar perfil" desde el chat: la misma pantalla de /join, ya llena con el perfil actual *@
+<div class="cot-screen cot-center join-page profile-edit" role="dialog" aria-label="Edita tu perfil">
+    <Backdrop />
+    <ProfileForm Form="form" Subtitle="EDITA TU PERFIL" SubmitLabel="GUARDAR CAMBIOS" Error="@error"
+                 OnSubmit="SaveAsync" OnCancel="OnClose" />
+</div>
+
+@code {
+    [Parameter, EditorRequired] public User User { get; set; } = default!;
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private JoinForm form = new();
+    private string? error;
+
+    // Se arma una sola vez: si el invitado cancela, el perfil queda igual
+    protected override void OnInitialized() => form = JoinForm.From(User);
+
+    private async Task SaveAsync()
+    {
+        var result = await Profiles.UpdateUserAsync(User.Id, form);
+        error = result.Error;
+        if (result.Value is not null) await OnClose.InvokeAsync();
+    }
+}

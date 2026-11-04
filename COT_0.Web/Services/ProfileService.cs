@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 namespace COT_0.Web.Services;
 
 public class ProfileService(
-    IChatService chat, IRoomService room, IAvatarStore avatars, IGuestStore guests, IOptions<ChatOptions> options)
+    IChatService chat, IUserEditor editor, IRoomService room, IAvatarStore avatars, IGuestStore guests, IOptions<ChatOptions> options)
     : IProfileService
 {
     private readonly ChatOptions _options = options.Value;
@@ -39,13 +39,25 @@ public class ProfileService(
             return OperationResult<User>.Fail("La sala está cerrada.");
 
         var name = form.Name.Trim();
-        if (name.Length == 0)
-            return OperationResult<User>.Fail("Elegí un nombre.");
-        if (name.Length > _options.MaxNameLength)
-            return OperationResult<User>.Fail($"El nombre puede tener hasta {_options.MaxNameLength} caracteres.");
+        if (ValidateName(name) is { } invalid) return OperationResult<User>.Fail(invalid);
 
         var user = await chat.AddUserAsync(new User { Name = name, PhotoUrl = form.PhotoUrl, FacultyFlag = form.FacultyFlag });
-        await guests.SaveAsync(new StoredGuest(room.Code!, user.Id, user.Name, user.PhotoUrl, user.FacultyFlag));
+        await RememberAsync(user);
+        return OperationResult<User>.Ok(user);
+    }
+
+    public async Task<OperationResult<User>> UpdateUserAsync(string userId, JoinForm form)
+    {
+        if (!room.IsOpen)
+            return OperationResult<User>.Fail("La sala está cerrada.");
+
+        var name = form.Name.Trim();
+        if (ValidateName(name) is { } invalid) return OperationResult<User>.Fail(invalid);
+
+        var user = await editor.UpdateUserAsync(userId, name, form.PhotoUrl, form.FacultyFlag);
+        if (user is null) return OperationResult<User>.Fail("Ya no estás en la sala.");
+
+        await RememberAsync(user);
         return OperationResult<User>.Ok(user);
     }
 
@@ -66,4 +78,14 @@ public class ProfileService(
         var form = new JoinForm { Name = saved.Name, PhotoUrl = saved.PhotoUrl, FacultyFlag = saved.FacultyFlag };
         return (await CreateUserAsync(form)).Value;
     }
+
+    private string? ValidateName(string name)
+    {
+        if (name.Length == 0) return "Elegí un nombre.";
+        if (name.Length > _options.MaxNameLength) return $"El nombre puede tener hasta {_options.MaxNameLength} caracteres.";
+        return null;
+    }
+
+    private Task RememberAsync(User user) =>
+        guests.SaveAsync(new StoredGuest(room.Code!, user.Id, user.Name, user.PhotoUrl, user.FacultyFlag));
 }

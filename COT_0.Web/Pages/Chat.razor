@@ -18,6 +18,19 @@
         <button type="button" class="chat-users-btn" @onclick="OpenUsers" aria-haspopup="dialog" aria-label="Conectados">
             <Icon Name="users" /> @Session.Users.Count
         </button>
+        @if (Session.CurrentUser is { } me)
+        {
+            <button type="button" class="chat-me cot-av" @onclick="OpenProfile" aria-haspopup="dialog" aria-label="Editar tu perfil">
+                @if (string.IsNullOrEmpty(me.PhotoUrl))
+                {
+                    <span class="cot-av-empty avatar-initial">@me.Name.Trim()[..1].ToUpperInvariant()</span>
+                }
+                else
+                {
+                    <img class="cot-av-img" src="@me.PhotoUrl" alt="" />
+                }
+            </button>
+        }
     </header>
 
     <div class="chat-body">
@@ -43,6 +56,11 @@
                placeholder="Escribí un mensaje…" autocomplete="off" aria-label="Mensaje" />
         <button type="submit" class="cot-btn chat-send" aria-label="Enviar"><Icon Name="arrow" Size="20" Class="arr" /></button>
     </form>
+
+    @if (profileOpen && Session.CurrentUser is { } user)
+    {
+        <ProfileEditor User="user" OnClose="CloseProfile" />
+    }
 </div>
 
 @code {
@@ -51,6 +69,7 @@
 
     private string draft = string.Empty;
     private bool usersOpen;
+    private bool profileOpen;
 
     protected override async Task OnInitializedAsync()
     {
@@ -70,6 +89,10 @@
     private void OpenUsers() => usersOpen = true;
 
     private void CloseUsers() => usersOpen = false;
+
+    private void OpenProfile() => profileOpen = true;
+
+    private void CloseProfile() => profileOpen = false;
 
     private void OnSessionChanged() => _ = InvokeAsync(StateHasChanged);
 

@@ -3,8 +3,6 @@
 @implements IDisposable
 @inject IProfileService Profiles
 @inject IRoomService Room
-@inject IFlagService Flags
-@inject IOptions<ChatOptions> Options
 @inject NavigationManager Nav
 
 <PageTitle>COT_0 · Únete a la sala</PageTitle>
@@ -13,56 +11,29 @@
 <div class="cot-screen cot-center join-page">
     <Backdrop />
 
-    <EditForm Model="form" OnValidSubmit="JoinAsync" class="cot-card">
-        <DataAnnotationsValidator />
-        <CotLogo Subtitle="ÚNETE A LA SALA" Class="cot-rise cot-card-head" />
-
-        @if (!Room.IsOpen)
-        {
-            <p class="cot-notice cot-rise cot-d1">La sala está cerrada. Esperá a que el anfitrión la abra y volvé a escanear el QR.</p>
-        }
-        else if (resuming)
-        {
-            <p class="cot-room cot-rise cot-d1">ENTRANDO A LA SALA #@Room.Code…</p>
-        }
-        else
-        {
-            @if (notice is not null)
+    <ProfileForm Form="form" Subtitle="ÚNETE A LA SALA" SubmitLabel="ENTRAR AL CHAT" ShowFields="Room.IsOpen && !resuming"
+                 Error="@error" OnSubmit="JoinAsync">
+        <Header>
+            @if (!Room.IsOpen)
+            {
+                <p class="cot-notice cot-rise cot-d1">La sala está cerrada. Esperá a que el anfitrión la abra y volvé a escanear el QR.</p>
+            }
+            else if (resuming)
+            {
+                <p class="cot-room cot-rise cot-d1">ENTRANDO A LA SALA #@Room.Code…</p>
+            }
+            else if (notice is not null)
             {
                 <p class="cot-notice cot-rise">@notice</p>
             }
-
-            <div class="cot-group cot-rise cot-d1">
-                <label for="cot-name" class="cot-label">NOMBRE DE USUARIO</label>
-                <InputText id="cot-name" class="cot-input" @bind-Value="form.Name" placeholder="cómo te verán en el chat"
-                           maxlength="@Options.Value.MaxNameLength" autocomplete="nickname" />
-                <ValidationMessage For="() => form.Name" />
-            </div>
-
-            <div class="cot-group cot-rise cot-d2">
-                <span class="cot-label">FOTO DE PERFIL</span>
-                <PhotoUpload PhotoUrl="@form.PhotoUrl" OnChange="UploadPhotoAsync" />
-            </div>
-
-            <div class="cot-group cot-group-last cot-rise cot-d3">
-                <span class="cot-label" id="cot-fac-label">FACULTAD</span>
-                <FacultyField Selected="SelectedFlag" LabelId="cot-fac-label" OnOpen="() => sheetOpen = true" />
-            </div>
-
-            @if (error is not null)
+        </Header>
+        <Footer>
+            @if (Room.IsOpen && !resuming)
             {
-                <p class="cot-error">@error</p>
+                <p class="cot-room">SALA #@Room.Code</p>
             }
-
-            <div class="cot-cta-bar cot-rise cot-d4">
-                <button type="submit" class="cot-btn">ENTRAR AL CHAT <Icon Name="arrow" Size="20" Class="arr" /></button>
-            </div>
-
-            <p class="cot-room">SALA #@Room.Code</p>
-        }
-    </EditForm>
-
-    <FacultySheet Flags="flags" Open="sheetOpen" Selected="@form.FacultyFlag" OnPick="PickFaculty" OnClose="() => sheetOpen = false" />
+        </Footer>
+    </ProfileForm>
 </div>
 
 @code {
@@ -72,18 +43,13 @@
     private readonly JoinForm form = new();
     private string? error;
     private string? notice;
-    private IReadOnlyList<FlagOption> flags = [];
-    private bool sheetOpen;
 
     // Mientras se busca el perfil guardado no se muestra el formulario
     private bool resuming = true;
 
-    private FlagOption? SelectedFlag => flags.FirstOrDefault(f => f.Key == form.FacultyFlag);
-
     protected override void OnInitialized()
     {
         notice = LeaveReason.ToNotice(Reason);
-        flags = Flags.GetFlags();
         Room.Changed += OnRoomChanged;
     }
 
@@ -101,20 +67,6 @@
 
         resuming = false;
         StateHasChanged();
-    }
-
-    // Al elegir, el panel se cierra solo
-    private void PickFaculty(string key)
-    {
-        form.FacultyFlag = key;
-        sheetOpen = false;
-    }
-
-    private async Task UploadPhotoAsync(InputFileChangeEventArgs e)
-    {
-        var result = await Profiles.SavePhotoAsync(e.File);
-        form.PhotoUrl = result.Value ?? form.PhotoUrl;
-        error = result.Error;
     }
 
     private async Task JoinAsync()

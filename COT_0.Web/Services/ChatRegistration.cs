@@ -13,7 +13,10 @@ public static class ChatRegistration
         services.Configure<ChatOptions>(config.GetSection(ChatOptions.Section));
         services.PostConfigure<ChatOptions>(o => o.ServerUrl = serverUrl);
 
-        services.AddSingleton<IChatService, InMemoryChatService>();
+        // Misma instancia para el chat y para editar perfiles
+        services.AddSingleton<InMemoryChatService>();
+        services.AddSingleton<IChatService>(sp => sp.GetRequiredService<InMemoryChatService>());
+        services.AddSingleton<IUserEditor>(sp => sp.GetRequiredService<InMemoryChatService>());
         services.AddSingleton<IRoomService, RoomService>();
         services.AddSingleton<IAvatarStore, InMemoryAvatarStore>();
         services.AddSingleton<IEmoteService, EmoteService>();
