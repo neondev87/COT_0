@@ -29,6 +29,8 @@ public static class ChatRegistration
         services.AddSingleton<IVoiceStore, InMemoryVoiceStore>();
         services.AddSingleton<IAudioTranscoder, OpusWavTranscoder>();
         services.AddSingleton<IVoiceService, VoiceService>();
+        services.AddSingleton<IImageStore, InMemoryImageStore>();
+        services.AddSingleton<IImageService, ImageService>();
         services.AddSingleton<IRoomService, RoomService>();
         services.AddSingleton<IAvatarStore, InMemoryAvatarStore>();
         services.AddSingleton<IEmoteService, EmoteService>();
@@ -38,6 +40,7 @@ public static class ChatRegistration
         services.AddScoped<IChatSession, ChatSession>();
         services.AddScoped<IChatBrowser, ChatBrowser>();
         services.AddScoped<IVoiceRecorder, VoiceRecorder>();
+        services.AddScoped<IImageUploader, ImageUploader>();
         services.AddHostedService<ChatBroadcaster>();
         return services;
     }
@@ -54,6 +57,20 @@ public static class ChatRegistration
         var voice = app.Services.GetRequiredService<IOptions<VoiceOptions>>().Value;
         app.MapGet($"{voice.Path.TrimEnd('/')}/{{id}}", (string id, IVoiceStore store) =>
             store.Get(id) is { } clip ? Results.File(clip.Bytes, clip.ContentType, enableRangeProcessing: true) : Results.NotFound());
+
+        app.MapGet($"{options.ImagesPath.TrimEnd('/')}/{{id}}", ServeImage);
         return app;
+    }
+
+    // Tipo según los magic bytes, sin que el navegador adivine, y cache larga (el id nunca cambia de contenido)
+    private static IResult ServeImage(string id, HttpContext context, IImageStore store, IOptions<ChatOptions> options)
+    {
+        if (store.Get(id) is not { } image) return Results.NotFound();
+
+        var headers = context.Response.Headers;
+        headers.XContentTypeOptions = "nosniff";
+        headers.CacheControl = $"private, max-age={options.Value.ImageCacheSeconds}, immutable";
+        headers.ContentSecurityPolicy = "default-src 'none'; sandbox";
+        return Results.File(image.Bytes, image.ContentType);
     }
 }

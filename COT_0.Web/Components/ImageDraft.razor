@@ -1,0 +1,33 @@
+@* Vista previa de la imagen elegida, antes de mandarla *@
+<div class="img-draft" role="dialog" aria-label="Vista previa de la imagen">
+    <div class="img-draft-frame">
+        @if (PreviewUrl is null)
+        {
+            <span class="img-draft-wait">PREPARANDO…</span>
+        }
+        else
+        {
+            <img class="img-draft-pic" src="@PreviewUrl" alt="Vista previa de la imagen a enviar" />
+        }
+        @if (State == ImageUploadState.Uploading)
+        {
+            <span class="img-draft-bar" aria-hidden="true"></span>
+        }
+    </div>
+    <div class="img-draft-actions">
+        <button type="button" class="cot-btn img-draft-cancel" disabled="@Busy" @onclick="OnCancel">CANCELAR</button>
+        <button type="button" class="cot-btn img-draft-send" disabled="@(State != ImageUploadState.Preview)" @onclick="OnSend"
+                aria-busy="@(State == ImageUploadState.Uploading ? "true" : "false")">
+            @(State == ImageUploadState.Uploading ? "SUBIENDO…" : "ENVIAR")
+        </button>
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public ImageUploadState State { get; set; }
+    [Parameter] public string? PreviewUrl { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+    [Parameter] public EventCallback OnSend { get; set; }
+
+    private bool Busy => State is ImageUploadState.Uploading or ImageUploadState.Preparing;
+}

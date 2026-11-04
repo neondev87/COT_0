@@ -87,6 +87,22 @@ public class ChatOptions
     public string PhotoFormat { get; set; } = "image/jpeg";
     public long MaxPhotoBytes { get; set; } = 1024 * 1024;
 
+    // Imágenes del chat: el navegador las achica a ImageMaxSide y las pasa a ImageFormat antes de subir
+    public string ImagesPath { get; set; } = "/images";
+    public string ImageFormat { get; set; } = "image/jpeg";
+    public int ImageMaxSide { get; set; } = 1600;
+    public int ImagePreviewSide { get; set; } = 720;
+    public long MaxImageBytes { get; set; } = 5 * 1024 * 1024;
+    public int ImageDecodeTimeoutSeconds { get; set; } = 30;
+
+    // Tope de memoria para todas las imágenes de la sala (se vacía al cerrarla)
+    public long MaxRoomImageBytes { get; set; } = 200L * 1024 * 1024;
+
+    // Miniatura en la burbuja (px) y cuánto cachea el navegador cada imagen
+    public int ImageThumbWidth { get; set; } = 240;
+    public int ImageThumbMaxHeight { get; set; } = 300;
+    public int ImageCacheSeconds { get; set; } = 86400;
+
     // URL local de Kestrel; la completa WebApp (el chat se conecta al hub por acá)
     public string ServerUrl { get; set; } = string.Empty;
 
