@@ -4,25 +4,24 @@ using Microsoft.Extensions.Configuration;
 
 namespace COT_0.Host.Services;
 
-// Música de fondo: arranca con Audio:DefaultFile (o la primera) y sigue en orden, en loop
+// Música de fondo: arranca con Audio:DefaultFile (o la primera) y sigue en orden, en loop.
+// El volumen inicia siempre en Audio:DefaultVolume; no se guarda entre sesiones
 public class MusicService : IDisposable
 {
     private const double MaxVolume = 100;
 
     private readonly MediaPlayer _player = new();
     private readonly MusicLibrary _library;
-    private readonly VolumeStore _volumeStore;
     private readonly string? _defaultFile;
     private IReadOnlyList<string> _tracks = [];
     private string? _current;
     private int _failures;
 
-    public MusicService(MusicLibrary library, VolumeStore volumeStore, IConfiguration configuration)
+    public MusicService(MusicLibrary library, IConfiguration configuration)
     {
         _library = library;
-        _volumeStore = volumeStore;
         _defaultFile = configuration["Audio:DefaultFile"];
-        Volume = volumeStore.Load(configuration.GetValue("Audio:DefaultVolume", 25d));
+        Volume = configuration.GetValue<double>("Audio:DefaultVolume");
         _player.MediaOpened += (_, _) => _failures = 0;
         _player.MediaEnded += (_, _) => PlayNext();
         // Si un archivo no se puede abrir pasa al siguiente, sin girar en falso si fallan todos
@@ -53,7 +52,6 @@ public class MusicService : IDisposable
 
     public void Dispose()
     {
-        _volumeStore.Save(Volume);
         _player.Close();
         GC.SuppressFinalize(this);
     }

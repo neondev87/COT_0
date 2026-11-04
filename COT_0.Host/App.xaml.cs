@@ -54,7 +54,6 @@ public partial class App : Application
         .AddSingleton<QrService>()
         .AddSingleton<ClockService>()
         .AddSingleton<MusicLibrary>()
-        .AddSingleton<VolumeStore>()
         .AddSingleton<MusicService>()
         .AddSingleton<DialogService>()
         .AddSingleton<BackgroundCatalog>()
