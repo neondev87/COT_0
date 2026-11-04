@@ -73,7 +73,7 @@ public partial class EmotesViewModel : ObservableObject
     private void Refresh()
     {
         Status = _emotes.Status;
-        StatusText = Text($"Status:{Status}");
+        StatusText = StatusMessage();
         CountText = string.Format(Text("Count"), _emotes.Active.Count);
 
         var removedDetail = Text("RemovedDetail");
@@ -98,6 +98,16 @@ public partial class EmotesViewModel : ObservableObject
         foreach (var group in groups)
             Reports.Add(new EmoteRowViewModel(group.Emote, string.Format(format, group.Count)));
         HasReports = Reports.Count > 0;
+    }
+
+    // Si falló, el motivo concreto (404, timeout, red, JSON); si no, el texto del estado
+    private string StatusMessage()
+    {
+        var error = _emotes.Error;
+        if (Status is not (EmoteSetStatus.NotFound or EmoteSetStatus.Failed) || error == EmoteSetError.None)
+            return Text($"Status:{Status}");
+
+        return string.Format(Text($"Error:{error}"), _emotes.ErrorCode);
     }
 
     private string Text(string key) => _config[$"Texts:Emotes:{key}"] ?? string.Empty;

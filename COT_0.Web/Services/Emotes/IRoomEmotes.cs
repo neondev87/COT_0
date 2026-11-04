@@ -8,6 +8,10 @@ public interface IRoomEmotes
     string? SetName { get; }
     EmoteSetStatus Status { get; }
 
+    // Motivo del último fallo (None si cargó bien) y código HTTP si 7TV respondió con error
+    EmoteSetError Error { get; }
+    int? ErrorCode { get; }
+
     // Sube cada vez que cambia algo (para volver a pintar los mensajes)
     int Version { get; }
 
