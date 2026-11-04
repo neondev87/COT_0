@@ -14,6 +14,7 @@ public sealed class RoomEmotes(ISevenTvClient client, IOptions<ChatOptions> opti
     private string? _setId = EmoteSetId.Parse(options.Value.EmoteSetId);
     private DateTime _expiresAt = DateTime.MinValue;
     private Task<EmoteSetStatus>? _loading;
+    private string? _loadingSetId;
     private EmoteSetStatus _status;
 
     public event Action? Changed;
@@ -22,6 +23,8 @@ public sealed class RoomEmotes(ISevenTvClient client, IOptions<ChatOptions> opti
     public string? SetId => _setId;
     public string? SetName { get; private set; }
     public int Version { get; private set; }
+    public EmoteSetError Error { get; private set; }
+    public int? ErrorCode { get; private set; }
 
     // Sin set: Off, salvo que el host haya pasado un ID inválido (NotFound, para mostrar el aviso)
     public EmoteSetStatus Status => Fresh(() =>
@@ -38,7 +41,10 @@ public sealed class RoomEmotes(ISevenTvClient client, IOptions<ChatOptions> opti
         lock (_gate)
         {
             _setId = EmoteSetId.Parse(setIdOrUrl);
-            _status = _setId is null && !string.IsNullOrWhiteSpace(setIdOrUrl) ? EmoteSetStatus.NotFound : EmoteSetStatus.Loading;
+            var invalid = _setId is null && !string.IsNullOrWhiteSpace(setIdOrUrl);
+            _status = invalid ? EmoteSetStatus.NotFound : EmoteSetStatus.Loading;
+            Error = invalid ? EmoteSetError.InvalidId : EmoteSetError.None;
+            ErrorCode = null;
             _all = [];
             SetName = null;
             _expiresAt = DateTime.MinValue;
@@ -108,7 +114,12 @@ public sealed class RoomEmotes(ISevenTvClient client, IOptions<ChatOptions> opti
     private Task<EmoteSetStatus>? StartLoad()
     {
         if (_setId is null) return null;
-        return _loading ??= Task.Run(() => LoadAsync(_setId));
+        if (_loading is not null && _loadingSetId == _setId) return _loading;
+
+        // Una carga de otro set (ej. el de arranque) no bloquea al set nuevo
+        var setId = _setId;
+        _loadingSetId = setId;
+        return _loading = Task.Run(() => LoadAsync(setId));
     }
 
     private async Task<EmoteSetStatus> LoadAsync(string setId)
@@ -118,7 +129,7 @@ public sealed class RoomEmotes(ISevenTvClient client, IOptions<ChatOptions> opti
 
         lock (_gate)
         {
-            _loading = null;
+            if (_loadingSetId == setId) _loading = null;
             if (setId != _setId) return result.Status;
 
             var ok = result.Status == EmoteSetStatus.Ready;
@@ -131,6 +142,8 @@ public sealed class RoomEmotes(ISevenTvClient client, IOptions<ChatOptions> opti
 
             // Si falla un refresco se siguen usando los emotes que ya había
             _status = ok || _all.Count == 0 ? result.Status : EmoteSetStatus.Ready;
+            Error = _status == EmoteSetStatus.Ready ? EmoteSetError.None : result.Error;
+            ErrorCode = _status == EmoteSetStatus.Ready ? null : result.HttpCode;
             Rebuild();
         }
 

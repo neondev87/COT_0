@@ -110,7 +110,8 @@ public class ChatOptions
     public string EmoteSetId { get; set; } = "global";
     public int EmoteCacheMinutes { get; set; } = 10;
     public int EmoteRetrySeconds { get; set; } = 60;
-    public int EmoteRequestTimeoutSeconds { get; set; } = 10;
+    // 7TV suele tardar 15-45 s en responder un set: con menos de eso la carga siempre falla
+    public int EmoteRequestTimeoutSeconds { get; set; } = 90;
 
     // Archivos del CDN: tamaño en el texto (~28 px) y grande (solo emotes / vista previa)
     public string EmoteScale { get; set; } = "2x";
