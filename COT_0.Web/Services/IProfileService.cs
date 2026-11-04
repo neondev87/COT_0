@@ -9,4 +9,8 @@ public interface IProfileService
 {
     Task<OperationResult<string>> SavePhotoAsync(IBrowserFile file);
     Task<OperationResult<User>> CreateUserAsync(JoinForm form);
+
+    // Vuelve a entrar con el perfil guardado si es de la sala abierta; null = pedir el formulario.
+    // Con leaveReason (expulsado, sala cerrada) borra el perfil guardado y no entra.
+    Task<User?> ResumeAsync(string? leaveReason);
 }

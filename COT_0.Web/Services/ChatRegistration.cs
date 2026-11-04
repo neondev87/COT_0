@@ -18,6 +18,7 @@ public static class ChatRegistration
         services.AddSingleton<IAvatarStore, InMemoryAvatarStore>();
         services.AddSingleton<IEmoteService, EmoteService>();
         services.AddSingleton<IFlagService, FlagService>();
+        services.AddScoped<IGuestStore, GuestStore>();
         services.AddScoped<IProfileService, ProfileService>();
         services.AddScoped<IChatSession, ChatSession>();
         services.AddHostedService<ChatBroadcaster>();

@@ -43,6 +43,13 @@ public class ChatOptions
         ["trabajo-social"] = "Trabajo Social y Desarrollo Humano",
     };
 
+    // Facultades que van primero en el selector, en este orden; el resto va alfabético.
+    // Default en código como FlagNames: un array en appsettings se sumaría a este en vez de reemplazarlo
+    public string[] FlagPriority { get; set; } = ["facpya", "fime", "ciencias-politicas-y-rri"];
+
+    // Clave de localStorage con el perfil del invitado (para volver a entrar sin el formulario)
+    public string GuestStorageKey { get; set; } = "cot0.guest";
+
     // Partículas de ceniza del fondo (semilla fija: siempre el mismo dibujo)
     public int AshSeed { get; set; } = 31;
     public int AshCount { get; set; } = 20;

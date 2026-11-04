@@ -21,6 +21,10 @@
         {
             <p class="cot-notice cot-rise cot-d1">La sala está cerrada. Esperá a que el anfitrión la abra y volvé a escanear el QR.</p>
         }
+        else if (resuming)
+        {
+            <p class="cot-room cot-rise cot-d1">ENTRANDO A LA SALA #@Room.Code…</p>
+        }
         else
         {
             @if (notice is not null)
@@ -71,6 +75,9 @@
     private IReadOnlyList<FlagOption> flags = [];
     private bool sheetOpen;
 
+    // Mientras se busca el perfil guardado no se muestra el formulario
+    private bool resuming = true;
+
     private FlagOption? SelectedFlag => flags.FirstOrDefault(f => f.Key == form.FacultyFlag);
 
     protected override void OnInitialized()
@@ -78,6 +85,22 @@
         notice = LeaveReason.ToNotice(Reason);
         flags = Flags.GetFlags();
         Room.Changed += OnRoomChanged;
+    }
+
+    // localStorage solo se puede leer después del primer render interactivo
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+
+        var user = await Profiles.ResumeAsync(Reason);
+        if (user is not null)
+        {
+            Nav.NavigateTo($"/chat?u={user.Id}");
+            return;
+        }
+
+        resuming = false;
+        StateHasChanged();
     }
 
     // Al elegir, el panel se cierra solo

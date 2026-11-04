@@ -7,7 +7,8 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services;
 
-public class ProfileService(IChatService chat, IRoomService room, IAvatarStore avatars, IOptions<ChatOptions> options)
+public class ProfileService(
+    IChatService chat, IRoomService room, IAvatarStore avatars, IGuestStore guests, IOptions<ChatOptions> options)
     : IProfileService
 {
     private readonly ChatOptions _options = options.Value;
@@ -43,7 +44,26 @@ public class ProfileService(IChatService chat, IRoomService room, IAvatarStore a
         if (name.Length > _options.MaxNameLength)
             return OperationResult<User>.Fail($"El nombre puede tener hasta {_options.MaxNameLength} caracteres.");
 
-        var user = new User { Name = name, PhotoUrl = form.PhotoUrl, FacultyFlag = form.FacultyFlag };
-        return OperationResult<User>.Ok(await chat.AddUserAsync(user));
+        var user = await chat.AddUserAsync(new User { Name = name, PhotoUrl = form.PhotoUrl, FacultyFlag = form.FacultyFlag });
+        await guests.SaveAsync(new StoredGuest(room.Code!, user.Id, user.Name, user.PhotoUrl, user.FacultyFlag));
+        return OperationResult<User>.Ok(user);
+    }
+
+    public async Task<User?> ResumeAsync(string? leaveReason)
+    {
+        var saved = await guests.LoadAsync();
+        if (saved is null) return null;
+
+        if (leaveReason is not null || !room.IsOpen || saved.RoomCode != room.Code)
+        {
+            await guests.ClearAsync();
+            return null;
+        }
+
+        // Si la pestaña anterior sigue viva (Safari tarda en avisar el cierre) se reusa el mismo usuario
+        if (await chat.GetUserAsync(saved.UserId) is { } current) return current;
+
+        var form = new JoinForm { Name = saved.Name, PhotoUrl = saved.PhotoUrl, FacultyFlag = saved.FacultyFlag };
+        return (await CreateUserAsync(form)).Value;
     }
 }
