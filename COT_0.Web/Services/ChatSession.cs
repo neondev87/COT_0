@@ -37,6 +37,7 @@ public sealed class ChatSession(IChatService chat, IOptions<ChatOptions> options
         _connection = new HubConnectionBuilder().WithUrl(_options.HubUrl).Build();
         _connection.On<ChatMessage>(ChatEvents.MessageReceived, OnMessageReceived);
         _connection.On<List<User>>(ChatEvents.UsersChanged, OnUsersChanged);
+        _connection.On<User>(ChatEvents.UserUpdated, OnUserUpdated);
         _connection.On(ChatEvents.Kicked, () => Ended?.Invoke(LeaveReason.Kicked));
         _connection.On(ChatEvents.RoomClosed, () => Ended?.Invoke(LeaveReason.RoomClosed));
 
@@ -67,6 +68,13 @@ public sealed class ChatSession(IChatService chat, IOptions<ChatOptions> options
     {
         var messages = _messages.Add(message);
         _messages = messages.Count > _options.MessagesOnJoin ? messages.RemoveAt(0) : messages;
+        Changed?.Invoke();
+    }
+
+    // Mismo Id → Blazor conserva cada elemento (@key) y el scroll no se mueve
+    private void OnUserUpdated(User user)
+    {
+        _messages = _messages.ConvertAll(m => m.UserId == user.Id ? MessageAuthor.With(m, user) : m);
         Changed?.Invoke();
     }
 

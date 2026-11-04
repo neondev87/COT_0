@@ -1,18 +1,20 @@
 using COT_0.Core.Models;
 using COT_0.Core.Services;
+using COT_0.Web.Services;
 using Microsoft.AspNetCore.SignalR;
 
 namespace COT_0.Web.Hubs;
 
 // Pasa los eventos de IChatService / IRoomService a los clientes del hub
 // (también los que dispara el Host: expulsar, cerrar la sala)
-public sealed class ChatBroadcaster(IChatService chat, IRoomService room, IHubContext<ChatHub> hub, ILogger<ChatBroadcaster> logger)
+public sealed class ChatBroadcaster(IChatService chat, IUserEditor editor, IRoomService room, IHubContext<ChatHub> hub, ILogger<ChatBroadcaster> logger)
     : IHostedService
 {
     public Task StartAsync(CancellationToken cancellationToken)
     {
         chat.UsersChanged += OnUsersChanged;
         chat.UserKicked += OnUserKicked;
+        editor.UserUpdated += OnUserUpdated;
         room.Changed += OnRoomChanged;
         return Task.CompletedTask;
     }
@@ -21,12 +23,16 @@ public sealed class ChatBroadcaster(IChatService chat, IRoomService room, IHubCo
     {
         chat.UsersChanged -= OnUsersChanged;
         chat.UserKicked -= OnUserKicked;
+        editor.UserUpdated -= OnUserUpdated;
         room.Changed -= OnRoomChanged;
         return Task.CompletedTask;
     }
 
     private void OnUsersChanged() => Fire(async () =>
         await hub.Clients.All.SendAsync(ChatEvents.UsersChanged, await chat.GetUsersAsync()));
+
+    // Cada cliente reemplaza nombre, foto y escudo en los mensajes ya pintados de ese usuario
+    private void OnUserUpdated(User user) => Fire(() => hub.Clients.All.SendAsync(ChatEvents.UserUpdated, user));
 
     private void OnUserKicked(User user)
     {

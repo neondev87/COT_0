@@ -15,6 +15,7 @@ public class InMemoryChatService(IOptions<ChatOptions> options) : IChatService, 
 
     public event Action? UsersChanged;
     public event Action<User>? UserKicked;
+    public event Action<User>? UserUpdated;
 
     public Task<User> AddUserAsync(User user)
     {
@@ -32,8 +33,10 @@ public class InMemoryChatService(IOptions<ChatOptions> options) : IChatService, 
             user.Name = name;
             user.PhotoUrl = photoUrl;
             user.FacultyFlag = facultyFlag;
+            foreach (var message in _messages.Where(m => m.UserId == userId)) MessageAuthor.Apply(message, user);
         }
 
+        UserUpdated?.Invoke(user);
         UsersChanged?.Invoke();
         return Task.FromResult<User?>(user);
     }
