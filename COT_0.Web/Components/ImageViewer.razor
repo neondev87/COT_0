@@ -1,0 +1,23 @@
+@* Imagen en grande sobre el chat: se cierra tocando afuera, con la X o con Esc *@
+<div class="img-viewer" role="dialog" aria-modal="true" aria-label="Imagen en grande" tabindex="-1"
+     @ref="overlay" @onclick="OnClose" @onkeydown="OnKeyDown">
+    <img class="img-viewer-pic" src="@Url" alt="Imagen en grande" @onclick:stopPropagation />
+    <button type="button" class="cot-x img-viewer-close" @onclick="OnClose" @onclick:stopPropagation aria-label="Cerrar imagen">
+        <Icon Name="close" Size="24" />
+    </button>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public string Url { get; set; } = string.Empty;
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private ElementReference overlay;
+
+    // Foco en el visor para que Esc funcione sin JS propio
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender) await overlay.FocusAsync();
+    }
+
+    private Task OnKeyDown(KeyboardEventArgs e) => e.Key == "Escape" ? OnClose.InvokeAsync() : Task.CompletedTask;
+}

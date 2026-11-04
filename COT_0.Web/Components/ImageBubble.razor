@@ -1,0 +1,17 @@
+@* Miniatura dentro de la burbuja: el tamaño viene calculado, así el scroll no salta al cargar *@
+@if (Image.Available)
+{
+    <button type="button" class="img-thumb" style="width:@(Image.ThumbWidth)px;height:@(Image.ThumbHeight)px"
+            @onclick="() => OnOpen.InvokeAsync(Image.Url)" aria-label="Ver imagen en grande">
+        <img src="@Image.Url" width="@Image.ThumbWidth" height="@Image.ThumbHeight" alt="Imagen enviada" loading="lazy" decoding="async" />
+    </button>
+}
+else
+{
+    <span class="img-gone">Imagen no disponible</span>
+}
+
+@code {
+    [Parameter, EditorRequired] public ImageView Image { get; set; } = default!;
+    [Parameter] public EventCallback<string> OnOpen { get; set; }
+}

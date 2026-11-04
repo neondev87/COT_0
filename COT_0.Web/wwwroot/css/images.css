@@ -1,0 +1,106 @@
+/* Imágenes del chat: botón de adjuntar, vista previa, miniatura y visor. Animaciones solo con transform y opacity */
+
+.chat-attach {
+    position: relative;
+    width: 44px;
+    height: 46px;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(230, 230, 230, .35);
+    border-radius: 2px;
+    color: var(--fg);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .15s ease, opacity .2s ease;
+}
+.chat-attach:hover, .chat-attach:focus-within { border-color: var(--accent); }
+.chat-attach:active { transform: scale(.94); }
+.chat-attach.off { opacity: .35; pointer-events: none; }
+
+/* Vista previa antes de enviar */
+.img-draft {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    background: var(--sheet);
+    border-top: 1px solid var(--edge);
+    animation: cotRise .25s ease both;
+}
+.img-draft-frame {
+    position: relative;
+    height: min(240px, 34dvh);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: rgba(255, 255, 255, .03);
+    border: 1px solid var(--edge);
+    border-radius: 8px;
+}
+.img-draft-pic { max-width: 100%; max-height: 100%; object-fit: contain; animation: cotFadeIn .2s ease both; }
+.img-draft-wait { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; letter-spacing: .2em; color: var(--fg-mute); animation: imgPulse .9s ease-in-out infinite alternate; }
+
+/* Subiendo: barra que recorre el borde de abajo */
+.img-draft-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; overflow: hidden; }
+.img-draft-bar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform: translateX(-100%) scaleX(.4);
+    animation: imgSlide 1.1s cubic-bezier(.4, 0, .2, 1) infinite;
+}
+.img-draft-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.img-draft-actions .cot-btn { height: 46px; }
+.img-draft-actions .cot-btn:disabled { opacity: .35; cursor: default; transform: none; }
+.img-draft-send:not(:disabled) { border-color: var(--accent); }
+
+/* Miniatura en la burbuja: el tamaño viene inline y no cambia al cargar */
+.msg-image { padding: 4px; line-height: 0; white-space: normal; }
+.img-thumb {
+    display: block;
+    max-width: 100%;
+    padding: 0;
+    overflow: hidden;
+    background: rgba(255, 255, 255, .04);
+    border: 0;
+    border-radius: 8px;
+    cursor: zoom-in;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .15s ease, opacity .15s ease;
+}
+.img-thumb:active { transform: scale(.98); }
+.img-thumb:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
+.img-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.img-gone { display: block; padding: 6px 8px; line-height: 1.4; font-size: 13px; font-style: italic; color: var(--fg-mute); }
+
+/* Visor en grande */
+.img-viewer {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: calc(56px + env(safe-area-inset-top)) 12px calc(24px + env(safe-area-inset-bottom));
+    background: rgba(0, 0, 0, .92);
+    outline: none;
+    animation: cotFadeIn .2s ease both;
+}
+.img-viewer-pic {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+    animation: imgZoom .25s cubic-bezier(.2, .8, .2, 1) both;
+}
+.img-viewer-close { position: absolute; top: calc(6px + env(safe-area-inset-top)); right: 6px; width: 48px; height: 48px; color: #fff; }
+
+@keyframes imgZoom { 0% { opacity: 0; transform: scale(.94) } 100% { opacity: 1; transform: none } }
+@keyframes imgSlide { 0% { transform: translateX(-100%) scaleX(.4) } 100% { transform: translateX(100%) scaleX(.4) } }
+@keyframes imgPulse { 0% { opacity: 1 } 100% { opacity: .4 } }

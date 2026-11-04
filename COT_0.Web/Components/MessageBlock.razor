@@ -1,5 +1,6 @@
 @inject IChatBrowser Browser
 @inject IVoiceService Voices
+@inject IImageService Images
 
 @* Grupo de mensajes seguidos de un autor (encabezado + hora una vez) o un aviso del sistema *@
 @if (Group.IsSystem)
@@ -25,6 +26,10 @@ else
                 {
                     <div class="msg-line msg-voice" @key="message.Id"><VoiceBubble Voice="voice" /></div>
                 }
+                else if (Images.Find(message) is { } image)
+                {
+                    <div class="msg-line msg-image" @key="message.Id"><ImageBubble Image="image" OnOpen="OnOpenImage" /></div>
+                }
                 else
                 {
                     <p class="msg-text msg-line" @key="message.Id"><MessageText Text="@message.Text" /></p>
@@ -36,4 +41,5 @@ else
 
 @code {
     [Parameter, EditorRequired] public MessageGroup Group { get; set; } = default!;
+    [Parameter] public EventCallback<string> OnOpenImage { get; set; }
 }

@@ -44,7 +44,7 @@
                     }
                     @foreach (var group in Session.Groups)
                     {
-                        <MessageBlock @key="group.Key" Group="group" />
+                        <MessageBlock @key="group.Key" Group="group" OnOpenImage="OpenImage" />
                     }
                 </div>
             </main>
@@ -66,6 +66,11 @@
     {
         <ProfileEditor User="user" OnClose="CloseProfile" />
     }
+
+    @if (viewingImage is not null)
+    {
+        <ImageViewer Url="@viewingImage" OnClose="CloseImage" />
+    }
 </div>
 
 @code {
@@ -76,6 +81,7 @@
     private MessageDraft draft = default!;
     private bool usersOpen;
     private bool profileOpen;
+    private string? viewingImage;
 
     protected override async Task OnInitializedAsync()
     {
@@ -109,6 +115,10 @@
     private void OpenProfile() => profileOpen = true;
 
     private void CloseProfile() => profileOpen = false;
+
+    private void OpenImage(string url) => viewingImage = url;
+
+    private void CloseImage() => viewingImage = null;
 
     private void OnSessionChanged() => _ = InvokeAsync(StateHasChanged);
 

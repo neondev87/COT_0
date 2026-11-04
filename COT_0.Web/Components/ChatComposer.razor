@@ -1,5 +1,6 @@
 @implements IAsyncDisposable
 @inject IVoiceRecorder Recorder
+@inject IImageUploader Images
 
 @* Barra de escritura: Enter envía, Shift+Enter salto de línea (chat.js), contador de caracteres.
    Sin texto, el botón de enviar pasa a ser el micrófono: mantener para grabar (voice.js) *@
@@ -10,9 +11,26 @@
         <button type="button" class="cot-x" @onclick="Recorder.DismissNotice" aria-label="Cerrar aviso"><Icon Name="close" Size="16" /></button>
     </p>
 }
+@if (Images.Notice is { } imageNotice)
+{
+    <p class="voice-notice" role="alert">
+        <span>@imageNotice</span>
+        <button type="button" class="cot-x" @onclick="Images.DismissNotice" aria-label="Cerrar aviso"><Icon Name="close" Size="16" /></button>
+    </p>
+}
+@if (Images.State != ImageUploadState.Idle)
+{
+    <ImageDraft State="Images.State" PreviewUrl="@Images.PreviewUrl" OnCancel="Images.Cancel" OnSend="() => Images.SendAsync(UserId)" />
+}
 
 <form class="chat-input @(Draft.Length > 0 ? "has-text" : null)" @ref="form" @onsubmit="OnSend">
     <EmotePicker OnPick="emote => AppendAsync(emote.Token)" />
+    @* Sin "capture": en el celular deja elegir cámara o galería *@
+    <label class="chat-attach @(Images.State == ImageUploadState.Idle ? null : "off")" title="Adjuntar imagen">
+        <Icon Name="image" Size="20" />
+        <InputFile @key="Images.InputVersion" class="cot-file" accept="image/*" OnChange="e => Images.SelectAsync(e.File)"
+                   disabled="@(Images.State != ImageUploadState.Idle)" aria-label="Adjuntar imagen" />
+    </label>
     <div class="chat-field">
         <textarea class="cot-input chat-text" rows="@Draft.Rows" maxlength="@Draft.MaxLength" enterkeyhint="send"
                   @bind="Draft.Text" @bind:event="oninput" @bind:after="NotifyTypingAsync"
