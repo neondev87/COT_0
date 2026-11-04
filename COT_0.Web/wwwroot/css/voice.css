@@ -7,18 +7,21 @@
     width: 52px;
     height: 46px;
     flex: none;
-    touch-action: none;
+    touch-action: manipulation;
     user-select: none;
     -webkit-user-select: none;
     -webkit-touch-callout: none;
-    transition: transform .15s ease;
+    transition: transform .15s ease, opacity .15s ease;
 }
 .voice-mic.on {
     border-color: var(--accent);
     background: color-mix(in srgb, var(--accent) 22%, rgba(10, 10, 10, .6));
-    transform: translateX(var(--voice-slide, 0)) scale(1.12);
-    transition: none;
+    transform: scale(1.08);
 }
+.voice-mic:disabled { opacity: .5; }
+/* Tiempo dentro del botón mientras graba; el pulso solo usa opacity */
+.voice-mic-time { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; letter-spacing: .06em; font-variant-numeric: tabular-nums; animation: cotVoicePulse 1.2s ease-in-out infinite; }
+@keyframes cotVoicePulse { 50% { opacity: .55; } }
 
 /* Barra de grabación encima del campo de texto */
 .voice-rec {
@@ -38,11 +41,21 @@
 }
 .voice-rec-dot { width: 8px; height: 8px; flex: none; border-radius: 50%; background: var(--accent); animation: cotBlink 1s steps(1) infinite; }
 .voice-rec-time { font-variant-numeric: tabular-nums; }
-.voice-rec-hint { position: relative; flex: 1; height: 16px; transform: translateX(var(--voice-slide, 0)); }
-.voice-rec-hint > span { position: absolute; right: 0; white-space: nowrap; color: var(--fg-mute); transition: opacity .15s ease; }
-.voice-rec-drop { opacity: 0; color: var(--accent) !important; }
-[data-voice-cancel] .voice-rec-slide { opacity: 0; }
-[data-voice-cancel] .voice-rec-drop { opacity: 1; }
+.voice-rec-hint { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--fg-mute); }
+/* Botón chico para descartar sin enviar */
+.voice-cancel {
+    flex: none;
+    padding: 4px 10px;
+    border: 1px solid var(--edge);
+    background: transparent;
+    color: var(--fg-mute);
+    font: inherit;
+    letter-spacing: inherit;
+    cursor: pointer;
+    transition: transform .15s ease, opacity .15s ease;
+}
+.voice-cancel:hover { color: var(--accent); border-color: var(--accent); }
+.voice-cancel:active { transform: scale(.94); opacity: .7; }
 
 /* Avisos: micrófono negado, falla al enviar, etc. */
 .voice-notice {

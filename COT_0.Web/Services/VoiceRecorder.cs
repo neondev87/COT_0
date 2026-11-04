@@ -33,7 +33,6 @@ public sealed class VoiceRecorder(IJSRuntime js, IVoiceService voice, IOptions<V
             _options.MimeCandidates,
             MaxMs = _options.MaxSeconds * 1000,
             MinMs = _options.MinMilliseconds,
-            CancelPx = _options.CancelSlidePx,
         };
         await js.InvokeVoidAsync("cotVoice.attach", composer, _self, config);
     }
@@ -58,6 +57,13 @@ public sealed class VoiceRecorder(IJSRuntime js, IVoiceService voice, IOptions<V
     [JSInvokable]
     public async Task OnRecorded(IJSStreamReference audio, int durationMs)
     {
+        // Seguro contra doble envío: una sola nota subiendo a la vez
+        if (State == VoiceState.Sending)
+        {
+            await audio.DisposeAsync();
+            return;
+        }
+
         Update(VoiceState.Sending, null);
         string? notice;
 

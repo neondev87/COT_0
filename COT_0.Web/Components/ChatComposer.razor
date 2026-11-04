@@ -3,7 +3,7 @@
 @inject IImageUploader Images
 
 @* Barra de escritura: Enter envía, Shift+Enter salto de línea (chat.js), contador de caracteres.
-   Sin texto, el botón de enviar pasa a ser el micrófono: mantener para grabar (voice.js) *@
+   Sin texto, el botón de enviar pasa a ser el micrófono: un toque graba y otro envía (voice.js) *@
 @if (Recorder.Notice is { } notice)
 {
     <p class="voice-notice" role="alert">
@@ -34,7 +34,7 @@
     <div class="chat-field">
         <textarea class="cot-input chat-text" rows="@Draft.Rows" maxlength="@Draft.MaxLength" enterkeyhint="send"
                   @bind="Draft.Text" @bind:event="oninput" @bind:after="NotifyTypingAsync"
-                  placeholder="Escribí un mensaje…" autocomplete="off" aria-label="Mensaje"></textarea>
+                  placeholder="Escribe un mensaje…" autocomplete="off" aria-label="Mensaje"></textarea>
         @if (Draft.Length > 0)
         {
             <span class="chat-count @(Draft.IsNearLimit ? "warn" : null)" aria-live="polite">@Draft.Length/@Draft.MaxLength</span>
@@ -48,9 +48,17 @@
     <button type="submit" class="cot-btn chat-send" disabled="@(!Draft.CanSend)" aria-label="Enviar" @onmousedown:preventDefault>
         <Icon Name="arrow" Size="20" Class="arr" />
     </button>
-    <button type="button" class="cot-btn voice-mic @(Recorder.State == VoiceState.Recording ? "on" : null)"
-            aria-label="Mantené presionado para grabar una nota de voz">
-        <Icon Name="mic" Size="20" />
+    @* Un solo botón: voice.js le engancha el toque una vez *@
+    <button type="button" class="cot-btn voice-mic @(Recording ? "on" : null)" disabled="@(Recorder.State == VoiceState.Sending)"
+            aria-label="@(Recording ? "Detener y enviar la nota de voz" : "Grabar una nota de voz")">
+        @if (Recording)
+        {
+            <span class="voice-mic-time">@VoiceFormat.Duration(Recorder.Elapsed)</span>
+        }
+        else
+        {
+            <Icon Name="mic" Size="20" />
+        }
     </button>
 </form>
 
@@ -61,6 +69,8 @@
     [Parameter] public EventCallback OnTyping { get; set; }
 
     private ElementReference form;
+
+    private bool Recording => Recorder.State == VoiceState.Recording;
 
     protected override void OnInitialized() => Recorder.Changed += OnRecorderChanged;
 

@@ -6,7 +6,7 @@ namespace COT_0.Web.Models;
 // Datos del formulario de perfil (/join y editar perfil)
 public class JoinForm
 {
-    [Required(ErrorMessage = "Elegí un nombre.")]
+    [Required(ErrorMessage = "Elige un nombre.")]
     public string Name { get; set; } = string.Empty;
 
     public string? PhotoUrl { get; set; }
