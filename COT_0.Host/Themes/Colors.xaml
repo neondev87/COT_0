@@ -59,6 +59,9 @@
     <SolidColorBrush x:Key="SignatureAvatarBrush" Color="#1C1C24"/>
     <SolidColorBrush x:Key="SliderTrackBrush" Color="#2EFFFFFF"/>       <!-- rgba(255,255,255,.18) -->
     <SolidColorBrush x:Key="PickerVeilBrush" Color="#80080809"/>        <!-- rgba(8,8,9,.5) -->
+    <SolidColorBrush x:Key="SongPanelBrush" Color="#F20D0D0E"/>         <!-- panel del selector de canciones -->
+    <SolidColorBrush x:Key="SongSelectedBrush" Color="#0FFFFFFF"/>      <!-- rgba(255,255,255,.06) -->
+    <SolidColorBrush x:Key="SongCoverBrush" Color="#1C1C24"/>           <!-- marcador sin portada -->
     <SolidColorBrush x:Key="VideoDimBrush" Color="#590D0D0E"/>          <!-- oscurece el video para leer la UI -->
     <SolidColorBrush x:Key="AshBrush" Color="#9A9A9A"/>
 

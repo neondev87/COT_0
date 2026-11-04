@@ -72,22 +72,39 @@
             </StackPanel>
         </Button>
 
-        <!-- Nota siempre visible. Con música: barra de volumen con hover. Sin música: clic → "SUBIR MÚSICA" -->
+        <!-- Nota siempre visible. Con música: clic silencia; con hover aparecen volumen y lista de canciones.
+             Sin música: clic → "SUBIR MÚSICA" -->
         <Grid x:Name="VolumeHost" Margin="69,-35,0,-7" Height="{StaticResource MinHitSize}" HorizontalAlignment="Left" Background="Transparent">
+            <Grid.Resources>
+                <!-- Trazo fino de los íconos de música; se aclara con hover sobre la zona -->
+                <Style x:Key="MusicIconPath" TargetType="Path">
+                    <Setter Property="Width" Value="24"/>
+                    <Setter Property="Height" Value="24"/>
+                    <Setter Property="StrokeThickness" Value="1.2"/>
+                    <Setter Property="StrokeStartLineCap" Value="Round"/>
+                    <Setter Property="StrokeEndLineCap" Value="Round"/>
+                    <Setter Property="StrokeLineJoin" Value="Round"/>
+                    <Setter Property="Stroke" Value="{StaticResource Light70Brush}"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsMouseOver, ElementName=VolumeHost}" Value="True">
+                            <Setter Property="Stroke" Value="{StaticResource WhiteBrush}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Resources>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Style="{StaticResource PlainButton}" Command="{Binding ToggleUploadCommand}" Padding="12">
+            <Button Style="{StaticResource PlainButton}" Command="{Binding ToggleNoteCommand}" Padding="12">
                 <Viewbox Width="20" Height="20">
-                    <Path Data="{StaticResource IconNote}" StrokeThickness="1.2" Width="24" Height="24"
-                          StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round">
+                    <Path>
                         <Path.Style>
-                            <Style TargetType="Path">
-                                <Setter Property="Stroke" Value="{StaticResource Light70Brush}"/>
+                            <Style TargetType="Path" BasedOn="{StaticResource MusicIconPath}">
+                                <Setter Property="Data" Value="{StaticResource IconNote}"/>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsMouseOver, ElementName=VolumeHost}" Value="True">
-                                        <Setter Property="Stroke" Value="{StaticResource WhiteBrush}"/>
+                                    <DataTrigger Binding="{Binding IsMuted}" Value="True">
+                                        <Setter Property="Data" Value="{StaticResource IconNoteMuted}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -114,6 +131,11 @@
                 <Slider Style="{StaticResource VolumeSlider}" Value="{Binding Volume}" VerticalAlignment="Center"/>
                 <TextBlock Text="{Binding Volume, StringFormat={}{0:0}}" Margin="10,0,0,0" MinWidth="24" VerticalAlignment="Center"
                            FontFamily="{StaticResource FontRedaction}" FontSize="13" Foreground="{StaticResource Light70Brush}"/>
+                <Button Style="{StaticResource PlainButton}" Command="{Binding Songs.OpenCommand}" Padding="10,12" VerticalAlignment="Center">
+                    <Viewbox Width="18" Height="18">
+                        <Path Data="{StaticResource IconList}" Style="{StaticResource MusicIconPath}"/>
+                    </Viewbox>
+                </Button>
             </StackPanel>
             <Button Grid.Column="1" Margin="5,0,0,0" HorizontalAlignment="Left" Style="{StaticResource MusicUploadButton}"
                     Content="{DynamicResource Text.Music.Upload}" Command="{Binding UploadCommand}"/>

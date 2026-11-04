@@ -9,7 +9,8 @@
     <sys:Double x:Key="CaptionButtonWidth">46</sys:Double>
     <sys:Double x:Key="CaptionHitHeight">44</sys:Double>       <!-- área clicable de los botones de ventana -->
     <sys:Double x:Key="MinHitSize">44</sys:Double>
-    <sys:Double x:Key="ConfirmWidth">560</sys:Double>
+    <sys:Double x:Key="ConfirmWidth">600</sys:Double>
+    <Thickness x:Key="ConfirmPadding">48,72,48,48</Thickness>
     <Thickness x:Key="BackLinkHitPadding">12,13</Thickness>
     <Thickness x:Key="BackLinkHitMargin">-12,-13</Thickness>
 
@@ -20,6 +21,13 @@
     <sys:Double x:Key="LoginImageOpacity">0.375</sys:Double>   <!-- 0.5 × brightness(.75) -->
     <sys:Double x:Key="SignatureAvatarSize">64</sys:Double>
     <sys:Double x:Key="VolumeSliderWidth">130</sys:Double>
+
+    <!-- Selector de canciones -->
+    <sys:Double x:Key="SongPickerWidth">520</sys:Double>
+    <sys:Double x:Key="SongPickerMaxHeight">480</sys:Double>
+    <sys:Double x:Key="SongCoverSize">40</sys:Double>
+    <CornerRadius x:Key="SongCoverRadius">4</CornerRadius>
+    <Thickness x:Key="SongRowPadding">16,8</Thickness>
 
     <!-- Dashboard -->
     <sys:Double x:Key="MenuCardWidth">340</sys:Double>
@@ -34,7 +42,9 @@
     <sys:Double x:Key="QrPanelSize">420</sys:Double>
     <sys:Double x:Key="QrSize">340</sys:Double>
     <sys:Double x:Key="RoomFieldHeight">52</sys:Double>
-    <sys:Double x:Key="CloseButtonWidth">260</sys:Double>
+    <sys:Double x:Key="CloseButtonWidth">260</sys:Double>        <!-- ancho mínimo; crece con el texto -->
+    <sys:Double x:Key="SlantedButtonCut">16</sys:Double>
+    <Thickness x:Key="SlantedButtonPadding">44,0</Thickness>    <!-- corte de 16px + 28px de aire -->
     <sys:Double x:Key="UserRowHeight">62</sys:Double>
     <sys:Double x:Key="AvatarSize">36</sys:Double>
     <sys:Double x:Key="PulseDotSize">9</sys:Double>

@@ -7,22 +7,22 @@
                        BorderBrush="{StaticResource PanelBorderBrush}" BorderThickness="1">
     <!-- Confirmación con el estilo de la sala (DataContext: textos del diálogo) -->
     <Grid>
-        <StackPanel Margin="40,56,40,36">
+        <StackPanel Margin="{StaticResource ConfirmPadding}">
             <Rectangle Width="28" Height="1" HorizontalAlignment="Left" Fill="{StaticResource AccentBrush}"/>
             <TextBlock Text="{Binding Message}" Margin="0,18,0,0" TextWrapping="Wrap" FontFamily="{StaticResource FontCondensedLight}"
                        FontSize="26" Foreground="{StaticResource TextBrush}"/>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,34,0,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,44,0,0">
                 <Button Style="{StaticResource BackLinkButton}" IsCancel="True" VerticalAlignment="Center">
-                    <controls:SpacedText Text="{Binding Cancel}" Style="{StaticResource BoldCondensedText}" FontSize="17" Spacing="0.3"
+                    <controls:SpacedText Text="{Binding Cancel}" Style="{StaticResource BoldCondensedText}" FontSize="17" Spacing="0.2"
                                          Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
                 </Button>
-                <Button Style="{StaticResource CloseRoomButton}" Margin="34,0,0,0" IsDefault="True" Click="OnConfirm">
+                <Button Style="{StaticResource CloseRoomButton}" Margin="28,0,0,0" IsDefault="True" Click="OnConfirm">
                     <StackPanel Orientation="Horizontal">
                         <Viewbox Width="18" Height="18">
                             <Path Data="{StaticResource IconPower}" Style="{StaticResource IconPath}" StrokeThickness="1.8"/>
                         </Viewbox>
                         <controls:SpacedText Text="{Binding Confirm}" Margin="12,0,0,0" Style="{StaticResource BoldCondensedText}"
-                                             FontSize="17" Spacing="0.3"/>
+                                             FontSize="17" Spacing="0.2"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
