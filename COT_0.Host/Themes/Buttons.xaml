@@ -10,10 +10,60 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <ContentPresenter Margin="{TemplateBinding Padding}"/>
+                    <!-- Fondo transparente: toda el área es clicable, no solo el texto -->
+                    <Border Background="{TemplateBinding Background}">
+                        <ContentPresenter Margin="{TemplateBinding Padding}"/>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <!-- SUBIR MÚSICA: aparece al lado de la nota (opacity + desplazamiento) cuando IsUploadOpen -->
+    <Style x:Key="MusicUploadButton" TargetType="Button" BasedOn="{StaticResource PlainButton}">
+        <Setter Property="Padding" Value="0,14"/>
+        <Setter Property="Opacity" Value="0"/>
+        <Setter Property="IsHitTestVisible" Value="False"/>
+        <Setter Property="Foreground" Value="{StaticResource Light70Brush}"/>
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <TranslateTransform X="-10"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <controls:SpacedText Text="{Binding}" FontFamily="{StaticResource FontCondensedMedium}" FontSize="13" Spacing="0.24"
+                                         Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource WhiteBrush}"/>
+            </Trigger>
+            <DataTrigger Binding="{Binding IsUploadOpen}" Value="True">
+                <Setter Property="IsHitTestVisible" Value="True"/>
+                <DataTrigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="{StaticResource VolumeRevealDuration}"/>
+                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="0"
+                                             Duration="{StaticResource VolumeRevealDuration}"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.EnterActions>
+                <DataTrigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="{StaticResource VolumeRevealDuration}"/>
+                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="-10"
+                                             Duration="{StaticResource VolumeRevealDuration}"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.ExitActions>
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <!-- ENTRAR: borde claro; con hover, capa de acento que aparece en .3s y flecha que avanza 4px -->
@@ -114,6 +164,9 @@
     <!-- Link de texto (INICIO): se aclara y se corre 4px a la izquierda -->
     <Style x:Key="BackLinkButton" TargetType="Button" BasedOn="{StaticResource PlainButton}">
         <Setter Property="Foreground" Value="{StaticResource Text62Brush}"/>
+        <!-- Área clicable de 44px+: el padding agranda y el margen negativo lo compensa -->
+        <Setter Property="Padding" Value="{StaticResource BackLinkHitPadding}"/>
+        <Setter Property="Margin" Value="{StaticResource BackLinkHitMargin}"/>
         <Setter Property="RenderTransform">
             <Setter.Value>
                 <TranslateTransform/>
@@ -155,8 +208,8 @@
     </Style>
 
     <Style x:Key="KickButton" TargetType="Button" BasedOn="{StaticResource IconButton}">
-        <Setter Property="Width" Value="44"/>
-        <Setter Property="Height" Value="44"/>
+        <Setter Property="Width" Value="{StaticResource MinHitSize}"/>
+        <Setter Property="Height" Value="{StaticResource MinHitSize}"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>

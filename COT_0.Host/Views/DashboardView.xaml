@@ -47,7 +47,7 @@
         <!-- Menú en diagonal -->
         <StackPanel Margin="44,0,0,38" HorizontalAlignment="Left" VerticalAlignment="Bottom">
             <Border Style="{StaticResource MenuCardSlot}" controls:EntryAnimation.Delay="{StaticResource Delay015}">
-                <controls:MenuCard Number="01" Title="{DynamicResource Text.Dashboard.QrTitle}" Subtitle="{Binding QrSubtitle}"
+                <controls:MenuCard Number="01" Title="{Binding QrTitle}" Subtitle="{Binding QrSubtitle}"
                                    Icon="{StaticResource IconQr}" Command="{Binding GenerateQrCommand}"/>
             </Border>
             <Border Style="{StaticResource MenuCardSlot}" Margin="26,8,0,0" controls:EntryAnimation.Delay="{StaticResource Delay027}">
@@ -70,5 +70,9 @@
             <Rectangle Style="{StaticResource Diamond}"/>
             <controls:SpacedText Text="{DynamicResource Text.App.Version}" Style="{StaticResource FooterText}" Foreground="{StaticResource Text55Brush}"/>
         </StackPanel>
+
+        <!-- Firma con música, sobre el pie -->
+        <controls:SignatureBadge DataContext="{Binding Signature}" Margin="0,0,48,76"
+                                 HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
     </Grid>
 </UserControl>

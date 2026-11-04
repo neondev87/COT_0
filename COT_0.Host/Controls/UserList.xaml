@@ -20,7 +20,7 @@
                             <Border Style="{StaticResource Avatar}" Background="{StaticResource AvatarTone0Brush}" BorderBrush="{StaticResource AccentBrush}">
                                 <TextBlock Text="{DynamicResource Text.Room.HostInitials}" Style="{StaticResource InitialsText}"/>
                             </Border>
-                            <Border DockPanel.Dock="Right" Width="44"/>
+                            <Border DockPanel.Dock="Right" Width="{StaticResource MinHitSize}"/>
                             <TextBlock DockPanel.Dock="Right" Text="{DynamicResource Text.Room.HostSince}" Margin="16,0"
                                        VerticalAlignment="Center" Style="{StaticResource InterText}" Foreground="{StaticResource Light60Brush}"/>
                             <StackPanel VerticalAlignment="Center">

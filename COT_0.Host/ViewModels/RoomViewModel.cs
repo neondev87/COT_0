@@ -2,7 +2,6 @@ using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Threading;
 using COT_0.Core.Services;
 using COT_0.Host.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -17,8 +16,10 @@ public partial class RoomViewModel : ObservableObject
     private readonly IRoomService _room;
     private readonly IChatService _chat;
     private readonly ITunnelService _tunnel;
+    private readonly RoomSession _session;
     private readonly QrService _qr;
     private readonly ScreenNavigator _screens;
+    private readonly ClockService _clock;
     private readonly IConfiguration _config;
 
     [ObservableProperty]
@@ -39,19 +40,19 @@ public partial class RoomViewModel : ObservableObject
     [ObservableProperty]
     private int _total;
 
-    public RoomViewModel(IRoomService room, IChatService chat, ITunnelService tunnel, QrService qr,
-        ScreenNavigator screens, IConfiguration config)
+    public RoomViewModel(IRoomService room, IChatService chat, ITunnelService tunnel, RoomSession session, QrService qr,
+        ScreenNavigator screens, ClockService clock, IConfiguration config)
     {
         _room = room;
         _chat = chat;
         _tunnel = tunnel;
+        _session = session;
         _qr = qr;
         _screens = screens;
+        _clock = clock;
         _config = config;
 
-        var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-        timer.Tick += (_, _) => Tick();
-        timer.Start();
+        clock.Tick += Tick;
 
         room.Changed += () => Application.Current.Dispatcher.Invoke(OnRoomChanged);
         chat.UsersChanged += () => Application.Current.Dispatcher.Invoke(() => _ = ReloadUsersAsync());
@@ -86,8 +87,7 @@ public partial class RoomViewModel : ObservableObject
     [RelayCommand]
     private async Task CloseRoomAsync()
     {
-        await _room.CloseAsync();
-        await _tunnel.StopAsync();
+        await _session.CloseAsync();
         _screens.ShowDashboard();
     }
 
@@ -96,6 +96,7 @@ public partial class RoomViewModel : ObservableObject
         Code = _room.Code ?? string.Empty;
         if (!_room.IsOpen)
         {
+            Elapsed = string.Empty;
             JoinUrl = string.Empty;
             QrImage = null;
             return;
@@ -114,7 +115,7 @@ public partial class RoomViewModel : ObservableObject
 
         Users.Clear();
         foreach (var user in users.OrderBy(u => u.JoinedAt))
-            Users.Add(new UserRowViewModel(user, sinceFormat));
+            Users.Add(new UserRowViewModel(user, sinceFormat, _clock));
         Total = Users.Count;
     }
 
@@ -122,7 +123,9 @@ public partial class RoomViewModel : ObservableObject
     {
         if (_room.OpenedAt is not { } openedAt) return;
 
-        Elapsed = (DateTime.UtcNow - openedAt).ToString(_config["Ui:ElapsedFormat"]);
+        // Horas totales: no se reinicia a las 24 h
+        var elapsed = _clock.Since(openedAt);
+        Elapsed = string.Format(_config["Ui:ElapsedFormat"] ?? "{0}", (int)elapsed.TotalHours, elapsed.Minutes, elapsed.Seconds);
         foreach (var user in Users) user.Refresh();
     }
 }

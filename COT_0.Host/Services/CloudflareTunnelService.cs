@@ -9,6 +9,8 @@ namespace COT_0.Host.Services;
 // Quick tunnel de cloudflared hacia localhost:5050
 public partial class CloudflareTunnelService(IConfiguration configuration) : ITunnelService, IDisposable
 {
+    // cloudflared queda atado a la vida de COT_0, incluso si se cierra de golpe
+    private readonly KillOnCloseJob _job = new();
     private Process? _process;
 
     public string? PublicUrl { get; private set; }
@@ -44,6 +46,7 @@ public partial class CloudflareTunnelService(IConfiguration configuration) : ITu
         }
 
         _process = process;
+        _job.Add(process);
         process.BeginOutputReadLine();
         process.BeginErrorReadLine();
 
@@ -81,6 +84,7 @@ public partial class CloudflareTunnelService(IConfiguration configuration) : ITu
         if (_process is not null) KillProcess(_process);
         _process?.Dispose();
         _process = null;
+        _job.Dispose();
         GC.SuppressFinalize(this);
     }
 

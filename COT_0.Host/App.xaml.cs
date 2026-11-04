@@ -51,7 +51,10 @@ public partial class App : Application
         // Mismas instancias que usa el hub: salen del contenedor de la app web
         .AddSingleton(sp => sp.GetRequiredService<WebServerHost>().Services.GetRequiredService<IChatService>())
         .AddSingleton(sp => sp.GetRequiredService<WebServerHost>().Services.GetRequiredService<IRoomService>())
+        .AddSingleton<RoomSession>()
         .AddSingleton<QrService>()
+        .AddSingleton<ClockService>()
+        .AddSingleton<MusicLibrary>()
         .AddSingleton<MusicService>()
         .AddSingleton<DialogService>()
         .AddSingleton<BackgroundCatalog>()
@@ -61,7 +64,8 @@ public partial class App : Application
         .AddSingleton<DashboardViewModel>()
         .AddSingleton<RoomViewModel>()
         .AddSingleton<MainViewModel>()
-        .AddTransient<SignatureViewModel>()
+        // Compartido por login y dashboard: mismo estado de música
+        .AddSingleton<SignatureViewModel>()
         .AddTransient<LoginViewModel>()
         .AddTransient<LoginWindow>()
         .AddTransient<MainWindow>()

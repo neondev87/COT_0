@@ -23,10 +23,10 @@
         </Style.Triggers>
     </Style>
 
-    <!-- Botón de la barra (46×32) -->
+    <!-- Botón de la barra: se ve de 46×32 pero el clic abarca 46×44 -->
     <Style x:Key="CaptionButton" TargetType="Button">
         <Setter Property="Width" Value="{StaticResource CaptionButtonWidth}"/>
-        <Setter Property="Height" Value="{StaticResource CaptionHeight}"/>
+        <Setter Property="Height" Value="{StaticResource CaptionHitHeight}"/>
         <Setter Property="Foreground" Value="{StaticResource Text60Brush}"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Focusable" Value="False"/>
@@ -35,10 +35,12 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}">
-                        <Path Data="{TemplateBinding Tag}" Style="{StaticResource CaptionIconPath}"
-                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
+                    <Grid Background="Transparent">
+                        <Border Height="{StaticResource CaptionHeight}" VerticalAlignment="Top" Background="{TemplateBinding Background}">
+                            <Path Data="{TemplateBinding Tag}" Style="{StaticResource CaptionIconPath}"
+                                  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="{StaticResource CaptionHoverBrush}"/>
@@ -59,7 +61,7 @@
     </Style>
 
     <Style TargetType="controls:CaptionBar">
-        <Setter Property="Height" Value="{StaticResource CaptionHeight}"/>
+        <Setter Property="Height" Value="{StaticResource CaptionHitHeight}"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
         <Setter Property="Panel.ZIndex" Value="5"/>
         <Setter Property="Template">
@@ -74,9 +76,11 @@
                             <Button Style="{StaticResource CaptionCloseButton}" Tag="{StaticResource IconClose}"
                                     Command="{x:Static SystemCommands.CloseWindowCommand}"/>
                         </StackPanel>
-                        <controls:SpacedText Text="{TemplateBinding Title}" Margin="16,0,0,0" VerticalAlignment="Center"
-                                             FontFamily="{StaticResource FontCinzel}" FontSize="11" Spacing="0.3"
-                                             Foreground="{StaticResource Text60Brush}"/>
+                        <Grid Height="{StaticResource CaptionHeight}" VerticalAlignment="Top">
+                            <controls:SpacedText Text="{TemplateBinding Title}" Margin="16,0,0,0" VerticalAlignment="Center"
+                                                 FontFamily="{StaticResource FontCinzel}" FontSize="11" Spacing="0.3"
+                                                 Foreground="{StaticResource Text60Brush}"/>
+                        </Grid>
                     </DockPanel>
                     <ControlTemplate.Triggers>
                         <Trigger Property="ShowMaximize" Value="False">
