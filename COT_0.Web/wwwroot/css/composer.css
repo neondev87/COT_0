@@ -1,0 +1,43 @@
+/* Barra de escritura del chat */
+.chat-input {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 10px 12px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+    background: rgba(8, 8, 8, .92);
+    border-top: 1px solid rgba(255, 255, 255, .06);
+}
+.chat-field { position: relative; flex: 1; min-width: 0; }
+.chat-text {
+    display: block;
+    height: auto;
+    min-height: 46px;
+    max-height: 132px;
+    padding: 12px 14px;
+    line-height: 22px;
+    resize: none;
+    overflow-y: auto;
+    field-sizing: content;
+}
+.chat-count {
+    position: absolute;
+    right: 8px;
+    top: -18px;
+    font-size: 11px;
+    letter-spacing: .08em;
+    color: var(--fg-mute);
+    pointer-events: none;
+    animation: cotFadeIn .2s ease both;
+}
+.chat-count.warn { color: var(--accent); }
+.chat-send { width: 52px; height: 46px; flex: none; }
+.chat-send:disabled { opacity: .35; cursor: default; }
+.chat-send:disabled:hover { border-color: rgba(230, 230, 230, .5); background: rgba(10, 10, 10, .55); }
+.chat-send:disabled .arr { transform: none; }
+
+@media (min-width: 900px) {
+    .chat-input { padding-left: 32px; padding-right: 32px; }
+}

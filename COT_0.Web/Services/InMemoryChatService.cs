@@ -7,31 +7,57 @@ using Microsoft.Extensions.Options;
 namespace COT_0.Web.Services;
 
 // Estado del chat en memoria (Singleton)
-public class InMemoryChatService(IOptions<ChatOptions> options) : IChatService
+public class InMemoryChatService(IOptions<ChatOptions> options) : IChatService, IUserEditor, IChatFeed
 {
+    private readonly ChatOptions _options = options.Value;
     private readonly ConcurrentDictionary<string, User> _users = new();
     private readonly List<ChatMessage> _messages = [];
     private readonly object _lock = new();
 
     public event Action? UsersChanged;
     public event Action<User>? UserKicked;
+    public event Action<User>? UserUpdated;
+    public event Action<ChatMessage>? MessageAdded;
 
     public Task<User> AddUserAsync(User user)
     {
         _users[user.Id] = user;
+        Store(SystemNotice.Create(_options.JoinedNotice, user));
         UsersChanged?.Invoke();
         return Task.FromResult(user);
     }
 
+    public Task<User?> UpdateUserAsync(string userId, string name, string? photoUrl, string? facultyFlag)
+    {
+        if (!_users.TryGetValue(userId, out var user)) return Task.FromResult<User?>(null);
+
+        lock (_lock)
+        {
+            user.Name = name;
+            user.PhotoUrl = photoUrl;
+            user.FacultyFlag = facultyFlag;
+            foreach (var message in _messages.Where(m => m.UserId == userId)) MessageAuthor.Apply(message, user);
+        }
+
+        UserUpdated?.Invoke(user);
+        UsersChanged?.Invoke();
+        return Task.FromResult<User?>(user);
+    }
+
     public Task RemoveUserAsync(string userId)
     {
-        if (_users.TryRemove(userId, out _)) UsersChanged?.Invoke();
+        if (!_users.TryRemove(userId, out var user)) return Task.CompletedTask;
+
+        Store(SystemNotice.Create(_options.LeftNotice, user));
+        UsersChanged?.Invoke();
         return Task.CompletedTask;
     }
 
     public Task KickUserAsync(string userId)
     {
         if (!_users.TryRemove(userId, out var user)) return Task.CompletedTask;
+
+        Store(SystemNotice.Create(_options.KickedNotice, user));
         UserKicked?.Invoke(user);
         UsersChanged?.Invoke();
         return Task.CompletedTask;
@@ -56,21 +82,9 @@ public class InMemoryChatService(IOptions<ChatOptions> options) : IChatService
         if (!_users.TryGetValue(userId, out var user))
             throw new InvalidOperationException($"El usuario {userId} no está conectado.");
 
-        var message = new ChatMessage
-        {
-            UserId = user.Id,
-            UserName = user.Name,
-            UserPhotoUrl = user.PhotoUrl,
-            UserFacultyFlag = user.FacultyFlag,
-            Text = text,
-        };
-
-        lock (_lock)
-        {
-            _messages.Add(message);
-            if (_messages.Count > options.Value.HistorySize) _messages.RemoveAt(0);
-        }
-
+        var message = new ChatMessage { UserId = user.Id, Text = text };
+        MessageAuthor.Apply(message, user);
+        Store(message);
         return Task.FromResult(message);
     }
 
@@ -79,6 +93,17 @@ public class InMemoryChatService(IOptions<ChatOptions> options) : IChatService
         lock (_lock)
         {
             return Task.FromResult<IReadOnlyList<ChatMessage>>(_messages.TakeLast(max).ToList());
+        }
+    }
+
+    // Guarda y avisa dentro del lock: así los mensajes salen en el mismo orden en que se guardaron
+    private void Store(ChatMessage message)
+    {
+        lock (_lock)
+        {
+            _messages.Add(message);
+            if (_messages.Count > _options.HistorySize) _messages.RemoveAt(0);
+            MessageAdded?.Invoke(message);
         }
     }
 }

@@ -1,4 +1,5 @@
 using COT_0.Core.Models;
+using COT_0.Web.Models;
 
 namespace COT_0.Web.Services;
 
@@ -6,16 +7,19 @@ namespace COT_0.Web.Services;
 public interface IChatSession : IAsyncDisposable
 {
     User? CurrentUser { get; }
-    IReadOnlyList<ChatMessage> Messages { get; }
+    IReadOnlyList<MessageGroup> Groups { get; }
     IReadOnlyList<User> Users { get; }
+
+    // "Fulano está escribiendo…" o null
+    string? TypingSummary { get; }
 
     event Action? Changed;
 
-    // El invitado tiene que salir del chat; el string es un LeaveReason
-    event Action<string>? Ended;
+    // El invitado tiene que salir del chat; el string es un LeaveReason (null = volver a entrar solo)
+    event Action<string?>? Ended;
 
     Task<bool> StartAsync(string? userId);
     Task SendAsync(string text);
-    bool IsOwn(ChatMessage message);
+    Task NotifyTypingAsync();
     Task StopAsync();
 }

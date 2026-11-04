@@ -1,0 +1,69 @@
+@implements IAsyncDisposable
+@inject IVoiceRecorder Recorder
+
+@* Barra de escritura: Enter envía, Shift+Enter salto de línea (chat.js), contador de caracteres.
+   Sin texto, el botón de enviar pasa a ser el micrófono: mantener para grabar (voice.js) *@
+@if (Recorder.Notice is { } notice)
+{
+    <p class="voice-notice" role="alert">
+        <span>@notice</span>
+        <button type="button" class="cot-x" @onclick="Recorder.DismissNotice" aria-label="Cerrar aviso"><Icon Name="close" Size="16" /></button>
+    </p>
+}
+
+<form class="chat-input @(Draft.Length > 0 ? "has-text" : null)" @ref="form" @onsubmit="OnSend">
+    <EmotePicker OnPick="emote => AppendAsync(emote.Token)" />
+    <div class="chat-field">
+        <textarea class="cot-input chat-text" rows="@Draft.Rows" maxlength="@Draft.MaxLength" enterkeyhint="send"
+                  @bind="Draft.Text" @bind:event="oninput" @bind:after="NotifyTypingAsync"
+                  placeholder="Escribí un mensaje…" autocomplete="off" aria-label="Mensaje"></textarea>
+        @if (Draft.Length > 0)
+        {
+            <span class="chat-count @(Draft.IsNearLimit ? "warn" : null)" aria-live="polite">@Draft.Length/@Draft.MaxLength</span>
+        }
+        @if (Recorder.State != VoiceState.Idle)
+        {
+            <VoiceRecordingBar State="Recorder.State" Elapsed="Recorder.Elapsed" />
+        }
+    </div>
+    @* mousedown sin acción: el textarea no pierde el foco y el teclado del celular no se cierra *@
+    <button type="submit" class="cot-btn chat-send" disabled="@(!Draft.CanSend)" aria-label="Enviar" @onmousedown:preventDefault>
+        <Icon Name="arrow" Size="20" Class="arr" />
+    </button>
+    <button type="button" class="cot-btn voice-mic @(Recorder.State == VoiceState.Recording ? "on" : null)"
+            aria-label="Mantené presionado para grabar una nota de voz">
+        <Icon Name="mic" Size="20" />
+    </button>
+</form>
+
+@code {
+    [Parameter, EditorRequired] public MessageDraft Draft { get; set; } = default!;
+    [Parameter, EditorRequired] public string UserId { get; set; } = string.Empty;
+    [Parameter] public EventCallback OnSend { get; set; }
+    [Parameter] public EventCallback OnTyping { get; set; }
+
+    private ElementReference form;
+
+    protected override void OnInitialized() => Recorder.Changed += OnRecorderChanged;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender) await Recorder.AttachAsync(form, UserId);
+    }
+
+    private Task NotifyTypingAsync() => OnTyping.InvokeAsync();
+
+    private Task AppendAsync(string token)
+    {
+        Draft.Append(token);
+        return NotifyTypingAsync();
+    }
+
+    private void OnRecorderChanged() => _ = InvokeAsync(StateHasChanged);
+
+    public async ValueTask DisposeAsync()
+    {
+        Recorder.Changed -= OnRecorderChanged;
+        await Recorder.DetachAsync();
+    }
+}

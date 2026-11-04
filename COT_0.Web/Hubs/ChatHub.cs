@@ -1,16 +1,19 @@
+using COT_0.Core.Models;
 using COT_0.Core.Services;
 using COT_0.Web.Options;
+using COT_0.Web.Services;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Hubs;
 
 // Hub del chat grupal, mapeado en Chat:HubPath (/chathub).
-// La lista de usuarios y los avisos de expulsión los manda ChatBroadcaster.
-public class ChatHub(IChatService chat, IOptions<ChatOptions> options) : Hub
+// Los mensajes, la lista de usuarios y los avisos de expulsión los manda ChatBroadcaster.
+public class ChatHub(IChatService chat, IPresenceTracker presence, IOptions<ChatOptions> options) : Hub
 {
     private const string UserIdKey = "userId";
 
+    // También se llama al reconectar: la conexión nueva pasa a ser la del usuario
     public async Task Join(string userId)
     {
         var user = await chat.GetUserAsync(userId) ?? throw new HubException("El usuario no existe.");
@@ -21,28 +24,35 @@ public class ChatHub(IChatService chat, IOptions<ChatOptions> options) : Hub
 
     public async Task SendMessage(string text)
     {
-        if (!Context.Items.TryGetValue(UserIdKey, out var value) || value is not string userId)
-            throw new HubException("Primero hay que unirse al chat.");
-        if (await chat.GetUserAsync(userId) is null)
-            throw new HubException("Ya no estás en la sala.");
+        var user = await GetCurrentUserAsync();
 
         var clean = text.Trim();
-        if (clean.Length == 0) return;
+        // Vacío o con el texto reservado de las notas de voz (esas solo entran por IVoiceService)
+        if (clean.Length == 0 || VoiceNote.IsVoice(clean)) return;
         if (clean.Length > options.Value.MaxMessageLength) clean = clean[..options.Value.MaxMessageLength];
 
-        var message = await chat.AddMessageAsync(userId, clean);
-        await Clients.All.SendAsync(ChatEvents.MessageReceived, message);
+        await chat.AddMessageAsync(user.Id, clean);
+    }
+
+    public async Task Typing()
+    {
+        var user = await GetCurrentUserAsync();
+        await Clients.Others.SendAsync(ChatEvents.UserTyping, user.Id, user.Name);
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         if (Context.Items.TryGetValue(UserIdKey, out var value) && value is string userId)
-        {
-            // Solo si sigue siendo su conexión actual (puede haber recargado la página)
-            var user = await chat.GetUserAsync(userId);
-            if (user?.ConnectionId == Context.ConnectionId) await chat.RemoveUserAsync(userId);
-        }
+            presence.ScheduleLeave(userId, Context.ConnectionId);
 
         await base.OnDisconnectedAsync(exception);
+    }
+
+    private async Task<User> GetCurrentUserAsync()
+    {
+        if (!Context.Items.TryGetValue(UserIdKey, out var value) || value is not string userId)
+            throw new HubException("Primero hay que unirse al chat.");
+
+        return await chat.GetUserAsync(userId) ?? throw new HubException("Ya no estás en la sala.");
     }
 }

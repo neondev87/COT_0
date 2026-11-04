@@ -43,6 +43,13 @@ public class ChatOptions
         ["trabajo-social"] = "Trabajo Social y Desarrollo Humano",
     };
 
+    // Facultades que van primero en el selector, en este orden; el resto va alfabético.
+    // Default en código como FlagNames: un array en appsettings se sumaría a este en vez de reemplazarlo
+    public string[] FlagPriority { get; set; } = ["facpya", "fime", "ciencias-politicas-y-rri"];
+
+    // Clave de localStorage con el perfil del invitado (para volver a entrar sin el formulario)
+    public string GuestStorageKey { get; set; } = "cot0.guest";
+
     // Partículas de ceniza del fondo (semilla fija: siempre el mismo dibujo)
     public int AshSeed { get; set; } = 31;
     public int AshCount { get; set; } = 20;
@@ -55,6 +62,26 @@ public class ChatOptions
     public int HistorySize { get; set; } = 200;
     public int MessagesOnJoin { get; set; } = 100;
     public string TimeFormat { get; set; } = "HH:mm";
+
+    // Mensajes seguidos del mismo autor dentro de esta ventana van en un solo grupo
+    public int GroupWindowMinutes { get; set; } = 5;
+
+    // "Escribiendo...": cada cuánto se avisa como máximo y cuánto dura el aviso
+    public int TypingThrottleSeconds { get; set; } = 2;
+    public int TypingTimeoutSeconds { get; set; } = 5;
+
+    // Segundos de espera antes de sacar a alguien que perdió la conexión (puede volver)
+    public int LeaveGraceSeconds { get; set; } = 20;
+
+    // Reconexión del circuito de Blazor (celular con la pantalla bloqueada)
+    public int CircuitRetentionMinutes { get; set; } = 5;
+    public int ReconnectRetries { get; set; } = 60;
+    public int ReconnectIntervalMs { get; set; } = 2000;
+
+    // Avisos del sistema en el chat ({0} = nombre)
+    public string JoinedNotice { get; set; } = "{0} entró a la sala";
+    public string LeftNotice { get; set; } = "{0} salió de la sala";
+    public string KickedNotice { get; set; } = "{0} fue expulsado";
 
     public int PhotoSize { get; set; } = 256;
     public string PhotoFormat { get; set; } = "image/jpeg";

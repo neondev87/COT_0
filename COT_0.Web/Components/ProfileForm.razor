@@ -1,0 +1,88 @@
+@inject IProfileService Profiles
+@inject IFlagService Flags
+@inject IOptions<ChatOptions> Options
+
+@* Pantalla de perfil (nombre, foto, facultad): la usan /join y "editar perfil" del chat *@
+@if (OnCancel.HasDelegate)
+{
+    <button type="button" class="cot-back" @onclick="OnCancel" aria-label="Volver al chat sin guardar">
+        <Icon Name="back" Size="22" />
+    </button>
+}
+
+<EditForm Model="Form" OnValidSubmit="OnSubmit" class="cot-card">
+    <DataAnnotationsValidator />
+    <CotLogo Subtitle="@Subtitle" Class="cot-rise cot-card-head" />
+
+    @Header
+
+    @if (ShowFields)
+    {
+        <div class="cot-group cot-rise cot-d1">
+            <label for="cot-name" class="cot-label">NOMBRE DE USUARIO</label>
+            <InputText id="cot-name" class="cot-input" @bind-Value="Form.Name" placeholder="cómo te verán en el chat"
+                       maxlength="@Options.Value.MaxNameLength" autocomplete="nickname" />
+            <ValidationMessage For="() => Form.Name" />
+        </div>
+
+        <div class="cot-group cot-rise cot-d2">
+            <span class="cot-label">FOTO DE PERFIL</span>
+            <PhotoUpload PhotoUrl="@Form.PhotoUrl" OnChange="UploadPhotoAsync" />
+        </div>
+
+        <div class="cot-group cot-group-last cot-rise cot-d3">
+            <span class="cot-label" id="cot-fac-label">FACULTAD</span>
+            <FacultyField Selected="SelectedFlag" LabelId="cot-fac-label" OnOpen="() => sheetOpen = true" />
+        </div>
+
+        @if ((Error ?? photoError) is { } message)
+        {
+            <p class="cot-error">@message</p>
+        }
+
+        <div class="cot-cta-bar cot-rise cot-d4">
+            <button type="submit" class="cot-btn">@SubmitLabel <Icon Name="arrow" Size="20" Class="arr" /></button>
+        </div>
+    }
+
+    @Footer
+</EditForm>
+
+<FacultySheet Flags="flags" Open="sheetOpen" Selected="@Form.FacultyFlag" OnPick="PickFaculty" OnClose="() => sheetOpen = false" />
+
+@code {
+    [Parameter, EditorRequired] public JoinForm Form { get; set; } = new();
+    [Parameter, EditorRequired] public string Subtitle { get; set; } = string.Empty;
+    [Parameter, EditorRequired] public string SubmitLabel { get; set; } = string.Empty;
+    [Parameter] public bool ShowFields { get; set; } = true;
+    [Parameter] public string? Error { get; set; }
+    [Parameter] public EventCallback OnSubmit { get; set; }
+
+    // Si se pasa, aparece la flecha para salir sin guardar
+    [Parameter] public EventCallback OnCancel { get; set; }
+
+    [Parameter] public RenderFragment? Header { get; set; }
+    [Parameter] public RenderFragment? Footer { get; set; }
+
+    private IReadOnlyList<FlagOption> flags = [];
+    private bool sheetOpen;
+    private string? photoError;
+
+    private FlagOption? SelectedFlag => flags.FirstOrDefault(f => f.Key == Form.FacultyFlag);
+
+    protected override void OnInitialized() => flags = Flags.GetFlags();
+
+    // Al elegir, el panel se cierra solo
+    private void PickFaculty(string key)
+    {
+        Form.FacultyFlag = key;
+        sheetOpen = false;
+    }
+
+    private async Task UploadPhotoAsync(InputFileChangeEventArgs e)
+    {
+        var result = await Profiles.SavePhotoAsync(e.File);
+        Form.PhotoUrl = result.Value ?? Form.PhotoUrl;
+        photoError = result.Error;
+    }
+}

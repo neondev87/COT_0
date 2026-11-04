@@ -1,0 +1,39 @@
+@inject IChatBrowser Browser
+@inject IVoiceService Voices
+
+@* Grupo de mensajes seguidos de un autor (encabezado + hora una vez) o un aviso del sistema *@
+@if (Group.IsSystem)
+{
+    <p class="msg-sys">
+        <span>@Group.First.Text</span>
+        <time>@Browser.FormatTime(Group.First.SentAt)</time>
+    </p>
+}
+else
+{
+    <article class="msg @(Group.IsOwn ? "msg-own" : null)">
+        <UserAvatar PhotoUrl="@Group.First.UserPhotoUrl" Name="@Group.First.UserName" />
+        <div class="msg-body">
+            <header class="msg-header">
+                <span class="msg-author">@Group.First.UserName</span>
+                <FlagIcon Key="@Group.First.UserFacultyFlag" />
+                <time class="msg-time">@Browser.FormatTime(Group.First.SentAt)</time>
+            </header>
+            @foreach (var message in Group.Messages)
+            {
+                if (Voices.Find(message) is { } voice)
+                {
+                    <div class="msg-line msg-voice" @key="message.Id"><VoiceBubble Voice="voice" /></div>
+                }
+                else
+                {
+                    <p class="msg-text msg-line" @key="message.Id"><MessageText Text="@message.Text" /></p>
+                }
+            }
+        </div>
+    </article>
+}
+
+@code {
+    [Parameter, EditorRequired] public MessageGroup Group { get; set; } = default!;
+}

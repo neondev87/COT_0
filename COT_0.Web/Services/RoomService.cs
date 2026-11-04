@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 namespace COT_0.Web.Services;
 
 // Estado de la sala en memoria (Singleton)
-public class RoomService(IChatService chat, IOptions<ChatOptions> options) : IRoomService
+public class RoomService(IChatService chat, IVoiceStore voices, IOptions<ChatOptions> options) : IRoomService
 {
     public event Action? Changed;
 
@@ -27,6 +27,7 @@ public class RoomService(IChatService chat, IOptions<ChatOptions> options) : IRo
         Code = null;
         OpenedAt = null;
         await chat.ClearAsync();
+        voices.Clear();
         Changed?.Invoke();
     }
 }

@@ -2,6 +2,7 @@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @implements IAsyncDisposable
 @inject IChatSession Session
+@inject IChatBrowser Browser
 @inject IRoomService Room
 @inject IOptions<ChatOptions> Options
 @inject NavigationManager Nav
@@ -9,7 +10,7 @@
 <PageTitle>COT_0 · Chat</PageTitle>
 
 @* Chat grupal en tiempo real (pensado primero para celular) *@
-<div class="cot-screen chat-page">
+<div class="cot-screen chat-page" @ref="page">
     <Backdrop />
 
     <header class="chat-top">
@@ -18,62 +19,101 @@
         <button type="button" class="chat-users-btn" @onclick="OpenUsers" aria-haspopup="dialog" aria-label="Conectados">
             <Icon Name="users" /> @Session.Users.Count
         </button>
+        @if (Session.CurrentUser is { } me)
+        {
+            <button type="button" class="chat-me cot-av" @onclick="OpenProfile" aria-haspopup="dialog" aria-label="Editar tu perfil">
+                @if (string.IsNullOrEmpty(me.PhotoUrl))
+                {
+                    <span class="cot-av-empty avatar-initial">@me.Name.Trim()[..1].ToUpperInvariant()</span>
+                }
+                else
+                {
+                    <img class="cot-av-img" src="@me.PhotoUrl" alt="" />
+                }
+            </button>
+        }
     </header>
 
     <div class="chat-body">
-        <main class="msg-scroll">
-            <div class="msg-stack">
-                @if (Session.Messages.Count == 0)
-                {
-                    <p class="msg-empty">Todavía no hay mensajes. Rompé el silencio.</p>
-                }
-                @foreach (var message in Session.Messages)
-                {
-                    <MessageItem @key="message.Id" Message="message" IsOwn="Session.IsOwn(message)" />
-                }
-            </div>
-        </main>
+        <div class="chat-main">
+            <main class="msg-scroll">
+                <div class="msg-stack">
+                    @if (Session.Groups.Count == 0)
+                    {
+                        <p class="msg-empty">Todavía no hay mensajes. Rompé el silencio.</p>
+                    }
+                    @foreach (var group in Session.Groups)
+                    {
+                        <MessageBlock @key="group.Key" Group="group" />
+                    }
+                </div>
+            </main>
+
+            <p class="msg-typing @(Session.TypingSummary is null ? null : "on")" aria-live="polite">@Session.TypingSummary</p>
+            @* Lo muestra chat.js cuando llegan mensajes mientras se lee más arriba *@
+            <button type="button" class="msg-new">MENSAJES NUEVOS <Icon Name="chevron" Size="16" /></button>
+        </div>
 
         <UserPanel Users="Session.Users" IsOpen="usersOpen" OnClose="CloseUsers" />
     </div>
 
-    <form class="chat-input" @onsubmit="SendAsync">
-        <EmotePicker OnPick="InsertEmote" />
-        <input class="cot-input chat-text" @bind="draft" @bind:event="oninput" maxlength="@Options.Value.MaxMessageLength"
-               placeholder="Escribí un mensaje…" autocomplete="off" aria-label="Mensaje" />
-        <button type="submit" class="cot-btn chat-send" aria-label="Enviar"><Icon Name="arrow" Size="20" Class="arr" /></button>
-    </form>
+    @if (Session.CurrentUser is { } author)
+    {
+        <ChatComposer Draft="draft" UserId="@author.Id" OnSend="SendAsync" OnTyping="Session.NotifyTypingAsync" />
+    }
+
+    @if (profileOpen && Session.CurrentUser is { } user)
+    {
+        <ProfileEditor User="user" OnClose="CloseProfile" />
+    }
 </div>
 
 @code {
     [SupplyParameterFromQuery(Name = "u")]
     public string? UserId { get; set; }
 
-    private string draft = string.Empty;
+    private ElementReference page;
+    private MessageDraft draft = default!;
     private bool usersOpen;
+    private bool profileOpen;
 
     protected override async Task OnInitializedAsync()
     {
+        draft = new MessageDraft(Options.Value.MaxMessageLength);
         Session.Changed += OnSessionChanged;
         Session.Ended += OnSessionEnded;
         if (!await Session.StartAsync(UserId)) Nav.NavigateTo("/join");
     }
 
-    private async Task SendAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await Session.SendAsync(draft);
-        draft = string.Empty;
+        if (!firstRender) return;
+
+        await Browser.AttachAsync(page);
+        StateHasChanged();
     }
 
-    private void InsertEmote(Emote emote) => draft += emote.Token;
+    private async Task SendAsync()
+    {
+        if (!draft.CanSend) return;
+
+        var text = draft.Text;
+        draft.Clear();
+        await Session.SendAsync(text);
+    }
 
     private void OpenUsers() => usersOpen = true;
 
     private void CloseUsers() => usersOpen = false;
 
+    private void OpenProfile() => profileOpen = true;
+
+    private void CloseProfile() => profileOpen = false;
+
     private void OnSessionChanged() => _ = InvokeAsync(StateHasChanged);
 
-    private void OnSessionEnded(string reason) => _ = InvokeAsync(() => Nav.NavigateTo($"/join?reason={reason}"));
+    private void OnSessionEnded(string? reason) =>
+        _ = InvokeAsync(() => Nav.NavigateTo(reason is null ? "/join" : $"/join?reason={reason}"));
 
     public async ValueTask DisposeAsync()
     {

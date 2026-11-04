@@ -34,40 +34,6 @@
 
 .chat-body { position: relative; z-index: 1; flex: 1; min-height: 0; display: flex; }
 
-/* column-reverse: el scroll queda pegado abajo sin JS */
-.msg-scroll { flex: 1; min-width: 0; overflow-y: auto; display: flex; flex-direction: column-reverse; padding: 16px; }
-.msg-stack { display: flex; flex-direction: column; gap: 14px; }
-.msg-empty { margin: 40px 0; text-align: center; font-family: 'Barlow Condensed', sans-serif; letter-spacing: .2em; color: var(--fg-mute); }
-
-.msg { display: flex; align-items: flex-start; gap: 10px; max-width: 88%; animation: cotRise .4s cubic-bezier(.2, .8, .2, 1) both; }
-.msg-own { align-self: flex-end; flex-direction: row-reverse; }
-.msg-body { min-width: 0; padding: 8px 12px 10px; background: var(--panel); border: 1px solid var(--edge); border-radius: 4px; }
-.msg-own .msg-body { background: color-mix(in srgb, var(--accent) 10%, rgba(10, 10, 11, .7)); border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
-.msg-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-.msg-author { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; }
-.msg-time { margin-left: auto; padding-left: 8px; font-size: 11px; color: var(--fg-mute); }
-.msg-text { margin: 0; font-size: 15px; line-height: 1.4; white-space: pre-wrap; overflow-wrap: anywhere; }
-
-.emote { height: 28px; vertical-align: middle; }
-.flag { width: 18px; height: 20px; flex: none; object-fit: contain; }
-.avatar-glow { width: 36px; height: 36px; flex: none; object-fit: cover; border-radius: 10px; background: #1c1c24; border: 1px solid rgba(255, 255, 255, .12); }
-.avatar-initial { display: inline-flex; align-items: center; justify-content: center; font-family: 'Cinzel', serif; font-weight: 700; font-size: 16px; color: var(--fg); }
-
-/* Barra de escritura */
-.chat-input {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    padding-bottom: calc(10px + env(safe-area-inset-bottom));
-    background: rgba(8, 8, 8, .92);
-    border-top: 1px solid rgba(255, 255, 255, .06);
-}
-.chat-text { flex: 1; min-width: 0; height: 46px; }
-.chat-send { width: 52px; height: 46px; flex: none; }
-
 .emote-toggle {
     width: 44px;
     height: 46px;
@@ -106,9 +72,7 @@
 .user-name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 @media (min-width: 900px) {
-    .chat-top, .chat-input { padding-left: 32px; padding-right: 32px; }
-    .msg-scroll { padding: 24px 32px; }
-    .msg { max-width: 70%; }
+    .chat-top { padding-left: 32px; padding-right: 32px; }
     .chat-users-btn, .user-scrim, .user-panel .cot-sheet-grip, .user-close { display: none; }
     .cot-sheet.user-panel {
         position: relative;
@@ -127,4 +91,55 @@
         -webkit-backdrop-filter: blur(10px);
         backdrop-filter: blur(10px);
     }
+}
+
+/* Botón de perfil (arriba a la derecha): avatar con brillo diagonal */
+.chat-me {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .15s ease;
+}
+.chat-me:hover, .chat-me:focus-visible { border-color: var(--accent); outline: none; }
+.chat-me:active { transform: scale(.94); }
+.chat-me .avatar-initial { font-size: 17px; color: var(--fg); }
+
+/* Editar perfil: la pantalla de /join encima del chat */
+.profile-edit {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    overflow-x: hidden;
+    overflow-y: auto;
+    animation: cotFadeIn .25s ease both;
+}
+.cot-back {
+    position: fixed;
+    top: calc(14px + env(safe-area-inset-top));
+    left: 12px;
+    z-index: 12;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid rgba(230, 230, 230, .25);
+    border-radius: 2px;
+    color: rgba(230, 230, 230, .8);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .15s ease;
+}
+.cot-back:hover, .cot-back:focus-visible { border-color: var(--accent); color: #fff; outline: none; }
+.cot-back:hover .cot-icon { transform: translateX(-3px); }
+.cot-back .cot-icon { transition: transform .2s ease; }
+.cot-back:active { transform: scale(.94); }
+
+@keyframes cotFadeIn { 0% { opacity: 0 } 100% { opacity: 1 } }
+
+@media (min-width: 601px) {
+    .cot-back { top: 24px; left: 24px; }
 }

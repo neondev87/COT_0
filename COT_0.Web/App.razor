@@ -1,21 +1,37 @@
+@inject IOptions<ChatOptions> Options
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content" />
     <base href="/" />
     <link rel="stylesheet" href="css/fonts.css" />
     <link rel="stylesheet" href="css/cot.css" />
     <link rel="stylesheet" href="css/join.css" />
     <link rel="stylesheet" href="css/chat.css" />
+    <link rel="stylesheet" href="css/messages.css" />
+    <link rel="stylesheet" href="css/composer.css" />
+    <link rel="stylesheet" href="css/voice.css" />
+    <link rel="stylesheet" href="css/reconnect.css" />
     <link rel="stylesheet" href="css/app.css" />
     <HeadOutlet />
 </head>
 
-<body>
+<body data-reconnect-retries="@Options.Value.ReconnectRetries" data-reconnect-interval="@Options.Value.ReconnectIntervalMs">
     <Routes />
-    <script src="_framework/blazor.web.js"></script>
+
+    @* Aviso de reconexión: Blazor le pone las clases components-reconnect-show / -failed / -rejected *@
+    <div id="components-reconnect-modal" class="cot-reconnect" role="status" aria-live="polite">
+        <span class="cot-reconnect-wait">RECONECTANDO…</span>
+        <span class="cot-reconnect-fail">SIN CONEXIÓN <button type="button" class="cot-reconnect-retry" data-retry>REINTENTAR</button></span>
+    </div>
+
+    <script src="_framework/blazor.web.js" autostart="false"></script>
+    <script src="js/reconnect.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/voice.js"></script>
 </body>
 
 </html>

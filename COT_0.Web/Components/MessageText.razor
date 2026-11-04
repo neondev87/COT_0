@@ -1,15 +1,19 @@
-@inject IEmoteService Emotes
+@inject IMessageFormatter Formatter
 
-@* Texto del mensaje con los códigos :emote: reemplazados por imágenes *@
-@foreach (var part in Emotes.Parse(Text))
+@* Texto del mensaje con links y emotes; el resto se escapa (nada de HTML del usuario) *@
+@foreach (var token in Formatter.Format(Text))
 {
-    if (part.Emote is null)
+    if (token.Emote is { } emote)
     {
-        @part.Text
+        <img class="emote" src="@emote.Url" alt="@emote.Token" title="@emote.Token" />
+    }
+    else if (token.Url is { } url)
+    {
+        <a class="msg-link" href="@url" target="_blank" rel="noopener noreferrer nofollow">@token.Text</a>
     }
     else
     {
-        <img class="emote" src="@part.Emote.Url" alt="@part.Emote.Token" title="@part.Emote.Token" />
+        @token.Text
     }
 }
 

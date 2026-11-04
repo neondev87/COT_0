@@ -1,0 +1,21 @@
+@* Encima del campo de texto mientras se graba o se envía; el deslizamiento lo mueve voice.js (--voice-slide) *@
+<div class="voice-rec" aria-live="polite">
+    @if (State == VoiceState.Recording)
+    {
+        <span class="voice-rec-dot"></span>
+        <span class="voice-rec-time">@VoiceFormat.Duration(Elapsed)</span>
+        <span class="voice-rec-hint">
+            <span class="voice-rec-slide">‹ DESLIZÁ PARA CANCELAR</span>
+            <span class="voice-rec-drop">SOLTÁ PARA CANCELAR</span>
+        </span>
+    }
+    else
+    {
+        <span class="voice-rec-time">ENVIANDO NOTA DE VOZ…</span>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired] public VoiceState State { get; set; }
+    [Parameter] public TimeSpan Elapsed { get; set; }
+}

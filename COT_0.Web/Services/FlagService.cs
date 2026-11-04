@@ -13,8 +13,16 @@ public class FlagService(IWebHostEnvironment env, IOptions<ChatOptions> options)
     public IReadOnlyList<FlagOption> GetFlags() =>
         _options.FlagNames
             .Select(f => new FlagOption(f.Key, f.Value, GetUrl(f.Key)))
-            .OrderBy(f => f.Label, StringComparer.CurrentCulture)
+            .OrderBy(f => PriorityOf(f.Key))
+            .ThenBy(f => f.Label, StringComparer.CurrentCulture)
             .ToList();
+
+    // Posición en Chat:FlagPriority; las que no están van al final
+    private int PriorityOf(string key)
+    {
+        var index = Array.IndexOf(_options.FlagPriority, key);
+        return index < 0 ? int.MaxValue : index;
+    }
 
     // Vacía si todavía no hay imagen (la vista muestra un marcador)
     public string GetUrl(string key)
