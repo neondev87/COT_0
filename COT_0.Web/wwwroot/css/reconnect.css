@@ -1,0 +1,38 @@
+/* Aviso de reconexión arriba (las clases components-reconnect-* las pone Blazor) */
+.cot-reconnect {
+    position: fixed;
+    top: calc(10px + env(safe-area-inset-top));
+    left: 50%;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    background: var(--sheet);
+    border: 1px solid color-mix(in srgb, var(--accent) 60%, transparent);
+    border-radius: 2px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: .24em;
+    color: var(--fg);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .6);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -16px);
+    transition: opacity .25s ease, transform .25s ease;
+}
+.cot-reconnect.components-reconnect-show,
+.cot-reconnect.components-reconnect-failed { opacity: 1; pointer-events: auto; transform: translate(-50%, 0); }
+.cot-reconnect-wait, .cot-reconnect-fail { display: none; align-items: center; gap: 10px; white-space: nowrap; }
+.components-reconnect-show .cot-reconnect-wait,
+.components-reconnect-failed .cot-reconnect-fail { display: inline-flex; }
+.cot-reconnect-wait::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: cotBlink 1s steps(1) infinite; }
+.cot-reconnect-retry {
+    padding: 4px 10px;
+    background: transparent;
+    border: 1px solid rgba(230, 230, 230, .4);
+    border-radius: 2px;
+    font: inherit;
+    letter-spacing: inherit;
+    cursor: pointer;
+}
+.cot-reconnect-retry:hover, .cot-reconnect-retry:focus-visible { border-color: var(--accent); outline: none; }

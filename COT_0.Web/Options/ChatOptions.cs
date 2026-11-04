@@ -63,6 +63,26 @@ public class ChatOptions
     public int MessagesOnJoin { get; set; } = 100;
     public string TimeFormat { get; set; } = "HH:mm";
 
+    // Mensajes seguidos del mismo autor dentro de esta ventana van en un solo grupo
+    public int GroupWindowMinutes { get; set; } = 5;
+
+    // "Escribiendo...": cada cuánto se avisa como máximo y cuánto dura el aviso
+    public int TypingThrottleSeconds { get; set; } = 2;
+    public int TypingTimeoutSeconds { get; set; } = 5;
+
+    // Segundos de espera antes de sacar a alguien que perdió la conexión (puede volver)
+    public int LeaveGraceSeconds { get; set; } = 20;
+
+    // Reconexión del circuito de Blazor (celular con la pantalla bloqueada)
+    public int CircuitRetentionMinutes { get; set; } = 5;
+    public int ReconnectRetries { get; set; } = 60;
+    public int ReconnectIntervalMs { get; set; } = 2000;
+
+    // Avisos del sistema en el chat ({0} = nombre)
+    public string JoinedNotice { get; set; } = "{0} entró a la sala";
+    public string LeftNotice { get; set; } = "{0} salió de la sala";
+    public string KickedNotice { get; set; } = "{0} fue expulsado";
+
     public int PhotoSize { get; set; } = 256;
     public string PhotoFormat { get; set; } = "image/jpeg";
     public long MaxPhotoBytes { get; set; } = 1024 * 1024;

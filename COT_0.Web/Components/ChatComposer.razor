@@ -1,0 +1,31 @@
+@* Barra de escritura: Enter envía, Shift+Enter salto de línea (chat.js), contador de caracteres *@
+<form class="chat-input" @onsubmit="OnSend">
+    <EmotePicker OnPick="emote => AppendAsync(emote.Token)" />
+    <div class="chat-field">
+        <textarea class="cot-input chat-text" rows="@Draft.Rows" maxlength="@Draft.MaxLength" enterkeyhint="send"
+                  @bind="Draft.Text" @bind:event="oninput" @bind:after="NotifyTypingAsync"
+                  placeholder="Escribí un mensaje…" autocomplete="off" aria-label="Mensaje"></textarea>
+        @if (Draft.Length > 0)
+        {
+            <span class="chat-count @(Draft.IsNearLimit ? "warn" : null)" aria-live="polite">@Draft.Length/@Draft.MaxLength</span>
+        }
+    </div>
+    @* mousedown sin acción: el textarea no pierde el foco y el teclado del celular no se cierra *@
+    <button type="submit" class="cot-btn chat-send" disabled="@(!Draft.CanSend)" aria-label="Enviar" @onmousedown:preventDefault>
+        <Icon Name="arrow" Size="20" Class="arr" />
+    </button>
+</form>
+
+@code {
+    [Parameter, EditorRequired] public MessageDraft Draft { get; set; } = default!;
+    [Parameter] public EventCallback OnSend { get; set; }
+    [Parameter] public EventCallback OnTyping { get; set; }
+
+    private Task NotifyTypingAsync() => OnTyping.InvokeAsync();
+
+    private Task AppendAsync(string token)
+    {
+        Draft.Append(token);
+        return NotifyTypingAsync();
+    }
+}
