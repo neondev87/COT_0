@@ -24,7 +24,7 @@
 }
 
 <form class="chat-input @(Draft.Length > 0 ? "has-text" : null)" @ref="form" @onsubmit="OnSend">
-    <EmotePicker OnPick="emote => AppendAsync(emote.Token)" />
+    <EmotePicker Query="@Draft.EmoteQuery" OnPick="emote => AppendAsync(emote.Name)" OnComplete="CompleteEmoteAsync" />
     @* Sin "capture": en el celular deja elegir cámara o galería *@
     <label class="chat-attach @(Images.State == ImageUploadState.Idle ? null : "off")" title="Adjuntar imagen">
         <Icon Name="image" Size="20" />
@@ -74,6 +74,12 @@
     private Task AppendAsync(string token)
     {
         Draft.Append(token);
+        return NotifyTypingAsync();
+    }
+
+    private Task CompleteEmoteAsync(RoomEmote emote)
+    {
+        Draft.CompleteEmote(emote.Name);
         return NotifyTypingAsync();
     }
 

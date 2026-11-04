@@ -1,6 +1,7 @@
 @inject IChatBrowser Browser
 @inject IVoiceService Voices
 @inject IImageService Images
+@inject IRoomEmotes Emotes
 
 @* Grupo de mensajes seguidos de un autor (encabezado + hora una vez) o un aviso del sistema *@
 @if (Group.IsSystem)
@@ -32,7 +33,7 @@ else
                 }
                 else
                 {
-                    <p class="msg-text msg-line" @key="message.Id"><MessageText Text="@message.Text" /></p>
+                    <p class="msg-text msg-line" @key="message.Id"><MessageText Text="@message.Text" EmoteVersion="Emotes.Version" /></p>
                 }
             }
         </div>

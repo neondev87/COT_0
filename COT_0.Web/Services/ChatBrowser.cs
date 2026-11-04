@@ -14,7 +14,7 @@ public sealed class ChatBrowser(IJSRuntime js, IOptions<ChatOptions> options, IL
     {
         try
         {
-            var zone = await js.InvokeAsync<BrowserZone>("cotChat.attach", chatPage);
+            var zone = await js.InvokeAsync<BrowserZone>("cotChat.attach", chatPage, options.Value.EmoteHoldMs);
             _zone = FindZone(zone);
         }
         catch (JSException ex)

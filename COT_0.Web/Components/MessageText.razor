@@ -1,22 +1,33 @@
 @inject IMessageFormatter Formatter
+@inject IEmoteActions EmoteActions
 
-@* Texto del mensaje con links y emotes; el resto se escapa (nada de HTML del usuario) *@
-@foreach (var token in Formatter.Format(Text))
-{
-    if (token.Emote is { } emote)
+@* Texto del mensaje con links y emotes; el resto se escapa (nada de HTML del usuario).
+   Clic derecho o mantener presionado un emote abre el menú de reportar *@
+<span class="msg-rich @(message.IsEmoteOnly ? "emote-only" : null)">
+    @foreach (var token in message.Tokens)
     {
-        <img class="emote" src="@emote.Url" alt="@emote.Token" title="@emote.Token" />
+        if (token.Emote is { } emote)
+        {
+            <EmoteImage Emote="emote" Large="message.IsEmoteOnly" OnMenu="EmoteActions.Open" />
+        }
+        else if (token.Url is { } url)
+        {
+            <a class="msg-link" href="@url" target="_blank" rel="noopener noreferrer nofollow">@token.Text</a>
+        }
+        else
+        {
+            @token.Text
+        }
     }
-    else if (token.Url is { } url)
-    {
-        <a class="msg-link" href="@url" target="_blank" rel="noopener noreferrer nofollow">@token.Text</a>
-    }
-    else
-    {
-        @token.Text
-    }
-}
+</span>
 
 @code {
     [Parameter, EditorRequired] public string Text { get; set; } = string.Empty;
+
+    // Cambia cuando el host quita/restaura emotes o cambia el set: obliga a volver a partir el texto
+    [Parameter] public int EmoteVersion { get; set; }
+
+    private FormattedMessage message = new([]);
+
+    protected override void OnParametersSet() => message = Formatter.Format(Text);
 }

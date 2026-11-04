@@ -1,25 +1,32 @@
 using System.Text.RegularExpressions;
-using COT_0.Core.Services;
+using COT_0.Web.Services.Emotes;
 using COT_0.Web.Models;
 
 namespace COT_0.Web.Services;
 
-public partial class MessageFormatter(IEmoteService emotes) : IMessageFormatter
+public partial class MessageFormatter(IRoomEmotes emotes) : IMessageFormatter
 {
     // Signos que suelen cerrar una oración y no forman parte del link
     private static readonly char[] TrailingPunctuation = ['.', ',', ';', ':', '!', '?', ')', ']', '}', '\'', '"'];
 
-    public IReadOnlyList<MessageToken> Format(string text)
+    // Como en Kick/7TV: una palabra igual al nombre de un emote activo se muestra como imagen.
+    // Si el host lo quita, Find no lo encuentra y queda como texto (también en mensajes viejos)
+    public FormattedMessage Format(string text)
     {
         var tokens = new List<MessageToken>();
+        var pending = 0;
 
-        foreach (var part in emotes.Parse(text))
+        foreach (Match word in WordPattern().Matches(text))
         {
-            if (part.Emote is null) AddLinks(tokens, part.Text);
-            else tokens.Add(new MessageToken(part.Text, Emote: part.Emote));
+            if (emotes.Find(word.Value) is not { } emote) continue;
+
+            AddLinks(tokens, text[pending..word.Index]);
+            tokens.Add(new MessageToken(word.Value, Emote: emote));
+            pending = word.Index + word.Length;
         }
 
-        return tokens;
+        AddLinks(tokens, text[pending..]);
+        return new FormattedMessage(tokens);
     }
 
     private static void AddLinks(List<MessageToken> tokens, string text)
@@ -47,6 +54,9 @@ public partial class MessageFormatter(IEmoteService emotes) : IMessageFormatter
             ? uri.AbsoluteUri
             : null;
     }
+
+    [GeneratedRegex(@"\S+")]
+    private static partial Regex WordPattern();
 
     [GeneratedRegex(@"\b(?:https?://|www\.)[^\s<>""]+", RegexOptions.IgnoreCase)]
     private static partial Regex LinkPattern();

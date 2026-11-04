@@ -1,0 +1,138 @@
+/* Emotes de 7TV: inline en el texto, picker estilo Kick y menú de reportar. Animaciones solo con transform y opacity */
+:root { --emote-h: 28px; --emote-lg: 56px; }
+
+@keyframes emoteIn { 0% { opacity: 0; transform: translateY(10px) scale(.98) } 100% { opacity: 1; transform: none } }
+@keyframes emoteToast { 0% { opacity: 0; transform: translate(-50%, -8px) } 10%, 80% { opacity: 1; transform: translate(-50%, 0) } 100% { opacity: 0; transform: translate(-50%, -8px) } }
+
+/* En el texto: alto fijo y ancho según width/height del <img> (lugar reservado antes de cargar) */
+.emote { display: inline-flex; vertical-align: middle; line-height: 0; }
+.emote img { height: var(--emote-h); width: auto; max-width: calc(var(--emote-h) * 4); object-fit: contain; }
+.emote-only .emote img { height: var(--emote-lg); max-width: calc(var(--emote-lg) * 4); }
+.emote-only { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+
+/* Mantener presionado abre el menú: sin el globo nativo de iPhone ni selección */
+.msg-scroll .emote { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; cursor: context-menu; }
+
+/* Carita */
+.emote-toggle {
+    width: 44px;
+    height: 46px;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid rgba(230, 230, 230, .35);
+    border-radius: 2px;
+    color: var(--fg);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .2s ease, opacity .2s ease;
+}
+.emote-toggle:hover, .emote-toggle:focus-visible { border-color: var(--accent); outline: none; }
+.emote-toggle:active { transform: scale(.94); }
+.emote-toggle.off { opacity: .45; }
+
+/* Cierra el picker / menú al tocar afuera */
+.emote-scrim { position: fixed; inset: 0; z-index: 3; padding: 0; border: 0; background: transparent; cursor: default; }
+
+/* Panel: arriba de la barra de escritura */
+.emote-panel {
+    position: absolute;
+    z-index: 4;
+    left: 12px;
+    right: 12px;
+    bottom: calc(100% + 8px);
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    background: var(--sheet);
+    border: 1px solid var(--edge);
+    border-radius: 10px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .55);
+    animation: emoteIn .2s ease both;
+}
+.emote-panel.suggest { max-width: 360px; }
+.emote-search { display: flex; align-items: center; gap: 8px; padding-left: 8px; color: var(--fg-mute); }
+.emote-search .cot-input { height: 40px; padding: 0 10px; font-size: 16px; }
+.emote-grid {
+    max-height: 220px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+    gap: 4px;
+}
+.emote-panel.suggest .emote-grid { max-height: 112px; }
+.emote-option {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .15s ease;
+}
+.emote-option img { max-width: 36px; }
+.emote-option:hover, .emote-option:focus-visible { border-color: rgba(255, 255, 255, .25); outline: none; transform: scale(1.08); }
+.emote-option:active { transform: scale(.94); }
+.emote-panel.suggest .emote-option:first-child { border-color: color-mix(in srgb, var(--accent) 55%, transparent); }
+
+/* Vista previa del emote señalado */
+.emote-preview { display: flex; align-items: center; gap: 12px; padding-top: 8px; border-top: 1px solid var(--edge); animation: emoteIn .15s ease both; }
+.emote-preview .emote img { height: var(--emote-lg); max-width: calc(var(--emote-lg) * 3); }
+.emote-preview span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; letter-spacing: .04em; }
+.emote-note { margin: 4px 6px; font-size: 13px; color: var(--fg-mute); }
+
+/* Menú de un emote del chat */
+.emote-menu {
+    position: fixed;
+    z-index: 30;
+    left: 50%;
+    bottom: calc(96px + env(safe-area-inset-bottom));
+    width: min(320px, calc(100vw - 32px));
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 6px 12px;
+    padding: 14px;
+    background: var(--sheet);
+    border: 1px solid var(--edge);
+    border-radius: 10px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .6);
+    transform: translateX(-50%);
+    animation: emoteMenuIn .2s ease both;
+}
+@keyframes emoteMenuIn { 0% { opacity: 0; transform: translate(-50%, 12px) } 100% { opacity: 1; transform: translate(-50%, 0) } }
+.emote-menu .emote img { height: var(--emote-lg); max-width: calc(var(--emote-lg) * 2); }
+.emote-menu-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.emote-menu .emote-report { grid-column: 1 / -1; grid-row: 2; height: 44px; font-size: 13px; letter-spacing: .28em; }
+.chat-page > .emote-scrim { z-index: 29; }
+
+.emote-toast {
+    position: fixed;
+    z-index: 31;
+    top: calc(72px + env(safe-area-inset-top));
+    left: 50%;
+    margin: 0;
+    padding: 8px 14px;
+    background: var(--sheet);
+    border: 1px solid var(--edge);
+    border-radius: 6px;
+    font-size: 13px;
+    letter-spacing: .06em;
+    pointer-events: none;
+    opacity: 0;
+    animation: emoteToast 3s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .emote-panel, .emote-preview, .emote-menu { animation-duration: .01s; }
+    .emote-option, .emote-toggle { transition: none; }
+}

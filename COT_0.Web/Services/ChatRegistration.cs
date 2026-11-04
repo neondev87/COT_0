@@ -1,6 +1,7 @@
 using COT_0.Core.Services;
 using COT_0.Web.Hubs;
 using COT_0.Web.Options;
+using COT_0.Web.Services.Emotes;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.Extensions.Options;
 
@@ -33,7 +34,7 @@ public static class ChatRegistration
         services.AddSingleton<IImageService, ImageService>();
         services.AddSingleton<IRoomService, RoomService>();
         services.AddSingleton<IAvatarStore, InMemoryAvatarStore>();
-        services.AddSingleton<IEmoteService, EmoteService>();
+        services.AddRoomEmotes();
         services.AddSingleton<IFlagService, FlagService>();
         services.AddScoped<IGuestStore, GuestStore>();
         services.AddScoped<IProfileService, ProfileService>();

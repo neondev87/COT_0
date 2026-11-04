@@ -1,0 +1,46 @@
+@implements IDisposable
+@inject IEmoteActions Actions
+
+@* Menú de un emote del chat (clic derecho / mantener presionado): REPORTAR le avisa al host *@
+@if (Actions.Target is { } emote)
+{
+    <button type="button" class="emote-scrim" @onclick="Actions.Close" aria-label="Cancelar" tabindex="-1"></button>
+    <div class="emote-menu" role="dialog" aria-label="Emote @emote.Name" @onkeydown="OnKeyDown">
+        <EmoteImage Emote="emote" Large />
+        <span class="emote-menu-name">@emote.Name</span>
+        @if (Reporter is { } reporter)
+        {
+            <button type="button" class="cot-btn emote-report" @onclick="() => Actions.Report(reporter)">REPORTAR</button>
+        }
+        <button type="button" class="cot-x" @onclick="Actions.Close" aria-label="Cerrar"><Icon Name="close" Size="16" /></button>
+    </div>
+}
+@if (Actions.LastReportSent is { } sent)
+{
+    @* Se desvanece solo (animación CSS); @key la reinicia en cada reporte *@
+    <p class="emote-toast" role="status" @key="Actions.NoticeKey">
+        @if (sent)
+        {
+            <span>Reporte enviado al host</span>
+        }
+        else
+        {
+            <span>Ya reportaste este emote</span>
+        }
+    </p>
+}
+
+@code {
+    [Parameter] public User? Reporter { get; set; }
+
+    protected override void OnInitialized() => Actions.Changed += OnChanged;
+
+    private void OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Escape") Actions.Close();
+    }
+
+    private void OnChanged() => _ = InvokeAsync(StateHasChanged);
+
+    public void Dispose() => Actions.Changed -= OnChanged;
+}

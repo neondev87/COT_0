@@ -7,8 +7,6 @@ public class ChatOptions
 
     public string HubPath { get; set; } = "/chathub";
     public string AvatarsPath { get; set; } = "/avatars";
-    public string EmotesFolder { get; set; } = "emotes";
-    public string[] EmoteExtensions { get; set; } = [".gif", ".png", ".webp", ".jpg"];
     public string FlagsFolder { get; set; } = "img/flags";
     public string FlagExtension { get; set; } = ".png";
 
@@ -102,6 +100,27 @@ public class ChatOptions
     public int ImageThumbWidth { get; set; } = 240;
     public int ImageThumbMaxHeight { get; set; } = 300;
     public int ImageCacheSeconds { get; set; } = 86400;
+
+    // Emotes de 7TV (API pública v3). El navegador baja las imágenes directo del CDN; el servidor solo cachea la lista.
+    // EmoteSetId: ID o URL del set ("global" = set global de 7TV); el Host lo cambia con IRoomEmotes.UseSetAsync
+    public string SevenTvApiUrl { get; set; } = "https://7tv.io/v3/";
+    public string SevenTvEmoteSetPath { get; set; } = "emote-sets/{0}";
+    public string SevenTvCdnHost { get; set; } = "cdn.7tv.app";
+    public string SevenTvUserAgent { get; set; } = "COT_0/1.0";
+    public string EmoteSetId { get; set; } = "global";
+    public int EmoteCacheMinutes { get; set; } = 10;
+    public int EmoteRetrySeconds { get; set; } = 60;
+    public int EmoteRequestTimeoutSeconds { get; set; } = 10;
+
+    // Archivos del CDN: tamaño en el texto (~28 px) y grande (solo emotes / vista previa)
+    public string EmoteScale { get; set; } = "2x";
+    public string EmoteLargeScale { get; set; } = "4x";
+    public string EmoteFormat { get; set; } = "webp";
+    public string EmoteFallbackFormat { get; set; } = "gif";
+    public int EmotePickerLimit { get; set; } = 120;
+
+    // Mantener presionado un emote del chat (celular) abre el menú de reportar
+    public int EmoteHoldMs { get; set; } = 500;
 
     // URL local de Kestrel; la completa WebApp (el chat se conecta al hub por acá)
     public string ServerUrl { get; set; } = string.Empty;
