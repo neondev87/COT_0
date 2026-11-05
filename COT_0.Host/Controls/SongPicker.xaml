@@ -15,7 +15,7 @@
             </Border.InputBindings>
         </Border>
 
-        <Border Style="{StaticResource SongPanel}">
+        <Border x:Name="SongPanel" Style="{StaticResource SongPanel}">
             <Border.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleX="0.97" ScaleY="0.97"/>

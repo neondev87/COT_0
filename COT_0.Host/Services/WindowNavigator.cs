@@ -13,6 +13,20 @@ public class WindowNavigator(IServiceProvider services, IShutdownCoordinator shu
 
     public void ShowMain() => Show<MainWindow>();
 
+    // Manual de Lain sobre la ventana actual, del mismo tamaño
+    public void ShowManual()
+    {
+        var manual = services.GetRequiredService<ManualWindow>();
+        if (_current is { } owner)
+        {
+            manual.Owner = owner;
+            manual.Width = owner.ActualWidth;
+            manual.Height = owner.ActualHeight;
+            manual.WindowState = owner.WindowState;
+        }
+        manual.ShowDialog();
+    }
+
     private void Show<T>() where T : Window
     {
         var next = services.GetRequiredService<T>();

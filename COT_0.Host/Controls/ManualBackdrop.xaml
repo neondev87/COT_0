@@ -1,0 +1,34 @@
+<UserControl x:Class="COT_0.Host.Controls.ManualBackdrop"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:COT_0.Host.Controls"
+             IsHitTestVisible="False" ClipToBounds="True">
+    <!-- Fondo del manual, de abajo hacia arriba: degradado, niebla, estática de TV y viñeta -->
+    <Grid Background="{StaticResource LoginBackgroundBrush}">
+        <Ellipse Margin="100,86" Fill="{StaticResource FogABrush}">
+            <Ellipse.Effect>
+                <BlurEffect Radius="30"/>
+            </Ellipse.Effect>
+            <Ellipse.RenderTransform>
+                <TranslateTransform x:Name="Fog"/>
+            </Ellipse.RenderTransform>
+        </Ellipse>
+        <controls:NoiseLayer Opacity="0.065"/>
+        <Rectangle Fill="{StaticResource VignetteBrush}"/>
+    </Grid>
+
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="Fog" Storyboard.TargetProperty="X" From="-70" To="70"
+                                     Duration="{StaticResource FogADuration}" AutoReverse="True" RepeatBehavior="Forever"
+                                     EasingFunction="{StaticResource SineInOut}"/>
+                    <DoubleAnimation Storyboard.TargetName="Fog" Storyboard.TargetProperty="Y" From="20" To="-28"
+                                     Duration="{StaticResource FogADuration}" AutoReverse="True" RepeatBehavior="Forever"
+                                     EasingFunction="{StaticResource SineInOut}"/>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </UserControl.Triggers>
+</UserControl>

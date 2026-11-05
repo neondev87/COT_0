@@ -109,7 +109,7 @@ public partial class DashboardViewModel : ObservableObject
     private void ShowRoom() => _screens.ShowRoom();
 
     [RelayCommand]
-    private void ShowManual() => _dialogs.ShowManual();
+    private void ShowManual() => _windows.ShowManual();
 
     [RelayCommand]
     private async Task LogoutAsync()

@@ -1,0 +1,87 @@
+<UserControl x:Class="COT_0.Host.Views.ManualStepView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:COT_0.Host.Controls">
+    <!-- Paso actual: número, título, texto y la vista de ejemplo (DataContext: ManualViewModel) -->
+    <UserControl.Resources>
+        <ResourceDictionary Source="ManualStages.xaml"/>
+    </UserControl.Resources>
+
+    <!-- Al cambiar de paso: sale con fundido corto; el nuevo entra subiendo 18px -->
+    <ContentControl Content="{Binding Current}" Focusable="False">
+        <ContentControl.Style>
+            <Style TargetType="ContentControl">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsLeaving}" Value="True">
+                        <DataTrigger.EnterActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="{StaticResource ManualLeaveDuration}"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </DataTrigger.EnterActions>
+                        <DataTrigger.ExitActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0" BeginTime="0:0:0.05"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </DataTrigger.ExitActions>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ContentControl.Style>
+        <ContentControl.ContentTemplate>
+            <DataTemplate>
+                <Grid controls:EntryAnimation.OffsetY="18" controls:EntryAnimation.Ease="{StaticResource EaseOut}"
+                      controls:EntryAnimation.Duration="{StaticResource ManualFadeDuration}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="{Binding Label}" Style="{StaticResource ManualStepNumberText}"/>
+                    <TextBlock Grid.Row="1" Text="{Binding Title}" Style="{StaticResource ManualStepTitleText}"
+                               Visibility="{Binding HasTitle, Converter={StaticResource BoolToVisibility}}"/>
+                    <TextBlock Grid.Row="2" Text="{Binding Text}" Style="{StaticResource ManualStepText}"/>
+
+                    <!-- Vista: ocupa el resto; la vista de 1280×720 se escala sin deformarse -->
+                    <Border Grid.Row="3" Margin="0,18,0,0" MinHeight="180" CornerRadius="10" Padding="1"
+                            Background="{StaticResource ManualPanelBrush}" BorderBrush="{StaticResource PanelBorderBrush}" BorderThickness="1">
+                        <Viewbox Stretch="Uniform">
+                            <ContentControl Focusable="False" ClipToBounds="True"
+                                            Content="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            controls:ManualCue.Phase="{Binding DataContext.Phase, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                <ContentControl.Style>
+                                    <Style TargetType="ContentControl">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Number}" Value="1">
+                                                <Setter Property="ContentTemplate" Value="{StaticResource ManualStage1}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Number}" Value="2">
+                                                <Setter Property="ContentTemplate" Value="{StaticResource ManualStage2}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Number}" Value="3">
+                                                <Setter Property="ContentTemplate" Value="{StaticResource ManualStage3}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Number}" Value="4">
+                                                <Setter Property="ContentTemplate" Value="{StaticResource ManualStage4}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Number}" Value="5">
+                                                <Setter Property="ContentTemplate" Value="{StaticResource ManualStage5}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Number}" Value="6">
+                                                <Setter Property="ContentTemplate" Value="{StaticResource ManualStage6}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ContentControl.Style>
+                            </ContentControl>
+                        </Viewbox>
+                    </Border>
+                </Grid>
+            </DataTemplate>
+        </ContentControl.ContentTemplate>
+    </ContentControl>
+</UserControl>

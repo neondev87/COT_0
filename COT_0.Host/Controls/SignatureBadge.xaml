@@ -96,7 +96,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Style="{StaticResource PlainButton}" Command="{Binding ToggleNoteCommand}" Padding="12">
+            <Button x:Name="NoteButton" Style="{StaticResource PlainButton}" Command="{Binding ToggleNoteCommand}" Padding="12">
                 <Viewbox Width="20" Height="20">
                     <Path>
                         <Path.Style>

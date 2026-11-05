@@ -17,6 +17,8 @@
                 <ResourceDictionary Source="Themes/Room.xaml"/>
                 <ResourceDictionary Source="Themes/Emotes.xaml"/>
                 <ResourceDictionary Source="Themes/SongPicker.xaml"/>
+                <ResourceDictionary Source="Themes/Manual.xaml"/>
+                <ResourceDictionary Source="Themes/ManualParts.xaml"/>
                 <ResourceDictionary Source="Themes/Window.xaml"/>
                 <ResourceDictionary Source="Themes/Templates.xaml"/>
             </ResourceDictionary.MergedDictionaries>

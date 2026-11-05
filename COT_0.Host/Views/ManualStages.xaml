@@ -1,0 +1,97 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:COT_0.Host.Controls"
+                    xmlns:views="clr-namespace:COT_0.Host.Views">
+
+    <!-- Ejemplos de cada paso con las vistas reales y datos de muestra (DataContext: ManualViewModel).
+         Fases: 1 = entra la notificación 1, 2 = sale, 3 = entra la 2, 4 = sale, 5 = entra la 3 -->
+
+    <!-- Lienzo de diseño (1280×720): la vista no se puede tocar ni toma el foco -->
+    <Style x:Key="ManualStageView" TargetType="FrameworkElement">
+        <Setter Property="Width" Value="{StaticResource DesignWidth}"/>
+        <Setter Property="Height" Value="{StaticResource DesignHeight}"/>
+        <Setter Property="IsEnabled" Value="False"/>
+        <Setter Property="IsHitTestVisible" Value="False"/>
+    </Style>
+
+    <!-- Velo y aviso de confirmación como en ConfirmWindow -->
+    <DataTemplate x:Key="ManualConfirmOverlay">
+        <Grid Background="{StaticResource PickerVeilBrush}">
+            <Border Width="{StaticResource ConfirmWidth}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Background="{StaticResource WindowBackgroundBrush}" BorderBrush="{StaticResource PanelBorderBrush}" BorderThickness="1">
+                <controls:ConfirmPanel DataContext="{Binding}"/>
+            </Border>
+        </Grid>
+    </DataTemplate>
+
+    <!-- 1 · Bienvenida: dashboard, tarjeta GENERAR QR -->
+    <DataTemplate x:Key="ManualStage1">
+        <Grid Background="{StaticResource LoginBackgroundBrush}">
+            <views:DashboardView DataContext="{Binding Demo.Idle}" Style="{StaticResource ManualStageView}"/>
+            <Canvas>
+                <controls:ManualHighlight Target="QrCard" Arrow="Right" Inflate="8" controls:ManualCue.From="3" controls:ManualCue.To="3"/>
+            </Canvas>
+        </Grid>
+    </DataTemplate>
+
+    <!-- 2 · QR y entrada: sala con su QR y los que ya entraron -->
+    <DataTemplate x:Key="ManualStage2">
+        <Grid Background="{StaticResource LoginBackgroundBrush}">
+            <views:RoomView DataContext="{Binding Demo.Room}" Style="{StaticResource ManualStageView}"/>
+            <Canvas>
+                <controls:ManualHighlight Target="RoomQr" Arrow="Right" Inflate="8" controls:ManualCue.From="1" controls:ManualCue.To="3"/>
+                <controls:ManualHighlight Target="RoomUsers" Arrow="Left" Inflate="6" controls:ManualCue.From="5"/>
+            </Canvas>
+        </Grid>
+    </DataTemplate>
+
+    <!-- 3 · El chat: la sala con los invitados conectados y en vivo -->
+    <DataTemplate x:Key="ManualStage3">
+        <Grid Background="{StaticResource LoginBackgroundBrush}">
+            <views:RoomView DataContext="{Binding Demo.Room}" Style="{StaticResource ManualStageView}"/>
+            <Canvas>
+                <controls:ManualHighlight Target="RoomUsers" Arrow="Left" Inflate="6" controls:ManualCue.From="1" controls:ManualCue.To="1"/>
+                <controls:ManualHighlight Target="RoomCount" Arrow="Right" Inflate="8" controls:ManualCue.From="3" controls:ManualCue.To="3"/>
+                <controls:ManualHighlight Target="RoomLive" Arrow="Bottom" Inflate="8" controls:ManualCue.From="5"/>
+            </Canvas>
+        </Grid>
+    </DataTemplate>
+
+    <!-- 4 · Emotes: bloque EMOTES con reportes de muestra -->
+    <DataTemplate x:Key="ManualStage4">
+        <Grid Background="{StaticResource LoginBackgroundBrush}">
+            <views:RoomView DataContext="{Binding Demo.Room}" Style="{StaticResource ManualStageView}"/>
+            <Canvas>
+                <controls:ManualHighlight Target="RoomEmotes" Arrow="Left" Inflate="6" controls:ManualCue.From="1" controls:ManualCue.To="1"/>
+                <controls:ManualHighlight Target="EmoteReports" Arrow="Left" Inflate="6" controls:ManualCue.From="3"/>
+            </Canvas>
+        </Grid>
+    </DataTemplate>
+
+    <!-- 5 · Música: la nota de la firma y el selector de canciones -->
+    <DataTemplate x:Key="ManualStage5">
+        <Grid Background="{StaticResource LoginBackgroundBrush}">
+            <views:DashboardView DataContext="{Binding Demo.Idle}" Style="{StaticResource ManualStageView}"/>
+            <Grid controls:ManualCue.From="3" Style="{StaticResource ManualStageView}">
+                <controls:SongPicker DataContext="{Binding Demo.Idle.Signature.Songs}"/>
+            </Grid>
+            <Canvas>
+                <controls:ManualHighlight Target="NoteButton" Arrow="Left" Inflate="2" controls:ManualCue.From="1" controls:ManualCue.To="1"/>
+                <controls:ManualHighlight Target="SongPanel" Arrow="Right" Inflate="6" controls:ManualCue.From="3"/>
+            </Canvas>
+        </Grid>
+    </DataTemplate>
+
+    <!-- 6 · Salir: tarjeta SALIR con la sala activa y el aviso para cerrarla -->
+    <DataTemplate x:Key="ManualStage6">
+        <Grid Background="{StaticResource LoginBackgroundBrush}">
+            <views:DashboardView DataContext="{Binding Demo.Active}" Style="{StaticResource ManualStageView}"/>
+            <ContentPresenter Content="{Binding Demo.Confirm}" ContentTemplate="{StaticResource ManualConfirmOverlay}"
+                              controls:ManualCue.From="3" Style="{StaticResource ManualStageView}"/>
+            <Canvas>
+                <controls:ManualHighlight Target="ExitCard" Arrow="Right" Inflate="8" controls:ManualCue.From="1" controls:ManualCue.To="1"/>
+                <controls:ManualHighlight Target="ConfirmButton" Arrow="Bottom" Inflate="6" controls:ManualCue.From="3" controls:ManualCue.To="3"/>
+            </Canvas>
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

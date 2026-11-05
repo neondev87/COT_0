@@ -10,7 +10,7 @@ public class SpacedText : FrameworkElement
 {
     public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
         nameof(Text), typeof(string), typeof(SpacedText),
-        new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.AffectsMeasure));
+        new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender));
 
     public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(
         nameof(Spacing), typeof(double), typeof(SpacedText),

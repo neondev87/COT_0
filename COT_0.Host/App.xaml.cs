@@ -61,6 +61,9 @@ public partial class App : Application
         .AddSingleton<SongCatalog>()
         .AddSingleton<SongPickerViewModel>()
         .AddSingleton<DialogService>()
+        .AddSingleton<ManualAssets>()
+        .AddSingleton<ManualSound>()
+        .AddSingleton<ManualDemoFactory>()
         .AddSingleton<BackgroundCatalog>()
         .AddSingleton<IShutdownCoordinator, ShutdownCoordinator>()
         .AddSingleton<WindowNavigator>()
@@ -75,6 +78,8 @@ public partial class App : Application
         .AddTransient<LoginViewModel>()
         .AddTransient<LoginWindow>()
         .AddTransient<MainWindow>()
+        .AddTransient<ManualViewModel>()
+        .AddTransient<ManualWindow>()
         .BuildServiceProvider();
 
     // Servidor web en segundo plano; si falla acá, "Generar QR" lo reintenta y muestra el error
