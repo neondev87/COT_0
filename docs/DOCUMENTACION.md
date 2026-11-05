@@ -41,10 +41,10 @@ COT_0_P\
 ├─ musica\     canciones (.mp3, .wav, .m4a…)
 ├─ portadas\   portadas con el mismo nombre que la canción (.jpg, .png, .webp)
 ├─ gifs\       lain_tele_web.mp4 y lain_despedida.mp4 (manual de Lain)
-└─ manual\     notificacion.mp3 y estatica.wav (sonidos del manual)
+└─ manual\     notificacion.mp3, estatica.wav, lain.mp4 y lain-poster.jpg (manual)
 ```
 
-Si falta alguna carpeta, la app funciona sin esa parte (sin música, sin fondo, manual sin sonido). Los sonidos del manual de invitados (`/manual`) salen de la misma carpeta `manual\` (`GuestManual:AssetsFolder`).
+Si falta alguna carpeta, la app funciona sin esa parte (sin música, sin fondo, manual sin sonido). Los sonidos y la tele de Lain del manual de invitados (`/manual`) salen de la misma carpeta `manual\` (`GuestManual:AssetsFolder`). `lain.mp4` es `gifs\lain.gif` convertido una sola vez (H.264, sin audio): `ffmpeg -i gifs\lain.gif -an -c:v libx264 -pix_fmt yuv420p -crf 26 -movflags +faststart -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" manual\lain.mp4` y el poster con `ffmpeg -i gifs\lain.gif -frames:v 1 manual\lain-poster.jpg`. La app no necesita ffmpeg para correr.
 
 **`Paths:MediaRoot`**
 
@@ -71,7 +71,7 @@ dotnet user-secrets set "Host:Password" "tu_contraseña" --project COT_0.Host
 dotnet run --project COT_0.Host
 ```
 
-Inicia sesión, toca **GENERAR QR** y comparte el código. Para probar solo la web, sin host: `dotnet run --project COT_0.Web` (la sala se abre sola en `http://localhost:5050`; sin `Paths:MediaRoot`, el manual de invitados queda sin sonido).
+Inicia sesión, toca **GENERAR QR** y comparte el código. Para probar solo la web, sin host: `dotnet run --project COT_0.Web` (la sala se abre sola en `http://localhost:5050`; sin `Paths:MediaRoot`, el manual de invitados queda sin sonido ni tele de Lain).
 
 ## 4. Funciones principales
 
