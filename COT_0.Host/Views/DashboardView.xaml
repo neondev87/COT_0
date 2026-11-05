@@ -47,7 +47,7 @@
         <!-- Menú en diagonal -->
         <StackPanel Margin="44,0,0,38" HorizontalAlignment="Left" VerticalAlignment="Bottom">
             <Border Style="{StaticResource MenuCardSlot}" controls:EntryAnimation.Delay="{StaticResource Delay015}">
-                <controls:MenuCard Number="01" Title="{Binding QrTitle}" Subtitle="{Binding QrSubtitle}"
+                <controls:MenuCard x:Name="QrCard" Number="01" Title="{Binding QrTitle}" Subtitle="{Binding QrSubtitle}"
                                    Icon="{StaticResource IconQr}" Command="{Binding GenerateQrCommand}"/>
             </Border>
             <Border Style="{StaticResource MenuCardSlot}" Margin="26,8,0,0" controls:EntryAnimation.Delay="{StaticResource Delay027}">
@@ -59,7 +59,7 @@
                                    Icon="{StaticResource IconManual}" Command="{Binding ShowManualCommand}"/>
             </Border>
             <Border Style="{StaticResource MenuCardSlot}" Margin="78,8,0,0" controls:EntryAnimation.Delay="{StaticResource Delay051}">
-                <controls:MenuCard Number="04" Title="{DynamicResource Text.Dashboard.ExitTitle}" Subtitle="{DynamicResource Text.Dashboard.ExitSubtitle}"
+                <controls:MenuCard x:Name="ExitCard" Number="04" Title="{DynamicResource Text.Dashboard.ExitTitle}" Subtitle="{DynamicResource Text.Dashboard.ExitSubtitle}"
                                    Icon="{StaticResource IconExit}" Command="{Binding LogoutCommand}"/>
             </Border>
         </StackPanel>

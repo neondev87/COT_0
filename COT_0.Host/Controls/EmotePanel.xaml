@@ -71,7 +71,7 @@
                     <Border Style="{StaticResource EmoteSectionHeader}">
                         <controls:SpacedText Text="{DynamicResource Text.Emotes.Reports}" Style="{StaticResource ColumnHeaderText}"/>
                     </Border>
-                    <ItemsControl ItemsSource="{Binding Reports}" Tag="{StaticResource ReportActions}"
+                    <ItemsControl x:Name="EmoteReports" ItemsSource="{Binding Reports}" Tag="{StaticResource ReportActions}"
                                   ItemTemplate="{StaticResource EmoteRowTemplate}" Focusable="False"/>
                     <TextBlock Text="{DynamicResource Text.Emotes.NoReports}" Tag="{Binding HasReports}" Style="{StaticResource EmptyListText}"/>
 

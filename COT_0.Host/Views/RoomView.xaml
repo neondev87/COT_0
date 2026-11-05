@@ -22,7 +22,7 @@
                 <controls:SpacedText Text="{Binding Code, StringFormat=#{0}}" Margin="28,0,0,0" VerticalAlignment="Center"
                                      FontFamily="{StaticResource FontMono}" FontSize="13" Spacing="0.1" Foreground="{StaticResource Text62Brush}"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+            <StackPanel x:Name="RoomLive" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                 <ContentControl Style="{StaticResource PulseDot}" VerticalAlignment="Center"/>
                 <controls:SpacedText Text="{DynamicResource Text.Room.Live}" Margin="12,0" VerticalAlignment="Center"
                                      FontFamily="{StaticResource FontCondensedMedium}" FontSize="14" Spacing="0.32" Foreground="{StaticResource Text70Brush}"/>
@@ -31,7 +31,7 @@
         </Grid>
 
         <!-- Columna izquierda: QR + URL -->
-        <controls:QrPanel Width="{StaticResource QrPanelSize}" Margin="64,124,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+        <controls:QrPanel x:Name="RoomQr" Width="{StaticResource QrPanelSize}" Margin="64,124,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                           controls:EntryAnimation.OffsetX="-60" controls:EntryAnimation.Delay="{StaticResource Delay010}"
                           controls:EntryAnimation.Ease="{StaticResource EaseOut}" controls:EntryAnimation.Duration="{StaticResource RoomEntryDuration}"/>
 
@@ -44,7 +44,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <StackPanel Orientation="Horizontal">
+            <StackPanel x:Name="RoomCount" Orientation="Horizontal" HorizontalAlignment="Left">
                 <TextBlock Text="{Binding Total, StringFormat={}{0:00}}" FontFamily="{StaticResource FontCondensedExtraLight}" FontSize="120"
                            LineHeight="98.4" LineStackingStrategy="BlockLineHeight" Foreground="{StaticResource TextBrush}" VerticalAlignment="Bottom"/>
                 <StackPanel Margin="18,0,0,8" VerticalAlignment="Bottom">
@@ -59,8 +59,8 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <controls:UserList/>
-                <controls:EmotePanel Grid.Column="1" Width="{StaticResource EmotePanelWidth}" Margin="16,0,0,0" DataContext="{Binding Emotes}"/>
+                <controls:UserList x:Name="RoomUsers"/>
+                <controls:EmotePanel x:Name="RoomEmotes" Grid.Column="1" Width="{StaticResource EmotePanelWidth}" Margin="16,0,0,0" DataContext="{Binding Emotes}"/>
             </Grid>
 
             <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
