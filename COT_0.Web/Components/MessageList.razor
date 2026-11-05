@@ -1,0 +1,28 @@
+@* Mensajes del chat, "escribiendo…" y el aviso de mensajes nuevos (lo muestra chat.js) *@
+<div class="chat-main">
+    <main class="msg-scroll">
+        <div class="msg-stack">
+            @if (Groups.Count == 0)
+            {
+                <p class="msg-empty">Todavía no hay mensajes. Rompe el silencio.</p>
+            }
+            @foreach (var group in Groups)
+            {
+                <MessageBlock @key="group.Key" Group="group" OnOpenImage="OnOpenImage" FindVoice="FindVoice" FindImage="FindImage" />
+            }
+        </div>
+    </main>
+
+    <p class="msg-typing @(TypingSummary is null ? null : "on")" aria-live="polite">@TypingSummary</p>
+    <button type="button" class="msg-new">MENSAJES NUEVOS <Icon Name="chevron" Size="16" /></button>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public IReadOnlyList<MessageGroup> Groups { get; set; } = [];
+    [Parameter] public string? TypingSummary { get; set; }
+    [Parameter] public EventCallback<string> OnOpenImage { get; set; }
+
+    // Solo el manual los pasa (datos de muestra); en el chat se buscan en memoria
+    [Parameter] public Func<ChatMessage, VoicePlayback?>? FindVoice { get; set; }
+    [Parameter] public Func<ChatMessage, ImageView?>? FindImage { get; set; }
+}

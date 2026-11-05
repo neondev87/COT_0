@@ -23,11 +23,11 @@ else
             </header>
             @foreach (var message in Group.Messages)
             {
-                if (Voices.Find(message) is { } voice)
+                if ((FindVoice ?? Voices.Find)(message) is { } voice)
                 {
                     <div class="msg-line msg-voice" @key="message.Id"><VoiceBubble Voice="voice" /></div>
                 }
-                else if (Images.Find(message) is { } image)
+                else if ((FindImage ?? Images.Find)(message) is { } image)
                 {
                     <div class="msg-line msg-image" @key="message.Id"><ImageBubble Image="image" OnOpen="OnOpenImage" /></div>
                 }
@@ -43,4 +43,8 @@ else
 @code {
     [Parameter, EditorRequired] public MessageGroup Group { get; set; } = default!;
     [Parameter] public EventCallback<string> OnOpenImage { get; set; }
+
+    // Solo el manual los pasa (datos de muestra); en el chat se buscan en memoria
+    [Parameter] public Func<ChatMessage, VoicePlayback?>? FindVoice { get; set; }
+    [Parameter] public Func<ChatMessage, ImageView?>? FindImage { get; set; }
 }
