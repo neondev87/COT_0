@@ -14,8 +14,28 @@
         <KeyBinding Key="Escape" Command="{Binding ExitCommand}"/>
     </controls:ChromeWindow.InputBindings>
 
+    <controls:ChromeWindow.Resources>
+        <Storyboard x:Key="SweepMotion">
+            <DoubleAnimation Storyboard.TargetName="Sweep" Storyboard.TargetProperty="Y" From="-140" To="1200"
+                             Duration="{StaticResource ManualSweepDuration}" RepeatBehavior="Forever"/>
+        </Storyboard>
+    </controls:ChromeWindow.Resources>
+
     <Grid>
-        <controls:ManualBackdrop/>
+        <!-- Fondo con margen extra para que el temblor de la señal no deje ver el borde -->
+        <controls:ManualBackdrop Margin="-12">
+            <controls:ManualBackdrop.RenderTransform>
+                <TranslateTransform Y="{Binding Tremor, ElementName=Signal}"/>
+            </controls:ManualBackdrop.RenderTransform>
+        </controls:ManualBackdrop>
+
+        <!-- Pérdida de señal: encima del fondo y la estática, debajo del contenido -->
+        <controls:SignalLossLayer x:Name="Signal" Channel="{Binding Channel}" BurstCommand="{Binding InterferenceCommand}"
+                                  MinInterval="{StaticResource SignalMinInterval}" MaxInterval="{StaticResource SignalMaxInterval}"
+                                  MinBurst="{StaticResource SignalMinBurst}" MaxBurst="{StaticResource SignalMaxBurst}"
+                                  LongBurst="{StaticResource SignalLongBurst}" BurstNoiseOpacity="{StaticResource SignalNoiseOpacity}"
+                                  MaxShift="{StaticResource SignalMaxShift}" MaxTremor="{StaticResource SignalMaxTremor}"
+                                  FlashBrush="{StaticResource SignalFlashBrush}" Tint="{StaticResource ManualBandColor}"/>
 
         <!-- Pasos: se desvanecen al pasar a la despedida -->
         <Grid>
@@ -62,12 +82,12 @@
                         Content="{DynamicResource Text.Manual.Skip}" Command="{Binding FarewellCommand}"/>
             </Grid>
 
-            <!-- Columna izquierda: notificación de Lain y, debajo, su video -->
+            <!-- Columna izquierda: notificación de Lain y, debajo, su video sin fondo (flota sobre la estática) -->
             <Grid Width="{StaticResource ManualColumnWidth}" Margin="32,0,0,20" HorizontalAlignment="Left">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="40*"/>
+                    <RowDefinition Height="25*"/>
                     <RowDefinition Height="6"/>
-                    <RowDefinition Height="60*"/>
+                    <RowDefinition Height="75*"/>
                 </Grid.RowDefinitions>
                 <ItemsControl ItemsSource="{Binding Current.Notices}" ItemTemplate="{StaticResource ManualNoticeTemplate}"
                               VerticalAlignment="Bottom" Focusable="False" IsHitTestVisible="False">
@@ -99,8 +119,13 @@
                         </Style>
                     </ItemsControl.Style>
                 </ItemsControl>
-                <controls:LoopingVideo Grid.Row="2" Source="{Binding LainVideo}" Stretch="Uniform" OpacityMask="{StaticResource LainEdgeMask}"
-                                       HorizontalAlignment="Left" VerticalAlignment="Bottom" IsHitTestVisible="False"/>
+                <controls:LoopingVideo Grid.Row="2" Source="{Binding LainVideo}" Stretch="Uniform" OpacityMask="{StaticResource LainFadeMask}"
+                                       Effect="{StaticResource LainKey}"
+                                       HorizontalAlignment="Left" VerticalAlignment="Bottom" IsHitTestVisible="False">
+                    <controls:LoopingVideo.RenderTransform>
+                        <TranslateTransform X="{Binding Shift, ElementName=Signal}" Y="{Binding Tremor, ElementName=Signal}"/>
+                    </controls:LoopingVideo.RenderTransform>
+                </controls:LoopingVideo>
             </Grid>
 
             <Button Margin="0,0,32,28" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{StaticResource ManualMuteButton}"
@@ -128,23 +153,14 @@
         </ContentControl>
 
         <!-- Encima de todo, muy tenues: scanlines y barrido -->
-        <Rectangle Fill="{StaticResource ScanlineBrush}" IsHitTestVisible="False"/>
-        <Rectangle Height="120" VerticalAlignment="Top" Fill="{StaticResource SweepBrush}" IsHitTestVisible="False">
+        <Rectangle Fill="{StaticResource ManualScanBrush}" IsHitTestVisible="False"/>
+        <Rectangle Height="120" VerticalAlignment="Top" Fill="{StaticResource ManualSweepBrush}" IsHitTestVisible="False"
+                   controls:Motion.Storyboard="{StaticResource SweepMotion}">
             <Rectangle.RenderTransform>
-                <TranslateTransform x:Name="Sweep"/>
+                <TranslateTransform x:Name="Sweep" Y="-140"/>
             </Rectangle.RenderTransform>
         </Rectangle>
         <controls:CaptionBar Title="{DynamicResource Text.Manual.Title}"/>
     </Grid>
 
-    <controls:ChromeWindow.Triggers>
-        <EventTrigger RoutedEvent="Loaded">
-            <BeginStoryboard>
-                <Storyboard>
-                    <DoubleAnimation Storyboard.TargetName="Sweep" Storyboard.TargetProperty="Y" From="-140" To="1200"
-                                     Duration="{StaticResource SweepDuration}" RepeatBehavior="Forever"/>
-                </Storyboard>
-            </BeginStoryboard>
-        </EventTrigger>
-    </controls:ChromeWindow.Triggers>
 </controls:ChromeWindow>

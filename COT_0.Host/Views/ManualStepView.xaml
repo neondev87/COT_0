@@ -48,7 +48,7 @@
 
                     <!-- Vista: ocupa el resto; la vista de 1280×720 se escala sin deformarse -->
                     <Border Grid.Row="3" Margin="0,18,0,0" MinHeight="180" CornerRadius="10" Padding="1"
-                            Background="{StaticResource ManualPanelBrush}" BorderBrush="{StaticResource PanelBorderBrush}" BorderThickness="1">
+                            Background="{StaticResource ManualPanelBrush}" BorderBrush="{StaticResource ManualBorderBrush}" BorderThickness="1">
                         <Viewbox Stretch="Uniform">
                             <ContentControl Focusable="False" ClipToBounds="True"
                                             Content="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"

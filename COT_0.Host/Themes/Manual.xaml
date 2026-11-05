@@ -3,13 +3,20 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib"
                     xmlns:controls="clr-namespace:COT_0.Host.Controls">
 
-    <!-- Manual de Lain: Inter, grises neutros; solo transform y opacity en las animaciones -->
-    <SolidColorBrush x:Key="ManualPanelBrush" Color="#121213"/>
-    <SolidColorBrush x:Key="ManualButtonBrush" Color="#14FFFFFF"/>      <!-- rgba(255,255,255,.08) -->
-    <SolidColorBrush x:Key="ManualButtonHoverBrush" Color="#24FFFFFF"/> <!-- rgba(255,255,255,.14) -->
-    <SolidColorBrush x:Key="KeycapBrush" Color="#0FFFFFFF"/>            <!-- rgba(255,255,255,.06) -->
-    <SolidColorBrush x:Key="KeycapHoverBrush" Color="#1AFFFFFF"/>
-    <SolidColorBrush x:Key="KeycapEdgeBrush" Color="#38FFFFFF"/>        <!-- rgba(255,255,255,.22) -->
+    <!-- Manual de Lain: Inter; paleta del GIF de Lain (negros azulados y verde azulado apagado); solo transform y opacity -->
+    <Color x:Key="ManualMarkColor">#9CD6D5</Color>                         <!-- resaltados, flechas y foco -->
+    <Color x:Key="ManualGlowColor">#59A3A6</Color>
+    <Color x:Key="ManualStaticColor">#C0EBED</Color>                       <!-- grano de la estática -->
+    <Color x:Key="ManualBandColor">#BEE6E6</Color>                         <!-- franjas de interferencia -->
+    <SolidColorBrush x:Key="ManualMarkBrush" Color="{StaticResource ManualMarkColor}"/>
+    <SolidColorBrush x:Key="ManualPanelBrush" Color="#D1091622"/>         <!-- rgba(9,22,34,.82) -->
+    <SolidColorBrush x:Key="ManualBorderBrush" Color="#149CD6D5"/>        <!-- rgba(156,214,213,.08) -->
+    <SolidColorBrush x:Key="ManualText2Brush" Color="#A6D6ECEC"/>         <!-- rgba(214,236,236,.65) -->
+    <SolidColorBrush x:Key="ManualButtonBrush" Color="#149CD6D5"/>
+    <SolidColorBrush x:Key="ManualButtonHoverBrush" Color="#249CD6D5"/>
+    <SolidColorBrush x:Key="KeycapBrush" Color="#0F9CD6D5"/>
+    <SolidColorBrush x:Key="KeycapHoverBrush" Color="#1A9CD6D5"/>
+    <SolidColorBrush x:Key="KeycapEdgeBrush" Color="#389CD6D5"/>
     <SolidColorBrush x:Key="IosBackgroundBrush" Color="#242426"/>
     <SolidColorBrush x:Key="IosEdgeBrush" Color="#0DFFFFFF"/>
     <SolidColorBrush x:Key="IosGrayBrush" Color="#9B9BA1"/>
@@ -40,7 +47,7 @@
         <Setter Property="FontFamily" Value="{StaticResource FontInter}"/>
         <Setter Property="FontWeight" Value="Medium"/>
         <Setter Property="FontSize" Value="14"/>
-        <Setter Property="Foreground" Value="{StaticResource Light65Brush}"/>
+        <Setter Property="Foreground" Value="{StaticResource ManualText2Brush}"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
     </Style>
     <Style x:Key="ManualStepTitleText" TargetType="TextBlock" BasedOn="{StaticResource ManualHeadingText}">
@@ -51,7 +58,7 @@
         <Setter Property="FontFamily" Value="{StaticResource FontInter}"/>
         <Setter Property="FontSize" Value="16"/>
         <Setter Property="Margin" Value="0,6,0,0"/>
-        <Setter Property="Foreground" Value="{StaticResource Light65Brush}"/>
+        <Setter Property="Foreground" Value="{StaticResource ManualText2Brush}"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
     </Style>
 
@@ -63,7 +70,7 @@
         <Setter Property="Margin" Value="20,0,0,0"/>
         <Setter Property="FontFamily" Value="{StaticResource FontInter}"/>
         <Setter Property="FontSize" Value="13"/>
-        <Setter Property="Foreground" Value="{StaticResource Light65Brush}"/>
+        <Setter Property="Foreground" Value="{StaticResource ManualText2Brush}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -117,7 +124,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="Root" CornerRadius="8" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}"
-                            BorderBrush="{StaticResource AccentBrush}" BorderThickness="0" RenderTransformOrigin="0.5,0.5">
+                            BorderBrush="{StaticResource ManualMarkBrush}" BorderThickness="0" RenderTransformOrigin="0.5,0.5">
                         <Border.RenderTransform>
                             <ScaleTransform/>
                         </Border.RenderTransform>
@@ -161,7 +168,7 @@
     <Style x:Key="ManualMuteButton" TargetType="Button" BasedOn="{StaticResource PlainButton}">
         <Setter Property="Width" Value="40"/>
         <Setter Property="Height" Value="40"/>
-        <Setter Property="Foreground" Value="{StaticResource Light65Brush}"/>
+        <Setter Property="Foreground" Value="{StaticResource ManualText2Brush}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">

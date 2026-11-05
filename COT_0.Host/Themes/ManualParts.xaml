@@ -1,35 +1,27 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
                     xmlns:controls="clr-namespace:COT_0.Host.Controls">
 
-    <!-- Tubo de la despedida: scanlines marcadas, viñeta y bordes que se funden -->
-    <DrawingBrush x:Key="TubeScanlineBrush" TileMode="Tile" Viewport="0,0,3,3" ViewportUnits="Absolute" Stretch="None">
-        <DrawingBrush.Drawing>
-            <DrawingGroup>
-                <GeometryDrawing Brush="#00000000" Geometry="M0,0 H3 V3 H0 Z"/>
-                <GeometryDrawing Brush="#59000000" Geometry="M0,0 H3 V1 H0 Z"/>
-            </DrawingGroup>
-        </DrawingBrush.Drawing>
-    </DrawingBrush>
-    <RadialGradientBrush x:Key="TubeVignetteBrush" RadiusX="0.62" RadiusY="0.62">
-        <GradientStop Color="#00000000" Offset="0.5"/>
-        <GradientStop Color="#E6000000" Offset="1"/>
-    </RadialGradientBrush>
-    <RadialGradientBrush x:Key="TubeEdgeMask" RadiusX="0.6" RadiusY="0.6">
-        <GradientStop Color="#FF000000" Offset="0.64"/>
-        <GradientStop Color="#00000000" Offset="0.86"/>
-    </RadialGradientBrush>
+    <!-- Lain del manual: el negro del video se vuelve transparente; solo se desvanece el corte de abajo -->
+    <controls:LumaKeyEffect x:Key="LainKey" Low="0.06" High="0.5" Strength="1"/>
+    <LinearGradientBrush x:Key="LainFadeMask" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FF000000" Offset="0.86"/>
+        <GradientStop Color="#00000000" Offset="1"/>
+    </LinearGradientBrush>
 
-    <!-- Video de Lain: el fondo negro se funde con la pantalla, sin marco -->
-    <RadialGradientBrush x:Key="LainEdgeMask">
-        <GradientStop Color="#FF000000" Offset="0.55"/>
+    <!-- Lain de la despedida: fantasma muy translúcido, sin el azul de su fondo y con bordes que se pierden -->
+    <controls:LumaKeyEffect x:Key="GhostKey" Low="0.2" High="0.9" Strength="0.32"/>
+    <RadialGradientBrush x:Key="GhostEdgeMask" RadiusX="0.5" RadiusY="0.5">
+        <GradientStop Color="#FF000000" Offset="0.45"/>
         <GradientStop Color="#00000000" Offset="1"/>
     </RadialGradientBrush>
+    <sys:Double x:Key="GhostScale">1.25</sys:Double>
 
-    <!-- Recuadro del manual: borde claro con brillo, pulso y flecha que se mueve hacia el elemento -->
+    <!-- Recuadro del manual: borde verde azulado con brillo, pulso y flecha que se mueve hacia el elemento -->
     <Style TargetType="controls:ManualHighlight">
         <Setter Property="IsHitTestVisible" Value="False"/>
-        <Setter Property="Foreground" Value="{StaticResource LightBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource ManualMarkBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="controls:ManualHighlight">
@@ -42,7 +34,7 @@
                         </Border>
                         <Border BorderBrush="{TemplateBinding Foreground}" BorderThickness="3" CornerRadius="6">
                             <Border.Effect>
-                                <DropShadowEffect Color="White" BlurRadius="36" ShadowDepth="0" Opacity="0.16"/>
+                                <DropShadowEffect Color="{StaticResource ManualGlowColor}" BlurRadius="24" ShadowDepth="0" Opacity="0.35"/>
                             </Border.Effect>
                         </Border>
                         <Grid x:Name="Arrow" Width="44" Height="44" Margin="-56,0,0,0" HorizontalAlignment="Left"
