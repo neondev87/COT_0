@@ -173,3 +173,9 @@ Hoy todo asume **una sala por proceso**. Si algún día hay varias, esto es lo q
 - **Rutas**: `/join`, `/chat`, `/chathub`, `{Voice:Path}/{id}`, `{Chat:ImagesPath}/{id}` y `/avatars/{id}` no llevan sala; el código de sala solo se muestra, no se usa para entrar.
 - **Navegador**: el invitado se guarda en `localStorage` con una sola clave (`Chat:GuestStorageKey`).
 - **Host**: `RoomSession`, `RoomViewModel`, `DashboardViewModel` y `EmotesViewModel` manejan una sala; un solo túnel de cloudflared (`ITunnelService.PublicUrl`) y un solo QR a `{PublicUrl}{Web:JoinPath}`.
+
+## Registro
+
+- **Fix de emotes (commit `e219f9e`, 04/11, rama `host`)**: el agente del Host tocó archivos de Web fuera de su carpeta para arreglar el timeout de 7TV: `Web/Options/ChatOptions.cs`, `Web/Services/Emotes/EmoteSetStatus.cs`, `IRoomEmotes.cs`, `RoomEmotes.cs` y `SevenTvClient.cs` (además de `Host/ViewModels/EmotesViewModel.cs` y `Host/appsettings.json`). Queda anotado como excepción a "cada agente solo en su carpeta".
+- **Pruebas**: la solución no tiene proyectos de prueba (`COT_0.sln` solo incluye Core, Web y Host). Las verificaciones se hacen compilando (0 errores, 0 warnings) y probando la app a mano.
+- **Auditoría 05/11 (Agente 0, sola)**: arranque del Host medido y optimizado (`Diagnostics:StartupTrace` deja el log de tiempos, apagado por defecto), pedidos de Core aplicados, rutas relativas a `Paths:MediaRoot`, credenciales en user-secrets, cultura `es-MX` y textos sin voseo.
