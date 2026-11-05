@@ -28,7 +28,7 @@ public static class ManualTimeline
         return $"{style};{prefix}out:{Seconds(start + options.NoticeIntervalSeconds - options.NoticeGapSeconds)}";
     }
 
-    private static string Seconds(double value) => value.ToString("0.##", CultureInfo.InvariantCulture) + "s";
+    public static string Seconds(double value) => value.ToString("0.##", CultureInfo.InvariantCulture) + "s";
 }
 
 public sealed record ManualFocus(string Keys, string Style);

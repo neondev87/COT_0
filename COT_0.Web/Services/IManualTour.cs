@@ -1,4 +1,5 @@
 using COT_0.Web.Models;
+using COT_0.Web.Options;
 
 namespace COT_0.Web.Services;
 
@@ -13,6 +14,8 @@ public interface IManualTour
     bool Muted { get; }
     string NoticeAuthor { get; }
     string SoundUrl { get; }
+    ManualOptions Settings { get; }
+    string BootStyle { get; }
     IReadOnlyList<ManualCue> Cues { get; }
     ManualFocus Focus { get; }
 

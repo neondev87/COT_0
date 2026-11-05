@@ -17,6 +17,10 @@ public sealed class ManualTour(IOptions<ManualOptions> options, IManualDemo demo
     public bool Muted { get; private set; }
     public string NoticeAuthor => _options.NoticeAuthor;
     public string SoundUrl => _options.SoundUrl;
+    public ManualOptions Settings => _options;
+
+    // Duración del arranque como variable CSS (--manual-boot)
+    public string BootStyle => $"--manual-boot:{ManualTimeline.Seconds(_options.BootSeconds)}";
 
     public IReadOnlyList<ManualCue> Cues => ManualTimeline.Cues(NoticeTexts, _options);
     public ManualFocus Focus => ManualTimeline.Focus(Current?.Notices ?? [], _options);
