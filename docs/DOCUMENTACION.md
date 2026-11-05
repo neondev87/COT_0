@@ -54,7 +54,7 @@ Es la única ruta absoluta de la configuración. En `COT_0.Host/appsettings.json
 "Paths": { "MediaRoot": "C:\\Users\\TU_USUARIO\\Documents\\COT_0_P" }
 ```
 
-Las demás rutas (`fondos`, `musica`, `gifs\\lain_tele_web.mp4`…) son relativas a ella.
+Las demás rutas (`fondos`, `musica`, `gifs\lain_tele_web.mp4`…) son relativas a ella.
 
 **Usuario y contraseña del host (user-secrets)**
 
