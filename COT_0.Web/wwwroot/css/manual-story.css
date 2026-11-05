@@ -1,0 +1,113 @@
+/* Manual: pasos tipo historias. Celular: progreso, cabecera de Lain, marco con la vista real, hoja inferior y barra.
+   PC (≥ 901 px): avisos en la columna izquierda, vista de escritorio a la derecha y atajos en la barra */
+.manual-progress { display: flex; gap: 4px; height: 3px; margin: 10px 14px 0; }
+.manual-progress i { position: relative; flex: 1; overflow: hidden; border-radius: 2px; background: rgba(156, 214, 213, .16); }
+.manual-progress i::after { content: ""; position: absolute; inset: 0; background: var(--mn-brand); transform: scaleX(0); transform-origin: left; }
+.manual-progress i.is-done::after { transform: scaleX(1); }
+.manual-progress i.is-now::after { animation: manualFill .5s var(--mn-ease) both; }
+
+.manual-head { display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 60px 0 14px; }
+.manual-avatar { flex: none; width: 34px; height: 34px; border: 1px solid var(--mn-edge-2); border-radius: 50%; object-fit: cover; background: #08172f; }
+.manual-who { flex: 1; display: flex; flex-direction: column; line-height: 1.15; }
+.manual-who b { font-weight: 600; font-size: 15px; }
+.manual-who small { font: 500 11px 'Barlow Condensed', sans-serif; letter-spacing: .18em; text-transform: uppercase; color: var(--mn-text-2); }
+.manual-head .manual-live { margin: 0; }
+.manual-side { display: none; }
+
+/* La escena tiembla con la ráfaga; marco y hoja suben al entrar */
+.manual-scene { position: relative; flex: 1; min-height: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto; animation: manualShake .6s steps(1, end) both; }
+.manual-zone { position: absolute; top: 0; bottom: 150px; z-index: 6; padding: 0; border: 0; background: none; cursor: pointer; }
+.manual-zone-prev { left: 0; width: 35%; }
+.manual-zone-next { right: 0; width: 65%; }
+.manual-frame {
+    position: relative;
+    justify-self: center;
+    align-self: center;
+    width: min(82%, 320px);
+    height: calc(100% - 12px);
+    max-height: 600px;
+    overflow: hidden;
+    border: 1px solid var(--mn-edge-2);
+    border-radius: 26px;
+    background: #050d18;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .5), 0 0 0 5px rgba(9, 22, 34, .7);
+    animation: manualRise .5s var(--mn-ease) .1s both;
+}
+.manual-frame::before { content: ""; position: absolute; top: 7px; left: 50%; z-index: 60; width: 54px; height: 5px; margin-left: -27px; border-radius: 3px; background: rgba(156, 214, 213, .22); }
+.manual-sheet {
+    position: relative;
+    z-index: 7;
+    min-height: 128px;
+    margin: 0 8px;
+    padding: 10px 20px 18px;
+    border: 1px solid var(--mn-edge);
+    border-radius: 22px 22px 18px 18px;
+    background: var(--mn-panel);
+    animation: manualRise .5s var(--mn-ease) .2s both;
+}
+.manual-grip { display: block; width: 36px; height: 4px; margin: 0 auto 12px; border-radius: 2px; background: rgba(214, 236, 236, .25); }
+.manual-sheet h2 { margin: 0 0 6px; font-weight: 600; font-size: 19px; line-height: 1.2; }
+.manual-sheet p { margin: 0; font-size: 14.5px; line-height: 1.4; color: var(--mn-text-2); }
+
+/* Barra de abajo (respeta la zona segura) */
+.manual-story { padding-bottom: 0; }
+.manual-nav { position: relative; z-index: 8; display: flex; gap: 8px; padding: 10px 14px calc(12px + var(--mn-bottom)); border-top: 1px solid var(--mn-edge); background: rgba(4, 12, 26, .72); }
+.manual-key {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 44px;
+    padding: 0 8px;
+    border: 1px solid var(--mn-edge);
+    border-radius: 12px;
+    background: var(--mn-tint);
+    font: 700 13px/1 'Barlow Condensed', sans-serif;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--mn-text);
+    cursor: pointer;
+    transition: transform .15s var(--mn-ease);
+}
+.manual-key-main { border-color: rgba(156, 214, 213, .5); }
+.manual-key:active { transform: scale(.96); }
+.manual-key:disabled { opacity: .35; cursor: default; transform: none; }
+.manual-key:focus-visible { outline: 2px solid var(--mn-brand); outline-offset: 2px; }
+.manual-key kbd { display: none; min-width: 26px; padding: 4px 6px; border-radius: 4px; border-bottom: 2px solid var(--mn-edge-2); background: rgba(156, 214, 213, .06); font: 500 12px/1 'Barlow', sans-serif; letter-spacing: 0; color: var(--mn-text-2); }
+
+@media (max-height: 700px) {
+    .manual-sheet { min-height: 110px; padding-bottom: 12px; }
+    .manual-sheet p { font-size: 13.5px; }
+}
+
+/* Con mouse no hay zonas de toque: se ven los atajos */
+@media (hover: hover) and (pointer: fine) {
+    .manual-zone { display: none; }
+    .manual-key kbd { display: inline-block; }
+    .manual-key:not(:disabled):hover { border-color: var(--mn-brand); }
+}
+
+@media (min-width: 901px) {
+    .manual-story {
+        width: min(100%, 1180px);
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 340px minmax(0, 1fr);
+        grid-template-rows: auto auto minmax(0, 1fr) auto;
+        column-gap: 28px;
+        padding: 12px 32px 0;
+    }
+    .manual-story > .manual-progress, .manual-story > .manual-head, .manual-story > .manual-nav { grid-column: 1 / -1; }
+    .manual-story > .manual-notifs { grid-column: 1; grid-row: 3; position: relative; inset: auto; height: 140px; margin-top: 24px; }
+    .manual-side { display: block; grid-column: 1; grid-row: 3; align-self: end; margin-bottom: 24px; }
+    .manual-scene { grid-column: 2; grid-row: 3; row-gap: 14px; padding-top: 8px; }
+    .manual-frame { width: 100%; height: calc(100% - 4px); max-height: none; border-radius: 14px; }
+    .manual-frame::before { display: none; }
+    .manual-sheet { min-height: 0; margin: 0 0 16px; padding: 16px 22px; border-radius: 14px; }
+    .manual-grip { display: none; }
+    .manual-nav { justify-content: flex-end; margin: 0 -32px; padding: 12px 32px; }
+    .manual-key { flex: 0 0 168px; }
+    .manual-intro > .manual-notifs { left: 50%; right: auto; width: 380px; margin-left: -190px; }
+}

@@ -1,0 +1,78 @@
+/* Manual: botón de silencio, enlace desde /join, animaciones y movimiento reducido */
+.manual-mute {
+    position: absolute;
+    top: calc(var(--mn-top) + 8px);
+    right: 8px;
+    z-index: 60;
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    color: var(--mn-text-2);
+    cursor: pointer;
+    transition: transform .15s var(--mn-ease);
+}
+.manual-mute:hover, .manual-mute:focus-visible { color: var(--mn-brand); outline: none; }
+.manual-mute:active { transform: scale(.92); }
+.manual-mute svg { width: 20px; height: 20px; }
+.manual-mute-cross { opacity: 0; }
+.manual-mute[aria-pressed="true"] .manual-mute-cross { opacity: 1; }
+.manual-mute[aria-pressed="true"] .manual-mute-wave { opacity: 0; }
+.manual[data-screen="steps"] .manual-mute { top: calc(var(--mn-top) + 17px); }
+
+/* Enlace discreto desde /join */
+.join-manual { display: block; margin: 18px auto 0; text-align: center; font-size: 13px; letter-spacing: .06em; color: var(--fg-mute); text-decoration: none; }
+.join-manual:hover, .join-manual:focus-visible { color: #fff; }
+
+@keyframes manualEnter { from { opacity: 0; transform: translate3d(0, 14px, 0); } to { opacity: 1; transform: none; } }
+@keyframes manualRise { from { opacity: 0; transform: translate3d(0, 18px, 0); } to { opacity: 1; transform: none; } }
+@keyframes manualFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes manualFadeOut { from { opacity: 1; } to { opacity: 0; } }
+@keyframes manualFog { from { transform: translate3d(-8%, 0, 0); } to { transform: translate3d(8%, 12%, 0); } }
+@keyframes manualGrain {
+    0% { transform: translate3d(0, 0, 0); }
+    20% { transform: translate3d(-73px, 41px, 0); }
+    40% { transform: translate3d(97px, -58px, 0); }
+    60% { transform: translate3d(-31px, -102px, 0); }
+    80% { transform: translate3d(66px, 89px, 0); }
+}
+@keyframes manualBootGrain { 0% { opacity: .22; } 100% { opacity: .06; } }
+@keyframes manualBoot { 0% { opacity: 0; } 8% { opacity: 1; } 11% { opacity: .2; } 14% { opacity: 1; } 22% { opacity: .5; } 25% { opacity: 1; } 92% { opacity: .3; } 95% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes manualFlicker { 0%, 100% { opacity: 1; } 18% { opacity: .9; } 22% { opacity: 1; } 61% { opacity: .94; } 64% { opacity: 1; } 88% { opacity: .88; } 90% { opacity: 1; } }
+@keyframes manualLive { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.7); } }
+@keyframes manualFill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes manualFlash { 0% { opacity: 0; } 12% { opacity: .5; } 24% { opacity: .08; } 48% { opacity: .3; } 100% { opacity: 0; } }
+@keyframes manualBand {
+    0% { opacity: .35; transform: translate3d(-40px, 0, 0); }
+    33% { opacity: .18; transform: translate3d(48px, 0, 0); }
+    66% { opacity: .3; transform: translate3d(-20px, 0, 0); }
+    100% { opacity: 0; transform: none; }
+}
+@keyframes manualShake { 0% { transform: translate3d(0, 5px, 0); } 20% { transform: translate3d(0, -4px, 0); } 40% { transform: translate3d(0, 3px, 0); } 60% { transform: translate3d(0, -2px, 0); } 80%, 100% { transform: none; } }
+@keyframes manualNotifIn { from { opacity: 0; transform: translate3d(0, -140%, 0); } to { opacity: 1; transform: none; } }
+@keyframes manualNotifOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: translate3d(0, -140%, 0); } }
+@keyframes manualNotifInFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes manualPulse { from { transform: scale(1); } to { transform: scale(1.06); } }
+@keyframes manualArrow { from { transform: translate3d(0, -10px, 0) rotate(45deg); } to { transform: rotate(45deg); } }
+@keyframes manualTvOff { 0% { transform: scale(1, 1); opacity: 1; } 55% { transform: scale(1, .02); opacity: 1; } 100% { transform: scale(0, .02); opacity: 0; } }
+@keyframes manualDot { 0%, 50% { opacity: 0; } 58% { opacity: 1; } 100% { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+    .manual { --manual-boot: 0s !important; }
+    .manual-boot, .manual-signal { display: none; }
+    .manual-fx-grain i, .manual-fx-fog::before, .manual-tv video, .manual-live i, .manual-scene { animation: none; }
+    .manual-pane, .manual-intro > .manual-tv, .manual-frame, .manual-sheet, .manual-later-boot { animation: manualFade .3s linear both; }
+    .manual[data-boot] .manual-fx-grain { animation: none; }
+    .manual-notif { animation-name: manualNotifInFade; }
+    .manual-notif-out { animation-name: manualNotifInFade, manualFadeOut; }
+    .manual-progress i.is-now::after { animation: none; transform: scaleX(1); }
+    .manual[data-tele="off"] .manual-finish .manual-tv { animation: manualFadeOut .3s linear forwards; }
+    .manual[data-tele="off"] .manual-dot { animation: none; }
+    .manual-btn, .manual-link, .manual-key, .manual-mute { transition: none; }
+    .manual-btn:active, .manual-link:active, .manual-key:active { transform: none; }
+}
