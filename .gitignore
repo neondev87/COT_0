@@ -485,3 +485,11 @@ $RECYCLE.BIN/
 
 # Música de fondo (local, nunca al repo)
 musica/
+
+# Videos, audios y manual de Lain (locales, fuera del repo)
+/gifs/
+/manual/
+/fondos/
+/portadas/
+*.mp4
+*.wav
