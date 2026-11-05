@@ -28,9 +28,7 @@ public class SignalLossLayer : Grid
     public static readonly DependencyProperty TremorProperty = DependencyProperty.Register(
         nameof(Tremor), typeof(double), typeof(SignalLossLayer));
 
-    private static readonly Brush[] Grays = Enumerable.Range(0, 6)
-        .Select(i => Freeze(new SolidColorBrush(Color.FromArgb((byte)(24 + i * 14), (byte)(60 + i * 36), (byte)(60 + i * 36), (byte)(60 + i * 36)))))
-        .ToArray();
+    private static readonly Brush[] Grays = Enumerable.Range(0, 6).Select(Gray).ToArray();
 
     private readonly DispatcherTimer _schedule = new();
     private readonly DispatcherTimer _frame = new(DispatcherPriority.Render) { Interval = TimeSpan.FromSeconds(1 / FramesPerSecond) };
@@ -57,31 +55,15 @@ public class SignalLossLayer : Grid
     }
 
     // Cambia al pasar de paso o a la despedida: dispara una ráfaga larga
-    public object? Channel
-    {
-        get => GetValue(ChannelProperty);
-        set => SetValue(ChannelProperty, value);
-    }
+    public object? Channel { get => GetValue(ChannelProperty); set => SetValue(ChannelProperty, value); }
 
     // Se ejecuta con la duración (TimeSpan) de cada ráfaga, para el sonido
-    public ICommand? BurstCommand
-    {
-        get => (ICommand?)GetValue(BurstCommandProperty);
-        set => SetValue(BurstCommandProperty, value);
-    }
+    public ICommand? BurstCommand { get => (ICommand?)GetValue(BurstCommandProperty); set => SetValue(BurstCommandProperty, value); }
 
     // Desplazamiento horizontal y vertical del momento, para que otros elementos sigan a las franjas
-    public double Shift
-    {
-        get => (double)GetValue(ShiftProperty);
-        private set => SetValue(ShiftProperty, value);
-    }
+    public double Shift { get => (double)GetValue(ShiftProperty); private set => SetValue(ShiftProperty, value); }
 
-    public double Tremor
-    {
-        get => (double)GetValue(TremorProperty);
-        private set => SetValue(TremorProperty, value);
-    }
+    public double Tremor { get => (double)GetValue(TremorProperty); private set => SetValue(TremorProperty, value); }
 
     public TimeSpan MinInterval { get; set; }
     public TimeSpan MaxInterval { get; set; }
@@ -94,8 +76,6 @@ public class SignalLossLayer : Grid
     public Brush? FlashBrush { get; set; }
 
     private bool CanRun => IsVisible && SystemParameters.ClientAreaAnimation && _window?.WindowState != WindowState.Minimized;
-
-    private bool IsBursting => _frame.IsEnabled;
 
     private static void OnChannelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -118,8 +98,7 @@ public class SignalLossLayer : Grid
         if (_window is not null) _window.StateChanged -= OnWindowStateChanged;
         SystemParameters.StaticPropertyChanged -= OnSystemParameterChanged;
         _window = null;
-        EndBurst();
-        _schedule.Stop();
+        Pause();
     }
 
     private void OnWindowStateChanged(object? sender, EventArgs e) => UpdateRunning();
@@ -131,11 +110,12 @@ public class SignalLossLayer : Grid
 
     private void UpdateRunning()
     {
-        if (CanRun)
-        {
-            if (!IsBursting && !_schedule.IsEnabled) ScheduleNext();
-            return;
-        }
+        if (!CanRun) Pause();
+        else if (!_frame.IsEnabled && !_schedule.IsEnabled) ScheduleNext();
+    }
+
+    private void Pause()
+    {
         EndBurst();
         _schedule.Stop();
     }
@@ -197,8 +177,11 @@ public class SignalLossLayer : Grid
 
     private static double Signed(double max) => (Random.Shared.NextDouble() * 2 - 1) * max;
 
-    private static Brush Freeze(Brush brush)
+    // Grises cada vez más claros y opacos, congelados para reusarlos en cada cuadro
+    private static Brush Gray(int step)
     {
+        var level = (byte)(60 + step * 36);
+        var brush = new SolidColorBrush(Color.FromArgb((byte)(24 + step * 14), level, level, level));
         brush.Freeze();
         return brush;
     }
