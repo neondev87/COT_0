@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:COT_0.Host.Controls"
              FocusManager.FocusedElement="{Binding ElementName=CloseButton}">
-    <!-- Despedida: Lain en un tubo de TV a casi toda la pantalla (DataContext: ManualViewModel) -->
+    <!-- Despedida: Lain como fantasma mezclado con la estática del fondo (DataContext: ManualViewModel) -->
     <Grid x:Name="Root" Margin="40,56,40,32" Opacity="0" RenderTransformOrigin="0.5,0.5">
         <Grid.RenderTransform>
             <ScaleTransform ScaleX="0.96" ScaleY="0.96"/>
@@ -14,17 +14,13 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Tubo: video, scanlines, viñeta, barrido y bordes que se funden con el fondo -->
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" OpacityMask="{StaticResource TubeEdgeMask}" ClipToBounds="True">
-            <controls:LoopingVideo Source="{Binding FarewellVideo}" Stretch="Uniform"/>
-            <Rectangle Fill="{StaticResource TubeScanlineBrush}"/>
-            <Rectangle Fill="{StaticResource TubeVignetteBrush}"/>
-            <Rectangle Height="120" VerticalAlignment="Top" Fill="{StaticResource SweepBrush}">
-                <Rectangle.RenderTransform>
-                    <TranslateTransform x:Name="Sweep"/>
-                </Rectangle.RenderTransform>
-            </Rectangle>
-        </Grid>
+        <!-- Fantasma: sin el azul de su fondo, muy translúcida y un poco más grande que su espacio -->
+        <controls:LoopingVideo Source="{Binding FarewellVideo}" Stretch="Uniform" IsHitTestVisible="False" RenderTransformOrigin="0.5,0.5"
+                               Effect="{StaticResource GhostKey}" OpacityMask="{StaticResource GhostEdgeMask}">
+            <controls:LoopingVideo.RenderTransform>
+                <ScaleTransform ScaleX="{StaticResource GhostScale}" ScaleY="{StaticResource GhostScale}"/>
+            </controls:LoopingVideo.RenderTransform>
+        </controls:LoopingVideo>
 
         <TextBlock Grid.Row="1" Margin="0,22,0,0" Text="{DynamicResource Text.Manual.Farewell}" Style="{StaticResource ManualStepTitleText}"/>
         <Button x:Name="CloseButton" Grid.Row="2" Margin="0,22,0,0" Style="{StaticResource ManualSmallButton}"
@@ -41,8 +37,6 @@
                                      To="1" BeginTime="0:0:0.2" Duration="{StaticResource NoticeInDuration}"/>
                     <DoubleAnimation Storyboard.TargetName="Root" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
                                      To="1" BeginTime="0:0:0.2" Duration="{StaticResource NoticeInDuration}"/>
-                    <DoubleAnimation Storyboard.TargetName="Sweep" Storyboard.TargetProperty="Y" From="-140" To="900"
-                                     Duration="{StaticResource SweepDuration}" RepeatBehavior="Forever"/>
                 </Storyboard>
             </BeginStoryboard>
         </EventTrigger>
