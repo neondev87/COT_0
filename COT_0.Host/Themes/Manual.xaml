@@ -30,6 +30,19 @@
     <Duration x:Key="NoticeInDuration">0:0:0.35</Duration>
     <Duration x:Key="PressDuration">0:0:0.15</Duration>
 
+    <!-- Pérdida de señal (SignalLossLayer): cada cuánto, cuánto dura y cuánto se corre -->
+    <sys:TimeSpan x:Key="SignalMinInterval">0:0:3</sys:TimeSpan>
+    <sys:TimeSpan x:Key="SignalMaxInterval">0:0:7</sys:TimeSpan>
+    <sys:TimeSpan x:Key="SignalMinBurst">0:0:0.15</sys:TimeSpan>
+    <sys:TimeSpan x:Key="SignalMaxBurst">0:0:0.4</sys:TimeSpan>
+    <sys:TimeSpan x:Key="SignalLongBurst">0:0:0.6</sys:TimeSpan>
+    <sys:Double x:Key="SignalNoiseOpacity">0.2</sys:Double>     <!-- sobre la estática de .065: en total ≈ .25 -->
+    <sys:Double x:Key="SignalMaxShift">8</sys:Double>
+    <sys:Double x:Key="SignalMaxTremor">5</sys:Double>
+    <SolidColorBrush x:Key="SignalFlashBrush" Color="#1FB4B4B4"/>
+    <SolidColorBrush x:Key="SignalLineBrush" Color="#0DFFFFFF"/>
+    <Duration x:Key="SignalLineDuration">0:0:9</Duration>
+
     <!-- Textos -->
     <Style x:Key="ManualHeadingText" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{StaticResource FontInter}"/>

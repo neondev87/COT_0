@@ -22,8 +22,10 @@
 
     <!-- Video de Lain: el fondo negro se funde con la pantalla, sin marco -->
     <RadialGradientBrush x:Key="LainEdgeMask">
-        <GradientStop Color="#FF000000" Offset="0.55"/>
-        <GradientStop Color="#00000000" Offset="1"/>
+        <GradientStop Color="#FF000000" Offset="0.3"/>
+        <GradientStop Color="#B3000000" Offset="0.6"/>
+        <GradientStop Color="#40000000" Offset="0.82"/>
+        <GradientStop Color="#00000000" Offset="0.97"/>
     </RadialGradientBrush>
 
     <!-- Recuadro del manual: borde claro con brillo, pulso y flecha que se mueve hacia el elemento -->

@@ -16,7 +16,7 @@ public partial class ManualViewModel : ObservableObject, IDisposable
     private bool _isClosed;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(Current))]
+    [NotifyPropertyChangedFor(nameof(Current), nameof(Channel))]
     [NotifyCanExecuteChangedFor(nameof(NextCommand), nameof(PreviousCommand))]
     private int _index;
 
@@ -27,6 +27,7 @@ public partial class ManualViewModel : ObservableObject, IDisposable
     private bool _isLeaving;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Channel))]
     private bool _isFarewell;
 
     [ObservableProperty]
@@ -51,6 +52,9 @@ public partial class ManualViewModel : ObservableObject, IDisposable
     public ManualDemo Demo { get; }
     public Uri? LainVideo { get; }
     public Uri? FarewellVideo { get; }
+
+    // Cambia con cada paso y con la despedida: la señal se corta un momento
+    public int Channel => IsFarewell ? -1 : Index;
 
     // ENTER: siguiente paso; después del último, la despedida. En la despedida cierra
     [RelayCommand]
@@ -91,6 +95,10 @@ public partial class ManualViewModel : ObservableObject, IDisposable
         _isClosed = true;
         CloseRequested?.Invoke();
     }
+
+    // Cada ráfaga de pérdida de señal: golpe corto de estática
+    [RelayCommand]
+    private void Interference(TimeSpan duration) => _sound.PlayStaticHit(duration);
 
     [RelayCommand]
     private void ToggleMute() => IsMuted = !IsMuted;

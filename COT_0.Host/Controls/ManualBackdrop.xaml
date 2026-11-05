@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:COT_0.Host.Controls"
              IsHitTestVisible="False" ClipToBounds="True">
-    <!-- Fondo del manual, de abajo hacia arriba: degradado, niebla, estática de TV y viñeta -->
+    <!-- Fondo del manual, de abajo hacia arriba: degradado, niebla, estática de TV, línea de barrido y viñeta -->
     <Grid Background="{StaticResource LoginBackgroundBrush}">
         <Ellipse Margin="100,86" Fill="{StaticResource FogABrush}">
             <Ellipse.Effect>
@@ -33,6 +33,11 @@
                 </Style>
             </controls:NoiseLayer.Style>
         </controls:NoiseLayer>
+        <Rectangle Height="2" VerticalAlignment="Top" Fill="{StaticResource SignalLineBrush}">
+            <Rectangle.RenderTransform>
+                <TranslateTransform x:Name="Line"/>
+            </Rectangle.RenderTransform>
+        </Rectangle>
         <Rectangle Fill="{StaticResource VignetteBrush}"/>
     </Grid>
 
@@ -46,6 +51,8 @@
                     <DoubleAnimation Storyboard.TargetName="Fog" Storyboard.TargetProperty="Y" From="20" To="-28"
                                      Duration="{StaticResource FogADuration}" AutoReverse="True" RepeatBehavior="Forever"
                                      EasingFunction="{StaticResource SineInOut}"/>
+                    <DoubleAnimation Storyboard.TargetName="Line" Storyboard.TargetProperty="Y" From="-4" To="1200"
+                                     Duration="{StaticResource SignalLineDuration}" RepeatBehavior="Forever"/>
                 </Storyboard>
             </BeginStoryboard>
         </EventTrigger>

@@ -15,7 +15,20 @@
     </controls:ChromeWindow.InputBindings>
 
     <Grid>
-        <controls:ManualBackdrop/>
+        <!-- Fondo con margen extra para que el temblor de la señal no deje ver el borde -->
+        <controls:ManualBackdrop Margin="-12">
+            <controls:ManualBackdrop.RenderTransform>
+                <TranslateTransform Y="{Binding Tremor, ElementName=Signal}"/>
+            </controls:ManualBackdrop.RenderTransform>
+        </controls:ManualBackdrop>
+
+        <!-- Pérdida de señal: encima del fondo y la estática, debajo del contenido -->
+        <controls:SignalLossLayer x:Name="Signal" Channel="{Binding Channel}" BurstCommand="{Binding InterferenceCommand}"
+                                  MinInterval="{StaticResource SignalMinInterval}" MaxInterval="{StaticResource SignalMaxInterval}"
+                                  MinBurst="{StaticResource SignalMinBurst}" MaxBurst="{StaticResource SignalMaxBurst}"
+                                  LongBurst="{StaticResource SignalLongBurst}" BurstNoiseOpacity="{StaticResource SignalNoiseOpacity}"
+                                  MaxShift="{StaticResource SignalMaxShift}" MaxTremor="{StaticResource SignalMaxTremor}"
+                                  FlashBrush="{StaticResource SignalFlashBrush}"/>
 
         <!-- Pasos: se desvanecen al pasar a la despedida -->
         <Grid>
@@ -100,7 +113,11 @@
                     </ItemsControl.Style>
                 </ItemsControl>
                 <controls:LoopingVideo Grid.Row="2" Source="{Binding LainVideo}" Stretch="Uniform" OpacityMask="{StaticResource LainEdgeMask}"
-                                       HorizontalAlignment="Left" VerticalAlignment="Bottom" IsHitTestVisible="False"/>
+                                       HorizontalAlignment="Left" VerticalAlignment="Bottom" IsHitTestVisible="False">
+                    <controls:LoopingVideo.RenderTransform>
+                        <TranslateTransform X="{Binding Shift, ElementName=Signal}" Y="{Binding Tremor, ElementName=Signal}"/>
+                    </controls:LoopingVideo.RenderTransform>
+                </controls:LoopingVideo>
             </Grid>
 
             <Button Margin="0,0,32,28" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{StaticResource ManualMuteButton}"
