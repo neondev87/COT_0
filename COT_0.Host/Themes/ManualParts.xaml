@@ -28,10 +28,10 @@
         <GradientStop Color="#00000000" Offset="0.97"/>
     </RadialGradientBrush>
 
-    <!-- Recuadro del manual: borde claro con brillo, pulso y flecha que se mueve hacia el elemento -->
+    <!-- Recuadro del manual: borde verde azulado con brillo, pulso y flecha que se mueve hacia el elemento -->
     <Style TargetType="controls:ManualHighlight">
         <Setter Property="IsHitTestVisible" Value="False"/>
-        <Setter Property="Foreground" Value="{StaticResource LightBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource ManualMarkBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="controls:ManualHighlight">
@@ -44,7 +44,7 @@
                         </Border>
                         <Border BorderBrush="{TemplateBinding Foreground}" BorderThickness="3" CornerRadius="6">
                             <Border.Effect>
-                                <DropShadowEffect Color="White" BlurRadius="36" ShadowDepth="0" Opacity="0.16"/>
+                                <DropShadowEffect Color="{StaticResource ManualGlowColor}" BlurRadius="24" ShadowDepth="0" Opacity="0.35"/>
                             </Border.Effect>
                         </Border>
                         <Grid x:Name="Arrow" Width="44" Height="44" Margin="-56,0,0,0" HorizontalAlignment="Left"
