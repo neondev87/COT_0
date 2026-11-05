@@ -1,8 +1,10 @@
 @implements IAsyncDisposable
 @inject IVoiceRecorder Recorder
 @inject IImageUploader Images
+@inject IComposerEditor Editor
 
-@* Barra de escritura: Enter envía, Shift+Enter salto de línea (chat.js), contador de caracteres.
+@* Barra de escritura: el cuadro lo maneja composer.js (emotes como imagen, Enter envía, Shift+Enter salto de línea).
+   Blazor no le pinta hijos al cuadro: así no le pisa las imágenes ni el cursor.
    Sin texto, el botón de enviar pasa a ser el micrófono: un toque graba y otro envía (voice.js) *@
 @if (Recorder.Notice is { } notice)
 {
@@ -23,8 +25,9 @@
     <ImageDraft State="Images.State" PreviewUrl="@Images.PreviewUrl" OnCancel="Images.Cancel" OnSend="() => Images.SendAsync(UserId)" />
 }
 
-<form class="chat-input @(Draft.Length > 0 ? "has-text" : null)" @ref="form" @onsubmit="OnSend">
-    <EmotePicker Query="@Draft.EmoteQuery" OnPick="emote => AppendAsync(emote.Name)" OnComplete="CompleteEmoteAsync" />
+<form class="chat-input @(Draft.Length > 0 ? "has-text" : null)" @ref="form" @onsubmit="SubmitAsync">
+    <EmotePicker Query="@Draft.EmoteQuery" OnPick="emote => Editor.InsertEmoteAsync(emote, false)"
+                 OnComplete="emote => Editor.InsertEmoteAsync(emote, true)" />
     @* Sin "capture": en el celular deja elegir cámara o galería *@
     <label class="chat-attach @(Images.State == ImageUploadState.Idle ? null : "off")" title="Adjuntar imagen">
         <Icon Name="image" Size="20" />
@@ -32,9 +35,8 @@
                    disabled="@(Images.State != ImageUploadState.Idle)" aria-label="Adjuntar imagen" />
     </label>
     <div class="chat-field">
-        <textarea class="cot-input chat-text" rows="@Draft.Rows" maxlength="@Draft.MaxLength" enterkeyhint="send"
-                  @bind="Draft.Text" @bind:event="oninput" @bind:after="NotifyTypingAsync"
-                  placeholder="Escribe un mensaje…" autocomplete="off" aria-label="Mensaje"></textarea>
+        <div class="cot-input chat-text" @ref="editor" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Mensaje"
+             data-placeholder="Escribe un mensaje…" enterkeyhint="send" inputmode="text" autocapitalize="sentences" spellcheck="true"></div>
         @if (Draft.Length > 0)
         {
             <span class="chat-count @(Draft.IsNearLimit ? "warn" : null)" aria-live="polite">@Draft.Length/@Draft.MaxLength</span>
@@ -44,7 +46,7 @@
             <VoiceRecordingBar State="Recorder.State" Elapsed="Recorder.Elapsed" />
         }
     </div>
-    @* mousedown sin acción: el textarea no pierde el foco y el teclado del celular no se cierra *@
+    @* mousedown sin acción: el cuadro no pierde el foco y el teclado del celular no se cierra *@
     <button type="submit" class="cot-btn chat-send" disabled="@(!Draft.CanSend)" aria-label="Enviar" @onmousedown:preventDefault>
         <Icon Name="arrow" Size="20" Class="arr" />
     </button>
@@ -69,35 +71,46 @@
     [Parameter] public EventCallback OnTyping { get; set; }
 
     private ElementReference form;
+    private ElementReference editor;
 
     private bool Recording => Recorder.State == VoiceState.Recording;
 
-    protected override void OnInitialized() => Recorder.Changed += OnRecorderChanged;
+    protected override void OnInitialized()
+    {
+        Recorder.Changed += OnRecorderChanged;
+        Editor.Changed += OnEditorChanged;
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender) await Recorder.AttachAsync(form, UserId);
+        if (!firstRender) return;
+
+        await Recorder.AttachAsync(form, UserId);
+        await Editor.AttachAsync(editor, Draft);
     }
 
-    private Task NotifyTypingAsync() => OnTyping.InvokeAsync();
-
-    private Task AppendAsync(string token)
+    // Se vacía el cuadro antes de enviar: lo que se escriba mientras sale el mensaje no se pierde
+    private async Task SubmitAsync()
     {
-        Draft.Append(token);
-        return NotifyTypingAsync();
-    }
+        if (!Draft.CanSend || !OnSend.HasDelegate) return;
 
-    private Task CompleteEmoteAsync(RoomEmote emote)
-    {
-        Draft.CompleteEmote(emote.Name);
-        return NotifyTypingAsync();
+        await Editor.ClearAsync();
+        await OnSend.InvokeAsync();
     }
 
     private void OnRecorderChanged() => _ = InvokeAsync(StateHasChanged);
 
+    private void OnEditorChanged() => _ = InvokeAsync(async () =>
+    {
+        await OnTyping.InvokeAsync();
+        StateHasChanged();
+    });
+
     public async ValueTask DisposeAsync()
     {
         Recorder.Changed -= OnRecorderChanged;
+        Editor.Changed -= OnEditorChanged;
         await Recorder.DetachAsync();
+        await Editor.DetachAsync();
     }
 }

@@ -41,6 +41,7 @@ public static class ChatRegistration
         services.AddScoped<IChatSession, ChatSession>();
         services.AddScoped<IChatBrowser, ChatBrowser>();
         services.AddScoped<IVoiceRecorder, VoiceRecorder>();
+        services.AddScoped<IComposerEditor, ComposerEditor>();
         services.AddScoped<IImageUploader, ImageUploader>();
         services.AddHostedService<ChatBroadcaster>();
         return services;

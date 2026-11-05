@@ -1,9 +1,8 @@
-// Interop mínimo del chat (no se puede hacer desde C#): Enter envía, scroll automático y aviso de mensajes nuevos
+// Interop mínimo del chat (no se puede hacer desde C#): scroll automático y aviso de mensajes nuevos (el cuadro de escritura está en composer.js)
 window.cotChat = {
     attach(page, holdMs) {
         const scroll = page.querySelector('.msg-scroll');
         const pill = page.querySelector('.msg-new');
-        const input = page.querySelector('.chat-text');
         const isMessage = n => n.nodeType === 1 && (n.matches('.msg-line, .msg-sys') || n.querySelector('.msg-line, .msg-sys'));
         let atBottom = true;
 
@@ -40,21 +39,6 @@ window.cotChat = {
             }, holdMs);
         });
         ['pointerup', 'pointercancel', 'contextmenu'].forEach(t => scroll.addEventListener(t, release, true));
-
-        input.addEventListener('keydown', e => {
-            // Tab completa con la primera sugerencia de ":"
-            const suggestion = e.key === 'Tab' && !e.shiftKey && page.querySelector('.emote-panel.suggest .emote-option');
-            if (suggestion) {
-                e.preventDefault();
-                suggestion.click();
-                return;
-            }
-            if (e.key !== 'Enter' || e.shiftKey || e.isComposing || e.keyCode === 229) return;
-            e.preventDefault();
-            // Directo al form: el botón puede seguir deshabilitado hasta que el servidor vea el texto
-            if (input.form.requestSubmit) input.form.requestSubmit();
-            else input.form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
-        });
 
         toBottom(false);
         return { id: Intl.DateTimeFormat().resolvedOptions().timeZone, offsetMinutes: -new Date().getTimezoneOffset() };
