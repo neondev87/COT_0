@@ -18,9 +18,31 @@
     max-height: 132px;
     padding: 12px 14px;
     line-height: 22px;
-    resize: none;
     overflow-y: auto;
-    field-sizing: content;
+    /* contenteditable: respeta los dos espacios antes del emote y los saltos de línea; iPhone necesita user-select */
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    -webkit-user-select: text;
+    user-select: text;
+    cursor: text;
+}
+.chat-text:empty::before { content: attr(data-placeholder); color: rgba(230, 230, 230, .4); pointer-events: none; }
+
+/* Emote dentro del cuadro: del alto de la línea; el toque pasa al texto (sin globo de iPhone) */
+@keyframes emoteInline { from { opacity: 0; transform: scale(.6) } to { opacity: 1; transform: none } }
+.chat-text .emote-inline {
+    display: inline;
+    height: 22px;
+    width: auto;
+    max-width: 88px;
+    vertical-align: bottom;
+    object-fit: contain;
+    pointer-events: none;
+    -webkit-touch-callout: none;
+    animation: emoteInline .18s ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+    .chat-text .emote-inline { animation: none; }
 }
 .chat-count {
     position: absolute;
