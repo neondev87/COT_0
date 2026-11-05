@@ -14,46 +14,11 @@
 <div class="cot-screen chat-page" @ref="page">
     <Backdrop />
 
-    <header class="chat-top">
-        <CotLogo Class="cot-brand-sm" />
-        <span class="chat-room">SALA #@Room.Code</span>
-        <button type="button" class="chat-users-btn" @onclick="OpenUsers" aria-haspopup="dialog" aria-label="Conectados">
-            <Icon Name="users" /> @Session.Users.Count
-        </button>
-        @if (Session.CurrentUser is { } me)
-        {
-            <button type="button" class="chat-me cot-av" @onclick="OpenProfile" aria-haspopup="dialog" aria-label="Editar tu perfil">
-                @if (string.IsNullOrEmpty(me.PhotoUrl))
-                {
-                    <span class="cot-av-empty avatar-initial">@me.Name.Trim()[..1].ToUpperInvariant()</span>
-                }
-                else
-                {
-                    <img class="cot-av-img" src="@me.PhotoUrl" alt="" />
-                }
-            </button>
-        }
-    </header>
+    <ChatHeader RoomCode="@Room.Code" UserCount="Session.Users.Count" Me="Session.CurrentUser"
+                OnOpenUsers="OpenUsers" OnOpenProfile="OpenProfile" />
 
     <div class="chat-body">
-        <div class="chat-main">
-            <main class="msg-scroll">
-                <div class="msg-stack">
-                    @if (Session.Groups.Count == 0)
-                    {
-                        <p class="msg-empty">Todavía no hay mensajes. Rompe el silencio.</p>
-                    }
-                    @foreach (var group in Session.Groups)
-                    {
-                        <MessageBlock @key="group.Key" Group="group" OnOpenImage="OpenImage" />
-                    }
-                </div>
-            </main>
-
-            <p class="msg-typing @(Session.TypingSummary is null ? null : "on")" aria-live="polite">@Session.TypingSummary</p>
-            @* Lo muestra chat.js cuando llegan mensajes mientras se lee más arriba *@
-            <button type="button" class="msg-new">MENSAJES NUEVOS <Icon Name="chevron" Size="16" /></button>
-        </div>
+        <MessageList Groups="Session.Groups" TypingSummary="@Session.TypingSummary" OnOpenImage="OpenImage" />
 
         <UserPanel Users="Session.Users" IsOpen="usersOpen" OnClose="CloseUsers" />
     </div>

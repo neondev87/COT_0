@@ -1,0 +1,29 @@
+@* Barra superior del chat: logo, sala, conectados y botón de perfil (la usan /chat y el manual) *@
+<header class="chat-top">
+    <CotLogo Class="cot-brand-sm" />
+    <span class="chat-room">SALA #@RoomCode</span>
+    <button type="button" class="chat-users-btn" @onclick="OnOpenUsers" aria-haspopup="dialog" aria-label="Conectados">
+        <Icon Name="users" /> @UserCount
+    </button>
+    @if (Me is { } me)
+    {
+        <button type="button" class="chat-me cot-av" @onclick="OnOpenProfile" aria-haspopup="dialog" aria-label="Editar tu perfil">
+            @if (string.IsNullOrEmpty(me.PhotoUrl))
+            {
+                <span class="cot-av-empty avatar-initial">@me.Name.Trim()[..1].ToUpperInvariant()</span>
+            }
+            else
+            {
+                <img class="cot-av-img" src="@me.PhotoUrl" alt="" />
+            }
+        </button>
+    }
+</header>
+
+@code {
+    [Parameter, EditorRequired] public string RoomCode { get; set; } = string.Empty;
+    [Parameter] public int UserCount { get; set; }
+    [Parameter] public User? Me { get; set; }
+    [Parameter] public EventCallback OnOpenUsers { get; set; }
+    [Parameter] public EventCallback OnOpenProfile { get; set; }
+}

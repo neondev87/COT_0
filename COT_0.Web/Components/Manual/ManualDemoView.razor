@@ -1,0 +1,35 @@
+@inject IManualDemo Demo
+
+@* Vista real de COT_0.Web en modo demostración: datos de muestra, sin sala y sin interacción (inert).
+   data-focus + las variables de Focus.Style dicen qué se resalta y cuándo (manual.css) *@
+<figure class="manual-vista" data-focus="@Focus.Keys" style="@Focus.Style">
+    <div class="manual-screen" data-view="@Step.View.ToString().ToLowerInvariant()" inert>
+        @switch (Step.View)
+        {
+            case ManualView.Join:
+                <div class="cot-screen cot-center join-page">
+                    <Backdrop />
+                    <ProfileForm Form="Demo.Profile" Subtitle="ÚNETE A LA SALA" SubmitLabel="ENTRAR AL CHAT">
+                        <Footer><p class="cot-room">SALA #@Demo.RoomCode</p></Footer>
+                    </ProfileForm>
+                </div>
+                break;
+            case ManualView.Exit:
+                <div class="cot-screen cot-center join-page">
+                    <Backdrop />
+                    <ProfileForm Form="Demo.Profile" Subtitle="ÚNETE A LA SALA" SubmitLabel="ENTRAR AL CHAT" ShowFields="false">
+                        <Header><p class="cot-notice">@LeaveReason.ToNotice(LeaveReason.RoomClosed)</p></Header>
+                    </ProfileForm>
+                </div>
+                break;
+            default:
+                <DemoChat ShowEmoteMenu="Step.View == ManualView.Emotes" />
+                break;
+        }
+    </div>
+</figure>
+
+@code {
+    [Parameter, EditorRequired] public ManualStep Step { get; set; } = default!;
+    [Parameter, EditorRequired] public ManualFocus Focus { get; set; } = default!;
+}

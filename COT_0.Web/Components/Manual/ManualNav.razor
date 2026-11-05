@@ -1,0 +1,18 @@
+@* Navegación: en PC atajos de teclado discretos arriba; en celular botones grandes abajo.
+   data-keys = teclas que la activan (manual.js) *@
+<nav class="manual-nav" aria-label="Navegación del manual">
+    <button type="button" class="manual-key" data-keys="ArrowLeft" disabled="@(!CanGoBack)" @onclick="OnPrevious">
+        <kbd>←</kbd><span>anterior</span>
+    </button>
+    <button type="button" class="manual-key manual-key-main" data-keys="ArrowRight Enter" @onclick="OnNext">
+        <kbd>→</kbd><span>siguiente</span>
+    </button>
+    <a class="manual-key" href="@ExitUrl" data-keys="Escape"><kbd>ESC</kbd><span>salir</span></a>
+</nav>
+
+@code {
+    [Parameter] public bool CanGoBack { get; set; }
+    [Parameter, EditorRequired] public string ExitUrl { get; set; } = string.Empty;
+    [Parameter] public EventCallback OnPrevious { get; set; }
+    [Parameter] public EventCallback OnNext { get; set; }
+}

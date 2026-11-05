@@ -24,6 +24,7 @@ public static class WebApp
             .AddInteractiveServerComponents();
         builder.Services.AddSignalR();
         builder.Services.AddChat(builder.Configuration, url);
+        builder.Services.AddManual(builder.Configuration);
 
         var app = builder.Build();
 
@@ -34,6 +35,7 @@ public static class WebApp
 
         // Sin HTTPS local: cloudflared se encarga del https público
         app.UseStaticFiles();
+        app.UseManualAssets();
         app.UseAntiforgery();
 
         app.MapGet("/", () => Results.Redirect("/join"));
