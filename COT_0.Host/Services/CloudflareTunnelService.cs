@@ -41,8 +41,8 @@ public partial class CloudflareTunnelService(IConfiguration configuration) : ITu
             process.Dispose();
             throw new InvalidOperationException(
                 $"No se encontró cloudflared (\"{executable}\").\n\n" +
-                "Instalalo con: winget install Cloudflare.cloudflared\n" +
-                "o configurá la ruta en appsettings.json → Tunnel:CloudflaredPath.");
+                "Instálalo con: winget install Cloudflare.cloudflared\n" +
+                "o configura la ruta en appsettings.json → Tunnel:CloudflaredPath.");
         }
 
         _process = process;
@@ -58,7 +58,7 @@ public partial class CloudflareTunnelService(IConfiguration configuration) : ITu
         catch (TimeoutException)
         {
             await StopAsync();
-            throw new TimeoutException($"cloudflared no entregó la URL en {timeoutSeconds} segundos. Revisá tu conexión.");
+            throw new TimeoutException($"cloudflared no entregó la URL en {timeoutSeconds} segundos. Revisa tu conexión.");
         }
         catch
         {
