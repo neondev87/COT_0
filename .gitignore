@@ -485,3 +485,8 @@ $RECYCLE.BIN/
 
 # Música de fondo (local, nunca al repo)
 musica/
+
+# Audios del manual (locales, nunca al repo)
+/manual/
+*.mp3
+*.wav
