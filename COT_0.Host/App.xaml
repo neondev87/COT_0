@@ -18,6 +18,7 @@
                 <ResourceDictionary Source="Themes/Emotes.xaml"/>
                 <ResourceDictionary Source="Themes/SongPicker.xaml"/>
                 <ResourceDictionary Source="Themes/Manual.xaml"/>
+                <ResourceDictionary Source="Themes/ManualFx.xaml"/>
                 <ResourceDictionary Source="Themes/ManualParts.xaml"/>
                 <ResourceDictionary Source="Themes/Window.xaml"/>
                 <ResourceDictionary Source="Themes/Templates.xaml"/>

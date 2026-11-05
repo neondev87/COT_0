@@ -8,7 +8,7 @@ using System.Windows.Threading;
 
 namespace COT_0.Host.Controls;
 
-// Pérdida de señal de TV: ráfagas al azar con franjas corridas, temblor, destello gris y más estática.
+// Pérdida de señal de TV: ráfagas al azar con franjas corridas, temblor, destello y más estática, teñidas con Tint.
 // Solo corre con la ventana a la vista y con las animaciones del sistema activas
 public class SignalLossLayer : Grid
 {
@@ -28,13 +28,12 @@ public class SignalLossLayer : Grid
     public static readonly DependencyProperty TremorProperty = DependencyProperty.Register(
         nameof(Tremor), typeof(double), typeof(SignalLossLayer));
 
-    private static readonly Brush[] Grays = Enumerable.Range(0, 6).Select(Gray).ToArray();
-
     private readonly DispatcherTimer _schedule = new();
     private readonly DispatcherTimer _frame = new(DispatcherPriority.Render) { Interval = TimeSpan.FromSeconds(1 / FramesPerSecond) };
-    private readonly NoiseLayer _noise = new() { Visibility = Visibility.Collapsed };
-    private readonly Canvas _bands = new() { Visibility = Visibility.Collapsed };
+    private readonly NoiseLayer _noise = new() { Visibility = Visibility.Hidden };
+    private readonly Canvas _bands = new() { Visibility = Visibility.Hidden };
     private readonly Rectangle _flash = new() { Opacity = 0 };
+    private Brush[] _shades = [];
     private Window? _window;
     private long _burstStart;
     private long _burstEnd;
@@ -74,6 +73,7 @@ public class SignalLossLayer : Grid
     public double MaxShift { get; set; }
     public double MaxTremor { get; set; }
     public Brush? FlashBrush { get; set; }
+    public Color Tint { get; set; } = Colors.Gray;
 
     private bool CanRun => IsVisible && SystemParameters.ClientAreaAnimation && _window?.WindowState != WindowState.Minimized;
 
@@ -87,6 +87,8 @@ public class SignalLossLayer : Grid
     {
         _noise.Opacity = BurstNoiseOpacity;
         _flash.Fill = FlashBrush;
+        _noise.Tint = Tint;
+        _shades = Enumerable.Range(0, 6).Select(Shade).ToArray();
         _window = Window.GetWindow(this);
         if (_window is not null) _window.StateChanged += OnWindowStateChanged;
         SystemParameters.StaticPropertyChanged += OnSystemParameterChanged;
@@ -159,7 +161,7 @@ public class SignalLossLayer : Grid
         band.Visibility = random.NextDouble() < 0.75 ? Visibility.Visible : Visibility.Hidden;
         band.Height = 2 + random.NextDouble() * random.NextDouble() * 46;
         band.Width = ActualWidth * (0.4 + random.NextDouble() * 0.8);
-        band.Fill = Grays[random.Next(Grays.Length)];
+        band.Fill = _shades[random.Next(_shades.Length)];
         Canvas.SetTop(band, random.NextDouble() * ActualHeight);
         Canvas.SetLeft(band, random.NextDouble() * (ActualWidth - band.Width * 0.6) + Signed(MaxShift * 6));
     }
@@ -168,7 +170,7 @@ public class SignalLossLayer : Grid
     {
         _frame.Stop();
         _burstEnd = 0;
-        _noise.Visibility = _bands.Visibility = Visibility.Collapsed;
+        _noise.Visibility = _bands.Visibility = Visibility.Hidden;
         _flash.Opacity = 0;
         Shift = Tremor = 0;
     }
@@ -177,11 +179,11 @@ public class SignalLossLayer : Grid
 
     private static double Signed(double max) => (Random.Shared.NextDouble() * 2 - 1) * max;
 
-    // Grises cada vez más claros y opacos, congelados para reusarlos en cada cuadro
-    private static Brush Gray(int step)
+    // Tonos del color cada vez más claros y opacos, congelados para reusarlos en cada cuadro
+    private Brush Shade(int step)
     {
-        var level = (byte)(60 + step * 36);
-        var brush = new SolidColorBrush(Color.FromArgb((byte)(24 + step * 14), level, level, level));
+        var light = 0.3 + step * 0.14;
+        var brush = new SolidColorBrush(Color.FromArgb((byte)(24 + step * 14), (byte)(Tint.R * light), (byte)(Tint.G * light), (byte)(Tint.B * light)));
         brush.Freeze();
         return brush;
     }
