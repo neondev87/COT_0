@@ -24,6 +24,8 @@
     <sys:Double x:Key="ManualColumnWidth">330</sys:Double>
     <Thickness x:Key="ManualPadding">402,24,32,28</Thickness>   <!-- columna izquierda (330) + 72 -->
     <Duration x:Key="ManualFadeDuration">0:0:0.3</Duration>
+    <sys:Double x:Key="ManualNoiseOpacity">0.065</sys:Double>     <!-- estática durante los pasos -->
+    <sys:Double x:Key="FarewellNoiseOpacity">0.12</sys:Double>    <!-- estática en la despedida -->
     <Duration x:Key="ManualLeaveDuration">0:0:0.25</Duration>
     <Duration x:Key="NoticeInDuration">0:0:0.35</Duration>
     <Duration x:Key="PressDuration">0:0:0.15</Duration>

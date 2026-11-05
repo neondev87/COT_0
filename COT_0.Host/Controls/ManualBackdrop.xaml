@@ -13,7 +13,26 @@
                 <TranslateTransform x:Name="Fog"/>
             </Ellipse.RenderTransform>
         </Ellipse>
-        <controls:NoiseLayer Opacity="0.065"/>
+        <!-- Estática: sube de intensidad al llegar a la despedida (DataContext: ManualViewModel) -->
+        <controls:NoiseLayer>
+            <controls:NoiseLayer.Style>
+                <Style TargetType="controls:NoiseLayer">
+                    <Setter Property="Opacity" Value="{StaticResource ManualNoiseOpacity}"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsFarewell}" Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="{StaticResource FarewellNoiseOpacity}"
+                                                         Duration="{StaticResource ManualFadeDuration}"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </controls:NoiseLayer.Style>
+        </controls:NoiseLayer>
         <Rectangle Fill="{StaticResource VignetteBrush}"/>
     </Grid>
 

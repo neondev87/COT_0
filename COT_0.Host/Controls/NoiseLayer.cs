@@ -6,41 +6,38 @@ using System.Windows.Threading;
 
 namespace COT_0.Host.Controls;
 
-// Estática de TV sin señal: unos pocos cuadros de ruido generados una vez y rotados (barato para la CPU)
+// Estática de TV sin señal: un bitmap chico que se repinta con ruido en cada cuadro; solo corre mientras se ve
 public class NoiseLayer : Image
 {
     private const int Size = 256;
-    private const int FrameCount = 6;
     private const double FramesPerSecond = 12;
 
-    private readonly DispatcherTimer _timer = new(DispatcherPriority.Background) { Interval = TimeSpan.FromSeconds(1 / FramesPerSecond) };
-    private BitmapSource[] _frames = [];
-    private int _index;
+    private readonly DispatcherTimer _timer = new(DispatcherPriority.Render) { Interval = TimeSpan.FromSeconds(1 / FramesPerSecond) };
+    private readonly WriteableBitmap _bitmap = new(Size, Size, 96, 96, PixelFormats.Gray8, null);
+    private readonly byte[] _pixels = new byte[Size * Size];
+    private readonly Int32Rect _area = new(0, 0, Size, Size);
 
     public NoiseLayer()
     {
+        Source = _bitmap;
         Stretch = Stretch.Fill;
         IsHitTestVisible = false;
         RenderOptions.SetBitmapScalingMode(this, BitmapScalingMode.NearestNeighbor);
-        _timer.Tick += (_, _) => Source = _frames[_index = (_index + 1) % _frames.Length];
-        Loaded += (_, _) => Start();
+        Paint();
+        _timer.Tick += (_, _) => Paint();
+        IsVisibleChanged += (_, _) => UpdateTimer();
         Unloaded += (_, _) => _timer.Stop();
     }
 
-    private void Start()
+    private void UpdateTimer()
     {
-        if (_frames.Length == 0) _frames = Enumerable.Range(0, FrameCount).Select(seed => BuildFrame(new Random(seed))).ToArray();
-        Source = _frames[0];
-        if (!SystemParameters.ClientAreaAnimation) return;
-        _timer.Start();
+        if (IsVisible) _timer.Start();
+        else _timer.Stop();
     }
 
-    private static BitmapSource BuildFrame(Random random)
+    private void Paint()
     {
-        var pixels = new byte[Size * Size];
-        random.NextBytes(pixels);
-        var frame = BitmapSource.Create(Size, Size, 96, 96, PixelFormats.Gray8, null, pixels, Size);
-        frame.Freeze();
-        return frame;
+        Random.Shared.NextBytes(_pixels);
+        _bitmap.WritePixels(_area, _pixels, Size, 0);
     }
 }
