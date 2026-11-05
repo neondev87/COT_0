@@ -20,10 +20,9 @@ public static class ChatRegistration
         services.AddOptions<CircuitOptions>().Configure<IOptions<ChatOptions>>((circuit, chat) =>
             circuit.DisconnectedCircuitRetentionPeriod = TimeSpan.FromMinutes(chat.Value.CircuitRetentionMinutes));
 
-        // Misma instancia para el chat, el feed de mensajes y editar perfiles
+        // Misma instancia para el chat y el feed de mensajes
         services.AddSingleton<InMemoryChatService>();
         services.AddSingleton<IChatService>(sp => sp.GetRequiredService<InMemoryChatService>());
-        services.AddSingleton<IUserEditor>(sp => sp.GetRequiredService<InMemoryChatService>());
         services.AddSingleton<IChatFeed>(sp => sp.GetRequiredService<InMemoryChatService>());
         services.AddSingleton<IPresenceTracker, PresenceTracker>();
         services.AddSingleton<IMessageFormatter, MessageFormatter>();

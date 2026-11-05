@@ -1,3 +1,5 @@
+using COT_0.Core.Models;
+
 namespace COT_0.Web.Services.Emotes;
 
 // Foto fija de los emotes del set: activos (con índice por nombre) y quitados por el host

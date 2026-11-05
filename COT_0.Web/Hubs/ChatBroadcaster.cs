@@ -9,7 +9,7 @@ namespace COT_0.Web.Hubs;
 // Pasa los eventos de IChatService / IRoomService a los clientes del hub
 // (también los que dispara el Host: expulsar, cerrar la sala)
 public sealed class ChatBroadcaster(
-    IChatService chat, IChatFeed feed, IUserEditor editor, IRoomService room, IHubContext<ChatHub> hub, ILogger<ChatBroadcaster> logger)
+    IChatService chat, IChatFeed feed, IRoomService room, IHubContext<ChatHub> hub, ILogger<ChatBroadcaster> logger)
     : BackgroundService
 {
     // Una sola cola: los avisos salen en el mismo orden en que pasaron
@@ -20,7 +20,7 @@ public sealed class ChatBroadcaster(
         chat.UsersChanged += OnUsersChanged;
         chat.UserKicked += OnUserKicked;
         feed.MessageAdded += OnMessageAdded;
-        editor.UserUpdated += OnUserUpdated;
+        chat.UserUpdated += OnUserUpdated;
         room.Changed += OnRoomChanged;
 
         try
@@ -37,7 +37,7 @@ public sealed class ChatBroadcaster(
             chat.UsersChanged -= OnUsersChanged;
             chat.UserKicked -= OnUserKicked;
             feed.MessageAdded -= OnMessageAdded;
-            editor.UserUpdated -= OnUserUpdated;
+            chat.UserUpdated -= OnUserUpdated;
             room.Changed -= OnRoomChanged;
         }
     }

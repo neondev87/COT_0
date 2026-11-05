@@ -1,7 +1,6 @@
 using System.Globalization;
 using COT_0.Core.Models;
 using COT_0.Host.ViewModels;
-using COT_0.Web.Services.Emotes;
 using Microsoft.Extensions.Configuration;
 
 namespace COT_0.Host.Services;

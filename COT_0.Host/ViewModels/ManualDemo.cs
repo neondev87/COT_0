@@ -1,5 +1,5 @@
+using COT_0.Core.Models;
 using System.Windows.Media;
-using COT_0.Web.Services.Emotes;
 
 namespace COT_0.Host.ViewModels;
 

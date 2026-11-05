@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 namespace COT_0.Web.Services;
 
 public class ProfileService(
-    IChatService chat, IUserEditor editor, IRoomService room, IAvatarStore avatars, IGuestStore guests, IOptions<ChatOptions> options)
+    IChatService chat, IRoomService room, IAvatarStore avatars, IGuestStore guests, IOptions<ChatOptions> options)
     : IProfileService
 {
     private readonly ChatOptions _options = options.Value;
@@ -54,7 +54,7 @@ public class ProfileService(
         var name = form.Name.Trim();
         if (ValidateName(name) is { } invalid) return OperationResult<User>.Fail(invalid);
 
-        var user = await editor.UpdateUserAsync(userId, name, form.PhotoUrl, form.FacultyFlag);
+        var user = await chat.UpdateUserAsync(userId, name, form.PhotoUrl, form.FacultyFlag);
         if (user is null) return OperationResult<User>.Fail("Ya no estás en la sala.");
 
         await RememberAsync(user);

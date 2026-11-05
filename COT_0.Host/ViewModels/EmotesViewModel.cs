@@ -1,6 +1,7 @@
+using COT_0.Core.Models;
+using COT_0.Core.Services;
 using System.Collections.ObjectModel;
 using System.Windows;
-using COT_0.Web.Services.Emotes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Configuration;

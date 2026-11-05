@@ -11,6 +11,13 @@ public class ChatMessage
     public string? UserPhotoUrl { get; set; }
     public string? UserFacultyFlag { get; set; }
 
+    public MessageKind Kind { get; set; } = MessageKind.Text;
+
     public string Text { get; set; } = string.Empty;
+
+    // Solo en notas de voz (Kind = Voice) e imágenes (Kind = Image): ruta relativa del archivo
+    public string? AudioUrl { get; set; }
+    public string? ImageUrl { get; set; }
+
     public DateTime SentAt { get; set; } = DateTime.UtcNow;
 }

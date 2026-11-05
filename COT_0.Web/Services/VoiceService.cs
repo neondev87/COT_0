@@ -30,7 +30,7 @@ public sealed class VoiceService(IChatService chat, IVoiceStore store, IAudioTra
         if (clip.Duration.TotalMilliseconds < _options.MinMilliseconds) return OperationResult<VoiceClip>.Fail(VoiceNotice.TooShort);
 
         store.Save(clip);
-        await chat.AddMessageAsync(userId, VoiceNote.ToText(clip.Id));
+        await chat.AddMediaAsync(userId, VoiceNote.ToText(clip.Id), MessageKind.Voice, UrlOf(clip.Id));
         return OperationResult<VoiceClip>.Ok(clip);
     }
 
@@ -38,9 +38,11 @@ public sealed class VoiceService(IChatService chat, IVoiceStore store, IAudioTra
     {
         if (VoiceNote.GetClipId(message.Text) is not { } id) return null;
 
-        var url = $"{_options.Path.Trim('/')}/{id}";
+        var url = UrlOf(id);
         return store.Get(id) is { } clip ? new VoicePlayback(url, clip.Duration, true) : new VoicePlayback(url, TimeSpan.Zero, false);
     }
+
+    private string UrlOf(string clipId) => $"{_options.Path.Trim('/')}/{clipId}";
 
     // null si pasa Voice:MaxBytes (el stream de JS ya corta antes, esto es por las dudas)
     private async Task<byte[]?> ReadAsync(Stream audio)

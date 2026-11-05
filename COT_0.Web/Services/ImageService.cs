@@ -24,7 +24,7 @@ public sealed class ImageService(IChatService chat, IImageStore store, IOptions<
         var clip = new ImageClip(Guid.NewGuid().ToString("N"), bytes, info.ContentType, info.Width, info.Height);
         if (!store.TrySave(clip)) return OperationResult<ImageClip>.Fail(ImageNotice.RoomFull);
 
-        await chat.AddMessageAsync(userId, ImageNote.ToText(clip.Id));
+        await chat.AddMediaAsync(userId, ImageNote.ToText(clip.Id), MessageKind.Image, UrlOf(clip.Id));
         return OperationResult<ImageClip>.Ok(clip);
     }
 
@@ -32,7 +32,7 @@ public sealed class ImageService(IChatService chat, IImageStore store, IOptions<
     {
         if (ImageNote.GetImageId(message.Text) is not { } id) return null;
 
-        var url = $"{_options.ImagesPath.Trim('/')}/{id}";
+        var url = UrlOf(id);
         if (store.Get(id) is not { } clip) return new ImageView(url, _options.ImageThumbWidth, _options.ImageThumbWidth, false);
 
         // Entra en ImageThumbWidth x ImageThumbMaxHeight sin deformarse
@@ -40,6 +40,8 @@ public sealed class ImageService(IChatService chat, IImageStore store, IOptions<
         scale = Math.Min(1, scale);
         return new ImageView(url, Math.Max(1, (int)Math.Round(clip.Width * scale)), Math.Max(1, (int)Math.Round(clip.Height * scale)), true);
     }
+
+    private string UrlOf(string imageId) => $"{_options.ImagesPath.Trim('/')}/{imageId}";
 
     // null si pasa Chat:MaxImageBytes (el navegador ya avisa antes, esto es la validación del servidor)
     private async Task<byte[]?> ReadAsync(Stream image)

@@ -1,7 +1,7 @@
 using COT_0.Core.Models;
+using COT_0.Core.Services;
 using COT_0.Web.Models;
 using COT_0.Web.Options;
-using COT_0.Web.Services.Emotes;
 using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services;
@@ -50,7 +50,7 @@ public sealed class ManualDemo : IManualDemo
     private List<ChatMessage> Messages()
     {
         var emotes = _emotes.Active.Take(2).Select(e => e.Name).ToList();
-        var joined = SystemNotice.Create(_chat.JoinedNotice, _rei);
+        var joined = SystemNotice.Create(MessageKind.Joined, _chat.JoinedNotice, _rei);
         joined.Id = "demo-joined";
         joined.SentAt = _now.AddMinutes(-9);
 

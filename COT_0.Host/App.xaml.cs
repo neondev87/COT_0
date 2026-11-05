@@ -3,7 +3,6 @@ using System.Windows.Threading;
 using COT_0.Core.Services;
 using COT_0.Host.Services;
 using COT_0.Host.ViewModels;
-using COT_0.Web.Services.Emotes;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

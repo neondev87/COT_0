@@ -1,6 +1,6 @@
 namespace COT_0.Web.Services;
 
-// Una nota de voz viaja como ChatMessage con este texto reservado (Core no tiene tipo de mensaje)
+// Una nota de voz viaja como ChatMessage con Kind = Voice y AudioUrl; el render todavía la reconoce por este texto reservado
 public static class VoiceNote
 {
     private const string Prefix = "\u0001voice:";

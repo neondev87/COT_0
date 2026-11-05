@@ -1,4 +1,4 @@
-using COT_0.Web.Services.Emotes;
+using COT_0.Core.Models;
 
 namespace COT_0.Host.ViewModels;
 

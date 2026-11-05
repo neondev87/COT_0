@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 namespace COT_0.Web.Services;
 
 // Estado del chat en memoria (Singleton)
-public class InMemoryChatService(IOptions<ChatOptions> options) : IChatService, IUserEditor, IChatFeed
+public class InMemoryChatService(IOptions<ChatOptions> options) : IChatService, IChatFeed
 {
     private readonly ChatOptions _options = options.Value;
     private readonly ConcurrentDictionary<string, User> _users = new();
@@ -22,7 +22,7 @@ public class InMemoryChatService(IOptions<ChatOptions> options) : IChatService, 
     public Task<User> AddUserAsync(User user)
     {
         _users[user.Id] = user;
-        Store(SystemNotice.Create(_options.JoinedNotice, user));
+        Store(SystemNotice.Create(MessageKind.Joined, _options.JoinedNotice, user));
         UsersChanged?.Invoke();
         return Task.FromResult(user);
     }
@@ -48,7 +48,7 @@ public class InMemoryChatService(IOptions<ChatOptions> options) : IChatService, 
     {
         if (!_users.TryRemove(userId, out var user)) return Task.CompletedTask;
 
-        Store(SystemNotice.Create(_options.LeftNotice, user));
+        Store(SystemNotice.Create(MessageKind.Left, _options.LeftNotice, user));
         UsersChanged?.Invoke();
         return Task.CompletedTask;
     }
@@ -57,7 +57,7 @@ public class InMemoryChatService(IOptions<ChatOptions> options) : IChatService, 
     {
         if (!_users.TryRemove(userId, out var user)) return Task.CompletedTask;
 
-        Store(SystemNotice.Create(_options.KickedNotice, user));
+        Store(SystemNotice.Create(MessageKind.Kicked, _options.KickedNotice, user));
         UserKicked?.Invoke(user);
         UsersChanged?.Invoke();
         return Task.CompletedTask;
@@ -77,16 +77,17 @@ public class InMemoryChatService(IOptions<ChatOptions> options) : IChatService, 
     public Task<IReadOnlyList<User>> GetUsersAsync() =>
         Task.FromResult<IReadOnlyList<User>>(_users.Values.OrderBy(u => u.JoinedAt).ToList());
 
-    public Task<ChatMessage> AddMessageAsync(string userId, string text)
-    {
-        if (!_users.TryGetValue(userId, out var user))
-            throw new InvalidOperationException($"El usuario {userId} no está conectado.");
+    public Task<ChatMessage> AddMessageAsync(string userId, string text) =>
+        Task.FromResult(Add(userId, new ChatMessage { Text = text }));
 
-        var message = new ChatMessage { UserId = user.Id, Text = text };
-        MessageAuthor.Apply(message, user);
-        Store(message);
-        return Task.FromResult(message);
-    }
+    public Task<ChatMessage> AddMediaAsync(string userId, string text, MessageKind kind, string url) =>
+        Task.FromResult(Add(userId, new ChatMessage
+        {
+            Text = text,
+            Kind = kind,
+            AudioUrl = kind == MessageKind.Voice ? url : null,
+            ImageUrl = kind == MessageKind.Image ? url : null,
+        }));
 
     public Task<IReadOnlyList<ChatMessage>> GetMessagesAsync(int max = 100)
     {
@@ -94,6 +95,17 @@ public class InMemoryChatService(IOptions<ChatOptions> options) : IChatService, 
         {
             return Task.FromResult<IReadOnlyList<ChatMessage>>(_messages.TakeLast(max).ToList());
         }
+    }
+
+    private ChatMessage Add(string userId, ChatMessage message)
+    {
+        if (!_users.TryGetValue(userId, out var user))
+            throw new InvalidOperationException($"El usuario {userId} no está conectado.");
+
+        message.UserId = user.Id;
+        MessageAuthor.Apply(message, user);
+        Store(message);
+        return message;
     }
 
     // Guarda y avisa dentro del lock: así los mensajes salen en el mismo orden en que se guardaron

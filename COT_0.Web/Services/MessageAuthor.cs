@@ -15,7 +15,16 @@ public static class MessageAuthor
     // Mensaje nuevo con el mismo Id (Blazor conserva el elemento por @key)
     public static ChatMessage With(ChatMessage message, User author)
     {
-        var copy = new ChatMessage { Id = message.Id, UserId = message.UserId, Text = message.Text, SentAt = message.SentAt };
+        var copy = new ChatMessage
+        {
+            Id = message.Id,
+            UserId = message.UserId,
+            Kind = message.Kind,
+            Text = message.Text,
+            AudioUrl = message.AudioUrl,
+            ImageUrl = message.ImageUrl,
+            SentAt = message.SentAt,
+        };
         Apply(copy, author);
         return copy;
     }

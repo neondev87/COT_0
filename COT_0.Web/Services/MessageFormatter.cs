@@ -1,5 +1,5 @@
+using COT_0.Core.Services;
 using System.Text.RegularExpressions;
-using COT_0.Web.Services.Emotes;
 using COT_0.Web.Models;
 
 namespace COT_0.Web.Services;

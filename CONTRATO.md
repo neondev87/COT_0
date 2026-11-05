@@ -59,7 +59,10 @@ Invitado conectado, solo en memoria.
 | `Id` | `string` | GUID sin guiones |
 | `UserId` | `string` | Autor |
 | `UserName`, `UserPhotoUrl`, `UserFacultyFlag` | `string` / `string?` | Copia del autor al enviar (el mensaje queda bien aunque el usuario se vaya) |
-| `Text` | `string` | Contenido |
+| `Kind` | `MessageKind` | `Text` / `Joined` / `Left` / `Kicked` / `Voice` / `Image` |
+| `Text` | `string` | Contenido (en voz e imagen sigue siendo el texto reservado de Web, ver Pedidos) |
+| `AudioUrl` | `string?` | Solo `Kind = Voice`: ruta relativa del audio (`{Voice:Path}/{id}`) |
+| `ImageUrl` | `string?` | Solo `Kind = Image`: ruta relativa de la imagen (`{Chat:ImagesPath}/{id}`) |
 | `SentAt` | `DateTime` | UTC |
 
 ## Interfaces (`COT_0.Core.Services`)
@@ -70,13 +73,16 @@ Estado del chat en memoria.
 - `Task<User> AddUserAsync(User user)` – agrega un invitado y lo devuelve.
 - `Task RemoveUserAsync(string userId)` – lo saca (desconexión).
 - `Task<User?> GetUserAsync(string userId)`
+- `Task<User?> UpdateUserAsync(string userId, string name, string? photoUrl, string? facultyFlag)` – edita el perfil y la copia del autor en sus mensajes; dispara `UserUpdated` y `UsersChanged`.
 - `Task<IReadOnlyList<User>> GetUsersAsync()` – conectados.
 - `Task<ChatMessage> AddMessageAsync(string userId, string text)` – crea el mensaje con los datos del autor.
+- `Task<ChatMessage> AddMediaAsync(string userId, string text, MessageKind kind, string url)` – nota de voz (`AudioUrl`) o imagen (`ImageUrl`).
 - `Task<IReadOnlyList<ChatMessage>> GetMessagesAsync(int max = 100)` – últimos mensajes, del más viejo al más nuevo.
 - `Task KickUserAsync(string userId)` – lo saca y dispara `UserKicked`.
 - `Task ClearAsync()` – borra usuarios e historial (al cerrar la sala).
 - `event Action? UsersChanged` – entra/sale/expulsado/vaciado. El Host lo escucha con `Dispatcher.Invoke`.
 - `event Action<User>? UserKicked` – Web le avisa al expulsado por el hub (evento `"Kicked"`).
+- `event Action<User>? UserUpdated` – perfil editado; Web lo reenvía por el hub (evento `"UserUpdated"`).
 
 ### `IRoomService` – implementa Web (`Services/RoomService.cs`, **Singleton**)
 Estado de la sala. El Host la abre/cierra; Web muestra el código y bloquea `/join` si está cerrada.
@@ -88,8 +94,11 @@ Estado de la sala. El Host la abre/cierra; Web muestra el código y bloquea `/jo
 
 El Host obtiene `IChatService` e `IRoomService` del contenedor de la app web que levanta `WebServerHost` (son la misma instancia que usa el hub).
 
-### `IFlagService` / `IEmoteService` – implementa Web
-Movidas a Core junto con sus modelos `FlagOption`, `Emote`, `MessagePart` (`COT_0.Core.Models`).
+### `IFlagService` – implementa Web
+Con su modelo `FlagOption` (`COT_0.Core.Models`).
+
+### `IRoomEmotes` – implementa Web (`Services/Emotes/RoomEmotes.cs`, **Singleton**)
+Emotes de la sala desde un set de 7TV. Modelos en `COT_0.Core.Models`: `RoomEmote`, `EmoteSources`, `EmoteReport`, `EmoteSetStatus`, `EmoteSetError`. El Host la saca del contenedor de la web (misma instancia que usan los chats). Ver el pedido "emotes 7TV" para el detalle de los miembros.
 
 ### `ITunnelService` – implementa Agente A (`Services/CloudflareTunnelService.cs`)
 - `string? PublicUrl` – `https://xxxx.trycloudflare.com` o `null`.
@@ -145,3 +154,10 @@ _(Anotar acá: agente, qué se necesita en Core y por qué.)_
 - **Agente A** (manual de Lain, P10b): `ManualAssets`, `ManualSound` (MediaPlayer) y `ManualDemoFactory` se registran como clases concretas en el Host por usar tipos de WPF. Si se quiere interfaz en Core: `IManualSound` (`bool IsMuted`, `PlayNotice()`, `StartStatic()`, `Stop()`). Config nueva en `appsettings.json`: sección `Manual` (rutas de videos y sonidos fuera del repo, volúmenes, `CueSeconds`, `StepChangeMilliseconds`, `Demo`) y `Texts:Manual` (textos y pasos). Se quitó `Texts:Manual:Text` y `DialogService.ShowManual`.
 - **Agente B → Agente 0 / Agente A** (manual del invitado): no hace falta nada en Core. Rutas nuevas en Web: `/manual` (`Pages/Manual.razor`, enlace discreto desde `/join`) y `/manual-assets/*` (audios desde una carpeta local fuera del repo). Sección opcional `"GuestManual"` (defaults en `COT_0.Web/Options/ManualOptions.cs`); el Host puede pisar `GuestManual:AssetsFolder` en su `appsettings.json` como hace con `Background:Folder`. `IManualTour`/`IManualDemo` quedan en Web (dependen de modelos de Web).
 - **Agente Web → Agente 0** (emotes en el cuadro de escritura): el cuadro del chat ya no es `<textarea>` sino un `contenteditable` manejado por `wwwroot/js/composer.js`; los emotes se ven como imagen y C# recibe el texto con las claves (el mensaje enviado no cambia). Servicio nuevo en Web: `IComposerEditor` (Scoped, usa `ElementReference`/`IJSRuntime`, queda en Web como `IChatBrowser`). Core no cambia.
+
+### Resueltos por el Agente 0 (auditoría 05/11)
+
+- `IUserEditor` (Web) → `IChatService.UpdateUserAsync` + `event UserUpdated` en Core. `IUserEditor` se borró.
+- `IRoomEmotes` y sus modelos pasaron de `Web/Services/Emotes` a Core. `EmoteSetResult`, `ISevenTvClient` e `IEmoteActions` quedan en Web (son del cliente de 7TV y de la vista).
+- `IEmoteService`, `Emote` y `MessagePart` se borraron de Core (nadie los usaba desde los emotes de 7TV).
+- `ChatMessage.Kind` (`MessageKind`), `AudioUrl` e `ImageUrl` en Core; los avisos del sistema y las notas de voz e imágenes ya los completan (`IChatService.AddMediaAsync`). **Pendiente**: el render y el hub todavía reconocen voz e imagen por el texto reservado (`VoiceNote` / `ImageNote`); pasar a `Kind` queda para después. No se agregaron `AudioDuration` ni `ImageWidth`/`ImageHeight`: la duración y el tamaño salen de `IVoiceStore` / `IImageStore`.
