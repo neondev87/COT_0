@@ -46,9 +46,11 @@ public partial class App : Application
         base.OnExit(e);
     }
 
+    // Credenciales del host en user-secrets (pisan a appsettings.json)
     private static IConfiguration LoadConfiguration() => new ConfigurationBuilder()
         .SetBasePath(AppContext.BaseDirectory)
         .AddJsonFile("appsettings.json", optional: false)
+        .AddUserSecrets<App>(optional: true)
         .Build();
 
     private static ServiceProvider BuildServices(IConfiguration configuration) => new ServiceCollection()

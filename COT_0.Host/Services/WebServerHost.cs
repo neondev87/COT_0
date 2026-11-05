@@ -1,15 +1,17 @@
 using COT_0.Web;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 
 namespace COT_0.Host.Services;
 
 // Levanta COT_0.Web (Kestrel) en segundo plano dentro del proceso WPF
-public class WebServerHost
+public class WebServerHost(IConfiguration configuration)
 {
-    public const string Url = WebApp.DefaultUrl;
-
     private Lazy<WebApplication> _app = CreateLazy();
     private Task? _starting;
+
+    // Web:Url de appsettings.json (la misma que usa la app web)
+    public string Url => configuration[WebApp.UrlKey] ?? string.Empty;
 
     public bool IsRunning => _starting is { IsCompletedSuccessfully: true };
 
@@ -40,5 +42,5 @@ public class WebServerHost
 
     // ContentRoot = carpeta del exe (ahí están appsettings.json y wwwroot)
     private static Lazy<WebApplication> CreateLazy() => new(() =>
-        StartupTrace.Measure("  WebApp.Create", () => WebApp.Create(url: Url, contentRoot: AppContext.BaseDirectory)));
+        StartupTrace.Measure("  WebApp.Create", () => WebApp.Create(contentRoot: AppContext.BaseDirectory)));
 }

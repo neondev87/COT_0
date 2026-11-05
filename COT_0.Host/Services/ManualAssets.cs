@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace COT_0.Host.Services;
 
-// Videos y sonidos del manual, fuera del repo (rutas en Manual:*); null si el archivo no está
+// Videos y sonidos del manual, fuera del repo (rutas en Manual:*, relativas a Paths:MediaRoot); null si el archivo no está
 public class ManualAssets(IConfiguration configuration)
 {
     public Uri? LainVideo => Resolve("LainVideo");
@@ -16,7 +16,7 @@ public class ManualAssets(IConfiguration configuration)
 
     private Uri? Resolve(string key)
     {
-        var file = configuration["Manual:" + key];
+        var file = configuration.GetMediaPath("Manual:" + key);
         return !string.IsNullOrWhiteSpace(file) && File.Exists(file) ? new Uri(file) : null;
     }
 }

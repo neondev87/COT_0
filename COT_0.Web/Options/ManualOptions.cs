@@ -7,8 +7,8 @@ public class ManualOptions
 {
     public const string Section = "GuestManual";
 
-    // Audios del manual: carpeta local fuera del repo, servida en AssetsPath (como los fondos y las portadas del Host)
-    public string AssetsFolder { get; set; } = @"C:\Users\neonpc\Documents\COT_0_P\manual";
+    // Audios del manual: carpeta local fuera del repo (relativa a Paths:MediaRoot), servida en AssetsPath
+    public string AssetsFolder { get; set; } = "manual";
     public string AssetsPath { get; set; } = "/manual-assets";
     public string NoticeSound { get; set; } = "notificacion.mp3";
 

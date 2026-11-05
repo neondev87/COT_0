@@ -9,7 +9,7 @@ public class BackgroundCatalog(IConfiguration configuration)
 {
     public IReadOnlyList<BackgroundOption> Load()
     {
-        var folder = configuration["Background:Folder"];
+        var folder = configuration.GetMediaPath("Background:Folder");
         if (string.IsNullOrWhiteSpace(folder) || !Directory.Exists(folder)) return [];
 
         var images = ReadExtensions("Background:ImageExtensions");

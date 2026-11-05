@@ -13,7 +13,7 @@ public class MusicLibrary
 
     public MusicLibrary(IConfiguration configuration)
     {
-        _folder = configuration["Audio:MusicFolder"] ?? string.Empty;
+        _folder = configuration.GetMediaPath("Audio:MusicFolder");
         _extensions = new(configuration.GetSection("Audio:Extensions").Get<string[]>() ?? [], StringComparer.OrdinalIgnoreCase);
     }
 

@@ -15,7 +15,6 @@ public partial class RoomViewModel : ObservableObject
 {
     private readonly IRoomService _room;
     private readonly IChatService _chat;
-    private readonly ITunnelService _tunnel;
     private readonly RoomSession _session;
     private readonly QrService _qr;
     private readonly ScreenNavigator _screens;
@@ -40,13 +39,12 @@ public partial class RoomViewModel : ObservableObject
     [ObservableProperty]
     private int _total;
 
-    public RoomViewModel(IRoomService room, IChatService chat, ITunnelService tunnel, RoomSession session, QrService qr,
+    public RoomViewModel(IRoomService room, IChatService chat, RoomSession session, QrService qr,
         ScreenNavigator screens, ClockService clock, IConfiguration config, EmotesViewModel emotes)
     {
         Emotes = emotes;
         _room = room;
         _chat = chat;
-        _tunnel = tunnel;
         _session = session;
         _qr = qr;
         _screens = screens;
@@ -105,7 +103,7 @@ public partial class RoomViewModel : ObservableObject
             return;
         }
 
-        JoinUrl = (_tunnel.PublicUrl ?? WebServerHost.Url) + _config["Web:JoinPath"];
+        JoinUrl = _session.Url + _config["Web:JoinPath"];
         QrImage = _qr.Generate(JoinUrl);
         Tick();
         _ = ReloadUsersAsync();

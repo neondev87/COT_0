@@ -11,7 +11,7 @@ public class CoverLibrary
 
     public CoverLibrary(IConfiguration configuration)
     {
-        _folder = configuration["Audio:CoversFolder"] ?? string.Empty;
+        _folder = configuration.GetMediaPath("Audio:CoversFolder");
         _extensions = configuration.GetSection("Audio:CoverExtensions").Get<string[]>() ?? [];
     }
 

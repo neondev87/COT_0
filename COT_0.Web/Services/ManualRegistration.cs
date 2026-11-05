@@ -1,3 +1,4 @@
+using COT_0.Core.Services;
 using COT_0.Web.Options;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
@@ -10,6 +11,7 @@ public static class ManualRegistration
     public static IServiceCollection AddManual(this IServiceCollection services, IConfiguration config)
     {
         services.Configure<ManualOptions>(config.GetSection(ManualOptions.Section));
+        services.PostConfigure<ManualOptions>(o => o.AssetsFolder = MediaPath.Resolve(config[MediaPath.RootKey], o.AssetsFolder));
         services.AddScoped<IManualDemo, ManualDemo>();
         services.AddScoped<IManualTour, ManualTour>();
         return services;

@@ -59,7 +59,7 @@ public partial class DashboardViewModel : ObservableObject
         _shutdown = shutdown;
         _dialogs = dialogs;
         _config = config;
-        _culture = CultureInfo.GetCultureInfo(config["Ui:Culture"] ?? "es-AR");
+        _culture = CultureInfo.GetCultureInfo(config["Ui:Culture"] ?? CultureInfo.CurrentCulture.Name);
         Picker = picker;
         Signature = signature;
         UpdateQrCard();

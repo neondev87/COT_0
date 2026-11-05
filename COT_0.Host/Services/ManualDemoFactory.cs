@@ -21,7 +21,7 @@ public class ManualDemoFactory(IConfiguration configuration, QrService qr, Clock
 
     private DemoDashboard CreateDashboard(bool active, string connected, DemoSignature signature)
     {
-        var culture = CultureInfo.GetCultureInfo(configuration["Ui:Culture"] ?? "es-AR");
+        var culture = CultureInfo.GetCultureInfo(configuration["Ui:Culture"] ?? CultureInfo.CurrentCulture.Name);
         var now = clock.Now;
         return new DemoDashboard(
             now.ToString(configuration["Ui:ClockFormat"], culture),

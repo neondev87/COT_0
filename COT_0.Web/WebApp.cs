@@ -5,9 +5,10 @@ namespace COT_0.Web;
 // Arma la app web. La usa Program.cs (modo standalone) y COT_0.Host (en segundo plano).
 public static class WebApp
 {
-    public const string DefaultUrl = "http://localhost:5050";
+    public const string UrlKey = "Web:Url";
 
-    public static WebApplication Create(string[]? args = null, string url = DefaultUrl, string? contentRoot = null)
+    // URL: Web:Url de appsettings.json (Host) o, en standalone, la del perfil de launchSettings.json
+    public static WebApplication Create(string[]? args = null, string? contentRoot = null)
     {
         var options = new WebApplicationOptions
         {
@@ -18,6 +19,8 @@ public static class WebApp
         };
 
         var builder = WebApplication.CreateBuilder(options);
+        var url = builder.Configuration[UrlKey] ?? builder.Configuration[WebHostDefaults.ServerUrlsKey]
+            ?? throw new InvalidOperationException($"Falta {UrlKey} en appsettings.json.");
         builder.WebHost.UseUrls(url);
 
         builder.Services.AddRazorComponents()

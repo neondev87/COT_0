@@ -26,7 +26,7 @@ Nadie toca carpetas ajenas. Ver `../CLAUDE.md` para las reglas generales (C#, si
 
 ## Red y rutas
 
-- Servidor: **http://localhost:5050** (constante `WebApp.DefaultUrl`). Solo HTTP; el HTTPS público lo da cloudflared.
+- Servidor: **http://localhost:5050** (`Web:Url` en `appsettings.json`; en standalone sale del perfil de `launchSettings.json`). Solo HTTP; el HTTPS público lo da cloudflared.
 - `COT_0.Host` arranca la web dentro de su propio proceso (`Services/WebServerHost.cs` → `WebApp.Create(...)`) al iniciar la app. Usa `FrameworkReference Microsoft.AspNetCore.App`.
 - `COT_0.Web` también corre solo con `dotnet run` (mismo puerto) para probar sin el Host.
 
@@ -121,9 +121,10 @@ Login del host contra `appsettings.json` → `Host:User` / `Host:Password`.
 
 Un solo `appsettings.json`, en `COT_0.Host/` (se copia a la salida y Web lo lee al estar hospedado):
 
-```json
-{ "Host": { "User": "admin", "Password": "cambiame123" } }
-```
+- `Host:User` / `Host:Password` **no** van en `appsettings.json` (quedan vacíos): se cargan con `dotnet user-secrets` del Host:
+  `dotnet user-secrets set "Host:User" "..." --project COT_0.Host` (y lo mismo con `Host:Password`).
+- `Paths:MediaRoot`: única ruta absoluta de la PC (carpeta con `fondos`, `musica`, `portadas`, `gifs`, `manual`). Las rutas de `Background:Folder`, `Audio:MusicFolder`, `Audio:CoversFolder`, `Manual:*` y `GuestManual:AssetsFolder` van relativas a ella (`COT_0.Core/Services/MediaPath`).
+- `Web:Url`: URL local del servidor.
 
 `COT_0.Host` copia `COT_0.Web/wwwroot` a su carpeta de salida; los archivos que agregue el Agente C se sirven solos.
 

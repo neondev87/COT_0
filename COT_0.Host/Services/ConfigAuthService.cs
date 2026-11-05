@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace COT_0.Host.Services;
 
-// Login del host contra Host:User / Host:Password de appsettings.json
+// Login del host contra Host:User / Host:Password (dotnet user-secrets del Host)
 public class ConfigAuthService(IConfiguration configuration) : IAuthService
 {
     public bool IsAuthenticated { get; private set; }

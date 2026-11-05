@@ -13,10 +13,13 @@ public class RoomSession(WebServerHost webServer, ITunnelService tunnel,
 
     public bool IsActive => Room.IsOpen || tunnel.IsRunning;
 
+    // URL pública del túnel o, si no hay, la local
+    public string Url => tunnel.PublicUrl ?? webServer.Url;
+
     public async Task OpenAsync()
     {
         await webServer.StartAsync();
-        await tunnel.StartAsync(WebServerHost.Url);
+        await tunnel.StartAsync(webServer.Url);
         Room.Open();
     }
 
