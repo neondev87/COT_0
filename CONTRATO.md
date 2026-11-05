@@ -162,3 +162,14 @@ _(Anotar acá: agente, qué se necesita en Core y por qué.)_
 - `IRoomEmotes` y sus modelos pasaron de `Web/Services/Emotes` a Core. `EmoteSetResult`, `ISevenTvClient` e `IEmoteActions` quedan en Web (son del cliente de 7TV y de la vista).
 - `IEmoteService`, `Emote` y `MessagePart` se borraron de Core (nadie los usaba desde los emotes de 7TV).
 - `ChatMessage.Kind` (`MessageKind`), `AudioUrl` e `ImageUrl` en Core; los avisos del sistema y las notas de voz e imágenes ya los completan (`IChatService.AddMediaAsync`). **Pendiente**: el render y el hub todavía reconocen voz e imagen por el texto reservado (`VoiceNote` / `ImageNote`); pasar a `Kind` queda para después. No se agregaron `AudioDuration` ni `ImageWidth`/`ImageHeight`: la duración y el tamaño salen de `IVoiceStore` / `IImageStore`.
+
+## Supuesto de una sola sala (para el futuro, sin refactorizar)
+
+Hoy todo asume **una sala por proceso**. Si algún día hay varias, esto es lo que habría que separar por sala:
+
+- **Core**: `IRoomService` tiene un solo `Code` / `OpenedAt`; `IChatService` guarda una sola lista de usuarios e historial; `IRoomEmotes` un solo set, quitados y reportes. Ninguna firma recibe un id de sala.
+- **Web, servicios Singleton globales**: `InMemoryChatService`, `RoomService`, `RoomEmotes`, `PresenceTracker`, `InMemoryVoiceStore`, `InMemoryImageStore` (tope `MaxRoomImageBytes` para todo el proceso) e `InMemoryAvatarStore`. `RoomService.CloseAsync` vacía chat, voz e imágenes de todos.
+- **Hub**: `ChatBroadcaster` manda todo con `Clients.All` (sin grupos de SignalR por sala); `RoomClosed` le llega a todos los conectados.
+- **Rutas**: `/join`, `/chat`, `/chathub`, `{Voice:Path}/{id}`, `{Chat:ImagesPath}/{id}` y `/avatars/{id}` no llevan sala; el código de sala solo se muestra, no se usa para entrar.
+- **Navegador**: el invitado se guarda en `localStorage` con una sola clave (`Chat:GuestStorageKey`).
+- **Host**: `RoomSession`, `RoomViewModel`, `DashboardViewModel` y `EmotesViewModel` manejan una sala; un solo túnel de cloudflared (`ITunnelService.PublicUrl`) y un solo QR a `{PublicUrl}{Web:JoinPath}`.
