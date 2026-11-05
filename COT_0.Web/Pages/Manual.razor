@@ -1,0 +1,80 @@
+@page "/manual"
+@rendermode InteractiveServer
+@implements IDisposable
+@inject IManualTour Tour
+@inject IRoomEmotes Emotes
+
+<PageTitle>COT_0 · Manual</PageTitle>
+
+@* Manual del invitado: bienvenida, cinco pasos con las vistas reales en modo demostración y final *@
+<div class="manual @(Tour.Current is null ? "manual-intro" : null)" data-muted="@(Tour.Muted ? "true" : "false")">
+    <Backdrop />
+    <audio id="manual-sfx" src="@Tour.SoundUrl" preload="auto"></audio>
+
+    <div class="manual-window">
+        <ManualNotices @key="Tour.Index" Cues="Tour.Cues" Author="@Tour.NoticeAuthor" />
+
+        <section class="manual-center">
+            <h1 class="manual-title">Bienvenido a COT_0</h1>
+
+            @if (Tour.Current is { } step)
+            {
+                <div class="manual-step" @key="Tour.Index">
+                    <span class="manual-num">Paso @StepNumber(Tour.Index + 1) / @StepNumber(Tour.Steps.Count)</span>
+                    <h2 class="manual-step-title">@step.Title</h2>
+                    <p class="manual-text">@step.Text</p>
+                    <ManualDemoView Step="step" Focus="Tour.Focus" />
+                </div>
+            }
+            else if (Tour.IsWelcome)
+            {
+                <div class="manual-step">
+                    <p class="manual-text">Un recorrido de @Tour.Steps.Count pasos para usar el chat de la sala.</p>
+                    <button type="button" class="cot-btn manual-start" data-manual-start data-keys="Enter" @onclick="Tour.Next">
+                        EMPEZAR <Icon Name="arrow" Size="20" Class="arr" />
+                    </button>
+                    <a class="manual-skip" href="@JoinUrl">Gracias, pero no necesito ayuda</a>
+                </div>
+            }
+            else
+            {
+                <div class="manual-step">
+                    <p class="manual-text">Ya sabes lo básico. Entra cuando quieras.</p>
+                    <a class="cot-btn manual-start" href="@JoinUrl" data-keys="Enter">ENTRAR A LA SALA <Icon Name="arrow" Size="20" Class="arr" /></a>
+                    <button type="button" class="manual-skip" @onclick="() => Tour.GoTo(0)">Ver el manual otra vez</button>
+                </div>
+            }
+        </section>
+
+        @if (Tour.Current is not null)
+        {
+            <ManualNav CanGoBack="Tour.Index > 0" ExitUrl="@JoinUrl" OnPrevious="Tour.Previous" OnNext="Tour.Next" />
+        }
+        <MuteButton Muted="Tour.Muted" OnToggle="Tour.ToggleMute" />
+    </div>
+</div>
+
+@code {
+    private const string JoinUrl = "join";
+
+    // ?paso=N abre directo en ese paso (1 = primero)
+    [SupplyParameterFromQuery(Name = "paso")]
+    public int? Step { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (Step is { } number) Tour.GoTo(number - 1);
+        Emotes.Changed += OnEmotesChanged;
+    }
+
+    private static string StepNumber(int number) => number.ToString("00");
+
+    // Cuando llegan los emotes de 7TV se vuelve a armar la vista (y el menú de reportar)
+    private void OnEmotesChanged() => _ = InvokeAsync(() =>
+    {
+        Tour.GoTo(Tour.Index);
+        StateHasChanged();
+    });
+
+    public void Dispose() => Emotes.Changed -= OnEmotesChanged;
+}

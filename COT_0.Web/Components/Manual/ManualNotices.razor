@@ -1,0 +1,16 @@
+@* Avisos de Lain estilo notificación de celular; manual.js suena cuando entra cada uno *@
+<div class="manual-notifs" role="status" aria-live="polite">
+    @foreach (var cue in Cues)
+    {
+        <div class="manual-notif @(cue.Leaves ? "manual-notif-out" : null)" style="@cue.Style">
+            <div class="manual-notif-head"><span class="manual-notif-icon" aria-hidden="true"></span>Mensajes<time>ahora</time></div>
+            <p class="manual-notif-title">@Author</p>
+            <p class="manual-notif-text">@cue.Text</p>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired] public IReadOnlyList<ManualCue> Cues { get; set; } = [];
+    [Parameter, EditorRequired] public string Author { get; set; } = string.Empty;
+}

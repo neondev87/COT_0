@@ -1,0 +1,25 @@
+@inject IManualDemo Demo
+
+@* El chat real (/chat) armado con los mismos componentes y datos de muestra *@
+<div class="cot-screen chat-page">
+    <Backdrop />
+
+    <ChatHeader RoomCode="@Demo.RoomCode" UserCount="Demo.Users.Count" Me="Demo.Me" />
+
+    <div class="chat-body">
+        <MessageList Groups="Demo.Groups" FindVoice="Demo.FindVoice" FindImage="Demo.FindImage" />
+        <UserPanel Users="Demo.Users" />
+    </div>
+
+    <ChatComposer Draft="Demo.Draft" UserId="@Demo.Me.Id" />
+
+    @if (ShowEmoteMenu)
+    {
+        @* Aparece junto con el aviso de reportar *@
+        <div class="manual-later"><EmoteMenu Reporter="Demo.Me" /></div>
+    }
+</div>
+
+@code {
+    [Parameter] public bool ShowEmoteMenu { get; set; }
+}

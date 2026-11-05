@@ -1,0 +1,13 @@
+@* Silenciar los avisos del manual: solo el ícono *@
+<button type="button" class="manual-mute" aria-pressed="@(Muted ? "true" : "false")" aria-label="Silenciar" @onclick="OnToggle">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" />
+        <path class="manual-mute-wave" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11" />
+        <path class="manual-mute-cross" d="M16 9.5l5 5M21 9.5l-5 5" />
+    </svg>
+</button>
+
+@code {
+    [Parameter] public bool Muted { get; set; }
+    [Parameter] public EventCallback OnToggle { get; set; }
+}

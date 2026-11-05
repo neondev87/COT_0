@@ -32,6 +32,10 @@
             {
                 <p class="cot-room">SALA #@Room.Code</p>
             }
+            @if (!resuming)
+            {
+                <a class="join-manual" href="manual">¿Primera vez? Mira cómo funciona</a>
+            }
         </Footer>
     </ProfileForm>
 </div>
