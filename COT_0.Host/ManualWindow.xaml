@@ -82,12 +82,12 @@
                         Content="{DynamicResource Text.Manual.Skip}" Command="{Binding FarewellCommand}"/>
             </Grid>
 
-            <!-- Columna izquierda: notificación de Lain y, debajo, su video -->
+            <!-- Columna izquierda: notificación de Lain y, debajo, su video sin fondo (flota sobre la estática) -->
             <Grid Width="{StaticResource ManualColumnWidth}" Margin="32,0,0,20" HorizontalAlignment="Left">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="40*"/>
+                    <RowDefinition Height="25*"/>
                     <RowDefinition Height="6"/>
-                    <RowDefinition Height="60*"/>
+                    <RowDefinition Height="75*"/>
                 </Grid.RowDefinitions>
                 <ItemsControl ItemsSource="{Binding Current.Notices}" ItemTemplate="{StaticResource ManualNoticeTemplate}"
                               VerticalAlignment="Bottom" Focusable="False" IsHitTestVisible="False">
@@ -119,7 +119,8 @@
                         </Style>
                     </ItemsControl.Style>
                 </ItemsControl>
-                <controls:LoopingVideo Grid.Row="2" Source="{Binding LainVideo}" Stretch="Uniform" OpacityMask="{StaticResource LainEdgeMask}"
+                <controls:LoopingVideo Grid.Row="2" Source="{Binding LainVideo}" Stretch="Uniform" OpacityMask="{StaticResource LainFadeMask}"
+                                       Effect="{StaticResource LainKey}"
                                        HorizontalAlignment="Left" VerticalAlignment="Bottom" IsHitTestVisible="False">
                     <controls:LoopingVideo.RenderTransform>
                         <TranslateTransform X="{Binding Shift, ElementName=Signal}" Y="{Binding Tremor, ElementName=Signal}"/>
