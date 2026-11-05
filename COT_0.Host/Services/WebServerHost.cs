@@ -8,31 +8,37 @@ public class WebServerHost
 {
     public const string Url = WebApp.DefaultUrl;
 
-    private WebApplication? _app;
-    private bool _started;
+    private Lazy<WebApplication> _app = CreateLazy();
+    private Task? _starting;
 
-    public bool IsRunning => _started;
+    public bool IsRunning => _starting is { IsCompletedSuccessfully: true };
 
-    // Contenedor de la app web: IChatService/IRoomService son las mismas instancias que usa el hub
-    public IServiceProvider Services => App.Services;
+    // Contenedor de la app web: IChatService/IRoomService son las mismas instancias que usa el hub.
+    // Si la app se está armando en segundo plano, espera a que termine (Lazy es seguro entre hilos)
+    public IServiceProvider Services => _app.Value.Services;
 
-    // ContentRoot = carpeta del exe (ahí están appsettings.json y wwwroot)
-    private WebApplication App => _app ??= WebApp.Create(url: Url, contentRoot: AppContext.BaseDirectory);
-
-    public async Task StartAsync()
+    // Arma e inicia la web fuera del hilo de la UI; si ya arrancó (o está arrancando) reusa esa tarea
+    public Task StartAsync()
     {
-        if (_started) return;
-        await App.StartAsync();
-        _started = true;
+        if (_starting is null || _starting.IsFaulted || _starting.IsCanceled)
+            _starting = Task.Run(() => _app.Value.StartAsync());
+        return _starting;
     }
 
     public async Task StopAsync()
     {
-        if (_app is null) return;
+        if (!_app.IsValueCreated) return;
 
-        if (_started) await _app.StopAsync();
-        await _app.DisposeAsync();
-        _app = null;
-        _started = false;
+        var app = _app.Value;
+        // Espera un arranque en curso sin relanzar su error: si falló, no hay nada que parar
+        if (_starting is not null) await Task.WhenAny(_starting);
+        if (IsRunning) await app.StopAsync();
+        await app.DisposeAsync();
+        _app = CreateLazy();
+        _starting = null;
     }
+
+    // ContentRoot = carpeta del exe (ahí están appsettings.json y wwwroot)
+    private static Lazy<WebApplication> CreateLazy() => new(() =>
+        StartupTrace.Measure("  WebApp.Create", () => WebApp.Create(url: Url, contentRoot: AppContext.BaseDirectory)));
 }

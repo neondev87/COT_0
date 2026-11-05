@@ -30,7 +30,8 @@ public partial class LoginViewModel(
         Error = string.Empty;
         if (await auth.LoginAsync(User, Password))
         {
-            windows.ShowMain();
+            StartupTrace.Mark("Login aceptado");
+            StartupTrace.Measure("Ventana principal: crear y mostrar", windows.ShowMain);
             return;
         }
 

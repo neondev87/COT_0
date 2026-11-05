@@ -17,7 +17,7 @@ public partial class BackgroundPickerViewModel : ObservableObject
 
     public BackgroundPickerViewModel(BackgroundCatalog catalog, IConfiguration configuration)
     {
-        Options = catalog.Load();
+        Options = StartupTrace.Measure("  Fondos: escaneo de carpeta", catalog.Load);
         // Arranca con el fondo por defecto (por nombre de archivo) hasta que el usuario elija otro
         var defaultFile = configuration["Background:DefaultFile"];
         _selected = Options.FirstOrDefault(option =>

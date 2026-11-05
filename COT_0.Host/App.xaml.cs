@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Threading;
 using COT_0.Core.Services;
 using COT_0.Host.Services;
 using COT_0.Host.ViewModels;
@@ -13,19 +14,29 @@ public partial class App : Application
 {
     private ServiceProvider? _services;
 
+    public App() => StartupTrace.Remember("App() (antes de cargar App.xaml)");
+
     protected override async void OnStartup(StartupEventArgs e)
     {
+        StartupTrace.Remember("App.xaml cargado (recursos y temas)");
         base.OnStartup(e);
         ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
         var configuration = LoadConfiguration();
+        StartupTrace.Enable(configuration);
+        StartupTrace.Mark("Configuración cargada");
         TextResources.Load(configuration, Resources);
+        StartupTrace.Mark("Textos a recursos");
         _services = BuildServices(configuration);
+        StartupTrace.Mark("Contenedor de servicios");
 
-        await TryStartWebServerAsync();
+        // La música va antes porque el login lee si hay canciones
+        StartupTrace.Measure("Música (escaneo + abrir)", _services.GetRequiredService<MusicService>().Start);
+        StartupTrace.Measure("Login: crear y mostrar", _services.GetRequiredService<WindowNavigator>().ShowLogin);
 
-        _services.GetRequiredService<MusicService>().Start();
-        _services.GetRequiredService<WindowNavigator>().ShowLogin();
+        // La web se arma en segundo plano cuando el login ya se pintó, mientras el host escribe la contraseña
+        await Dispatcher.Yield(DispatcherPriority.ApplicationIdle);
+        await StartupTrace.MeasureAsync("Servidor web (crear + iniciar, en segundo plano)", TryStartWebServerAsync);
     }
 
     // El cierre ordenado ya lo hizo ShutdownCoordinator; esto es la red de seguridad:
@@ -82,7 +93,7 @@ public partial class App : Application
         .AddTransient<ManualWindow>()
         .BuildServiceProvider();
 
-    // Servidor web en segundo plano; si falla acá, "Generar QR" lo reintenta y muestra el error
+    // Servidor web en segundo plano; si falla aquí, "Generar QR" lo reintenta y muestra el error
     private async Task TryStartWebServerAsync()
     {
         try

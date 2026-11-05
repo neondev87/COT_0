@@ -1,19 +1,23 @@
 using COT_0.Core.Services;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace COT_0.Host.Services;
 
 // Ciclo de vida de la sala: servidor + túnel + sala, y la pregunta al salir con sala activa
-public class RoomSession(WebServerHost webServer, ITunnelService tunnel, IRoomService room,
+public class RoomSession(WebServerHost webServer, ITunnelService tunnel,
     DialogService dialogs, IConfiguration configuration)
 {
-    public bool IsActive => room.IsOpen || tunnel.IsRunning;
+    // Se pide recién al usarla: así el login no espera a que se arme la web
+    private IRoomService Room => webServer.Services.GetRequiredService<IRoomService>();
+
+    public bool IsActive => Room.IsOpen || tunnel.IsRunning;
 
     public async Task OpenAsync()
     {
         await webServer.StartAsync();
         await tunnel.StartAsync(WebServerHost.Url);
-        room.Open();
+        Room.Open();
     }
 
     public async Task CloseAsync()
@@ -25,7 +29,7 @@ public class RoomSession(WebServerHost webServer, ITunnelService tunnel, IRoomSe
     // Saca a los invitados y vacía el chat
     public async Task CloseRoomAsync()
     {
-        if (room.IsOpen) await room.CloseAsync();
+        if (Room.IsOpen) await Room.CloseAsync();
     }
 
     public Task StopTunnelAsync() => tunnel.StopAsync();

@@ -29,14 +29,15 @@ public class WindowNavigator(IServiceProvider services, IShutdownCoordinator shu
 
     private void Show<T>() where T : Window
     {
-        var next = services.GetRequiredService<T>();
+        var next = StartupTrace.Measure($"  {typeof(T).Name}: resolver + InitializeComponent", () => services.GetRequiredService<T>());
+        next.ContentRendered += (_, _) => StartupTrace.Mark($"  {typeof(T).Name}: primer cuadro pintado");
         var previous = _current;
         _current = next;
 
         Application.Current.MainWindow = next;
         next.Closing += OnWindowClosing;
         next.Closed += OnWindowClosed;
-        next.Show();
+        StartupTrace.Measure($"  {typeof(T).Name}: Show()", next.Show);
 
         if (previous is null) return;
         previous.Closing -= OnWindowClosing;

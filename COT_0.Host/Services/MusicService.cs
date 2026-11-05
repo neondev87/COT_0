@@ -58,12 +58,18 @@ public class MusicService : IDisposable
         _library.EnsureFolder();
         _tracks = _library.GetTracks();
         if (Current is not null || _tracks.Count == 0) return;
-        Play(_tracks.FirstOrDefault(IsDefault) ?? _tracks[0]);
+        Open(_tracks.FirstOrDefault(IsDefault) ?? _tracks[0]);
     }
 
     public void Play(string track)
     {
         _tracks = _library.GetTracks();
+        Open(track);
+    }
+
+    // Sin releer la carpeta: quien llama ya tiene la lista al día
+    private void Open(string track)
+    {
         SetCurrent(track);
         _player.Open(new Uri(Path.GetFullPath(track)));
         _player.Play();
@@ -91,7 +97,7 @@ public class MusicService : IDisposable
             SetCurrent(null);
             return;
         }
-        Play(MusicLibrary.NextAfter(_tracks, Current));
+        Open(MusicLibrary.NextAfter(_tracks, Current));
     }
 
     private void SetCurrent(string? track)

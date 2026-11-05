@@ -3,15 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:COT_0.Host.Controls"
              xmlns:vm="clr-namespace:COT_0.Host.ViewModels">
-    <!-- Selector "Elige un fondo" (DataContext: BackgroundPickerViewModel). Clic fuera o Esc cierra -->
+    <!-- Selector "Elige un fondo" (DataContext: BackgroundPickerViewModel). Clic fuera o Esc cierra.
+         Cerrado queda colapsado: las miniaturas no se crean hasta abrirlo y se sueltan al terminar de cerrarse -->
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type vm:ImageBackground}">
-            <Image Source="{Binding Source}" Stretch="UniformToFill"/>
+            <controls:ThumbnailImage File="{Binding Source}" DecodeSide="{StaticResource ThumbHeight}" Stretch="UniformToFill"/>
         </DataTemplate>
 
         <!-- Miniatura de video: un fotograma de vista previa en pausa -->
         <DataTemplate DataType="{x:Type vm:VideoBackground}">
-            <controls:VideoThumbnail Source="{Binding Source}" PreviewPosition="{Binding Preview}" Stretch="UniformToFill"/>
+            <controls:VideoThumbnail Video="{Binding Source}" PreviewPosition="{Binding Preview}" Stretch="UniformToFill"/>
         </DataTemplate>
     </UserControl.Resources>
 
@@ -19,12 +20,16 @@
         <Style TargetType="UserControl">
             <Setter Property="Opacity" Value="0"/>
             <Setter Property="IsHitTestVisible" Value="False"/>
+            <Setter Property="Visibility" Value="Collapsed"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsOpen}" Value="True">
                     <Setter Property="IsHitTestVisible" Value="True"/>
                     <DataTrigger.EnterActions>
                         <BeginStoryboard>
                             <Storyboard>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
+                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+                                </ObjectAnimationUsingKeyFrames>
                                 <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="{StaticResource PickerFadeDuration}"/>
                             </Storyboard>
                         </BeginStoryboard>
@@ -33,6 +38,9 @@
                         <BeginStoryboard>
                             <Storyboard>
                                 <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="{StaticResource PickerFadeDuration}"/>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" BeginTime="{StaticResource PickerFadeTime}">
+                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
+                                </ObjectAnimationUsingKeyFrames>
                             </Storyboard>
                         </BeginStoryboard>
                     </DataTrigger.ExitActions>
