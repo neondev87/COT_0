@@ -50,6 +50,15 @@ window.cotComposer = (() => {
         return r;
     };
 
+    // Cursor entre nodos justo después de un texto → al final de ese texto (para poder quitarle los espacios)
+    function intoText(range) {
+        const prev = range.collapsed && range.startContainer.childNodes[range.startOffset - 1];
+        if (prev?.nodeType !== 3) return range;
+        const r = document.createRange();
+        r.setStart(prev, prev.data.length);
+        return r;
+    }
+
     // Deja el cursor en range; solo enfoca (abre el teclado del celular) si se pide
     function place(root, range, focus) {
         root.cotRange = range.cloneRange();
@@ -105,7 +114,7 @@ window.cotComposer = (() => {
     // Con texto antes: exactamente dos espacios antes del emote; vacío o inicio de línea: ninguno. Uno después para seguir escribiendo
     function insertEmote(root, emote, replaceQuery) {
         const saved = root.cotRange && root.contains(root.cotRange.startContainer) ? root.cotRange : null;
-        const range = replaceQuery ? queryRange(root) : saved ?? endOf(root);
+        const range = intoText(replaceQuery ? queryRange(root) : rangeIn(root) ?? saved ?? endOf(root));
         if (serialize(root).length - serializeRange(range).length + emote.name.length + 3 > root.cotMax) return null;
 
         range.deleteContents();
@@ -134,25 +143,23 @@ window.cotComposer = (() => {
         const range = rangeIn(root);
         if (!range?.collapsed) return false;
         const { startContainer: node, startOffset: offset } = range;
-        let prev;
+        let prev = node.childNodes[offset - 1];
         let pad = null;
         if (node.nodeType === 3) {
             if (!isPad(node.data.slice(0, offset))) return false;
-            pad = [node, offset];
+            if (offset) pad = [node, offset];
             prev = node.previousSibling;
-        } else {
-            prev = node.childNodes[offset - 1];
-            if (prev?.nodeType === 3) {
-                if (!isPad(prev.data)) return false;
-                pad = [prev, prev.data.length];
-                prev = prev.previousSibling;
-            }
         }
         prev = skipEmpty(prev, 'previousSibling');
+        if (prev?.nodeType === 3) {
+            if (pad || !isPad(prev.data)) return false;
+            pad = [prev, prev.data.length];
+            prev = skipEmpty(prev.previousSibling, 'previousSibling');
+        }
         if (!isEmote(prev)) return false;
 
         if (pad) pad[0].deleteData(0, pad[1]);
-        const before = prev.previousSibling;
+        const before = skipEmpty(prev.previousSibling, 'previousSibling');
         const parent = prev.parentNode;
         const index = [...parent.childNodes].indexOf(prev);
         prev.remove();
