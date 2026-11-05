@@ -1,17 +1,17 @@
-@* Navegación: en PC atajos de teclado discretos arriba; en celular botones grandes abajo.
-   data-keys = teclas que la activan (manual.js) *@
+@* Barra de abajo: ANTERIOR · SIGUIENTE · SALIR. En PC muestra sus atajos (data-keys, manual.js) *@
 <nav class="manual-nav" aria-label="Navegación del manual">
     <button type="button" class="manual-key" data-keys="ArrowLeft" disabled="@(!CanGoBack)" @onclick="OnPrevious">
-        <kbd>←</kbd><span>anterior</span>
+        <kbd>←</kbd><span>Anterior</span>
     </button>
     <button type="button" class="manual-key manual-key-main" data-keys="ArrowRight Enter" @onclick="OnNext">
-        <kbd>→</kbd><span>siguiente</span>
+        <span>@(IsLast ? "Terminar" : "Siguiente")</span><kbd>→</kbd>
     </button>
-    <a class="manual-key" href="@ExitUrl" data-keys="Escape"><kbd>ESC</kbd><span>salir</span></a>
+    <a class="manual-key" href="@ExitUrl" data-keys="Escape"><span>Salir</span><kbd>ESC</kbd></a>
 </nav>
 
 @code {
     [Parameter] public bool CanGoBack { get; set; }
+    [Parameter] public bool IsLast { get; set; }
     [Parameter, EditorRequired] public string ExitUrl { get; set; } = string.Empty;
     [Parameter] public EventCallback OnPrevious { get; set; }
     [Parameter] public EventCallback OnNext { get; set; }

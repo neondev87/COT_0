@@ -1,0 +1,29 @@
+@* Final: Lain se despide en la tele; al entrar a la sala la tele se apaga (manual.js) *@
+<section class="manual-pane manual-intro manual-finish" aria-label="@Tour.Settings.FinishHeading">
+    <ManualNotices Cues="Tour.Cues" Author="@Tour.NoticeAuthor" />
+    <button type="button" class="manual-tv-btn" data-manual-tv aria-label="Apagar la tele">
+        <LainTv VideoUrl="@Tour.Settings.VideoUrl" PosterUrl="@Tour.Settings.PosterUrl" />
+        <span class="manual-dot"></span>
+        <span class="manual-tv-hint">Toca para encender</span>
+    </button>
+
+    <div class="manual-intro-text">
+        <h2 class="manual-h">@Tour.Settings.FinishHeading</h2>
+        <p class="manual-sub">@Tour.Settings.FinishText</p>
+        <p class="manual-sign">@Tour.Settings.FinishSignature</p>
+    </div>
+
+    <div class="manual-actions">
+        <a class="manual-btn manual-btn-big" href="@ExitUrl" data-keys="Enter" data-manual-leave>
+            ENTRAR A LA SALA <Icon Name="arrow" Size="18" />
+        </a>
+        <button type="button" class="manual-btn manual-btn-sec" @onclick="OnRestart">Ver el manual otra vez</button>
+    </div>
+</section>
+
+@code {
+    [Parameter, EditorRequired] public IManualTour Tour { get; set; } = default!;
+    [Parameter, EditorRequired] public string ExitUrl { get; set; } = string.Empty;
+    // Los eventos vienen de la página para que ella se vuelva a pintar (pantalla, ráfaga)
+    [Parameter] public EventCallback OnRestart { get; set; }
+}

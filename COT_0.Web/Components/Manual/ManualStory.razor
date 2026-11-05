@@ -1,0 +1,47 @@
+@* Pasos tipo historias: barra de progreso, Lain en la cabecera, la vista real en el marco y la hoja inferior *@
+<section class="manual-pane manual-story" aria-label="Paso @Number(Tour.Index + 1) de @Number(Tour.Steps.Count)">
+    <div class="manual-progress" aria-hidden="true">
+        @for (var i = 0; i < Tour.Steps.Count; i++)
+        {
+            <i class="@(i < Tour.Index ? "is-done" : i == Tour.Index ? "is-now" : null)"></i>
+        }
+    </div>
+
+    <header class="manual-head">
+        <img class="manual-avatar" src="@Tour.Settings.PosterUrl" alt="" />
+        <span class="manual-who"><b>@Tour.NoticeAuthor</b><small>Paso @Number(Tour.Index + 1) / @Number(Tour.Steps.Count)</small></span>
+        <span class="manual-live"><i></i>En vivo</span>
+    </header>
+
+    <ManualNotices @key="Tour.Index" Cues="Tour.Cues" Author="@Tour.NoticeAuthor" />
+    @* En PC Lain acompaña en la columna izquierda; en celular solo va en la cabecera *@
+    <div class="manual-side"><LainTv VideoUrl="@Tour.Settings.VideoUrl" PosterUrl="@Tour.Settings.PosterUrl" /></div>
+
+    <div class="manual-scene" @key="Step">
+        @* Zonas de toque como en las historias: izquierda = anterior, derecha = siguiente *@
+        <button type="button" class="manual-zone manual-zone-prev" tabindex="-1" aria-hidden="true" @onclick="OnPrevious"></button>
+        <button type="button" class="manual-zone manual-zone-next" tabindex="-1" aria-hidden="true" @onclick="OnNext"></button>
+        <div class="manual-frame">
+            <ManualDemoView Step="Step" Focus="Tour.Focus" />
+        </div>
+        <div class="manual-sheet">
+            <span class="manual-grip" aria-hidden="true"></span>
+            <h2>@Step.Title</h2>
+            <p>@Step.Text</p>
+        </div>
+    </div>
+
+    <ManualNav CanGoBack="Tour.Index > 0" IsLast="Tour.Index == Tour.Steps.Count - 1" ExitUrl="@ExitUrl"
+               OnPrevious="OnPrevious" OnNext="OnNext" />
+</section>
+
+@code {
+    [Parameter, EditorRequired] public IManualTour Tour { get; set; } = default!;
+    [Parameter, EditorRequired] public ManualStep Step { get; set; } = default!;
+    [Parameter, EditorRequired] public string ExitUrl { get; set; } = string.Empty;
+    // Los eventos vienen de la página para que ella se vuelva a pintar (pantalla, ráfaga)
+    [Parameter] public EventCallback OnPrevious { get; set; }
+    [Parameter] public EventCallback OnNext { get; set; }
+
+    private static string Number(int number) => number.ToString("00");
+}

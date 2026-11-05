@@ -6,52 +6,31 @@
 
 <PageTitle>COT_0 · Manual</PageTitle>
 
-@* Manual del invitado: bienvenida, cinco pasos con las vistas reales en modo demostración y final *@
-<div class="manual @(Tour.Current is null ? "manual-intro" : null)" data-muted="@(Tour.Muted ? "true" : "false")">
-    <Backdrop />
+@* Manual del invitado «Transmisión»: arranque y bienvenida, cinco pasos tipo historias con las vistas reales
+   en modo demostración y final con la tele de Lain. data-boot solo en la bienvenida (el arranque corre una vez) *@
+<div class="manual" data-screen="@Screen" data-muted="@(Tour.Muted ? "true" : "false")"
+     data-boot="@Tour.IsWelcome" style="@(Tour.IsWelcome ? Tour.BootStyle : null)">
+    <ManualFx />
     <audio id="manual-sfx" src="@Tour.SoundUrl" preload="auto"></audio>
 
-    <div class="manual-window">
-        <ManualNotices @key="Tour.Index" Cues="Tour.Cues" Author="@Tour.NoticeAuthor" />
+    @if (Tour.Current is { } step)
+    {
+        <ManualStory Tour="Tour" Step="step" ExitUrl="@JoinUrl" OnPrevious="Tour.Previous" OnNext="Tour.Next" />
+    }
+    else if (Tour.IsWelcome)
+    {
+        <ManualWelcome Tour="Tour" ExitUrl="@JoinUrl" OnStart="Tour.Next" />
+    }
+    else
+    {
+        <ManualFinish Tour="Tour" ExitUrl="@JoinUrl" OnRestart="() => Tour.GoTo(0)" />
+    }
 
-        <section class="manual-center">
-            <h1 class="manual-title">Bienvenido a COT_0</h1>
-
-            @if (Tour.Current is { } step)
-            {
-                <div class="manual-step" @key="Tour.Index">
-                    <span class="manual-num">Paso @StepNumber(Tour.Index + 1) / @StepNumber(Tour.Steps.Count)</span>
-                    <h2 class="manual-step-title">@step.Title</h2>
-                    <p class="manual-text">@step.Text</p>
-                    <ManualDemoView Step="step" Focus="Tour.Focus" />
-                </div>
-            }
-            else if (Tour.IsWelcome)
-            {
-                <div class="manual-step">
-                    <p class="manual-text">Un recorrido de @Tour.Steps.Count pasos para usar el chat de la sala.</p>
-                    <button type="button" class="cot-btn manual-start" data-manual-start data-keys="Enter" @onclick="Tour.Next">
-                        EMPEZAR <Icon Name="arrow" Size="20" Class="arr" />
-                    </button>
-                    <a class="manual-skip" href="@JoinUrl">Gracias, pero no necesito ayuda</a>
-                </div>
-            }
-            else
-            {
-                <div class="manual-step">
-                    <p class="manual-text">Ya sabes lo básico. Entra cuando quieras.</p>
-                    <a class="cot-btn manual-start" href="@JoinUrl" data-keys="Enter">ENTRAR A LA SALA <Icon Name="arrow" Size="20" Class="arr" /></a>
-                    <button type="button" class="manual-skip" @onclick="() => Tour.GoTo(0)">Ver el manual otra vez</button>
-                </div>
-            }
-        </section>
-
-        @if (Tour.Current is not null)
-        {
-            <ManualNav CanGoBack="Tour.Index > 0" ExitUrl="@JoinUrl" OnPrevious="Tour.Previous" OnNext="Tour.Next" />
-        }
-        <MuteButton Muted="Tour.Muted" OnToggle="Tour.ToggleMute" />
-    </div>
+    @if (!Tour.IsWelcome)
+    {
+        <ManualSignal @key="Tour.Index" />
+    }
+    <MuteButton Muted="Tour.Muted" OnToggle="Tour.ToggleMute" />
 </div>
 
 @code {
@@ -61,13 +40,13 @@
     [SupplyParameterFromQuery(Name = "paso")]
     public int? Step { get; set; }
 
+    private string Screen => Tour.IsWelcome ? "welcome" : Tour.IsFinished ? "finish" : "steps";
+
     protected override void OnInitialized()
     {
         if (Step is { } number) Tour.GoTo(number - 1);
         Emotes.Changed += OnEmotesChanged;
     }
-
-    private static string StepNumber(int number) => number.ToString("00");
 
     // Cuando llegan los emotes de 7TV se vuelve a armar la vista (y el menú de reportar)
     private void OnEmotesChanged() => _ = InvokeAsync(() =>

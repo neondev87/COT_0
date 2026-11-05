@@ -1,0 +1,9 @@
+@* Lain en la pantalla de la tele: MP4 sin audio en bucle; manual.js lo silencia y lo pausa con movimiento reducido *@
+<div class="manual-tv" aria-hidden="true">
+    <video src="@VideoUrl" poster="@PosterUrl" muted autoplay loop playsinline preload="auto"></video>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public string VideoUrl { get; set; } = string.Empty;
+    [Parameter, EditorRequired] public string PosterUrl { get; set; } = string.Empty;
+}

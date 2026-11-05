@@ -1,0 +1,31 @@
+@* Bienvenida: arranque de la transmisión (logo sobre la tele) y luego el texto y EMPEZAR *@
+<section class="manual-pane manual-intro" aria-label="@Tour.Settings.WelcomeHeading">
+    <ManualNotices Cues="Tour.Cues" Author="@Tour.NoticeAuthor" />
+    <LainTv VideoUrl="@Tour.Settings.VideoUrl" PosterUrl="@Tour.Settings.PosterUrl" />
+
+    <div class="manual-intro-mid">
+        <div class="manual-boot" aria-hidden="true">
+            <p class="manual-logo">COT_0</p>
+            <p class="manual-tag">Transmisión</p>
+        </div>
+        <div class="manual-intro-text manual-later-boot">
+            <p class="manual-live"><i></i>En vivo</p>
+            <h1 class="manual-h">@Tour.Settings.WelcomeHeading</h1>
+            <p class="manual-sub">Un recorrido de @Tour.Steps.Count pasos para usar el chat de la sala.</p>
+        </div>
+    </div>
+
+    <div class="manual-actions manual-later-boot">
+        <button type="button" class="manual-btn" data-manual-start data-keys="Enter" @onclick="OnStart">
+            EMPEZAR <Icon Name="arrow" Size="18" />
+        </button>
+        <a class="manual-link" href="@ExitUrl">Gracias, pero no necesito ayuda</a>
+    </div>
+</section>
+
+@code {
+    [Parameter, EditorRequired] public IManualTour Tour { get; set; } = default!;
+    [Parameter, EditorRequired] public string ExitUrl { get; set; } = string.Empty;
+    // Los eventos vienen de la página para que ella se vuelva a pintar (pantalla, ráfaga)
+    [Parameter] public EventCallback OnStart { get; set; }
+}
