@@ -39,7 +39,7 @@ public class RoomSession(WebServerHost webServer, ITunnelService tunnel,
 
     // "Hay una sala activa. ¿Cerrar la sala y salir?"; true si el host confirmó
     public bool ConfirmLeave() => dialogs.Confirm(
-        configuration["Texts:ExitDialog:Message"] ?? string.Empty,
-        configuration["Texts:ExitDialog:Confirm"] ?? string.Empty,
-        configuration["Texts:ExitDialog:Cancel"] ?? string.Empty);
+        configuration.GetText("ExitDialog:Message"),
+        configuration.GetText("ExitDialog:Confirm"),
+        configuration.GetText("ExitDialog:Cancel"));
 }

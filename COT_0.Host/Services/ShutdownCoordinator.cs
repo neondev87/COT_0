@@ -110,5 +110,5 @@ public sealed class ShutdownCoordinator(
             dialogs.ShowError(Text("ErrorTitle"), string.Join("\n", failures));
     }
 
-    private string Text(string key) => configuration["Texts:Shutdown:" + key] ?? string.Empty;
+    private string Text(string key) => configuration.GetText("Shutdown:" + key);
 }

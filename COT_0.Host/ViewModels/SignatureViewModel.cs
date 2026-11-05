@@ -53,7 +53,7 @@ public partial class SignatureViewModel(
     [RelayCommand]
     private async Task UploadAsync()
     {
-        var files = dialogs.PickFiles(Text("Music:FilterName"), library.Extensions);
+        var files = dialogs.PickFiles(configuration.GetText("Music:FilterName"), library.Extensions);
         if (files.Count == 0) return;
         try
         {
@@ -62,7 +62,7 @@ public partial class SignatureViewModel(
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
-            dialogs.ShowError(Text("Music:UploadError"), ex.Message);
+            dialogs.ShowError(configuration.GetText("Music:UploadError"), ex.Message);
         }
         IsUploadOpen = false;
         OnPropertyChanged(nameof(IsMusicAvailable));
@@ -75,6 +75,4 @@ public partial class SignatureViewModel(
         if (string.IsNullOrWhiteSpace(url)) return;
         Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
     }
-
-    private string Text(string key) => configuration["Texts:" + key] ?? string.Empty;
 }

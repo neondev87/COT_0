@@ -1,4 +1,3 @@
-using System.Globalization;
 using COT_0.Core.Models;
 using COT_0.Host.ViewModels;
 using Microsoft.Extensions.Configuration;
@@ -12,8 +11,8 @@ public class ManualDemoFactory(IConfiguration configuration, QrService qr, Clock
     {
         var signature = new DemoSignature(true, false, Demo.GetValue<double>("Volume"), false, CreateSongs());
         var room = CreateRoom();
-        var connected = string.Format(Text("Dashboard:Connected"), room.Total);
-        var confirm = new ConfirmTexts(Text("ExitDialog:Message"), Text("ExitDialog:Confirm"), Text("ExitDialog:Cancel"));
+        var connected = string.Format(configuration.GetText("Dashboard:Connected"), room.Total);
+        var confirm = new ConfirmTexts(configuration.GetText("ExitDialog:Message"), configuration.GetText("ExitDialog:Confirm"), configuration.GetText("ExitDialog:Cancel"));
         return new ManualDemo(CreateDashboard(false, connected, signature), CreateDashboard(true, connected, signature), room, confirm);
     }
 
@@ -21,22 +20,22 @@ public class ManualDemoFactory(IConfiguration configuration, QrService qr, Clock
 
     private DemoDashboard CreateDashboard(bool active, string connected, DemoSignature signature)
     {
-        var culture = CultureInfo.GetCultureInfo(configuration["Ui:Culture"] ?? CultureInfo.CurrentCulture.Name);
+        var culture = configuration.GetUiCulture();
         var now = clock.Now;
         return new DemoDashboard(
             now.ToString(configuration["Ui:ClockFormat"], culture),
             now.ToString(configuration["Ui:SecondsFormat"], culture),
             now.ToString(configuration["Ui:DateFormat"], culture).ToUpper(culture),
             active, connected,
-            Text(active ? "Dashboard:RoomTitle" : "Dashboard:QrTitle"),
-            Text(active ? "Dashboard:RoomSubtitle" : "Dashboard:QrSubtitle"),
+            configuration.GetText(active ? "Dashboard:RoomTitle" : "Dashboard:QrTitle"),
+            configuration.GetText(active ? "Dashboard:RoomSubtitle" : "Dashboard:QrSubtitle"),
             signature);
     }
 
     private DemoRoom CreateRoom()
     {
         var joinUrl = Demo["JoinUrl"] ?? string.Empty;
-        var sinceFormat = Text("Room:Since");
+        var sinceFormat = configuration.GetText("Room:Since");
         var users = Demo.GetSection("Guests").GetChildren()
             .Select(guest => new User { Name = guest["Name"] ?? string.Empty, JoinedAt = DateTime.UtcNow.AddMinutes(-guest.GetValue<int>("Minutes")) })
             .Select(user => new UserRowViewModel(user, sinceFormat, clock))
@@ -47,15 +46,15 @@ public class ManualDemoFactory(IConfiguration configuration, QrService qr, Clock
 
     private DemoEmotes CreateEmotes()
     {
-        var reportFormat = Text("Emotes:ReportCount");
+        var reportFormat = configuration.GetText("Emotes:ReportCount");
         var reports = Demo.GetSection("Reports").GetChildren()
             .Select(report => new EmoteRowViewModel(Emote(report["Name"]), string.Format(reportFormat, report.GetValue<int>("Count"))))
             .ToList();
         var removed = (Demo.GetSection("Removed").Get<string[]>() ?? [])
-            .Select(name => new EmoteRowViewModel(Emote(name), Text("Emotes:RemovedDetail")))
+            .Select(name => new EmoteRowViewModel(Emote(name), configuration.GetText("Emotes:RemovedDetail")))
             .ToList();
-        return new DemoEmotes(Demo["EmoteSet"] ?? string.Empty, EmoteSetStatus.Ready, Text("Emotes:Status:Ready"),
-            string.Format(Text("Emotes:Count"), Demo.GetValue<int>("EmoteCount")), reports, removed);
+        return new DemoEmotes(Demo["EmoteSet"] ?? string.Empty, EmoteSetStatus.Ready, configuration.GetText("Emotes:Status:Ready"),
+            string.Format(configuration.GetText("Emotes:Count"), Demo.GetValue<int>("EmoteCount")), reports, removed);
     }
 
     // Sin imagen: la muestra no descarga nada de 7TV
@@ -82,6 +81,4 @@ public class ManualDemoFactory(IConfiguration configuration, QrService qr, Clock
         if (playing is not null) playing.IsPlaying = true;
         return new DemoSongs(true, string.Empty, songs, playing);
     }
-
-    private string Text(string key) => configuration["Texts:" + key] ?? string.Empty;
 }

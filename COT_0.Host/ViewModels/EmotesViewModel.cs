@@ -1,7 +1,7 @@
+using System.Collections.ObjectModel;
 using COT_0.Core.Models;
 using COT_0.Core.Services;
-using System.Collections.ObjectModel;
-using System.Windows;
+using COT_0.Host.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Configuration;
@@ -42,8 +42,8 @@ public partial class EmotesViewModel : ObservableObject
         _setInput = emotes.SetId ?? string.Empty;
 
         // Ambos eventos pueden llegar desde otro hilo (carga de 7TV, hub de los invitados)
-        emotes.Changed += () => Application.Current.Dispatcher.Invoke(Refresh);
-        emotes.Reported += _ => Application.Current.Dispatcher.Invoke(RefreshReports);
+        emotes.Changed += () => UiThread.Run(Refresh);
+        emotes.Reported += _ => UiThread.Run(RefreshReports);
         Refresh();
     }
 
@@ -111,5 +111,5 @@ public partial class EmotesViewModel : ObservableObject
         return string.Format(Text($"Error:{error}"), _emotes.ErrorCode);
     }
 
-    private string Text(string key) => _config[$"Texts:Emotes:{key}"] ?? string.Empty;
+    private string Text(string key) => _config.GetText("Emotes:" + key);
 }

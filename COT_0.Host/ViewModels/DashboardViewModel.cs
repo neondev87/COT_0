@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Windows;
 using COT_0.Core.Services;
 using COT_0.Host.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -59,7 +58,7 @@ public partial class DashboardViewModel : ObservableObject
         _shutdown = shutdown;
         _dialogs = dialogs;
         _config = config;
-        _culture = CultureInfo.GetCultureInfo(config["Ui:Culture"] ?? CultureInfo.CurrentCulture.Name);
+        _culture = config.GetUiCulture();
         Picker = picker;
         Signature = signature;
         UpdateQrCard();
@@ -96,7 +95,7 @@ public partial class DashboardViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            _dialogs.ShowError(Text("Dashboard:QrError"), ex.Message);
+            _dialogs.ShowError(_config.GetText("Dashboard:QrError"), ex.Message);
         }
         finally
         {
@@ -127,8 +126,8 @@ public partial class DashboardViewModel : ObservableObject
     // Tarjeta 01: GENERAR QR o SALA según haya sala activa
     private void UpdateQrCard()
     {
-        QrTitle = Text(IsRoomActive ? "Dashboard:RoomTitle" : "Dashboard:QrTitle");
-        QrSubtitle = Text(_isOpening ? "Dashboard:QrBusy" : IsRoomActive ? "Dashboard:RoomSubtitle" : "Dashboard:QrSubtitle");
+        QrTitle = _config.GetText(IsRoomActive ? "Dashboard:RoomTitle" : "Dashboard:QrTitle");
+        QrSubtitle = _config.GetText(_isOpening ? "Dashboard:QrBusy" : IsRoomActive ? "Dashboard:RoomSubtitle" : "Dashboard:QrSubtitle");
     }
 
     private void UpdateClock()
@@ -141,14 +140,12 @@ public partial class DashboardViewModel : ObservableObject
 
     // Los eventos llegan desde hilos de la web
     private void OnRoomStateChanged() =>
-        Application.Current.Dispatcher.Invoke(() => _ = RefreshRoomStateAsync());
+        UiThread.Run(() => _ = RefreshRoomStateAsync());
 
     private async Task RefreshRoomStateAsync()
     {
         IsRoomActive = _room.IsOpen;
         var users = await _chat.GetUsersAsync();
-        ConnectedText = string.Format(Text("Dashboard:Connected"), users.Count);
+        ConnectedText = string.Format(_config.GetText("Dashboard:Connected"), users.Count);
     }
-
-    private string Text(string key) => _config["Texts:" + key] ?? string.Empty;
 }

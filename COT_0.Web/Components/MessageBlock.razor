@@ -47,4 +47,19 @@ else
     // Solo el manual los pasa (datos de muestra); en el chat se buscan en memoria
     [Parameter] public Func<ChatMessage, VoicePlayback?>? FindVoice { get; set; }
     [Parameter] public Func<ChatMessage, ImageView?>? FindImage { get; set; }
+
+    private MessageGroup? _painted;
+    private int _paintedEmotes;
+    private string? _paintedTime;
+
+    // El chat se repinta con cada "escribiendo…" o mensaje nuevo: este grupo solo si cambió algo suyo
+    // (sus mensajes, los emotes de la sala o la hora al conocer la zona del navegador)
+    protected override bool ShouldRender()
+    {
+        var time = Browser.FormatTime(Group.First.SentAt);
+        if (_painted is not null && _painted.SameAs(Group) && _paintedEmotes == Emotes.Version && _paintedTime == time) return false;
+
+        (_painted, _paintedEmotes, _paintedTime) = (Group, Emotes.Version, time);
+        return true;
+    }
 }

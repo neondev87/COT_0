@@ -35,7 +35,7 @@ public partial class LoginViewModel(
             return;
         }
 
-        Error = configuration["Texts:Login:Error"] ?? string.Empty;
+        Error = configuration.GetText("Login:Error");
         Password = string.Empty;
     }
 }

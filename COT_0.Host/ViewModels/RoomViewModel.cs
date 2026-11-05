@@ -53,8 +53,8 @@ public partial class RoomViewModel : ObservableObject
 
         clock.Tick += Tick;
 
-        room.Changed += () => Application.Current.Dispatcher.Invoke(OnRoomChanged);
-        chat.UsersChanged += () => Application.Current.Dispatcher.Invoke(() => _ = ReloadUsersAsync());
+        room.Changed += () => UiThread.Run(OnRoomChanged);
+        chat.UsersChanged += () => UiThread.Run(() => _ = ReloadUsersAsync());
     }
 
     public ObservableCollection<UserRowViewModel> Users { get; } = [];

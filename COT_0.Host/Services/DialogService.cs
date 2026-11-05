@@ -10,7 +10,7 @@ public class DialogService(IConfiguration configuration)
     public void ShowError(string title, string message) => MessageBox.Show(
         Application.Current.MainWindow,
         message,
-        $"{configuration["Texts:App:ErrorTitle"]} · {title}",
+        $"{configuration.GetText("App:ErrorTitle")} · {title}",
         MessageBoxButton.OK,
         MessageBoxImage.Error);
 
