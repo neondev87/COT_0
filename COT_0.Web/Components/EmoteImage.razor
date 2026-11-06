@@ -1,11 +1,7 @@
-@* Emote de 7TV desde el CDN: webp animado, primer cuadro si el sistema pide menos movimiento
+@* Emote de 7TV desde el CDN: webp animado siempre (aunque Windows tenga apagadas las animaciones)
    y gif para navegadores sin webp. width/height reservan el lugar antes de que cargue *@
 <picture class="emote @(Large ? "emote-lg" : null)" title="@Emote.Name"
          @oncontextmenu="OpenMenuAsync" @oncontextmenu:preventDefault="@OnMenu.HasDelegate">
-    @if (Sources.StillUrl is { } still && Emote.Animated)
-    {
-        <source media="(prefers-reduced-motion: reduce)" srcset="@still" type="@Sources.MimeType" />
-    }
     <source srcset="@Sources.Url" type="@Sources.MimeType" />
     <img src="@(Sources.FallbackUrl ?? Sources.Url)" alt="@Emote.Name" width="@Emote.Width" height="@Emote.Height"
          loading="lazy" decoding="async" draggable="false" referrerpolicy="no-referrer" />

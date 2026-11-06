@@ -28,8 +28,7 @@ public sealed class ComposerEditor(IJSRuntime js, ILogger<ComposerEditor> logger
     {
         if (_editor is not { } editor) return;
 
-        var still = emote.Animated ? emote.Small.StillUrl : null;
-        var data = new { emote.Name, emote.Small.Url, StillUrl = still, emote.Width, emote.Height };
+        var data = new { emote.Name, emote.Small.Url, emote.Width, emote.Height };
         // null: no cabe por el límite de caracteres
         if (await js.InvokeAsync<string?>("cotComposer.insertEmote", editor, data, replaceQuery) is { } text) SetText(text);
     }
