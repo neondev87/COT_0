@@ -158,8 +158,87 @@
     .manual-mute { top: calc(12px + env(safe-area-inset-top)); right: 8px; bottom: auto; }
 }
 
+/* Progreso (número + puntos) y subtítulo de la bienvenida */
+.manual-progress { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.manual-dots { display: flex; gap: 6px; }
+.manual-dots i {
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(230, 230, 230, .18);
+    transition: transform .35s var(--manual-ease), background-color .35s ease;
+}
+.manual-dots i.done { background: color-mix(in srgb, var(--accent) 55%, transparent); }
+.manual-dots i.on { width: 18px; background: var(--accent); box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 70%, transparent); }
+.manual-kicker { margin: -6px 0 0; font-size: 12px; letter-spacing: .32em; color: var(--accent); }
+
+/* Celular: tarjeta con brillo suave, progreso visible y botones en la zona del pulgar */
+@media (max-width: 900px) {
+    .manual { background: radial-gradient(ellipse 120% 70% at 50% 0%, #1d1416 0%, #0f0f10 46%, #070707 100%); }
+    .manual-window { padding-bottom: calc(92px + env(safe-area-inset-bottom)); }
+    .manual-step { animation: manualRise .42s var(--manual-ease) both; }
+    .manual-progress { gap: 7px; margin-top: 10px; }
+    .manual-num { font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: var(--fg-mute); }
+    .manual-step-title { margin-top: 8px; font-size: 20px; letter-spacing: -.005em; text-wrap: balance; }
+    .manual-text { margin-top: 4px; font-size: 14px; text-wrap: pretty; }
+
+    .manual-vista {
+        margin-top: 14px;
+        border-radius: 18px;
+        border-color: rgba(255, 255, 255, .1);
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, .6), 0 18px 40px -18px rgba(0, 0, 0, .9),
+                    0 0 36px -12px color-mix(in srgb, var(--accent) 45%, transparent);
+    }
+
+    /* Bienvenida: título con brillo y botón principal con color */
+    .manual-intro .manual-title { font-size: 34px; text-shadow: 0 0 28px color-mix(in srgb, var(--accent) 45%, transparent); }
+    .manual-intro .manual-step { animation: manualRise .5s var(--manual-ease) .1s both; }
+    .manual-intro .manual-text { font-size: 16px; line-height: 1.5; color: var(--fg-dim); text-wrap: balance; }
+    .manual-start {
+        height: 56px;
+        border-color: var(--accent);
+        border-radius: 14px;
+        background: color-mix(in srgb, var(--accent) 22%, rgba(10, 10, 10, .7));
+        box-shadow: 0 10px 30px -10px color-mix(in srgb, var(--accent) 80%, transparent);
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Barra de abajo: anterior y salir discretos, siguiente destacado */
+    .manual-nav {
+        grid-template-columns: 1fr 1.6fr 1fr;
+        gap: 10px;
+        padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
+        background: linear-gradient(to top, rgba(7, 7, 7, .96) 60%, rgba(7, 7, 7, .7));
+        border-top: 1px solid rgba(255, 255, 255, .06);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+    }
+    .manual-key {
+        min-height: 52px;
+        border-color: rgba(230, 230, 230, .16);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, .03);
+        font-size: 12px;
+        letter-spacing: .16em;
+        color: var(--fg-dim);
+        transition: transform .15s var(--manual-ease), background-color .2s ease;
+    }
+    .manual-key:active { transform: scale(.95); background: rgba(255, 255, 255, .08); }
+    .manual-key-main {
+        border-color: var(--accent);
+        background: color-mix(in srgb, var(--accent) 24%, rgba(10, 10, 10, .7));
+        color: #fff;
+        font-weight: 600;
+        box-shadow: 0 8px 24px -10px color-mix(in srgb, var(--accent) 85%, transparent);
+    }
+    .manual-key-main:active { background: color-mix(in srgb, var(--accent) 38%, rgba(10, 10, 10, .7)); }
+    .manual-key:disabled { opacity: .3; }
+}
+@keyframes manualRise { from { opacity: 0; transform: translate3d(0, 14px, 0) scale(.985); } to { opacity: 1; transform: none; } }
+
 @media (prefers-reduced-motion: reduce) {
-    .manual-step { animation-name: manualFade; }
+    .manual-step, .manual-intro .manual-step { animation-name: manualFade; }
+    .manual-dots i { transition: none; }
     .manual-notif { animation-name: manualNotifInFade; }
     .manual-notif-out { animation-name: manualNotifInFade, manualFadeOut; }
     .manual-key, .manual-mute { transition: none; }

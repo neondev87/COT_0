@@ -20,7 +20,15 @@
             @if (Tour.Current is { } step)
             {
                 <div class="manual-step" @key="Tour.Index">
-                    <span class="manual-num">Paso @StepNumber(Tour.Index + 1) / @StepNumber(Tour.Steps.Count)</span>
+                    <div class="manual-progress">
+                        <span class="manual-num">Paso @StepNumber(Tour.Index + 1) / @StepNumber(Tour.Steps.Count)</span>
+                        <span class="manual-dots" aria-hidden="true">
+                            @for (var i = 0; i < Tour.Steps.Count; i++)
+                            {
+                                <i class="@(i == Tour.Index ? "on" : i < Tour.Index ? "done" : null)"></i>
+                            }
+                        </span>
+                    </div>
                     <h2 class="manual-step-title">@step.Title</h2>
                     <p class="manual-text">@step.Text</p>
                     <ManualDemoView Step="step" Focus="Tour.Focus" />
@@ -29,6 +37,7 @@
             else if (Tour.IsWelcome)
             {
                 <div class="manual-step">
+                    <p class="manual-kicker">MANUAL DEL INVITADO</p>
                     <p class="manual-text">Un recorrido de @Tour.Steps.Count pasos para usar el chat de la sala.</p>
                     <button type="button" class="cot-btn manual-start" data-manual-start data-keys="Enter" @onclick="Tour.Next">
                         EMPEZAR <Icon Name="arrow" Size="20" Class="arr" />
