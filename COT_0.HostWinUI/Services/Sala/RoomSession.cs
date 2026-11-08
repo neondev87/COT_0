@@ -1,6 +1,7 @@
 // Ciclo de vida de la sala: servidor + túnel + sala, y la pregunta al salir con sala activa
 using COT_0.Core.Services;
 using COT_0.HostWinUI.Models;
+using COT_0.HostWinUI.Services.Almacenamiento;
 using COT_0.HostWinUI.Services.Dialogos;
 using COT_0.HostWinUI.Services.Sesiones;
 using COT_0.HostWinUI.Services.Textos;
@@ -10,11 +11,16 @@ using Microsoft.Extensions.DependencyInjection;
 namespace COT_0.HostWinUI.Services.Sala;
 
 /// <summary>
-/// Abrir: servidor → vigilantes (visitas y sesiones) → túnel → sala. Cerrar: sala (y hora de fin de la sesión) → túnel.
-/// Kestrel sigue corriendo con la sala cerrada: /join no deja entrar y sin túnel nadie de fuera lo ve.
+/// Abrir: servidor → vigilantes (visitas y sesiones) → túnel → sala.
+/// Cerrar: sala (y hora de fin de la sesión) → vigilantes → túnel.
+/// Kestrel sigue corriendo con la sala cerrada (los ViewModels guardan sus IChatService/IRoomService);
+/// se detiene al cerrar la app con ShutdownAsync.
 /// </summary>
-public class RoomSession(WebServerHost webServer, ITunnelService tunnel, ConfirmDialogService dialogs, IServiceProvider services)
+public class RoomSession(WebServerHost webServer, ITunnelService tunnel, ConfirmDialogService dialogs)
 {
+    // Uno por sala abierta: se sueltan al cerrarla para no escuchar el chat de más
+    private readonly List<IDisposable> _watchers = [];
+
     // Se pide hasta usarla: así el login no espera a que se arme la web
     private IRoomService Room => webServer.Services.GetRequiredService<IRoomService>();
 
@@ -27,27 +33,33 @@ public class RoomSession(WebServerHost webServer, ITunnelService tunnel, Confirm
 
     public async Task OpenAsync()
     {
-        await webServer.StartAsync();
-        AttachWatchers();
-        await tunnel.StartAsync(webServer.Url);
-        Room.Open();
+        try
+        {
+            await webServer.StartAsync();
+            AttachWatchers();
+            await tunnel.StartAsync(webServer.Url);
+            Room.Open();
+        }
+        catch
+        {
+            ReleaseWatchers();
+            throw;
+        }
     }
 
     public async Task CloseAsync()
     {
         await CloseRoomAsync();
-        await StopTunnelAsync();
+        ReleaseWatchers();
+        await tunnel.StopAsync();
     }
 
-    // Saca a los invitados y vacía el chat
-    public async Task CloseRoomAsync()
+    /// <summary>Al cerrar la app: cierra la sala si hay y apaga Kestrel.</summary>
+    public async Task ShutdownAsync()
     {
-        if (Room.IsOpen) await Room.CloseAsync();
-        // SesionWatcher ya la cierra con IRoomService.Changed; esperarla aquí asegura que quede guardada
-        await SesionService.EndAsync();
+        if (IsActive) await CloseAsync();
+        await webServer.StopAsync();
     }
-
-    public Task StopTunnelAsync() => tunnel.StopAsync();
 
     /// <summary>"Hay una sala activa. ¿Cerrar la sala y salir?"; true si confirmaste.</summary>
     public Task<bool> ConfirmLeaveAsync() => dialogs.ConfirmAsync(new ConfirmTexts(
@@ -55,10 +67,33 @@ public class RoomSession(WebServerHost webServer, ITunnelService tunnel, Confirm
         UiText.Get("Text.ExitDialog.Confirm"),
         UiText.Get("Text.ExitDialog.Cancel")));
 
-    // Ya con la web arriba existen IChatService.UsersChanged e IRoomService.Changed. Son Singleton: se crean una vez
+    // Saca a los invitados, vacía el chat y deja guardada la hora de fin
+    private async Task CloseRoomAsync()
+    {
+        if (Room.IsOpen) await Room.CloseAsync();
+        try
+        {
+            // SesionWatcher ya la cierra con IRoomService.Changed; esperarla aquí asegura que quede guardada
+            await SesionService.EndAsync();
+        }
+        catch (Exception ex) when (JsonStore.IsStorageError(ex))
+        {
+        }
+    }
+
+    // Ya con la web arriba existen IChatService.UsersChanged e IRoomService.Changed
     private void AttachWatchers()
     {
-        services.GetRequiredService<VisitWatcher>();
-        services.GetRequiredService<SesionWatcher>();
+        if (_watchers.Count > 0) return;
+
+        var chat = webServer.Services.GetRequiredService<IChatService>();
+        _watchers.Add(new VisitWatcher(chat));
+        _watchers.Add(new SesionWatcher(chat, Room));
+    }
+
+    private void ReleaseWatchers()
+    {
+        foreach (var watcher in _watchers) watcher.Dispose();
+        _watchers.Clear();
     }
 }

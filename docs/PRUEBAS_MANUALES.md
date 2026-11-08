@@ -1,51 +1,86 @@
 # Pruebas manuales (Host WinUI)
 
-La solución no tiene proyectos de prueba: esto se revisa a mano con `dotnet run --project COT_0.HostWinUI` (o el .exe de `bin`).
-Antes de empezar: `dotnet build COT_0.HostWinUI` en 0 errores y 0 warnings.
+No hay proyectos de prueba: esto se revisa a mano con `dotnet run --project COT_0.HostWinUI`.
+Antes: `dotnet build COT_0.HostWinUI` en 0 errores y 0 warnings.
 
 ## Preparación
 
-- En `COT_0.HostWinUI/appsettings.json`, `Paths:MediaRoot` apunta a tu carpeta `COT_0_P` (fuera del repo).
-- Dentro: `musica\` con 2 o 3 canciones (.mp3/.wav/.m4a) y `portadas\` con al menos una imagen que se llame igual que una canción.
-- Para probar errores, ten a mano un archivo que no sea audio renombrado a `.mp3` (por ejemplo, un .txt).
+- `Paths:MediaRoot` en `COT_0.HostWinUI/appsettings.json` apunta a tu carpeta `COT_0_P` (fuera del repo), con `musica\` (2 o 3 canciones) y `portadas\`.
+- `cloudflared` instalado (`winget install Cloudflare.cloudflared`) o su ruta en `Tunnel:CloudflaredPath`.
+- Para empezar de cero, borra `%LocalAppData%\COT_0\` (ahí viven `usuarios.json`, `visitas.json` y `sesiones.json`).
+- Cierra el Host WPF y cualquier `dotnet run` de la web: usan el mismo puerto 5050.
 
-## Firma del login
+## 1. Registro con pregunta secreta
 
-1. Abre la app. Arriba a la derecha aparece el avatar y **Neondev**; debajo, la nota, la barra de volumen (25) y el nombre de la canción que suena.
-2. La música empieza sola (con `Audio:DefaultFile` o la primera en orden alfabético).
-3. Pasa el mouse por el avatar o el nombre: el nombre se pone rojo y el borde del avatar se aclara. Sin brillo ni desenfoque.
-4. Clic en el nombre: se abre `https://github.com/neondev87/COT_0` en el navegador.
-5. Clic en la nota: se silencia y el icono cambia a bocina tachada. Otro clic: vuelve a sonar.
-6. Silencia y mueve la barra de volumen: el silencio se quita solo y el número cambia de 0 a 100.
-7. Deja terminar una canción (o usa una corta): pasa a la siguiente y el nombre debajo de la firma cambia.
-8. Sin música: cambia `Audio:MusicFolder` a una carpeta que no exista y abre la app. La firma dice **Sin música** y no hay barra de volumen.
+1. Sin `usuarios.json`, la app abre en **CREA TU CUENTA DE HOST**.
+2. REGISTRARME vacío → InfoBar "Escribe tu usuario.". Usuario con espacio o símbolo → "solo puede tener letras y números".
+3. Sin elegir pregunta → "Elige una pregunta secreta."; sin respuesta → "Escribe tu respuesta.".
+4. Llena todo y REGISTRARME → entra al dashboard. En `usuarios.json` hay hash y salt, nunca la contraseña ni la respuesta.
+5. Cierra y abre la app: ahora sale **ACCESO DEL HOST** (ENTRAR).
 
-## Música
+## 2. Recuperación de contraseña
 
-1. Entra con tu cuenta y en el dashboard toca **05 MÚSICA**.
-2. Se ve la lista con portada, título y duración; la que suena tiene una barra roja a la izquierda y su portada grande a la izquierda.
-3. Clic en otra canción: empieza a sonar, la barra roja se mueve y cambian la portada grande y el título.
-4. ▶‖ pausa y reanuda (el icono cambia). ◀ y ▶ van a la anterior y a la siguiente; en la última, ▶ vuelve a la primera.
-5. Mueve el volumen aquí y regresa a INICIO → SALIR: en el login, la firma muestra el mismo volumen y la misma canción.
-6. **Carpeta no encontrada**: con `Audio:MusicFolder` apuntando a una carpeta que no existe, abre MÚSICA → InfoBar amarillo con la ruta.
-7. **Carpeta vacía**: con una carpeta que existe pero sin canciones → InfoBar "no tiene canciones".
-8. **Archivo ilegible**: con el .txt renombrado a .mp3 en la carpeta, elígelo → InfoBar "No se pudo leer «…»" y salta a la siguiente.
-9. Agrega una canción a la carpeta, regresa a INICIO y vuelve a abrir MÚSICA: aparece en la lista.
-10. **INICIO** (o Esc) regresa al dashboard sin cortar la música.
+1. En ACCESO DEL HOST, clic en **¿Olvidaste tu contraseña?** → RECUPERA TU CONTRASEÑA con tu pregunta guardada.
+2. Respuesta mal + VERIFICAR → "La respuesta no coincide.". Respuesta bien pero con mayúsculas y espacios de más → también pasa.
+3. Ya verificada, la respuesta queda fija y aparecen CONTRASEÑA NUEVA y ESCRÍBELA OTRA VEZ.
+4. Distintas en los dos campos → "Las dos contraseñas no coinciden.".
+5. CAMBIAR CONTRASEÑA → InfoBar verde "Tu contraseña cambió…". La vieja ya no entra; la nueva sí.
+6. "Volver al inicio de sesión" regresa sin cambiar nada.
 
-## Emotes
+## 3. ENTRAR y SALIR
 
-1. En el dashboard toca **04 EMOTES**. Se ve SET DE 7TV con el campo, APLICAR, el estado y "0 emotes cargados" (o los del set por defecto de `Chat:EmoteSetId`).
-2. Escribe un ID o una URL de set de 7TV (`https://7tv.app/emote-sets/{id}`) y presiona APLICAR o Enter: el estado dice CARGANDO… y luego **OK** en claro con el número de emotes.
-3. ID inventado (ej. `abc`) → estado en rojo con el motivo (ID inválido o 404).
-4. Sin internet → estado en rojo "SIN CONEXIÓN CON 7TV".
-5. Campo vacío + APLICAR → **SIN EMOTES** y 0 cargados.
-6. Reportes (necesita la sala abierta con un invitado; hoy la sala WinUI todavía no abre el túnel, así que esto se prueba con el Host WPF o cuando se migre la sala): un invitado mantiene presionado un emote en el chat → REPORTAR. Aparece en REPORTES con su miniatura y "1 reporte(s)".
-7. QUITAR: el emote pasa a QUITADOS ("Se muestra como texto") y en el chat se ve como texto. RESTAURAR lo regresa.
-8. IGNORAR: desaparece de REPORTES; si alguien lo vuelve a reportar, regresa.
-9. Sin reportes ni quitados se ven "Sin reportes" y "No has quitado emotes".
-10. **INICIO** (o Esc) regresa al dashboard.
+1. Usuario o contraseña mal → "Usuario o contraseña incorrectos.".
+2. Bien → dashboard con reloj, fecha, estado de la sala y las 6 tarjetas.
+3. **06 SALIR** sin sala abierta → regresa al login sin preguntar.
+4. Con la sala abierta (ver 4), SALIR → diálogo "Hay una sala activa. ¿Cerrar la sala y salir?":
+   - CANCELAR (o Esc) → te quedas en el dashboard y la sala sigue abierta.
+   - CERRAR SALA Y SALIR → cierra la sala y el túnel y vuelve al login.
+5. Lo mismo con la ✕ de la ventana: con sala abierta pregunta; sin sala cierra directo.
 
-## Sala
+## 4. Sala
 
-1. En el dashboard toca **01 GENERAR QR**: abre la sala con el encabezado ← INICIO | SALA. INICIO o Esc regresa.
+1. **01 GENERAR QR** → SalaPage con InfoBar "Abriendo la sala" y barra de progreso; luego QR, enlace `https://….trycloudflare.com/join`, código `#XXXX`, punto rojo **EN VIVO** y el tiempo corriendo.
+2. **COPIAR** → cambia a COPIADO un momento; pega en el navegador y abre `/join`.
+3. **Escanear**: apunta el celular al QR → se abre `/join`. Pon nombre, foto y escudo y entra al chat.
+4. **Invitado conectado**: el contador pasa a `01` y aparece en la lista. En el dashboard dice "· 1 conectados".
+5. **Expulsar**: ✕ de su fila → sale de la lista y el celular vuelve a `/join` con aviso de expulsado.
+6. **EMOTES** y **MÚSICA** (abajo a la izquierda) abren su pantalla; el encabezado dice **← SALA** y regresa con la sala abierta (mismo código, el tiempo sigue).
+7. **← INICIO** (o Esc) vuelve al dashboard con la sala abierta: la tarjeta 01 dice SALA "Volver a la sala activa".
+8. **CERRAR SALA** → el celular ve que la sala se cerró, regresas al dashboard y la tarjeta vuelve a GENERAR QR. Abrir otra vez da código nuevo.
+
+### Errores (InfoBar rojo con REINTENTAR)
+
+- **cloudflared no encontrado**: pon `Tunnel:CloudflaredPath` en `noexiste.exe` → "No se encontró cloudflared…".
+- **Túnel que no arranca**: desconecta el internet y genera el QR → "no entregó el enlace en N segundos" (o "se cerró antes de dar el enlace").
+- **Puerto ocupado**: corre `dotnet run --project COT_0.Web` antes de abrir la app → "El puerto de http://localhost:5050 ya está ocupado…".
+- Arregla la causa y REINTENTAR abre la sala sin salir de la pantalla.
+
+## 5. Archivos en `%LocalAppData%\COT_0`
+
+1. `visitas.json`: una línea por cada invitado que entró (`Name`, `EnteredAt`). Si sale y vuelve a entrar, cuenta otra vez.
+2. `sesiones.json`: una entrada por cada vez que abriste la sala, con `Number` 1, 2, 3…, `StartedAt`, `Guests` y `EndedAt`.
+3. Después de CERRAR SALA (o SALIR / ✕ con confirmación) la última sesión tiene `EndedAt`. Si matas la app desde el Administrador de tareas, queda en `null` (esperado).
+4. Abre una sala sin invitados y ciérrala: sesión nueva con `Guests` vacío.
+
+## 6. Emotes
+
+1. **04 EMOTES** (o EMOTES desde la sala). Escribe un ID o URL de set de 7TV y APLICAR → CARGANDO… y luego **OK** con el número de emotes.
+2. ID inventado → estado en rojo con el motivo. Sin internet → "SIN CONEXIÓN CON 7TV". Campo vacío → SIN EMOTES.
+3. Con la sala abierta, un invitado mantiene presionado un emote → REPORTAR: aparece en REPORTES.
+4. QUITAR → pasa a QUITADOS y en el chat se ve como texto; RESTAURAR lo regresa. IGNORAR lo saca de REPORTES.
+
+## 7. Música
+
+1. **05 MÚSICA**: lista con portada, título y duración; la que suena tiene barra roja y su portada grande.
+2. Clic en otra canción la cambia. ▶‖ pausa/reanuda; ◀ ▶ anterior/siguiente (en la última, ▶ vuelve a la primera).
+3. Errores con InfoBar amarillo: carpeta que no existe, carpeta vacía, archivo que no es audio renombrado a `.mp3` (salta a la siguiente).
+4. ← INICIO no corta la música.
+
+## 8. Firma del login
+
+1. Arriba a la derecha: avatar, **Neondev**, nota, barra de volumen y la canción que suena. La música empieza sola.
+2. Mouse encima: el nombre pasa a rojo y el borde del avatar se aclara (sin brillo).
+3. Clic en el nombre → abre el repo de GitHub.
+4. Clic en la nota → silencio (icono tachado); mover la barra quita el silencio.
+5. El volumen y la canción son los mismos que en MÚSICA (cambia uno y revisa el otro).
+6. Con `Audio:MusicFolder` en una carpeta que no existe → la firma dice **Sin música**.

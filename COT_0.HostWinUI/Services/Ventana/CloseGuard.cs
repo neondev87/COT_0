@@ -1,4 +1,4 @@
-// Al cerrar la ventana con sala activa: pregunta, cierra la sala (y su sesión) y el túnel, y luego sí cierra
+// Al cerrar la ventana: con sala activa pregunta primero; luego cierra sala, túnel y servidor, y sí cierra
 using COT_0.HostWinUI.Services.Sala;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -10,6 +10,7 @@ public class CloseGuard(RoomSession session)
 {
     private Window? _window;
     private bool _canClose;
+    private bool _isClosing;
 
     public void Attach(Window window)
     {
@@ -20,13 +21,22 @@ public class CloseGuard(RoomSession session)
     // async void: manejador de evento. Cancel se pone antes del primer await
     private async void OnClosing(AppWindow sender, AppWindowClosingEventArgs args)
     {
-        if (_canClose || !session.IsActive) return;
+        if (_canClose) return;
 
         args.Cancel = true;
-        if (!await session.ConfirmLeaveAsync()) return;
+        if (_isClosing) return;
+        if (session.IsActive && !await session.ConfirmLeaveAsync()) return;
 
-        await session.CloseAsync();
-        _canClose = true;
-        _window?.Close();
+        _isClosing = true;
+        try
+        {
+            await session.ShutdownAsync();
+        }
+        finally
+        {
+            // Aunque algo falle al apagar, la ventana se cierra (cloudflared muere con KillOnCloseJob)
+            _canClose = true;
+            _window?.Close();
+        }
     }
 }

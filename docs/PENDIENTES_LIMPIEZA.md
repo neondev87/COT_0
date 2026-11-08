@@ -14,9 +14,8 @@ Cosas que sobran o que hay que borrar/cambiar cuando termine la migración a Win
 
 ## En COT_0.HostWinUI
 
-- **`Text.Pending`** ("Pantalla en migración a WinUI 3.") en `SalaPage` y `ManualPage`: quitarlo cuando se migren.
+- **`Text.Pending`** ("Pantalla en migración a WinUI 3."): ya solo lo usa `ManualPage`; borrar el texto de `Textos.xaml` al migrarla.
 - **Tarjeta 02 (CAMBIAR FONDO) apagada** y su texto `Text.Dashboard.BackgroundSubtitle` ("Próximamente en WinUI"): cambiar al migrar el selector de fondos.
-- **Tarjeta 01 solo navega**: al migrar `SalaPage`, que abra la sala (`RoomSession.OpenAsync`) como el WPF y conectar `SesionWatcher` (ver `docs/ESTRUCTURA.md`).
 - **`ManualPage` no tiene botón de regresar**: usar `EncabezadoPantalla` al migrarla (Sala, Emotes y Música ya lo tienen).
 - **SUBIR MÚSICA** de la firma del WPF no se migró (necesita `FileOpenPicker` con el HWND de la ventana). Si se quiere, va en `MusicaPage`.
 - **`.gitignore` de la raíz** solo ignora `*.mp3` y `*.wav`: si alguien copia música dentro del repo, `.m4a`, `.aac` y `.wma` (extensiones de `Audio:Extensions`) y las portadas `.jpg/.png/.webp` sueltas no quedan ignoradas. Agregar esas reglas (está fuera de las carpetas de este agente).
@@ -24,6 +23,9 @@ Cosas que sobran o que hay que borrar/cambiar cuando termine la migración a Win
 - **TagLibSharp, `CoverDecoder`, `SongPicker`, `SignatureBadge`, `EmotePanel`, `Themes/Emotes.xaml`, `Themes/SongPicker.xaml`** del WPF: ya tienen reemplazo en WinUI; se van con el WPF.
 - **Sección `Texts:Emotes`, `Texts:Music`, `Texts:Songs`, `Texts:Signature`** del `appsettings.json` del WPF: en WinUI esos textos están en `Textos.xaml`.
 - **Cuentas de prueba**: si probaste el registro, `%LocalAppData%\COT_0\usuarios.json` puede tener una cuenta sin pregunta (de antes de este cambio). La app te pide configurarla al entrar; si quieres empezar de cero, borra el archivo.
+- **`QrPanel`, `UserList`, `RoomView`, `Themes/Room.xaml`, `RoomViewModel`** del WPF: ya tienen reemplazo (`SalaPage`, `ListaConectados`, `Sala.xaml`, `SalaViewModel`); se van con el WPF.
+- **Kestrel queda arriba con la sala cerrada** (se apaga al cerrar la ventana). Si se quiere apagar también al cerrar la sala, hay que volver a pedir `IChatService`/`IRoomService` a la web nueva en cada ViewModel (hoy se guardan una vez como Singleton).
+- **`ConnectedUsersViewModel` y `SalaViewModel`** se suscriben a eventos de la web y del reloj sin soltarlos: es intencional (viven lo que la app), pero si se cambian a Transient habría que desuscribir.
 
 ## Archivos temporales
 

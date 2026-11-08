@@ -23,14 +23,16 @@ COT_0.HostWinUI/
 │   ├── CredentialError.cs        Por qué se rechazó lo que escribiste (cada valor tiene su Text.Error.*)
 │   ├── Song.cs                   Canción de la biblioteca: ruta, título, duración y portada
 │   ├── MusicError.cs             Carpeta sin encontrar, sin canciones o archivo ilegible (Text.Music.Error.*)
+│   ├── RoomError.cs              Por qué no abrió la sala: cloudflared no encontrado, túnel lento o caído, puerto ocupado, servidor (Text.Room.Error.*)
 │   └── ConfirmTexts.cs           Textos del diálogo sí/no
 ├── Services/
 │   ├── Almacenamiento/           JsonStore: lee y guarda cualquier clase en %LocalAppData%\COT_0\*.json (async)
-│   ├── Configuracion/            AppConfig + un record por sección de appsettings.json (Window, Storage, Security, Validation, Recovery, Ui, Paths, Audio, Links)
+│   ├── Configuracion/            AppConfig + un record por sección de appsettings.json (Window, Storage, Security, Validation, Recovery, Ui, Paths, Audio, Links, Web, Tunnel, Qr)
 │   ├── Dialogos/                 ConfirmDialogService: abre el diálogo sí/no sobre la ventana
 │   ├── Musica/                   MusicLibrary y CoverLibrary (copiadas del WPF, sin tipos de WPF), SongCatalog (duración y portada, async)
 │   │                             y MusicService (Windows.Media.Playback.MediaPlayer: play/pausa, anterior/siguiente, volumen, silencio)
-│   ├── Sala/                     WebServerHost (Kestrel con COT_0.Web), RoomSession (abrir y cerrar la sala) y GuestWatcher (base: detecta quién entra)
+│   ├── Sala/                     WebServerHost (Kestrel con COT_0.Web), RoomSession (abrir/cerrar sala, vigilantes y apagado),
+│   │                             QrService (PNG de QRCoder → BitmapImage), RoomOpenErrors (error → RoomError + texto) y GuestWatcher (base: detecta quién entra)
 │   ├── Sesiones/                 SesionService (sesiones.json) y SesionWatcher (abre/cierra la sesión con la sala y anota invitados)
 │   ├── Textos/                   UiText: busca un texto de Textos.xaml desde C#
 │   ├── Tiempo/                   ClockService (tick de cada segundo) y UiThread (pasa eventos al hilo de la UI)
@@ -38,7 +40,8 @@ COT_0.HostWinUI/
 │   ├── Usuarios/                 UserService (registro/login), PasswordRecoveryService (¿olvidaste tu contraseña?),
 │   │                             HostAccounts (usuarios.json) y SecretHasher (PBKDF2 + SHA-256 con salt)
 │   ├── Validaciones/             CredentialValidator (solo letras y números) y SecurityAnswerValidator (normaliza la respuesta)
-│   ├── Ventana/                  WindowSetup (tamaño y barra de título) y Navigator (cambia de página: Login, Dashboard, Sala, Emotes, Música, Manual)
+│   ├── Ventana/                  WindowSetup (tamaño y barra de título), Navigator (cambia de página y regresa a sala o dashboard)
+│   │                             y CloseGuard (cerrar la ventana con sala activa pregunta; luego apaga sala, túnel y servidor)
 │   └── Visitas/                  VisitService (visitas.json) y VisitWatcher (anota a cada invitado que entra)
 └── Views/
     ├── Componentes/              Piezas reutilizables
@@ -47,7 +50,7 @@ COT_0.HostWinUI/
     │   ├── FormularioRecuperacion  Pregunta secreta → contraseña nueva, dentro del login
     │   ├── TarjetaMenu.cs        Tarjeta inclinada del menú (Button con número, subtítulo e icono)
     │   ├── PuntoPulso            Punto rojo con pulso (sala activa)
-    │   ├── EncabezadoPantalla    ← INICIO | TÍTULO de Sala, Emotes y Música (clic o Esc regresa al dashboard)
+    │   ├── EncabezadoPantalla    ← INICIO | TÍTULO de Sala, Emotes y Música (clic o Esc regresa; ← SALA si viniste de la sala)
     │   ├── PanelEmotes           Set de 7TV, reportes y emotes quitados (+ EmoteStatusBrushes.cs: color del estado)
     │   ├── ControlVolumen        Nota (silencio), barra de volumen y número; lo usan la firma y MusicaPage
     │   ├── Firma                 Avatar + Neondev (abre el repo) y la música que suena, en el login
@@ -56,9 +59,10 @@ COT_0.HostWinUI/
     ├── Estilos/
     │   ├── Textos.xaml           Todos los textos visibles, en español de México
     │   ├── Dashboard.xaml        Reloj, fecha, estado de la sala y botón sin aspecto (lo mezcla DashboardPage)
+│   ├── Sala.xaml             Medidas del QR, fuente mono, textos del contador, EN VIVO y la nota de CERRAR SALA (lo mezcla SalaPage)
     │   └── TarjetaMenu.xaml      Plantilla de TarjetaMenu con sus estados (normal, mouse encima, apagada)
     ├── ModelosDeVista/           ViewModels: Login (+ LoginStep, FormViewModel), Recovery, SecurityQuestion,
-    │                             Dashboard, ConnectedUsers, UserRow, Emotes + EmoteRow,
+    │                             Dashboard, Sala, ConnectedUsers, UserRow, Emotes + EmoteRow,
     │                             MusicControls (base) → Musica y Firma, SongRow
     └── Pantallas/                Páginas del Frame: Login, Dashboard, Sala, Emotes, Musica, Manual
 ```
@@ -81,25 +85,21 @@ En `%LocalAppData%\COT_0\`:
 - La respuesta se normaliza antes de hashear y al comparar: se recorta, se quitan todos los espacios y pasa a minúsculas (`SecurityAnswerValidator.Normalize`).
 - Las preguntas salen de `Recovery:QuestionKeys` (claves) y su texto de `Textos.xaml`. En `usuarios.json` se guarda la clave, no el texto.
 
-## Sesiones: cómo conectarlas al migrar SalaPage
+## Sala: abrir y cerrar
 
-`SesionWatcher` ya está registrado en `App.BuildServices`, pero nadie lo pide todavía, así que no se crea.
-Al migrar `SalaPage` (abrir sala + QR), basta con pedirlo una vez después de levantar la web, junto a `VisitWatcher`:
+`SalaPage` llama a `SalaViewModel.EnsureOpenAsync()` al cargar; si la sala ya está abierta (por ejemplo, al regresar de Emotes o Música) no hace nada.
 
-```csharp
-Services.GetRequiredService<SesionWatcher>();
-```
+| Paso | Abrir (`RoomSession.OpenAsync`) | Cerrar (`RoomSession.CloseAsync`) |
+|---|---|---|
+| 1 | `WebServerHost.StartAsync()` (reusa el arranque de `App`) | `IRoomService.CloseAsync()`: saca a todos y vacía el chat |
+| 2 | Crea `VisitWatcher` y `SesionWatcher` | `SesionService.EndAsync()`: hora de fin en `sesiones.json` |
+| 3 | `cloudflared tunnel --url` y espera la URL pública | Suelta (`Dispose`) los dos vigilantes |
+| 4 | `IRoomService.Open()` → `SesionWatcher` abre la sesión N+1 | Detiene cloudflared |
 
-Desde ahí: `IRoomService.Changed` con la sala abierta → `SesionService.StartAsync()` (número = máximo + 1);
-cada invitado nuevo → `SesionService.AddGuestAsync(nombre)`; sala cerrada → `SesionService.EndAsync()`.
-Si la app se cierra de golpe con la sala abierta, esa sesión se queda con `EndedAt = null`.
-
-## Carpetas que vienen después
-
-Se crean al migrar cada pantalla (ver `diseno/inventario-winui.md`, fuera del repo):
-
-- `Views/Componentes/` · faltan el QR de la sala y el selector de fondos
-- `Assets/Fondos/`, `Assets/Musica/` · solo si algún fondo o canción tiene que ir dentro del proyecto (hoy viven fuera del repo, en `Paths:MediaRoot`)
+- Si abrir falla, se sueltan los vigilantes y el error sale en un `InfoBar` con REINTENTAR (`RoomOpenErrors`: cloudflared no encontrado, túnel que no da URL a tiempo, túnel caído, puerto ocupado, servidor).
+- Kestrel no se apaga al cerrar la sala: `IChatService`/`IRoomService` salen del contenedor de la web y los ViewModels (Singleton) guardan esas instancias. Se apaga al cerrar la ventana (`CloseGuard` → `RoomSession.ShutdownAsync`). Con la sala cerrada `/join` no deja entrar y sin túnel nadie de fuera llega.
+- SALIR del dashboard y cerrar la ventana con sala activa usan `RoomSession.ConfirmLeaveAsync()`. CERRAR SALA no pregunta (es el botón explícito).
+- Si la app muere de golpe con la sala abierta, esa sesión se queda con `EndedAt = null`.
 
 ## Música, emotes y firma
 

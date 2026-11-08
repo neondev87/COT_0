@@ -8,8 +8,7 @@ namespace COT_0.HostWinUI.Services.Sesiones;
 
 /// <summary>
 /// Mismo patrón que VisitWatcher (sin tocar Core): escucha IChatService.UsersChanged para los invitados
-/// e IRoomService.Changed para el inicio y el fin. Todavía no se crea en App: se conecta al migrar
-/// SalaPage (ver docs/ESTRUCTURA.md).
+/// e IRoomService.Changed para el inicio y el fin. Lo crea RoomSession al abrir la sala y lo suelta al cerrarla.
 /// </summary>
 public sealed class SesionWatcher : GuestWatcher
 {

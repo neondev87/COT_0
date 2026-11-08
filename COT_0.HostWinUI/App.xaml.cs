@@ -3,11 +3,9 @@ using COT_0.Core.Services;
 using COT_0.HostWinUI.Services.Dialogos;
 using COT_0.HostWinUI.Services.Musica;
 using COT_0.HostWinUI.Services.Sala;
-using COT_0.HostWinUI.Services.Sesiones;
 using COT_0.HostWinUI.Services.Tiempo;
 using COT_0.HostWinUI.Services.Tunel;
 using COT_0.HostWinUI.Services.Ventana;
-using COT_0.HostWinUI.Services.Visitas;
 using COT_0.HostWinUI.Views.ModelosDeVista;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -61,9 +59,6 @@ public partial class App : Application
             .AddSingleton<RoomSession>()
             .AddSingleton<ClockService>()
             .AddSingleton<ConfirmDialogService>()
-            // Los crea RoomSession al abrir la sala, ya con la web arriba
-            .AddSingleton<VisitWatcher>()
-            .AddSingleton<SesionWatcher>()
             .AddSingleton<QrService>()
             .AddSingleton<SalaViewModel>()
             .AddSingleton<CloseGuard>()

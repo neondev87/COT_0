@@ -57,8 +57,8 @@ Lo que WinUI 3 no soporta igual que WPF y cómo se simplificó. Prioridad: que a
 | Punto con pulso (`EventTrigger` en una plantilla) | Componente `PuntoPulso` que arranca su `Storyboard` en `Loaded` | WinUI no tiene `EventTrigger` en plantillas; escala y opacidad corren en el compositor |
 | Entradas con `EntryAnimation` (tarjetas desde -408 px con retrasos fijos; reloj y estado con fundido de 1.2–1.4 s) | `EntranceThemeTransition` escalonada desde -120 px; reloj y estado con la transición del sistema | Animación del sistema, sin código propio |
 | Tarjeta CAMBIAR FONDO abre el selector | Tarjeta visible pero apagada ("Próximamente en WinUI") | El selector de fondos se migra después |
-| GENERAR QR abre túnel + sala | Por ahora solo lleva a `SalaPage` | Abrir la sala se migra con `SalaPage` |
-| Firma con música (`SignatureBadge`) sobre el pie | Quitada por ahora | Se migra con la música |
+| GENERAR QR abre túnel + sala y luego cambia de vista | Lleva a `SalaPage` y ella abre la sala al cargar | El aviso de "abriendo" y los errores se ven en la sala |
+| Firma con música (`SignatureBadge`) sobre el pie | Solo en el login (ver "Firma del login"); en el dashboard está la tarjeta 05 MÚSICA | Una sola firma; la biblioteca es su pantalla |
 
 ## Dashboard: tarjetas nuevas
 
@@ -92,6 +92,24 @@ Lo que WinUI 3 no soporta igual que WPF y cómo se simplificó. Prioridad: que a
 | `Slider` con plantilla propia (riel de 2 px) | `Slider` de WinUI con el acento | Mismo uso, sin rehacer la plantilla |
 | Errores en `MessageBox` | `InfoBar` de aviso (carpeta no encontrada, carpeta vacía, archivo ilegible) | Pedido del cambio |
 | SUBIR MÚSICA (copiar archivos a la carpeta) | Quitado por ahora | Necesita `FileOpenPicker` con el HWND; ver pendientes |
+
+## Sala
+
+| WPF | WinUI 3 | Motivo |
+|---|---|---|
+| Placa del QR con `Clip` (esquinas cortadas) | `Path` con la misma forma, relleno claro y borde de acento de 1 px | En WinUI `UIElement.Clip` solo acepta rectángulos |
+| Brillo de acento que late alrededor del QR (`DropShadowEffect` animado con `EventTrigger`, radio 18 → 34) | Quitado: queda el borde de acento fijo | WinUI 3 no tiene `DropShadowEffect`; `ThemeShadow` es caro y no da brillo de color |
+| COPIAR ↔ COPIADO con 2 `DataTrigger` (texto e icono copiar/palomita) | Solo cambia el texto (`CopyLabel` del ViewModel); sin icono | WinUI 3 no tiene `DataTrigger`; un icono menos |
+| Botón COPIAR con plantilla propia | `SolidButton` común de `App.xaml` | Mismo look que los demás botones sólidos |
+| CERRAR SALA inclinado (`SlantedShape`) con icono de encendido | `ConfirmButton` (rectángulo con relleno tenue y borde de acento, como el diálogo); sin icono | `SlantedShape` dibuja con `OnRender` |
+| ← INICIO propio de la sala | `EncabezadoPantalla` compartido (clic o Esc) | Una sola pieza para Sala, Emotes y Música |
+| Emotes dentro de la sala (`EmotePanel` al lado de la lista) | Botones de texto EMOTES y MÚSICA abajo a la izquierda; abren su pantalla y ← SALA regresa | La sala queda más limpia; cada pantalla con su espacio |
+| Sala se abría desde el dashboard antes de entrar | `SalaPage` abre servidor + túnel + sala al cargar; mientras, un `InfoBar` con barra de progreso | El aviso de "abriendo" se ve dentro de la misma pantalla |
+| Errores del túnel/servidor en `MessageBox` | `InfoBar` de error con REINTENTAR (cloudflared no encontrado, túnel lento o caído, puerto ocupado, servidor) | Pedido del cambio |
+| Estados abriendo / error / abierta con `DataTrigger` | `IsOpening`, `IsErrorOpen`, `IsRoomOpen` del ViewModel con `x:Bind` | WinUI 3 no tiene `DataTrigger` |
+| `EntryAnimation` (QR desde -60 px y columna derecha desde 40 px, con retraso) | `EntranceThemeTransition` con los mismos desplazamientos | Animación del sistema |
+| `SpacedText` en código, EN VIVO, ESCANEA y etiquetas | `TextBlock.CharacterSpacing` | Mismo efecto, nativo |
+| Rombo con la marca al centro del QR | Igual: `Border` girado 45° + dos `TextBlock` | Ya era barato |
 
 ## Firma del login
 
