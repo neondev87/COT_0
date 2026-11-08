@@ -12,13 +12,13 @@ using Windows.Media.Playback;
 namespace COT_0.Host.Views.ModelosDeVista;
 
 /// <summary>
-/// Solo se ve en Dashboard, Sala y Fondos; en las demás páginas el
-/// video se pausa. Sin desenfoque: con el selector abierto el velo oscuro sube (PickerVeilOpacity).
+/// Solo se ve en Dashboard, Sala, Fondos y el manual; en las demás páginas el video se pausa.
+/// En el manual ya suena el video de Lain: ahí un fondo de video se muestra como su cuadro fijo (un solo video a la vez). Sin desenfoque: con el selector abierto el velo oscuro sube (PickerVeilOpacity).
 /// Si el video falla, cae a su cuadro fijo (el JPEG de la caché) y FondoService guarda la causa para FondosPage.
 /// </summary>
 public partial class CapaFondoViewModel : ObservableObject
 {
-    private static readonly HashSet<Type> PagesWithBackground = [typeof(DashboardPage), typeof(SalaPage), typeof(FondosPage)];
+    private static readonly HashSet<Type> PagesWithBackground = [typeof(DashboardPage), typeof(SalaPage), typeof(FondosPage), typeof(ManualPage)];
 
     private readonly FondoService _fondos;
     private readonly FondoPlayer _player;
@@ -27,6 +27,7 @@ public partial class CapaFondoViewModel : ObservableObject
     private readonly HashSet<string> _failedStills = new(StringComparer.OrdinalIgnoreCase);
     private string? _stillPath;
     private bool _isPicker;
+    private bool _isStillOnly;
     private int _version;
 
     [ObservableProperty]
@@ -63,6 +64,7 @@ public partial class CapaFondoViewModel : ObservableObject
     {
         IsActive = PagesWithBackground.Contains(page);
         _isPicker = page == typeof(FondosPage);
+        _isStillOnly = page == typeof(ManualPage);
         // Abrir el selector vuelve a intentar los archivos que fallaron (pudiste reemplazarlos)
         if (_isPicker) ForgetFailures();
         if (IsActive && !_fondos.IsLoaded) await _fondos.LoadAsync();
@@ -80,7 +82,7 @@ public partial class CapaFondoViewModel : ObservableObject
             _player.Pause();
             return;
         }
-        if (fondo is { Kind: FondoKind.Video, UseStill: false } && !_failedVideos.Contains(_fondos.PathOf(fondo)))
+        if (fondo is { Kind: FondoKind.Video, UseStill: false } && !_isStillOnly && !_failedVideos.Contains(_fondos.PathOf(fondo)))
         {
             await ShowVideoAsync(_fondos.PathOf(fondo));
             return;

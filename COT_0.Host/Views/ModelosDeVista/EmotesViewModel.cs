@@ -4,6 +4,7 @@ using COT_0.Core.Models;
 using COT_0.Core.Services;
 using COT_0.Host.Services.Textos;
 using COT_0.Host.Services.Tiempo;
+using COT_0.Host.Services.Validaciones;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -61,11 +62,19 @@ public partial class EmotesViewModel : ObservableObject
 
     public bool NoRemoved => !HasRemoved;
 
-    // Campo vacío: apaga los emotes. Mientras 7TV responde, el estado dice CARGANDO
+    // Campo vacío: apaga los emotes. Mientras 7TV responde, el estado dice CARGANDO.
+    // Más largo que Inputs:MaxEmoteSetCaracteres (también si llegó por código) no se manda a 7TV
     [RelayCommand]
     private async Task ApplyAsync()
     {
-        await _emotes.UseSetAsync(string.IsNullOrWhiteSpace(SetInput) ? null : SetInput.Trim());
+        var input = SetInput.Trim();
+        if (input.Length > InputLimits.MaxEmoteSetCharacters)
+        {
+            Status = EmoteSetStatus.Failed;
+            StatusText = string.Format(UiText.Get("Text.Emotes.Error.TooLong"), InputLimits.MaxEmoteSetCharacters);
+            return;
+        }
+        await _emotes.UseSetAsync(input.Length == 0 ? null : input);
         Refresh();
     }
 

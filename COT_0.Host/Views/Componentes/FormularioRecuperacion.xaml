@@ -2,7 +2,8 @@
 <!-- Recuperar contraseña dentro del login: pregunta guardada, respuesta y, ya verificada, la contraseña nueva dos veces -->
 <UserControl x:Class="COT_0.Host.Views.Componentes.FormularioRecuperacion"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:validaciones="using:COT_0.Host.Services.Validaciones">
     <StackPanel>
         <StackPanel Margin="0,0,0,22">
             <TextBlock Text="{StaticResource Text.Question.Label}" Style="{StaticResource FieldLabelText}"/>
@@ -12,7 +13,7 @@
 
         <StackPanel>
             <TextBlock Text="{StaticResource Text.Question.Answer}" Style="{StaticResource FieldLabelText}"/>
-            <TextBox Style="{StaticResource LoginTextBox}" PlaceholderText="{StaticResource Text.Question.AnswerPlaceholder}"
+            <TextBox Style="{StaticResource LoginTextBox}" PlaceholderText="{StaticResource Text.Question.AnswerPlaceholder}" MaxLength="{x:Bind validaciones:InputLimits.MaxCharacters}"
                      IsEnabled="{x:Bind ViewModel.IsAnswerEditable, Mode=OneWay}"
                      Text="{x:Bind ViewModel.Answer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
@@ -21,12 +22,12 @@
         <StackPanel Visibility="{x:Bind ViewModel.IsAnswerVerified, Mode=OneWay}">
             <StackPanel Margin="0,22,0,22">
                 <TextBlock Text="{StaticResource Text.Recovery.NewPassword}" Style="{StaticResource FieldLabelText}"/>
-                <PasswordBox Style="{StaticResource LoginPasswordBox}" PlaceholderText="{StaticResource Text.Login.PasswordPlaceholder}"
+                <PasswordBox Style="{StaticResource LoginPasswordBox}" PlaceholderText="{StaticResource Text.Login.PasswordPlaceholder}" MaxLength="{x:Bind validaciones:InputLimits.MaxCharacters}"
                              Password="{x:Bind ViewModel.NewPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
             <StackPanel>
                 <TextBlock Text="{StaticResource Text.Recovery.ConfirmPassword}" Style="{StaticResource FieldLabelText}"/>
-                <PasswordBox Style="{StaticResource LoginPasswordBox}" PlaceholderText="{StaticResource Text.Login.PasswordPlaceholder}"
+                <PasswordBox Style="{StaticResource LoginPasswordBox}" PlaceholderText="{StaticResource Text.Login.PasswordPlaceholder}" MaxLength="{x:Bind validaciones:InputLimits.MaxCharacters}"
                              Password="{x:Bind ViewModel.ConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
         </StackPanel>

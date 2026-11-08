@@ -282,3 +282,27 @@ Un solo volumen: las tres firmas y MÚSICA leen el mismo `MusicService`. Arranca
 | Vista de ejemplo en un marco que se estiraba a todo el ancho (con `MinHeight` 180) y la réplica centrada adentro; pasos a 402 px del borde | El marco se ajusta a la réplica 1280×720 escalada (`Viewbox` `Stretch="Uniform"`), centrado en todo el espacio a la derecha de Lain; pasos a 386 px (32 + columna de 330 + 24). A 1280×720 pasa de ~827×465 a ~862×485 (~+4 % por lado, ~+9 % de área) y crece con la ventana |
 
 Notificaciones, sonido, tiempos, resaltados, atajos, silencio, despedida y ← INICIO quedan igual. Los resaltados viven dentro de la réplica, así que escalan con ella.
+
+### Manual: Lain en el borde, fondo transparente y paneles de vidrio
+
+| Antes | Ahora |
+|---|---|
+| Video de Lain en una caja de 330 × 460 con 20 px de margen abajo: flotaba y el fundido de arriba se comía parte del encuadre | Caja de **315 × 560** (la proporción del video, 480 × 854), `VerticalAlignment="Bottom"` y **sin margen inferior**: la figura queda completa y parada en el borde. Orillas de arriba, izquierda y derecha fundidas con degradados (`LainFadeBrush`, `LainFadeLeftBrush`, `LainFadeRightBrush`). Las notificaciones terminan antes de donde empieza la figura y los pasos siguen a 386 px, así que no se enciman |
+| Despedida: video de 720 × 440 a 60 px del borde de arriba (colgaba) | **900 × 634** centrado y pegado abajo, como fondo al 45 %; el texto y CERRAR van en un panel de vidrio encima |
+| Página con fondo sólido azul (`ManualBaseBrush`) y viñeta propia | Página transparente: el fondo de la app (`CapaFondo`) se ve a través de un **velo** radial `#050507` al **55 % en el centro y 65 % en las orillas** (`ManualVeilBrush`). La viñeta la pone `CapaFondo`. Si el fondo es video, en el manual se muestra su cuadro fijo (no dos videos a la vez) |
+| Paleta azul verdosa de Lain en atajos, botones y marco | Paleta del proyecto: **vidrio** (`ManualGlassBrush`, degradado blanco 10 % → 2 %, borde claro de 1 px, esquinas de 12) en la fila de atajos, el botón "Gracias, pero no necesito ayuda" y la despedida; marco de la vista de ejemplo con **borde rojo tenue** (`ManualFrameBrush`, rojo al 35 %); teclas con canto rojo |
+| "Paso 0N / 06" en Inter | Barlow Condensed con espaciado y **una línea roja a cada lado**; título en Barlow Condensed Medium |
+| Sin piso | Degradado de 240 px que oscurece el borde de abajo (`ManualFloorBrush`) para asentar a Lain |
+
+Sin desenfoque, sombras ni `OpacityMask`: todo es degradados quietos. Notificaciones (textos, sonido, orden y tiempos), resaltados, atajos, silencio, despedida y ← INICIO quedan igual.
+
+### Barra de volumen de la firma: minimalista
+
+| Antes | Ahora |
+|---|---|
+| WPF: nota, barra de 130 px, número, botón de lista y "SUBIR MÚSICA"; volumen que aparecía con hover. WinUI: `Slider` de WinUI a todo el ancho del logo (riel, thumb grande con anillo y estados por defecto) | **Bocina + línea**, nada más, alineadas bajo "Neondev" (`VolumeRowMargin` 96 = avatar + separación) |
+| Thumb de WinUI siempre visible | `ControlTemplate` propio (`MiniVolumeSlider` en `Views/Estilos/Volumen.xaml`): línea de **2 px** gris tenue con tramo **rojo** hasta el valor y un punto de **10 px** que solo aparece (y crece) con el mouse, al arrastrar o con foco de teclado. Zona de clic de 24 px de alto aunque la línea sea fina |
+| Clic en la nota de MÚSICA para silenciar | Bocina (Segoe Fluent Icons, 14 px, gris claro → blanco con hover, rojo al presionar), cursor de mano (`BotonBocina`) y tooltip "Silenciar" / "Activar sonido". El glifo cambia por rangos: tachada (silencio), 0, bajo (< 50) y alto |
+| En silencio la barra seguía marcando el volumen | En silencio la barra marca **0 sin perder el volumen**; al quitar el silencio regresa. Si subes la barra estando en silencio, se quita solo. MÚSICA usa el mismo `MusicControlsViewModel.Volume`, así que su barra y su número también marcan 0 |
+
+Evitado por ligereza: sombras del thumb, brillo del tramo rojo, animación del ancho y el panel que se abría con hover del WPF. Solo opacidad y escala del punto (0.15 s). Sigue habiendo un solo `MusicService`: arranca en 0 con `Audio_01` cargada y el silencio no se guarda entre sesiones.

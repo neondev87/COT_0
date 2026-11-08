@@ -6,7 +6,7 @@ public record AppSettings(
     WindowSettings Window,
     StorageSettings Storage,
     SecuritySettings Security,
-    ValidationSettings Validation,
+    InputsSettings Inputs,
     RecoverySettings Recovery,
     UiSettings Ui,
     PathsSettings Paths,

@@ -1,6 +1,8 @@
 // Base de los formularios del login: mensaje de error para el InfoBar
+using System.Globalization;
 using COT_0.Host.Models;
 using COT_0.Host.Services.Textos;
+using COT_0.Host.Services.Validaciones;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace COT_0.Host.Views.ModelosDeVista;
@@ -19,6 +21,9 @@ public abstract partial class FormViewModel : ObservableObject
     {
         if (error == CredentialError.None) return true;
         ShowError($"Text.Error.{error}");
+        // Los "demasiado largo" dicen el límite de Inputs:MaxCaracteres
+        if (error is CredentialError.UserTooLong or CredentialError.PasswordTooLong or CredentialError.AnswerTooLong)
+            ErrorMessage = string.Format(CultureInfo.CurrentCulture, ErrorMessage, InputLimits.MaxCharacters);
         return false;
     }
 

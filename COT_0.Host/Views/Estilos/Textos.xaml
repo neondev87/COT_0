@@ -50,14 +50,14 @@
     <!-- Mensajes del login -->
     <x:String x:Key="Text.Error.UserEmpty">Escribe tu usuario.</x:String>
     <x:String x:Key="Text.Error.UserInvalid">Tu usuario solo puede tener letras y números, sin espacios ni símbolos.</x:String>
-    <x:String x:Key="Text.Error.UserTooLong">Tu usuario es demasiado largo.</x:String>
+    <x:String x:Key="Text.Error.UserTooLong">Usuario: máximo {0} caracteres.</x:String>
     <x:String x:Key="Text.Error.PasswordEmpty">Escribe tu contraseña.</x:String>
     <x:String x:Key="Text.Error.PasswordInvalid">Tu contraseña solo puede tener letras y números, sin espacios ni símbolos.</x:String>
-    <x:String x:Key="Text.Error.PasswordTooLong">Tu contraseña es demasiado larga.</x:String>
+    <x:String x:Key="Text.Error.PasswordTooLong">Contraseña: máximo {0} caracteres.</x:String>
     <x:String x:Key="Text.Error.PasswordMismatch">Las dos contraseñas no coinciden.</x:String>
     <x:String x:Key="Text.Error.QuestionEmpty">Elige una pregunta secreta.</x:String>
     <x:String x:Key="Text.Error.AnswerEmpty">Escribe tu respuesta.</x:String>
-    <x:String x:Key="Text.Error.AnswerTooLong">Tu respuesta es demasiado larga.</x:String>
+    <x:String x:Key="Text.Error.AnswerTooLong">Respuesta: máximo {0} caracteres.</x:String>
     <x:String x:Key="Text.Error.WrongAnswer">La respuesta no coincide.</x:String>
     <x:String x:Key="Text.Error.NoQuestion">Tu cuenta no tiene pregunta secreta, así que no se puede recuperar la contraseña.</x:String>
     <x:String x:Key="Text.Error.WrongCredentials">Usuario o contraseña incorrectos.</x:String>
@@ -120,7 +120,7 @@
     <!-- Emotes (7TV) -->
     <x:String x:Key="Text.Emotes.ScreenTitle">EMOTES</x:String>
     <x:String x:Key="Text.Emotes.Title">SET DE 7TV</x:String>
-    <x:String x:Key="Text.Emotes.Placeholder">ID o URL del set de 7TV</x:String>
+    <x:String x:Key="Text.Emotes.Placeholder">ID del set de 7TV</x:String>
     <x:String x:Key="Text.Emotes.Apply">APLICAR</x:String>
     <x:String x:Key="Text.Emotes.Count">{0} emotes cargados</x:String>
     <x:String x:Key="Text.Emotes.Status.Off">SIN EMOTES</x:String>
@@ -128,6 +128,7 @@
     <x:String x:Key="Text.Emotes.Status.Ready">OK</x:String>
     <x:String x:Key="Text.Emotes.Status.NotFound">ERROR · NO SE ENCONTRÓ EL SET</x:String>
     <x:String x:Key="Text.Emotes.Status.Failed">ERROR · NO SE PUDO CARGAR EL SET</x:String>
+    <x:String x:Key="Text.Emotes.Error.TooLong">ERROR · MÁXIMO {0} CARACTERES</x:String>
     <x:String x:Key="Text.Emotes.Error.InvalidId">ERROR · ESE ID O URL NO ES DE UN SET DE 7TV</x:String>
     <x:String x:Key="Text.Emotes.Error.NotFound">ERROR · 7TV NO TIENE UN SET CON ESE ID (404)</x:String>
     <x:String x:Key="Text.Emotes.Error.Timeout">ERROR · 7TV TARDÓ DEMASIADO EN RESPONDER, INTÉNTALO DE NUEVO</x:String>
@@ -155,6 +156,8 @@
     <x:String x:Key="Text.Music.Next">Siguiente</x:String>
     <x:String x:Key="Text.Music.Mute">Silenciar o quitar el silencio</x:String>
     <x:String x:Key="Text.Music.Volume">Volumen</x:String>
+    <x:String x:Key="Text.Volume.Mute">Silenciar</x:String>
+    <x:String x:Key="Text.Volume.Unmute">Activar sonido</x:String>
 
     <!-- Fondos -->
     <x:String x:Key="Text.Backgrounds.Title">FONDOS</x:String>

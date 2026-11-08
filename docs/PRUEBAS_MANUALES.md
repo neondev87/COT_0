@@ -105,7 +105,7 @@ Antes: `dotnet build COT_0.Host` en 0 errores y 0 warnings.
 1. Elige un video ligero (menos de 120 MB): se reproduce detrás en bucle y **sin sonido**; la música sigue sonando igual.
 2. Elige un video de más de 120 MB: su miniatura dice **PESADO** y arranca como **cuadro fijo**. "Usar cuadro fijo (más ligero)" está marcado.
 3. Desmarca "Usar cuadro fijo" → el video se reproduce. Márcalo → vuelve el cuadro fijo. Se guarda por video en `fondos.json` (`UseStill`).
-4. Con un video de fondo, abre 05 MÚSICA o 03 MANUAL: el fondo no se ve ahí (y se pausa). Regresa al dashboard: sigue donde iba.
+4. Con un video de fondo, abre 05 MÚSICA: el fondo no se ve ahí (y se pausa); en 03 MANUAL se ve como cuadro fijo, quieto. Regresa al dashboard: sigue donde iba.
 5. En el Administrador de tareas, con el video corriendo en el dashboard, el uso de CPU no debería trabar la ventana (el reloj avanza cada segundo).
 
 ### Errores (InfoBar amarillo en FONDOS)
@@ -118,7 +118,7 @@ Antes: `dotnet build COT_0.Host` en 0 errores y 0 warnings.
 
 ## 10. Manual de Lain
 
-1. **03 MANUAL** → fondo azul noche, ← INICIO | MANUAL arriba a la izquierda y atajos ENTER / → / ← / ESC arriba a la derecha.
+1. **03 MANUAL** → el fondo de la app detrás de un velo oscuro, ← INICIO | MANUAL arriba a la izquierda y atajos ENTER / → / ← / ESC arriba a la derecha.
    A la derecha, "Paso 01 / 06", el título del paso y, justo debajo, la **vista de ejemplo** del paso (una réplica quieta de la pantalla). Ya no hay texto explicativo bajo el título: lo dicen las notificaciones de Lain.
    La vista de ejemplo ocupa todo el ancho a la derecha de Lain, en 16:9, sin recortes y centrada con márgenes parejos.
    Cambia el tamaño de la ventana (1280×720, maximizada y más chica): la réplica crece o se reduce entera, sin encimarse con Lain ni con sus avisos, y cada resaltado sigue sobre su elemento.
@@ -190,3 +190,33 @@ Antes: `dotnet build COT_0.Host` en 0 errores y 0 warnings.
 2. Un brillo diagonal cruza el avatar de ida y vuelta (3 s por lado), sin trabar nada.
 3. Mouse encima: cursor de mano, tooltip "Abrir el repositorio del proyecto", el nombre pasa a rojo y el borde del avatar se aclara.
 4. Clic → abre https://github.com/neondev87/COT_0 en el navegador (cámbialo en `Branding:RepoUrl`).
+
+## 12. Retoques finales (08/11)
+
+### Manual de Lain
+
+1. Elige un fondo en **02 CAMBIAR FONDO** (imagen o video) y abre **03 MANUAL**: el fondo se ve detrás, oscurecido (velo de ~60 %), y el texto se lee bien. Con un fondo de video se ve su cuadro fijo, quieto.
+2. Lain (el video de la tele) está completa y parada en el borde de abajo: sin hueco debajo, sin cabeza ni pies cortados y sin caja con orillas duras.
+3. Sus notificaciones, la fila de atajos (ENTER, →, ←, ESC) y "Gracias, pero no necesito ayuda" no se enciman con ella.
+4. La fila de atajos y el botón de abajo se ven como vidrio (degradado claro y borde fino); el marco de la vista de ejemplo tiene un borde rojo tenue; "Paso 0N / 06" lleva una línea roja a cada lado.
+5. Toca "Gracias, pero no necesito ayuda": el video de la despedida queda al centro y pegado abajo (no flota ni se corta) y el texto con CERRAR va en un panel de vidrio encima.
+6. Avisos, sonido, tiempos, resaltados, atajos, silenciar y ← INICIO funcionan igual que antes.
+
+### Barra de volumen de la firma
+
+1. Abre la app: la música está en silencio (barra en 0) con `Audio_01` cargada.
+2. Bajo "Neondev" (login, dashboard y sala) solo hay una bocina y una línea fina; sin número, sin canción, sin botones.
+3. Pasa el mouse por la línea: aparece un punto pequeño. Arrastra o haz clic: el volumen sube y baja; el tramo rojo sigue al valor; la bocina cambia (0, bajo, alto).
+4. Mouse sobre la bocina: cursor de mano, se pone blanca y el tooltip dice "Silenciar". Clic: la bocina sale tachada, la barra baja a 0 y el tooltip dice "Activar sonido". Clic otra vez: regresa al volumen que tenía.
+5. Silencia y sube la barra: el silencio se quita solo.
+6. Abre **05 MÚSICA**: su barra, su número y su nota marcan lo mismo que la firma (también el silencio). Cambia el volumen ahí y regresa: la firma lo refleja.
+7. En la **sala** a 1280 × 720: la firma no se encima con el contador ni se corta.
+
+### Límite de caracteres (`Inputs:MaxCaracteres` = 15)
+
+1. Login: escribe más de 15 caracteres en usuario y en contraseña: se detiene en 15. Pega un texto de 40: se recorta a 15.
+2. Registro (sin cuenta): usuario, contraseña y respuesta secreta se detienen en 15, también pegando.
+3. Configurar pregunta de una cuenta vieja: la respuesta se detiene en 15.
+4. Recuperación: respuesta, contraseña nueva y repetir contraseña se detienen en 15, también pegando.
+5. Cambia `Inputs:MaxCaracteres` a 5 en el `appsettings.json` junto al `.exe`, abre la app: los campos se detienen en 5. Con una cuenta guardada antes con más letras, ENTRAR dice "Usuario: máximo 5 caracteres." y la cuenta no se borra (`usuarios.json` intacto). Regrésalo a 15.
+6. **04 EMOTES**: el campo del set de 7TV se detiene en 26 (`Inputs:MaxEmoteSetCaracteres`); un ID de 24 o 26 carga normal.

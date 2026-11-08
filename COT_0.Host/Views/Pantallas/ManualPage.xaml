@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Manual de Lain: a la izquierda sus notificaciones y su video en la tele; a la derecha los atajos, el número y título del paso
-     y su vista de ejemplo con resaltados (o la captura opcional del paso). Al final, la despedida con el mismo video al centro.
-     ← INICIO regresa al dashboard -->
+<!-- Manual de Lain: a la izquierda sus notificaciones y su video en la tele, parado en el borde de abajo; a la derecha los atajos,
+     el número y título del paso y su vista de ejemplo con resaltados (o la captura opcional del paso). Al final, la despedida
+     con el mismo video al centro y abajo. El fondo de la app (CapaFondo) se ve a través de un velo. ← INICIO regresa al dashboard -->
 <Page x:Class="COT_0.Host.Views.Pantallas.ManualPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,7 +9,7 @@
     xmlns:manual="using:COT_0.Host.Views.Componentes.Manual"
     xmlns:convertidores="using:COT_0.Host.Views.Convertidores"
       xmlns:vm="using:COT_0.Host.Views.ModelosDeVista"
-      Background="{StaticResource WindowBackgroundBrush}">
+      Background="Transparent">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -30,7 +30,7 @@
         <KeyboardAccelerator Key="Escape" Invoked="OnExitKey"/>
     </Page.KeyboardAccelerators>
 
-    <Grid Background="{StaticResource ManualBaseBrush}">
+    <Grid Background="{StaticResource ManualVeilBrush}">
         <!-- Despedida: sin DataTrigger, un StateTrigger mueve el video al centro y cambia los paneles -->
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -41,12 +41,10 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="VideoHost.HorizontalAlignment" Value="Center"/>
-                        <Setter Target="VideoHost.VerticalAlignment" Value="Top"/>
-                        <Setter Target="VideoHost.Margin" Value="0,60,0,0"/>
-                        <Setter Target="VideoHost.Width" Value="720"/>
-                        <Setter Target="VideoHost.Height" Value="440"/>
+                        <Setter Target="VideoHost.Margin" Value="0"/>
+                        <Setter Target="VideoHost.Width" Value="{StaticResource FarewellVideoWidth}"/>
+                        <Setter Target="VideoHost.Height" Value="{StaticResource FarewellVideoHeight}"/>
                         <Setter Target="VideoHost.Opacity" Value="{StaticResource FarewellVideoOpacity}"/>
-                        <Setter Target="LainFade.Visibility" Value="Collapsed"/>
                         <Setter Target="NoticesHost.Visibility" Value="Collapsed"/>
                         <Setter Target="StepsRoot.Opacity" Value="0"/>
                         <Setter Target="StepsRoot.IsHitTestVisible" Value="False"/>
@@ -61,16 +59,19 @@
                 <TranslateTransform x:Name="Sweep" Y="-140"/>
             </Rectangle.RenderTransform>
         </Rectangle>
-        <Rectangle Fill="{StaticResource VignetteBrush}" IsHitTestVisible="False"/>
+        <!-- Piso: el borde de abajo se oscurece y Lain queda asentada (la viñeta ya la pone CapaFondo) -->
+        <Rectangle Height="240" VerticalAlignment="Bottom" Fill="{StaticResource ManualFloorBrush}" IsHitTestVisible="False"/>
 
-        <!-- Video de Lain sin LumaKey: opacidad fija sobre el azul del fondo y el borde de arriba fundido -->
-        <Grid x:Name="VideoHost" Width="{StaticResource ManualColumnWidth}" Height="460" Margin="32,0,0,20"
+        <!-- Video de Lain sin LumaKey: completo (Uniform), pegado al borde de abajo sin margen y con las orillas fundidas con el velo -->
+        <Grid x:Name="VideoHost" Width="{StaticResource LainVideoWidth}" Height="{StaticResource LainVideoHeight}" Margin="40,0,0,0"
               HorizontalAlignment="Left" VerticalAlignment="Bottom" Opacity="{StaticResource LainVideoOpacity}" IsHitTestVisible="False">
             <Grid.OpacityTransition>
                 <ScalarTransition Duration="0:0:0.3"/>
             </Grid.OpacityTransition>
             <MediaPlayerElement x:Name="LainVideo" Stretch="Uniform" AreTransportControlsEnabled="False" VerticalAlignment="Bottom"/>
-            <Rectangle x:Name="LainFade" Height="80" VerticalAlignment="Top" Fill="{StaticResource LainFadeBrush}"/>
+            <Rectangle Height="120" VerticalAlignment="Top" Fill="{StaticResource LainFadeBrush}"/>
+            <Rectangle Width="40" HorizontalAlignment="Left" Fill="{StaticResource LainFadeLeftBrush}"/>
+            <Rectangle Width="40" HorizontalAlignment="Right" Fill="{StaticResource LainFadeRightBrush}"/>
         </Grid>
 
         <componentes:EncabezadoPantalla Margin="32,24,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
@@ -102,17 +103,19 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Atajos de teclado (también se pueden tocar) -->
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <manual:BotonManual Style="{StaticResource ManualKeycap}" Margin="0" KeyText="{StaticResource Text.Manual.KeyStart}"
-                                         Content="{StaticResource Text.Manual.Start}" Command="{x:Bind ViewModel.StartCommand}"/>
-                <manual:BotonManual Style="{StaticResource ManualKeycap}" KeyText="{StaticResource Text.Manual.KeyNext}"
-                                         Content="{StaticResource Text.Manual.Next}" Command="{x:Bind ViewModel.NextCommand}"/>
-                <manual:BotonManual Style="{StaticResource ManualKeycap}" KeyText="{StaticResource Text.Manual.KeyPrevious}"
-                                         Content="{StaticResource Text.Manual.Previous}" Command="{x:Bind ViewModel.PreviousCommand}"/>
-                <manual:BotonManual Style="{StaticResource ManualKeycap}" KeyText="{StaticResource Text.Manual.KeyExit}"
-                                         Content="{StaticResource Text.Manual.Exit}" Command="{x:Bind ViewModel.ExitCommand}"/>
-            </StackPanel>
+            <!-- Atajos de teclado (también se pueden tocar), en un panel de vidrio -->
+            <Border Style="{StaticResource ManualGlassPanel}" Padding="14,6" HorizontalAlignment="Right">
+                <StackPanel Orientation="Horizontal">
+                    <manual:BotonManual Style="{StaticResource ManualKeycap}" Margin="0" KeyText="{StaticResource Text.Manual.KeyStart}"
+                                             Content="{StaticResource Text.Manual.Start}" Command="{x:Bind ViewModel.StartCommand}"/>
+                    <manual:BotonManual Style="{StaticResource ManualKeycap}" KeyText="{StaticResource Text.Manual.KeyNext}"
+                                             Content="{StaticResource Text.Manual.Next}" Command="{x:Bind ViewModel.NextCommand}"/>
+                    <manual:BotonManual Style="{StaticResource ManualKeycap}" KeyText="{StaticResource Text.Manual.KeyPrevious}"
+                                             Content="{StaticResource Text.Manual.Previous}" Command="{x:Bind ViewModel.PreviousCommand}"/>
+                    <manual:BotonManual Style="{StaticResource ManualKeycap}" KeyText="{StaticResource Text.Manual.KeyExit}"
+                                             Content="{StaticResource Text.Manual.Exit}" Command="{x:Bind ViewModel.ExitCommand}"/>
+                </StackPanel>
+            </Border>
 
             <!-- Paso actual: se apaga un momento al cambiar (fundido de 0.25 s) y entra con su vista de ejemplo -->
             <Grid Grid.Row="1" Margin="0,12,0,0" Opacity="{x:Bind ViewModel.StepOpacity, Mode=OneWay}">
@@ -124,14 +127,19 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Text="{x:Bind ViewModel.Current.Label, Mode=OneWay}" Style="{StaticResource ManualStepNumberText}"/>
+                <!-- Indicador del paso entre dos líneas rojas -->
+                <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
+                    <Rectangle Width="28" Height="1" VerticalAlignment="Center" Fill="{StaticResource AccentFadeInBrush}"/>
+                    <TextBlock Text="{x:Bind ViewModel.Current.Label, Mode=OneWay}" Style="{StaticResource ManualStepNumberText}"/>
+                    <Rectangle Width="28" Height="1" VerticalAlignment="Center" Fill="{StaticResource AccentFadeOutBrush}"/>
+                </StackPanel>
                 <TextBlock Grid.Row="1" Text="{x:Bind ViewModel.Current.Title, Mode=OneWay}" Style="{StaticResource ManualStepTitleText}"
                            Visibility="{x:Bind ViewModel.Current.HasTitle, Mode=OneWay}"/>
 
                 <!-- Vista de ejemplo del paso con sus resaltados; si hay captura (manual\pasos\pasoN.png), la captura.
                      El marco se ajusta a la réplica 16:9 escalada (Viewbox Uniform) y queda centrado en el espacio libre -->
-                <Border Grid.Row="2" Margin="0,12,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="10" Padding="1"
-                        Background="{StaticResource ManualPanelBrush}" BorderBrush="{StaticResource ManualBorderBrush}" BorderThickness="1">
+                <Border Grid.Row="2" Margin="0,12,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="{StaticResource ManualGlassRadius}"
+                        Padding="1" Background="{StaticResource ManualStageBrush}" BorderBrush="{StaticResource ManualFrameBrush}" BorderThickness="1">
                     <Grid>
                         <Image Source="{x:Bind ViewModel.Current.Stage, Mode=OneWay}" Stretch="Uniform"
                                Visibility="{x:Bind ViewModel.Current.HasStage, Mode=OneWay}"/>
@@ -146,12 +154,15 @@
                                      Content="{StaticResource Text.Manual.Skip}" Command="{x:Bind ViewModel.FarewellCommand}"/>
         </Grid>
 
-        <!-- Despedida -->
-        <StackPanel x:Name="FarewellPanel" Margin="0,0,0,64" HorizontalAlignment="Center" VerticalAlignment="Bottom" Visibility="Collapsed">
-            <TextBlock Text="{StaticResource Text.Manual.Farewell}" Style="{StaticResource ManualStepTitleText}"/>
-            <manual:BotonManual Margin="0,22,0,0" Style="{StaticResource ManualSmallButton}" Content="{StaticResource Text.Manual.Close}"
-                                     Command="{x:Bind ViewModel.CloseCommand}"/>
-        </StackPanel>
+        <!-- Despedida: panel de vidrio sobre la parte de abajo del video -->
+        <Border x:Name="FarewellPanel" Style="{StaticResource ManualGlassPanel}" Padding="40,24,40,28" Margin="0,0,0,56"
+                HorizontalAlignment="Center" VerticalAlignment="Bottom" Visibility="Collapsed">
+            <StackPanel>
+                <TextBlock Text="{StaticResource Text.Manual.Farewell}" Style="{StaticResource ManualStepTitleText}"/>
+                <manual:BotonManual Margin="0,20,0,0" Style="{StaticResource ManualSmallButton}" Content="{StaticResource Text.Manual.Close}"
+                                         Command="{x:Bind ViewModel.CloseCommand}"/>
+            </StackPanel>
+        </Border>
 
         <InfoBar MaxWidth="560" Margin="0,0,88,24" HorizontalAlignment="Right" VerticalAlignment="Bottom" Severity="Warning"
                  Title="{StaticResource Text.Manual.ErrorTitle}" Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Nota (clic = silencio), barra de volumen y número de MusicaPage (la firma usa solo la barra, con el mismo volumen) -->
+<!-- Nota (clic = silencio), barra de volumen y número de MusicaPage. En silencio la barra y el número marcan 0 (mismo MusicService que la firma) -->
 <UserControl x:Class="COT_0.Host.Views.Componentes.ControlVolumen"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

@@ -119,7 +119,7 @@ COT_0.Host/
 │   ├── Cache/                    CacheFolders: %LocalAppData%\COT_0\cache\<nombre> y la llave (hash de ruta + tamaño + fecha)
 │   ├── Registro/                 MediaLog: fallas de video, miniaturas y portadas en registro-medios.jsonl
 │   ├── Configuracion/            AppConfig (LoadAsync de appsettings.json al arrancar) + AppSettings y un record por sección (Window, Storage, Security,
-│   │                             Validation, Recovery, Ui, Paths, Audio, Background, Manual, ManualDemo*, Branding, Tunnel, Qr, Web)
+│   │                             Inputs, Recovery, Ui, Paths, Audio, Background, Manual, ManualDemo*, Branding, Tunnel, Qr, Web)
 │   ├── Dialogos/                 ConfirmDialogService: abre el diálogo sí/no sobre la ventana
 │   ├── Fondos/                   FondoCatalog (IBackgroundCatalog: lee la carpeta), FondoStore (fondos.json), FondoService (catálogo,
 │   │                             elegido y último error), FondoImages (imagen o cuadro fijo decodificado), FondoPlayer (único MediaPlayer),
@@ -137,7 +137,7 @@ COT_0.Host/
 │   ├── Tunel/                    CloudflareTunnelService (ITunnelService) y KillOnCloseJob (cloudflared muere con la app)
 │   ├── Usuarios/                 UserService (registro/login), PasswordRecoveryService (¿olvidaste tu contraseña?),
 │   │                             HostAccounts (usuarios.json) y SecretHasher (PBKDF2 + SHA-256 con salt)
-│   ├── Validaciones/             CredentialValidator (solo letras y números) y SecurityAnswerValidator (normaliza la respuesta)
+│   ├── Validaciones/             InputLimits (Inputs:MaxCaracteres), CredentialValidator (solo letras y números) y SecurityAnswerValidator (normaliza la respuesta)
 │   ├── Ventana/                  WindowSetup (tamaño y barra de título), Navigator (cambia de página) y CloseGuard (cerrar con sala activa)
 │   └── Visitas/                  VisitService (visitas.json) y VisitWatcher (anota a cada invitado que entra)
 └── Views/
@@ -146,11 +146,12 @@ COT_0.Host/
     │                             ConnectedUsers + UserRow, Emotes + EmoteRow, MusicControls (base) → Musica y Firma, SongRow,
     │                             CapaFondo, Fondos + FondoRow, LogoNeondev, Manual + ManualStep + ManualNotice + ManualDemo
     ├── Componentes/              Piezas reutilizables
-    │   ├── CapaFondo             Fondo detrás del Frame: degradado, imagen/cuadro fijo o video, velo y viñeta (Dashboard, Sala y Fondos)
+    │   ├── CapaFondo             Fondo detrás del Frame: degradado, imagen/cuadro fijo o video, velo y viñeta (Dashboard, Sala, Fondos y Manual)
     │   ├── ConfirmacionDialogo   ContentDialog sí/no
-    │   ├── ControlVolumen        Nota (silencio), barra de volumen y número
+    │   ├── BotonBocina.cs        Bocina de la firma: Button con cursor de mano
+    │   ├── ControlVolumen        Nota (silencio), barra de volumen y número (MÚSICA)
     │   ├── EncabezadoPantalla    ← INICIO | TÍTULO de cada pantalla (clic o Esc regresa; ← SALA si viniste de la sala)
-    │   ├── Firma                 LogoNeondev y debajo la barra de volumen (login, dashboard y sala)
+    │   ├── Firma                 LogoNeondev y debajo bocina + línea de volumen (login, dashboard y sala)
     │   ├── LogoNeondev           Avatar + "Neondev" con brillo de vidrio; clic abre Branding:RepoUrl
     │   ├── FormularioRecuperacion  Pregunta secreta → contraseña nueva, dentro del login
     │   ├── ListaConectados       Invitados conectados (ListView)
@@ -170,7 +171,8 @@ COT_0.Host/
         ├── Textos.xaml           Todos los textos visibles, en español de México
         ├── Dashboard.xaml        Reloj, fecha, estado de la sala (lo mezcla DashboardPage)
         ├── Sala.xaml             Medidas del QR, fuente mono, contador, EN VIVO (lo mezcla SalaPage)
-        ├── Manual.xaml           Paleta de Lain, fondo, barrido y estilos de BotonManual (lo mezcla ManualPage)
+        ├── Manual.xaml           Velo, paneles de vidrio, orillas del video, barrido y estilos de BotonManual (lo mezcla ManualPage)
+        ├── Volumen.xaml          Volumen minimalista: plantilla del Slider, punto y bocina (lo mezcla Firma)
         └── TarjetaMenu.xaml      Plantilla de TarjetaMenu y trazos de sus iconos
 ```
 
@@ -220,7 +222,7 @@ En `%LocalAppData%\COT_0\`:
 ## Fondos
 
 - Carpeta fuera del repo: `Paths:MediaRoot` + `Background:Folder` (imágenes `Background:ImageExtensions`, videos `Background:VideoExtensions`). La app no la crea.
-- `CapaFondo` vive en `MainWindow`, detrás del `Frame`, y es la única: Dashboard, Sala y Fondos son páginas transparentes. En las demás páginas se oculta y el video se pausa. La carpeta se lee la primera vez que entras al dashboard (el login no la toca).
+- `CapaFondo` vive en `MainWindow`, detrás del `Frame`, y es la única: Dashboard, Sala, Fondos y Manual son páginas transparentes (en el Manual un fondo de video se muestra como cuadro fijo, porque ya suena el video de Lain). En las demás páginas se oculta y el video se pausa. La carpeta se lee la primera vez que entras al dashboard (el login no la toca).
 - Un solo `MediaPlayer` (`FondoPlayer`) en bucle y en silencio; cambiar de fondo solo cambia su `Source`.
 - Videos de más de `Background:HeavyVideoMegabytes` (120 MB) arrancan como **cuadro fijo**. En FONDOS, "Usar cuadro fijo" lo cambia por video y se guarda en `fondos.json`.
 - **Cuadro fijo** (`FondoFrameCache`): una sola vez por video, async, en `%LocalAppData%\COT_0\cache\fondos\<hash>.jpg`. Intentos en orden:

@@ -27,11 +27,12 @@ Rutas relativas a `COT_0.Host/` salvo que digan otro proyecto. Las pantallas `X`
 | **Fondos** | `Views/Pantallas/FondosPage`, `Views/Componentes/CapaFondo` (en `MainWindow.xaml`) | `Views/ModelosDeVista/FondosViewModel.cs`, `FondoRowViewModel.cs`, `CapaFondoViewModel.cs`; `Services/Fondos/` (`FondoCatalog`, `FondoStore`, `FondoService`, `FondoImages`, `FondoPlayer`, `FondoFrameCache`, `FfmpegFrames`, `ShellThumbnailFrames`, `CompositionFrames`, `FrameFiles`, `FondoFailures`, `FondoNames`); `Services/Cache/CacheFolders.cs`; `Models/FondosGuardados.cs`, `FondoError.cs`; `COT_0.Core/Models/Fondo.cs`, `FondoKind.cs`, `COT_0.Core/Services/IBackgroundCatalog.cs` |
 | **Manual de Lain** (host) | `Views/Pantallas/ManualPage`, `Views/Componentes/Manual/` (`AvisoLain`, `BotonManual`, `ResaltadoManual`, `EncabezadoEjemplo`, `VistaEjemplo*`), `Views/Estilos/Manual.xaml` | `Views/ModelosDeVista/ManualViewModel.cs`, `ManualStepViewModel.cs`, `ManualNoticeViewModel.cs`, `ManualDemoViewModel.cs`; `Services/Manual/ManualAssets.cs`, `ManualSound.cs`, `ManualVideo.cs`, `ManualTimeline.cs`; `Models/ManualDemoRow.cs`; `Services/Configuracion/ManualSettings.cs`, `ManualDemo*.cs` |
 | Manual del invitado (`/manual`) | `COT_0.Web/Views/Pantallas/Manual.razor`, `COT_0.Web/Views/Componentes/Manual/` | `COT_0.Web/Services/Manual/` |
-| **Firma de Neondev** (logo + volumen) | `Views/Componentes/Firma`, `Views/Componentes/LogoNeondev`, `Views/Componentes/ControlVolumen`; `Assets/Imagenes/neondev-avatar.png`, `Assets/Fuentes/Redaction50-400.ttf` | `Views/ModelosDeVista/FirmaViewModel.cs`, `LogoNeondevViewModel.cs`; `Services/Configuracion/BrandingSettings.cs` (`Branding:RepoUrl`) |
+| **Firma de Neondev** (logo + volumen) | `Views/Componentes/Firma`, `Views/Componentes/LogoNeondev`, `Views/Componentes/BotonBocina.cs`, `Views/Estilos/Volumen.xaml`; `Assets/Imagenes/neondev-avatar.png`, `Assets/Fuentes/Redaction50-400.ttf` | `Views/ModelosDeVista/FirmaViewModel.cs`, `MusicControlsViewModel.cs` (volumen y silencio), `LogoNeondevViewModel.cs`; `Views/Convertidores/MusicGlyphs.cs` (bocina por rangos); `Services/Configuracion/BrandingSettings.cs` (`Branding:RepoUrl`) |
 | **Sesiones** (`sesiones.json`) | — | `Services/Sesiones/SesionService.cs`, `SesionWatcher.cs`; `Models/SesionInvitados.cs` |
 | **Visitas** (`visitas.json`) | — | `Services/Visitas/VisitService.cs`, `VisitWatcher.cs`; `Models/Visit.cs` |
 | **JSON** (todo lo que se guarda) | — | `Services/Almacenamiento/JsonStore.cs` (lee/guarda en `%LocalAppData%\COT_0\`), `Services/Configuracion/StorageSettings.cs` (nombres de archivo), `Services/Fondos/FondoStore.cs` (`fondos.json`), `Services/Usuarios/HostAccounts.cs` (`usuarios.json`), `Services/Registro/MediaLog.cs` (`registro-medios.jsonl`) |
 | Configuración y textos | `Views/Estilos/Textos.xaml` | `appsettings.json`, `Services/Configuracion/AppConfig.cs` + un record por sección, `Services/Textos/UiText.cs` |
+| Límite de caracteres (`Inputs`) | `MaxLength` en `LoginPage`, `FormularioRecuperacion` y `PanelEmotes` | `Services/Configuracion/InputsSettings.cs` (reemplaza a `ValidationSettings.cs`), `Services/Validaciones/InputLimits.cs`, `CredentialValidator.cs`, `SecurityAnswerValidator.cs` |
 | Ventana y navegación | `MainWindow.xaml`, `Views/Componentes/EncabezadoPantalla`, `Views/Componentes/ConfirmacionDialogo` | `App.xaml.cs`, `Services/Ventana/WindowSetup.cs`, `Navigator.cs`, `Services/Dialogos/ConfirmDialogService.cs` |
 
 ## QUÉ SE BORRÓ
@@ -159,3 +160,7 @@ Se comparó `COT_0.Host` (WPF) contra el Host WinUI (entonces en otra carpeta) e
 | `Diagnostics:*` | `StartupTrace` no se migró |
 | `Texts:*` (110 claves) | Los textos viven en `Textos.xaml` |
 
+## Retoques finales (08/11): manual, volumen y límite de caracteres
+
+- Archivos nuevos: `Views/Componentes/BotonBocina.cs`, `Views/Estilos/Volumen.xaml`, `Services/Validaciones/InputLimits.cs`. `Services/Configuracion/ValidationSettings.cs` pasó a `InputsSettings.cs` (sección `Validation` → `Inputs`).
+- `dotnet build COT_0.sln`: 0 errores, 0 warnings. El `.exe` se lanzó unos segundos para confirmar que abre; sin capturas, así que el aspecto del manual y de la barra no se revisó a ojo (ver `PRUEBAS_MANUALES.md`, sección 12).

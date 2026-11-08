@@ -1,18 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Firma Neondev (login, dashboard y sala): LogoNeondev (abre el repo) y debajo solo la barra de volumen de la música.
-     La barra toma el ancho del logo; reproducir, siguiente y la lista viven en MusicaPage. Sin canciones queda el aviso -->
+<!-- Firma Neondev (login, dashboard y sala): LogoNeondev (abre el repo) y debajo, alineado con el nombre, el volumen minimalista:
+     bocina (clic = silencio) y una línea fina. Sin número, sin canción ni botones; eso vive en MusicaPage. Sin canciones queda el aviso -->
 <UserControl x:Class="COT_0.Host.Views.Componentes.Firma"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:componentes="using:COT_0.Host.Views.Componentes">
+             xmlns:componentes="using:COT_0.Host.Views.Componentes"
+             xmlns:convertidores="using:COT_0.Host.Views.Convertidores">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Views/Estilos/Volumen.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
 
     <StackPanel>
         <componentes:LogoNeondev/>
 
-        <!-- Mismo MusicService que MusicaPage: un solo volumen para las dos -->
-        <Slider Style="{StaticResource VolumeSlider}" Width="Auto" Margin="0,6,0,0" HorizontalAlignment="Stretch"
-                AutomationProperties.Name="{StaticResource Text.Music.Volume}" ToolTipService.ToolTip="{StaticResource Text.Music.Volume}"
-                Value="{x:Bind ViewModel.Volume, Mode=TwoWay}" Visibility="{x:Bind ViewModel.IsMusicAvailable, Mode=OneWay}"/>
+        <!-- Mismo MusicService que MusicaPage: un solo volumen y un solo silencio para las dos -->
+        <Grid Margin="{StaticResource VolumeRowMargin}" ColumnSpacing="6" Visibility="{x:Bind ViewModel.IsMusicAvailable, Mode=OneWay}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <componentes:BotonBocina Style="{StaticResource VolumeIconButton}" Command="{x:Bind ViewModel.ToggleMuteCommand}"
+                                     ToolTipService.ToolTip="{x:Bind ViewModel.MuteText, Mode=OneWay}"
+                                     AutomationProperties.Name="{x:Bind ViewModel.MuteText, Mode=OneWay}">
+                <FontIcon Glyph="{x:Bind convertidores:MusicGlyphs.Volume(ViewModel.IsMuted, ViewModel.Volume), Mode=OneWay}"
+                          FontFamily="{StaticResource FontIcons}" FontSize="{StaticResource VolumeIconSize}"/>
+            </componentes:BotonBocina>
+            <Slider Grid.Column="1" Style="{StaticResource MiniVolumeSlider}" AutomationProperties.Name="{StaticResource Text.Music.Volume}"
+                    Value="{x:Bind ViewModel.Volume, Mode=TwoWay}"/>
+        </Grid>
         <TextBlock Text="{StaticResource Text.Signature.NoMusic}" Margin="0,6,0,0" Visibility="{x:Bind ViewModel.IsMusicMissing, Mode=OneWay}"
                    FontFamily="{StaticResource FontBarlow}" FontSize="12" Foreground="{StaticResource Light40Brush}"/>
     </StackPanel>
