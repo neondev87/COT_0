@@ -1,4 +1,4 @@
-// Un paso del manual: número, título, texto, sus notificaciones y su captura opcional (si no hay, la vista de ejemplo)
+// Un paso del manual: número, título, sus notificaciones y su captura opcional (si no hay, la vista de ejemplo)
 using COT_0.Host.Services.Configuracion;
 using COT_0.Host.Services.Textos;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -18,12 +18,11 @@ public partial class ManualStepViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(HasStage), nameof(HasNoStage))]
     private ImageSource? _stage;
 
-    public ManualStepViewModel(int number, string label, string title, string text, IReadOnlyList<string> notices)
+    public ManualStepViewModel(int number, string label, string title, IReadOnlyList<string> notices)
     {
         Number = number;
         Label = label;
         Title = title;
-        Text = text;
         Notices = notices
             .Select((notice, i) => new ManualNoticeViewModel(notice, 2 * i + 1, i == notices.Count - 1 ? int.MaxValue : 2 * i + 1))
             .ToList();
@@ -32,7 +31,6 @@ public partial class ManualStepViewModel : ObservableObject
     public int Number { get; }
     public string Label { get; }
     public string Title { get; }
-    public string Text { get; }
     public bool HasTitle => Title.Length > 0;
     public bool HasStage => Stage is not null;
     public bool HasNoStage => Stage is null;
@@ -53,7 +51,7 @@ public partial class ManualStepViewModel : ObservableObject
             var key = $"Text.Manual.Step{i + 1}";
             var notices = Enumerable.Range(1, count).Select(n => UiText.Get($"{key}.Notice{n}")).ToList();
             return new ManualStepViewModel(i + 1, string.Format(format, i + 1, counts.Count),
-                UiText.Find($"{key}.Title") ?? string.Empty, UiText.Get($"{key}.Text"), notices);
+                UiText.Find($"{key}.Title") ?? string.Empty, notices);
         }).ToList();
     }
 }

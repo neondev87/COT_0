@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Manual de Lain: a la izquierda sus notificaciones y su video en la tele; a la derecha los atajos, el paso actual
+<!-- Manual de Lain: a la izquierda sus notificaciones y su video en la tele; a la derecha los atajos, el número y título del paso
      y su vista de ejemplo con resaltados (o la captura opcional del paso). Al final, la despedida con el mismo video al centro.
      ← INICIO regresa al dashboard -->
 <Page x:Class="COT_0.Host.Views.Pantallas.ManualPage"
@@ -91,8 +91,8 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <!-- Pasos -->
-        <Grid x:Name="StepsRoot" Margin="402,24,32,28">
+        <!-- Pasos: a la derecha de la columna de Lain (32 + ManualColumnWidth 330 + 24 de separación); la vista de ejemplo usa el resto -->
+        <Grid x:Name="StepsRoot" Margin="386,24,32,28">
             <Grid.OpacityTransition>
                 <ScalarTransition Duration="0:0:0.3"/>
             </Grid.OpacityTransition>
@@ -122,16 +122,15 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Text="{x:Bind ViewModel.Current.Label, Mode=OneWay}" Style="{StaticResource ManualStepNumberText}"/>
                 <TextBlock Grid.Row="1" Text="{x:Bind ViewModel.Current.Title, Mode=OneWay}" Style="{StaticResource ManualStepTitleText}"
                            Visibility="{x:Bind ViewModel.Current.HasTitle, Mode=OneWay}"/>
-                <TextBlock Grid.Row="2" Text="{x:Bind ViewModel.Current.Text, Mode=OneWay}" Style="{StaticResource ManualStepText}"/>
 
-                <!-- Vista de ejemplo del paso con sus resaltados; si hay captura (manual\pasos\pasoN.png), la captura -->
-                <Border Grid.Row="3" Margin="0,14,0,0" MinHeight="180" CornerRadius="10" Padding="1"
+                <!-- Vista de ejemplo del paso con sus resaltados; si hay captura (manual\pasos\pasoN.png), la captura.
+                     El marco se ajusta a la réplica 16:9 escalada (Viewbox Uniform) y queda centrado en el espacio libre -->
+                <Border Grid.Row="2" Margin="0,12,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="10" Padding="1"
                         Background="{StaticResource ManualPanelBrush}" BorderBrush="{StaticResource ManualBorderBrush}" BorderThickness="1">
                     <Grid>
                         <Image Source="{x:Bind ViewModel.Current.Stage, Mode=OneWay}" Stretch="Uniform"

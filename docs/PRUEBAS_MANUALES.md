@@ -119,9 +119,11 @@ Antes: `dotnet build COT_0.Host` en 0 errores y 0 warnings.
 ## 10. Manual de Lain
 
 1. **03 MANUAL** → fondo azul noche, ← INICIO | MANUAL arriba a la izquierda y atajos ENTER / → / ← / ESC arriba a la derecha.
-   A la derecha, "Paso 01 / 06", el título del paso, su texto y debajo la **vista de ejemplo** del paso (una réplica quieta de la pantalla).
+   A la derecha, "Paso 01 / 06", el título del paso y, justo debajo, la **vista de ejemplo** del paso (una réplica quieta de la pantalla). Ya no hay texto explicativo bajo el título: lo dicen las notificaciones de Lain.
+   La vista de ejemplo ocupa todo el ancho a la derecha de Lain, en 16:9, sin recortes y centrada con márgenes parejos.
+   Cambia el tamaño de la ventana (1280×720, maximizada y más chica): la réplica crece o se reduce entera, sin encimarse con Lain ni con sus avisos, y cada resaltado sigue sobre su elemento.
 2. Abajo a la izquierda, el video de Lain en bucle (sin quitar el negro: se ve sobre el azul con el borde de arriba fundido).
-3. Arriba a la izquierda salen las notificaciones de Lain una por una con fundido y el sonido de aviso; la última se queda.
+3. Arriba a la izquierda salen las notificaciones de Lain una por una con fundido y el sonido de aviso; la última se queda (textos, orden y tiempos sin cambios).
    **Cada aviso enciende su resaltado** en la vista de ejemplo: borde rojo del proyecto con un halo que late. El anterior se apaga al entrar el siguiente.
 4. Revisa cada paso (ENTER o → avanza con destello y fundido corto; ← regresa):
 

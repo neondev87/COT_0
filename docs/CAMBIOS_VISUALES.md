@@ -273,3 +273,12 @@ No hubo que reconstruir nada pesado: el original no usaba shader ni blur, solo u
 | Dashboard y sala: solo `LogoNeondev` | `Firma` completa (logo + barra) en login, dashboard y sala. En la sala va centrada a media altura de la fila del contador (antes arriba) |
 
 Un solo volumen: las tres firmas y MÚSICA leen el mismo `MusicService`. Arranca siempre en 0 (`Audio:DefaultVolume`, no se guarda entre sesiones) con `Audio_01.mp3` (`Audio:DefaultFile`) cargada en pausa; empieza a sonar al subir el volumen, así no avanza a otra canción mientras está en silencio.
+
+### Manual: sin texto duplicado y vista de ejemplo más grande
+
+| Antes | Ahora |
+|---|---|
+| Debajo del título de cada paso, un párrafo (`Text.Manual.StepN.Text`) que repetía lo que dicen los avisos de Lain | Quitado: queda "Paso 0N / 06" y el título corto. Se borraron las 6 claves de `Textos.xaml`, la propiedad `ManualStepViewModel.Text` y el estilo `ManualStepText` (su formato pasó a `ManualStepNumberText`) |
+| Vista de ejemplo en un marco que se estiraba a todo el ancho (con `MinHeight` 180) y la réplica centrada adentro; pasos a 402 px del borde | El marco se ajusta a la réplica 1280×720 escalada (`Viewbox` `Stretch="Uniform"`), centrado en todo el espacio a la derecha de Lain; pasos a 386 px (32 + columna de 330 + 24). A 1280×720 pasa de ~827×465 a ~862×485 (~+4 % por lado, ~+9 % de área) y crece con la ventana |
+
+Notificaciones, sonido, tiempos, resaltados, atajos, silencio, despedida y ← INICIO quedan igual. Los resaltados viven dentro de la réplica, así que escalan con ella.
