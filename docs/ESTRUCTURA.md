@@ -1,111 +1,177 @@
-# Estructura de COT_0.Host
+# Estructura de COT_0
 
-Host de COT_0 en WinUI 3. Una sola ventana con un `Frame`; cada pantalla es una `Page`.
-Las carpetas de primer nivel van en inglés; las de adentro, en español y con el nombre de lo que hacen.
-Una clase por archivo.
+La solución (`COT_0.sln`) tiene tres proyectos. Referencias: `Host → Web, Core` y `Web → Core`; Core no depende de nadie.
+
+Reglas de carpetas: en cada proyecto, el primer nivel va en inglés (`Views`, `Models`, `Services`, `Assets`); adentro, subcarpetas en español con el nombre de lo que hacen. Una clase por archivo y un comentario `///` arriba de cada tipo. El detalle de qué se movió y qué se quedó está en `MAPA_CARPETAS.md`.
+
+```
+COT_0/
+├── COT_0.sln                     Solución: Core, Web y Host
+├── CONTRATO.md                   Acuerdo entre agentes: dueños de carpetas, interfaces de Core y pedidos de cambio
+├── README.md                     Qué es, requisitos, cómo compilar y correr
+├── .gitignore                    Build, y medios locales (/musica/, /fondos/, /portadas/, /gifs/, /manual/, audio y video sueltos)
+├── docs/                         Esta documentación
+├── COT_0.Core/                   Lo compartido: modelos e interfaces (sin dependencias)
+├── COT_0.Web/                    Lo que ven los invitados: Blazor Server + SignalR
+└── COT_0.Host/                   La app del host: WinUI 3
+```
+
+## COT_0.Core
+
+```
+COT_0.Core/
+├── Models/
+│   ├── User.cs                   Invitado conectado (nombre, foto, escudo), solo en memoria
+│   ├── ChatMessage.cs            Mensaje del chat (texto, voz, imagen o aviso del sistema)
+│   ├── MessageKind.cs            Tipo de mensaje
+│   ├── FlagOption.cs             Escudo de facultad que puede elegir el invitado
+│   ├── RoomEmote.cs              Emote de 7TV activo en la sala
+│   ├── EmoteSources.cs           URLs de las imágenes de un emote
+│   ├── EmoteReport.cs            Reporte de un invitado sobre un emote
+│   ├── EmoteSetStatus.cs         Estado del set de 7TV (apagado, cargando, listo…)
+│   ├── EmoteSetError.cs          Por qué falló el set
+│   ├── Fondo.cs                  Fondo del catálogo: archivo, tipo, tamaño y si se muestra como cuadro fijo
+│   └── FondoKind.cs              Imagen o video
+└── Services/
+    ├── IChatService.cs           Usuarios e historial del chat (lo implementa Web)
+    ├── IRoomService.cs           Abrir/cerrar la sala y su código (lo implementa Web)
+    ├── IRoomEmotes.cs            Set de 7TV, reportes y emotes quitados (lo implementa Web)
+    ├── IFlagService.cs           Lista de escudos de facultad (lo implementa Web)
+    ├── ITunnelService.cs         Túnel de cloudflared (lo implementa el Host)
+    ├── IBackgroundCatalog.cs     Carpeta de fondos (lo implementa el Host)
+    └── MediaPath.cs              Une Paths:MediaRoot con las rutas relativas de los medios
+```
+
+## COT_0.Web
+
+```
+COT_0.Web/
+├── COT_0.Web.csproj              Blazor Server; los namespaces de Services se importan aquí una sola vez (<Using>)
+├── Program.cs                    Arranque solo (dotnet run --project COT_0.Web): la sala abre sola
+├── WebApp.cs                     Arma la app web; la usan Program.cs y el Host
+├── App.razor                     Componente raíz (HTML base, CSS y scripts)
+├── _Imports.razor                Usings de todos los .razor (tiene que estar en la raíz)
+├── Properties/launchSettings.json  Puerto 5050 para dotnet run (ruta que pide .NET)
+├── Models/                       Clases simples de la web: formulario de entrada, borradores, imágenes, voz, manual, ceniza
+├── Services/
+│   ├── Configuracion/            ChatOptions, VoiceOptions, ManualOptions y ManualSteps (secciones Chat, Voice y GuestManual)
+│   ├── Sala/                     ChatHub (/chathub), ChatBroadcaster, ChatEvents, InMemoryChatService (IChatService),
+│   │                             RoomService (IRoomService), PresenceTracker, ChatSession, ChatBrowser (interop), SystemNotice
+│   │                             y ChatRegistration (registro en DI)
+│   ├── Mensajes/                 MessageFormatter (texto → piezas con emotes y enlaces), MessageGrouping, MessageAuthor
+│   │                             y ComposerEditor (cuadro de escritura)
+│   ├── Perfil/                   ProfileService, GuestStore (localStorage cifrado), InMemoryAvatarStore, FlagService (IFlagService) y FlagSearch
+│   ├── Imagenes/                 ImageService, ImageUploader, ImageSniffer (valida el formato), InMemoryImageStore e ImageNote
+│   ├── Voz/                      VoiceService, VoiceRecorder, AudioSniffer, OpusWavTranscoder + WebmOpusFrames + WavWriter
+│   │                             (WebM/Opus → WAV con Concentus), InMemoryVoiceStore, VoiceFormat y VoiceNote
+│   ├── Emotes/                   RoomEmotes (IRoomEmotes), SevenTvClient + sus DTO (SevenTv*), EmoteSearch, EmoteList,
+│   │                             EmoteActions, EmoteSetId, EmoteSetResult y EmoteRegistration
+│   └── Manual/                   Manual del invitado (/manual): ManualTour, ManualDemo, ManualFocus, ManualTimeline y ManualRegistration
+├── Views/
+│   ├── Pantallas/                Páginas con ruta: Join (/join), Chat (/chat), Manual (/manual) y Error
+│   ├── Plantillas/               MainLayout y Routes (enrutador)
+│   └── Componentes/              Piezas del chat y del perfil (MessageList, ChatComposer, EmotePicker, VoiceBubble, ImageViewer,
+│       │                         ProfileForm, FacultySheet, UserPanel, AshLayer…)
+│       └── Manual/               Piezas del manual del invitado (LainTv, ManualStory, ManualNotices, DemoChat, MuteButton…)
+└── wwwroot/                      Archivos estáticos (nombre que pide ASP.NET; el Host los copia junto al .exe)
+    ├── css/                      Estilos y animaciones por pantalla (join, chat, emotes, voz, manual…)
+    ├── fonts/                    Fuentes woff2 (Barlow, Barlow Condensed, Cinzel)
+    ├── img/                      Fondo ASCII y escudos de facultad (img/flags)
+    └── js/                       Interop mínimo que C# no puede hacer: chat.js (scroll), composer.js (cuadro editable),
+                                  voice.js (micrófono), manual.js (sonidos y atajos) y reconnect.js (reconexión)
+```
+
+## COT_0.Host
+
+Host en WinUI 3. Una sola ventana con un `Frame`; cada pantalla es una `Page`.
 
 ```
 COT_0.Host/
+├── COT_0.Host.csproj             WinUI 3 sin MSIX (WindowsAppSDKSelfContained); copia Assets, appsettings.json y wwwroot de la web
 ├── App.xaml                      Paleta, fuentes, medidas y estilos comunes (login, TextButton, SolidButton, VolumeSlider, filas de lista)
 ├── App.xaml.cs                   Arranque: arma los servicios, crea la ventana, arranca la música y levanta la web
 ├── MainWindow.xaml               Única ventana: CapaFondo (fondo elegido) y encima el Frame (RootFrame)
-├── appsettings.json              Ventana, archivos JSON, seguridad, validación, preguntas secretas, reloj, Audio (música y portadas),
-│                                 Background (fondos y cuadro fijo con ffmpeg), Manual (videos, sonidos y tiempos de Lain, y Demo: datos ficticios de las vistas de ejemplo),
-│                                 Branding (RepoUrl: el logo abre el repo) y la config de la web/túnel
-├── .gitignore                    Vuelve a incluir Services/Musica (la regla musica/ de la raíz la tapaba) e ignora fondos/gifs/manual,
-│                                 cache/ y *.jsonl sueltos
+├── appsettings.json              Toda la configuración (ventana, archivos JSON, seguridad, validación, preguntas secretas, Ui, Paths,
+│                                 Audio, Background, Manual + Manual:Demo, Branding, Tunnel, Qr, Web, Chat, GuestManual)
 ├── app.manifest                  Nitidez en pantallas con escala (DPI)
 ├── Assets/
 │   ├── Fuentes/                  TTF del diseño (Cinzel, Barlow, Barlow Condensed 200/300/500/700/800 itálica, Inter, Redaction 50 de la firma)
 │   └── Imagenes/                 Imágenes fijas de la interfaz (fondo ASCII del login, avatar de la firma)
 ├── Models/                       Clases simples que se guardan en JSON o viajan entre capas (sin lógica)
 │   ├── HostUser.cs               Cuenta del host: hash + salt de la contraseña y de la respuesta secreta
-│   ├── Visit.cs                  Nombre y hora de entrada de un invitado (visitas y sesiones)
-│   ├── SesionInvitados.cs        Sesión numerada: inicio, fin e invitados que entraron
 │   ├── HashedSecret.cs           Hash y salt en Base64
 │   ├── SecurityQuestionOption.cs Clave y texto de una pregunta secreta
 │   ├── CredentialError.cs        Por qué se rechazó lo que escribiste (cada valor tiene su Text.Error.*)
+│   ├── Visit.cs                  Nombre y hora de entrada de un invitado (visitas y sesiones)
+│   ├── SesionInvitados.cs        Sesión numerada: inicio, fin e invitados que entraron
+│   ├── RoomError.cs              Por qué no abrió la sala: cloudflared no encontrado, túnel lento o caído, puerto ocupado, servidor
 │   ├── Song.cs                   Canción de la biblioteca: ruta, título, duración y portada
-│   ├── MusicError.cs             Carpeta sin encontrar, sin canciones o archivo ilegible (Text.Music.Error.*)
-│   ├── RoomError.cs              Por qué no abrió la sala: cloudflared no encontrado, túnel lento o caído, puerto ocupado, servidor (Text.Room.Error.*)
-│   ├── Fondo.cs                  Fondo del catálogo: archivo, tipo, tamaño y si se muestra como cuadro fijo
-│   ├── FondoKind.cs              Imagen o video
-│   ├── FondosGuardados.cs        Contenido de fondos.json: catálogo y fondo elegido
-│   ├── FondoError.cs             Carpeta sin encontrar o vacía, imagen ilegible, fondos.json dañado, archivo que ya no está o bloqueado,
-│   │                             video sin códec, video que no decodifica y video sin cuadro fijo (Text.Backgrounds.Error.*)
-│   ├── MediaLogEntry.cs          Una línea de registro-medios.jsonl: hora, origen, archivo, ErrorCode (HRESULT) y detalle
 │   ├── CoverArt.cs               Portada grande decodificada y su tamaño en pantalla
-│   ├── ManualDemoRow.cs          Fila ficticia de las vistas de ejemplo del manual (emote o canción) e inicial del recuadro
+│   ├── MusicError.cs             Carpeta sin encontrar, sin canciones o archivo ilegible
+│   ├── FondosGuardados.cs        Contenido de fondos.json: catálogo y fondo elegido
+│   ├── FondoError.cs             Carpeta vacía o sin encontrar, imagen ilegible, fondos.json dañado, archivo bloqueado o que ya no está,
+│   │                             video sin códec, que no decodifica o sin cuadro fijo
+│   ├── MediaLogEntry.cs          Una línea de registro-medios.jsonl: hora, origen, archivo, ErrorCode (HRESULT) y detalle
+│   ├── ManualDemoRow.cs          Fila ficticia de las vistas de ejemplo del manual (emote o canción)
 │   └── ConfirmTexts.cs           Textos del diálogo sí/no
 ├── Services/
 │   ├── Almacenamiento/           JsonStore: lee y guarda cualquier clase en %LocalAppData%\COT_0\*.json (async)
 │   ├── Cache/                    CacheFolders: %LocalAppData%\COT_0\cache\<nombre> y la llave (hash de ruta + tamaño + fecha)
-│   ├── Registro/                 MediaLog: ErrorCode/ExtendedErrorCode de MediaFailed, miniaturas y portadas en registro-medios.jsonl
-│   ├── Configuracion/            AppConfig + un record por sección de appsettings.json (Window, Storage, Security, Validation, Recovery, Ui, Paths,
-│   │                             Audio, Background, Manual, Links, Web, Tunnel, Qr)
-│   │                             (Manual:Demo → ManualDemoSettings + ManualDemoGuest/Emote/Song)
+│   ├── Registro/                 MediaLog: fallas de video, miniaturas y portadas en registro-medios.jsonl
+│   ├── Configuracion/            AppConfig (lee appsettings.json) + AppSettings y un record por sección (Window, Storage, Security,
+│   │                             Validation, Recovery, Ui, Paths, Audio, Background, Manual, ManualDemo*, Branding, Tunnel, Qr, Web)
 │   ├── Dialogos/                 ConfirmDialogService: abre el diálogo sí/no sobre la ventana
-│   ├── Fondos/                   FondoCatalog (lee la carpeta; antes BackgroundCatalog del WPF), FondoStore (fondos.json), FondoService (catálogo,
-│   │                             elegido y último error con su código), FondoImages (imagen o cuadro fijo decodificado al tamaño pedido),
-│   │                             FondoPlayer (único MediaPlayer; abre con StorageFile), FondoFrameCache (cuadro fijo en caché) con sus tres
-│   │                             intentos FfmpegFrames → ShellThumbnailFrames → CompositionFrames (+ FrameFiles: guarda el JPEG),
-│   │                             FondoFailures (HRESULT → FondoError) y FondoNames (nombre limpio para la miniatura)
-│   ├── Manual/                   ManualAssets (rutas de Lain, async; copiado del WPF), ManualSound (aviso + estática), ManualVideo (un MediaPlayer
-│   │                             para Lain y la despedida) y ManualTimeline (fases de cada paso con Manual:CueSeconds)
-│   ├── Musica/                   MusicLibrary y CoverLibrary (copiadas del WPF, sin tipos de WPF), SongCatalog (duración y portada, async),
-│   │                             MusicService (Windows.Media.Playback.MediaPlayer: play/pausa, anterior/siguiente, volumen, silencio)
-│   │                             y CoverImages (portada grande a su tamaño real, con tope de Audio:CoverLargeSize y CoverMaxUpscale)
+│   ├── Fondos/                   FondoCatalog (IBackgroundCatalog: lee la carpeta), FondoStore (fondos.json), FondoService (catálogo,
+│   │                             elegido y último error), FondoImages (imagen o cuadro fijo decodificado), FondoPlayer (único MediaPlayer),
+│   │                             FondoFrameCache (cuadro fijo en caché) con sus intentos FfmpegFrames → ShellThumbnailFrames →
+│   │                             CompositionFrames (+ FrameFiles: guarda el JPEG), FondoFailures (HRESULT → FondoError) y FondoNames
+│   ├── Manual/                   ManualAssets (qué archivos de Lain existen, async), ManualSound (aviso + estática),
+│   │                             ManualVideo (un MediaPlayer para Lain y la despedida) y ManualTimeline (fases con Manual:CueSeconds)
+│   ├── Musica/                   MusicLibrary (canciones de la carpeta), CoverLibrary (portadas), SongCatalog (duración y portada, async),
+│   │                             MusicService (Windows.Media.Playback: play/pausa, anterior/siguiente, volumen, silencio) y CoverImages
 │   ├── Sala/                     WebServerHost (Kestrel con COT_0.Web), RoomSession (abrir/cerrar sala, vigilantes y apagado),
-│   │                             QrService (PNG de QRCoder → BitmapImage), RoomOpenErrors (error → RoomError + texto) y GuestWatcher (base: detecta quién entra)
+│   │                             QrService (PNG de QRCoder → BitmapImage), RoomOpenErrors (error → RoomError + texto) y GuestWatcher (base)
 │   ├── Sesiones/                 SesionService (sesiones.json) y SesionWatcher (abre/cierra la sesión con la sala y anota invitados)
-│   ├── Textos/                   UiText: busca un texto de Textos.xaml desde C# (Get, o Find si es opcional)
+│   ├── Textos/                   UiText: busca un texto de Textos.xaml desde C#
 │   ├── Tiempo/                   ClockService (tick de cada segundo) y UiThread (pasa eventos al hilo de la UI)
-│   ├── Tunel/                    CloudflareTunnelService y KillOnCloseJob (cloudflared muere con la app)
+│   ├── Tunel/                    CloudflareTunnelService (ITunnelService) y KillOnCloseJob (cloudflared muere con la app)
 │   ├── Usuarios/                 UserService (registro/login), PasswordRecoveryService (¿olvidaste tu contraseña?),
 │   │                             HostAccounts (usuarios.json) y SecretHasher (PBKDF2 + SHA-256 con salt)
 │   ├── Validaciones/             CredentialValidator (solo letras y números) y SecurityAnswerValidator (normaliza la respuesta)
-│   ├── Ventana/                  WindowSetup (tamaño y barra de título), Navigator (cambia de página, avisa PageChanged y regresa a sala o dashboard)
-│   │                             y CloseGuard (cerrar la ventana con sala activa pregunta; luego apaga sala, túnel y servidor)
+│   ├── Ventana/                  WindowSetup (tamaño y barra de título), Navigator (cambia de página) y CloseGuard (cerrar con sala activa)
 │   └── Visitas/                  VisitService (visitas.json) y VisitWatcher (anota a cada invitado que entra)
 └── Views/
+    ├── Pantallas/                Páginas del Frame: LoginPage, DashboardPage, SalaPage, EmotesPage, MusicaPage, FondosPage, ManualPage
+    ├── ModelosDeVista/           ViewModels: Login (+ LoginStep, FormViewModel), Recovery, SecurityQuestion, Dashboard, Sala,
+    │                             ConnectedUsers + UserRow, Emotes + EmoteRow, MusicControls (base) → Musica y Firma, SongRow,
+    │                             CapaFondo, Fondos + FondoRow, LogoNeondev, Manual + ManualStep + ManualNotice + ManualDemo
     ├── Componentes/              Piezas reutilizables
+    │   ├── CapaFondo             Fondo detrás del Frame: degradado, imagen/cuadro fijo o video, velo y viñeta (Dashboard, Sala y Fondos)
     │   ├── ConfirmacionDialogo   ContentDialog sí/no
-    │   ├── ListaConectados       Invitados conectados (ListView); con SampleUsers muestra los de ejemplo del manual
-    │   ├── FormularioRecuperacion  Pregunta secreta → contraseña nueva, dentro del login
-    │   ├── TarjetaMenu.cs        Tarjeta inclinada del menú (Button con número, subtítulo e icono)
-    │   ├── PuntoPulso            Punto rojo con pulso (sala activa)
-    │   ├── EncabezadoPantalla    ← INICIO | TÍTULO de Sala, Emotes, Música, Fondos y Manual (clic o Esc regresa; ← SALA si viniste de la sala;
-    │   │                         en el manual HandlesEscape="False" porque ahí Esc abre la despedida)
-    │   ├── CapaFondo             Fondo detrás del Frame: degradado, imagen/cuadro fijo o video, velo y viñeta (solo en Dashboard, Sala y Fondos)
-    │   ├── AvisoLain             Notificación de Lain estilo celular, con transición de opacidad
-    │   ├── BotonManual.cs        Botón del manual: atajo con tecla dibujada (ENTER, →, ←, ESC) o botón redondeado
-    │   ├── VistaEjemploManual    Escenario del manual: crea la vista de ejemplo del paso a 1280×720 (Window) en un Viewbox y le pasa la fase
-    │   ├── VistaEjemplo.cs       Base de las vistas de ejemplo: Step, Phase y Demo (ManualDemoViewModel); sin toque ni foco
-    │   ├── VistaEjemploLogin     Paso 1: réplica del login (usuario de muestra)
-    │   ├── VistaEjemploInicio    Paso 2: réplica del dashboard con las TarjetaMenu reales sin comando
-    │   ├── VistaEjemploSala      Pasos 3 y 4: sala con QR de adorno (no escaneable), enlace de ejemplo y ListaConectados con invitados ficticios
-    │   ├── VistaEjemploEmotes    Paso 5: EMOTES simplificado (inicial en vez de la miniatura de 7TV)
-    │   ├── VistaEjemploMusica    Paso 6: MÚSICA con canciones ficticias y sin portadas
-    │   ├── ResaltadoManual       Borde rojo + halo que late; visible entre las fases From y To (y OnlyInStep si la vista sirve a dos pasos)
-    │   ├── EncabezadoEjemplo     ← INICIO | TÍTULO dibujado, sin botón ni Esc (el real navega)
-    │   ├── PanelEmotes           Set de 7TV, reportes y emotes quitados (+ EmoteStatusBrushes.cs: color del estado)
-    │   ├── ControlVolumen        Nota (silencio), barra de volumen y número de MusicaPage
+    │   ├── ControlVolumen        Nota (silencio), barra de volumen y número
+    │   ├── EncabezadoPantalla    ← INICIO | TÍTULO de cada pantalla (clic o Esc regresa; ← SALA si viniste de la sala)
     │   ├── Firma                 LogoNeondev y debajo la barra de volumen (login, dashboard y sala)
-    │   ├── LogoNeondev           Avatar + "Neondev" con brillo de vidrio (rescatado del SignatureBadge del WPF); clic abre Branding:RepoUrl.
-    │   │                         Va dentro de Firma; sus medidas (avatar 80, nombre 50.4) están como recursos arriba del XAML
-    │   ├── MusicGlyphs.cs        Iconos de play/pausa, nota/silencio y la bocina del manual según el estado
-    │   └── AvatarTones.cs        Tono del avatar de cada fila
-    ├── Estilos/
-    │   ├── Textos.xaml           Todos los textos visibles, en español de México
-    │   ├── Dashboard.xaml        Reloj, fecha, estado de la sala y botón sin aspecto (lo mezcla DashboardPage)
-    │   ├── Sala.xaml             Medidas del QR, fuente mono, textos del contador, EN VIVO y la nota de CERRAR SALA (lo mezcla SalaPage)
-    │   ├── Manual.xaml           Paleta de Lain, fondo azul noche, barrido, textos y estilos de BotonManual (lo mezcla ManualPage)
-    │   └── TarjetaMenu.xaml      Plantilla de TarjetaMenu con sus estados (normal, mouse encima, apagada) y los trazos de sus iconos (MenuIcon.*)
-    ├── ModelosDeVista/           ViewModels: Login (+ LoginStep, FormViewModel), Recovery, SecurityQuestion,
-    │                             Dashboard, Sala, ConnectedUsers, UserRow, Emotes + EmoteRow,
-    │                             MusicControls (base) → Musica y Firma, SongRow, CapaFondo, Fondos + FondoRow, LogoNeondev,
-    │                             Manual + ManualStep + ManualNotice + ManualDemo (datos de las vistas de ejemplo)
-    └── Pantallas/                Páginas del Frame: Login, Dashboard, Sala, Emotes, Musica, Fondos, Manual
+    │   ├── LogoNeondev           Avatar + "Neondev" con brillo de vidrio; clic abre Branding:RepoUrl
+    │   ├── FormularioRecuperacion  Pregunta secreta → contraseña nueva, dentro del login
+    │   ├── ListaConectados       Invitados conectados (ListView)
+    │   ├── PanelEmotes           Set de 7TV, reportes y emotes quitados
+    │   ├── PuntoPulso            Punto rojo con pulso (sala activa)
+    │   ├── TarjetaMenu.cs        Tarjeta inclinada del menú del dashboard
+    │   └── Manual/               Piezas del manual de Lain
+    │       ├── AvisoLain         Notificación de Lain estilo celular
+    │       ├── BotonManual.cs    Botón del manual con tecla dibujada (ENTER, →, ←, ESC)
+    │       ├── ResaltadoManual   Borde rojo + halo que late sobre la vista de ejemplo
+    │       ├── EncabezadoEjemplo ← INICIO | TÍTULO dibujado, sin botón
+    │       ├── VistaEjemplo.cs   Base de las vistas de ejemplo (Step, Phase, Demo)
+    │       ├── VistaEjemploManual  Escenario: crea la vista del paso a 1280×720 dentro de un Viewbox
+    │       └── VistaEjemploLogin, VistaEjemploInicio, VistaEjemploSala, VistaEjemploEmotes, VistaEjemploMusica  Réplicas quietas por paso
+    ├── Convertidores/            AvatarTones (tono del avatar), EmoteStatusBrushes (color del estado), MusicGlyphs (iconos de música)
+    └── Estilos/
+        ├── Textos.xaml           Todos los textos visibles, en español de México
+        ├── Dashboard.xaml        Reloj, fecha, estado de la sala (lo mezcla DashboardPage)
+        ├── Sala.xaml             Medidas del QR, fuente mono, contador, EN VIVO (lo mezcla SalaPage)
+        ├── Manual.xaml           Paleta de Lain, fondo, barrido y estilos de BotonManual (lo mezcla ManualPage)
+        └── TarjetaMenu.xaml      Plantilla de TarjetaMenu y trazos de sus iconos
 ```
 
 Los diccionarios de `Views/Estilos` que usan pinceles o fuentes de `App.xaml` se mezclan en los recursos de la página, no en `App.xaml`: un diccionario mezclado dentro de `App.xaml` no puede ver las claves del propio `App.xaml`.
@@ -149,7 +215,7 @@ En `%LocalAppData%\COT_0\`:
 
 - `MusicService` es una sola instancia (Singleton): la firma del login (`FirmaViewModel`) y `MusicaPage` (`MusicaViewModel`) heredan de `MusicControlsViewModel` y leen el mismo reproductor, así que van sincronizadas.
 - La música vive fuera del repo: `Paths:MediaRoot` + `Audio:MusicFolder` (canciones) y `Audio:CoversFolder` (portadas). La app no crea la carpeta; si falta, `MusicaPage` lo avisa con un InfoBar.
-- `EmotesViewModel` usa `IRoomEmotes` de Core tal cual, sacado del contenedor de la web (misma instancia que los chats de los invitados). En el WPF los emotes eran un bloque de la sala; en WinUI son su propia pantalla.
+- `EmotesViewModel` usa `IRoomEmotes` de Core tal cual, sacado del contenedor de la web (misma instancia que los chats de los invitados). Los emotes tienen su propia pantalla (EMOTES), no son un bloque de la sala.
 
 ## Fondos
 
@@ -158,7 +224,7 @@ En `%LocalAppData%\COT_0\`:
 - Un solo `MediaPlayer` (`FondoPlayer`) en bucle y en silencio; cambiar de fondo solo cambia su `Source`.
 - Videos de más de `Background:HeavyVideoMegabytes` (120 MB) arrancan como **cuadro fijo**. En FONDOS, "Usar cuadro fijo" lo cambia por video y se guarda en `fondos.json`.
 - **Cuadro fijo** (`FondoFrameCache`): una sola vez por video, async, en `%LocalAppData%\COT_0\cache\fondos\<hash>.jpg`. Intentos en orden:
-  1. `ffmpeg` si ya está junto al `.exe` o en el `PATH` (`Background:FfmpegPath`; no se instala nada): cuadro en `Background:FrameSeconds` (3 s, como el `PreviewSeconds` del WPF), máx. `FrameMaxWidth` (1280) con `lanczos`.
+  1. `ffmpeg` si ya está junto al `.exe` o en el `PATH` (`Background:FfmpegPath`; no se instala nada): cuadro en `Background:FrameSeconds` (3 s), máx. `FrameMaxWidth` (1280) con `lanczos`.
   2. Miniatura de Windows con `ThumbnailMode.VideosView` (con `SingleItem` Windows regresaba el **icono** del archivo, no un cuadro).
   3. `MediaComposition.GetThumbnailAsync` (Media Foundation; en lugar del frame server de `MediaPlayer`, que pide una superficie Direct3D).
 - La miniatura de FONDOS y el cuadro fijo del fondo usan ese mismo JPEG (decodificado a `ThumbnailSize` o `StillSize`).
@@ -175,6 +241,6 @@ En `%LocalAppData%\COT_0\`:
   (usuario, código, enlace, invitados, set y reportes, canciones, volumen) y los arma `ManualDemoViewModel`; la hora es la del reloj. No tocan la sala, el túnel, 7TV ni la música.
 - Resaltados: `ManualViewModel.Phase` llega a la vista; cada `ResaltadoManual` dice en qué fases se ve (aviso 1 → fases 1-2, aviso 2 → 3-4, aviso 3 → 5 en adelante).
 - Si hay captura `manual\pasos\pasoN.png`, se muestra en lugar de la vista de ejemplo de ese paso.
-- Fases (igual que el WPF): la fase 2i+1 muestra el aviso i y la 2i+2 lo quita; la última se queda. Los tiempos salen de `Manual:CueSeconds`.
+- Fases: la fase 2i+1 muestra el aviso i y la 2i+2 lo quita; la última se queda. Los tiempos salen de `Manual:CueSeconds`.
 - Atajos: ENTER siguiente (después del último, despedida; en la despedida, cerrar), → / ← cambian de paso, ESC despedida y luego cerrar. ← INICIO regresa al dashboard en cualquier momento.
 - La despedida usa el mismo video y el mismo reproductor: un `StateTrigger` lo mueve al centro con menos opacidad.

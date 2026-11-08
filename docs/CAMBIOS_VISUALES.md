@@ -2,6 +2,8 @@
 
 Lo que WinUI 3 no soporta igual que WPF y cómo se simplificó. Prioridad: que arranque rápido y no se trabe.
 
+Nota histórica: la columna "WPF" habla del Host viejo, que ya se borró (está en el tag `pre-cierre-winui`). Las rutas de la columna "WinUI 3" son las de `COT_0.Host` final (ver `ESTRUCTURA.md`).
+
 ## Login
 
 | WPF | WinUI 3 | Motivo |
@@ -91,7 +93,7 @@ Lo que WinUI 3 no soporta igual que WPF y cómo se simplificó. Prioridad: que a
 | Iconos con `Path` y `DataTrigger` (nota / nota tachada) | Glifos de Segoe Fluent Icons (`MusicGlyphs`) | Heredan el color del botón; sin plantillas extra |
 | `Slider` con plantilla propia (riel de 2 px) | `Slider` de WinUI con el acento | Mismo uso, sin rehacer la plantilla |
 | Errores en `MessageBox` | `InfoBar` de aviso (carpeta no encontrada, carpeta vacía, archivo ilegible) | Pedido del cambio |
-| SUBIR MÚSICA (copiar archivos a la carpeta) | Quitado por ahora | Necesita `FileOpenPicker` con el HWND; ver pendientes |
+| SUBIR MÚSICA (copiar archivos a la carpeta) | Quitado por ahora | Necesita `FileOpenPicker` con el HWND; ver `PENDIENTES_LIMPIEZA.md` |
 
 ## Sala
 

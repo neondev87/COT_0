@@ -140,7 +140,7 @@ En Web, los namespaces nuevos se importan una sola vez: `<Using>` en `COT_0.Web.
 |---|---|
 | `COT_0.Host/App.xaml(.cs)`, `MainWindow.xaml(.cs)`, `appsettings.json`, `COT_0.Host.csproj` | Raíz permitida |
 | `COT_0.Host/app.manifest` | Configuración inevitable (DPI); el `.csproj` lo pide por ruta |
-| `COT_0.Host/Models/` (19 clases) | Ya es primer nivel válido; son clases simples sin lógica, partirlas solo sumaría `using` |
+| `COT_0.Host/Models/` (15 clases) | Ya es primer nivel válido; son clases simples sin lógica, partirlas solo sumaría `using` |
 | `COT_0.Host/Views/ModelosDeVista/` | Ya está en español (equivale a "VistasModelo") |
 | `COT_0.Host/Services/*` (Almacenamiento, Cache, Configuracion, Dialogos, Fondos, Manual, Musica, Registro, Sala, Sesiones, Textos, Tiempo, Tunel, Usuarios, Validaciones, Ventana, Visitas) | Ya cumplen la convención |
 | `COT_0.Host/Assets/Fuentes`, `Assets/Imagenes` | Ya cumplen; las rutas `ms-appx:///Assets/...` no cambian |
@@ -148,6 +148,6 @@ En Web, los namespaces nuevos se importan una sola vez: `<Using>` en `COT_0.Web.
 | `COT_0.Web/Properties/launchSettings.json` | **Riesgoso**: `dotnet run` lo busca en `Properties/` |
 | `COT_0.Web/App.razor`, `_Imports.razor` | `_Imports.razor` solo aplica a su carpeta y las de abajo: tiene que estar en la raíz; `App` es el componente raíz |
 | `COT_0.Web/Program.cs`, `WebApp.cs` | Punto de entrada (standalone) y armado de la app que usa el Host |
-| `COT_0.Web/Models/` | Primer nivel válido (los archivos con varias clases se separan en el paso 6) |
+| `COT_0.Web/Models/` | Primer nivel válido (ya con una clase por archivo) |
 | `COT_0.Web/Services/Emotes/` | Ya agrupado; "emote" se usa igual en español |
 | `COT_0.Core/Models/`, `COT_0.Core/Services/` | Primer nivel válido, pocos archivos; los namespaces los usan Web y Host |

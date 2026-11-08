@@ -1,4 +1,4 @@
-# Pruebas manuales (Host WinUI)
+# Pruebas manuales (COT_0.Host, WinUI 3)
 
 No hay proyectos de prueba: esto se revisa a mano con `dotnet run --project COT_0.Host`.
 Antes: `dotnet build COT_0.Host` en 0 errores y 0 warnings.
@@ -9,7 +9,7 @@ Antes: `dotnet build COT_0.Host` en 0 errores y 0 warnings.
   `fondos\` (al menos una imagen y un video), `gifs\` (videos de Lain) y `manual\` (sonidos del manual).
 - `cloudflared` instalado (`winget install Cloudflare.cloudflared`) o su ruta en `Tunnel:CloudflaredPath`.
 - Para empezar de cero, borra `%LocalAppData%\COT_0\` (ahí viven `usuarios.json`, `visitas.json`, `sesiones.json` y `fondos.json`).
-- Cierra el Host WPF y cualquier `dotnet run` de la web: usan el mismo puerto 5050.
+- Cierra otra instancia del Host y cualquier `dotnet run` de la web: usan el mismo puerto 5050.
 
 ## 1. Registro con pregunta secreta
 
