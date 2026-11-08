@@ -6,6 +6,7 @@ using COT_0.HostWinUI.Services.Sala;
 using COT_0.HostWinUI.Services.Sesiones;
 using COT_0.HostWinUI.Services.Tiempo;
 using COT_0.HostWinUI.Services.Tunel;
+using COT_0.HostWinUI.Services.Ventana;
 using COT_0.HostWinUI.Services.Visitas;
 using COT_0.HostWinUI.Views.ModelosDeVista;
 using Microsoft.Extensions.Configuration;
@@ -30,6 +31,8 @@ public partial class App : Application
         Services = BuildServices();
 
         _window = new MainWindow();
+        // Cerrar la ventana con sala activa pregunta primero (como SALIR)
+        Services.GetRequiredService<CloseGuard>().Attach(_window);
         _window.Closed += (_, _) => Services.Dispose();
         _window.Activate();
 
@@ -58,9 +61,12 @@ public partial class App : Application
             .AddSingleton<RoomSession>()
             .AddSingleton<ClockService>()
             .AddSingleton<ConfirmDialogService>()
+            // Los crea RoomSession al abrir la sala, ya con la web arriba
             .AddSingleton<VisitWatcher>()
-            // Registrado pero todavía sin crear: se resuelve al migrar SalaPage (ver docs/ESTRUCTURA.md)
             .AddSingleton<SesionWatcher>()
+            .AddSingleton<QrService>()
+            .AddSingleton<SalaViewModel>()
+            .AddSingleton<CloseGuard>()
             .AddSingleton<ConnectedUsersViewModel>()
             .AddSingleton<DashboardViewModel>()
             .AddSingleton<EmotesViewModel>()
@@ -79,8 +85,6 @@ public partial class App : Application
         try
         {
             await Services.GetRequiredService<WebServerHost>().StartAsync();
-            // Desde ahora cada invitado que entra queda en visitas.json
-            Services.GetRequiredService<VisitWatcher>();
         }
         catch (Exception ex) when (ex is IOException or InvalidOperationException or System.Net.Sockets.SocketException)
         {

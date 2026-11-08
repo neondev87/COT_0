@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Encabezado de las pantallas internas (Sala, Emotes, Música): ← INICIO | TÍTULO, como el de la sala del WPF -->
+<!-- Encabezado de las pantallas internas (Sala, Emotes, Música): ← INICIO (o ← SALA) | TÍTULO, como el de la sala del WPF -->
 <UserControl x:Class="COT_0.HostWinUI.Views.Componentes.EncabezadoPantalla"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <StackPanel Orientation="Horizontal">
-        <Button Style="{StaticResource TextButton}" Padding="0,0,8,0" Click="OnBackClick"
+        <Button x:Name="BackButton" Style="{StaticResource TextButton}" Padding="0,0,8,0" Click="OnBackClick"
                 AutomationProperties.Name="{StaticResource Text.Header.Back}">
             <Button.KeyboardAccelerators>
                 <KeyboardAccelerator Key="Escape"/>
             </Button.KeyboardAccelerators>
             <StackPanel Orientation="Horizontal">
                 <FontIcon Glyph="&#xE72B;" FontFamily="{StaticResource FontIcons}" FontSize="14"/>
-                <TextBlock Text="{StaticResource Text.Header.Back}" Margin="10,0,0,0" VerticalAlignment="Center"
+                <TextBlock x:Name="BackLabel" Text="{StaticResource Text.Header.Back}" Margin="10,0,0,0" VerticalAlignment="Center"
                            FontFamily="{StaticResource FontCondensedMedium}" FontWeight="Normal" FontSize="14" CharacterSpacing="300"/>
             </StackPanel>
         </Button>

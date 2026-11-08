@@ -39,10 +39,8 @@ public partial class CloudflareTunnelService(IConfiguration configuration) : ITu
         catch (Win32Exception)
         {
             process.Dispose();
-            throw new InvalidOperationException(
-                $"No se encontró cloudflared (\"{executable}\").\n\n" +
-                "Instálalo con: winget install Cloudflare.cloudflared\n" +
-                "o configura la ruta en appsettings.json → Tunnel:CloudflaredPath.");
+            // FileNotFoundException: la sala lo muestra como "cloudflared no encontrado" (RoomOpenErrors)
+            throw new FileNotFoundException($"No se encontró cloudflared (\"{executable}\").", executable);
         }
 
         _process = process;

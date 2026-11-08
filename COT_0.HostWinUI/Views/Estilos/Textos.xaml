@@ -88,7 +88,33 @@
 
     <!-- Encabezado de las pantallas internas -->
     <x:String x:Key="Text.Header.Back">INICIO</x:String>
-    <x:String x:Key="Text.Room.Title">SALA</x:String>
+    <x:String x:Key="Text.Header.BackToRoom">SALA</x:String>
+
+    <!-- Sala -->
+    <x:String x:Key="Text.Room.Title">SALA ACTIVA</x:String>
+    <x:String x:Key="Text.Room.Live">EN VIVO</x:String>
+    <x:String x:Key="Text.Room.Scan">ESCANEA</x:String>
+    <x:String x:Key="Text.Room.QrMarkStart">C</x:String>
+    <x:String x:Key="Text.Room.QrMarkEnd">0</x:String>
+    <x:String x:Key="Text.Room.QrDescription">Código QR para entrar a la sala</x:String>
+    <x:String x:Key="Text.Room.UrlLabel">URL DE LA SALA</x:String>
+    <x:String x:Key="Text.Room.Copy">COPIAR</x:String>
+    <x:String x:Key="Text.Room.Copied">COPIADO</x:String>
+    <x:String x:Key="Text.Room.Count">Personas conectadas</x:String>
+    <x:String x:Key="Text.Room.Emotes">EMOTES</x:String>
+    <x:String x:Key="Text.Room.Music">MÚSICA</x:String>
+    <x:String x:Key="Text.Room.CloseHint">Al cerrar, todos salen de la sala</x:String>
+    <x:String x:Key="Text.Room.Close">CERRAR SALA</x:String>
+    <x:String x:Key="Text.Room.OpeningTitle">Abriendo la sala</x:String>
+    <x:String x:Key="Text.Room.OpeningMessage">Levantando el servidor y el túnel de cloudflared. Puede tardar unos segundos.</x:String>
+    <x:String x:Key="Text.Room.ErrorTitle">No se pudo abrir la sala</x:String>
+    <x:String x:Key="Text.Room.Retry">REINTENTAR</x:String>
+    <!-- {0} ruta de cloudflared · {1} URL local · {2} segundos de espera · {3} detalle -->
+    <x:String x:Key="Text.Room.Error.CloudflaredMissing">No se encontró cloudflared («{0}»). Instálalo con «winget install Cloudflare.cloudflared» o pon su ruta en Tunnel:CloudflaredPath de appsettings.json.</x:String>
+    <x:String x:Key="Text.Room.Error.TunnelTimeout">cloudflared no entregó el enlace en {2} segundos. Revisa tu internet e inténtalo de nuevo.</x:String>
+    <x:String x:Key="Text.Room.Error.TunnelFailed">El túnel de cloudflared se cerró antes de dar el enlace. Revisa tu internet e inténtalo de nuevo.</x:String>
+    <x:String x:Key="Text.Room.Error.PortInUse">El puerto de {1} ya está ocupado. Cierra la otra app que lo usa (¿el Host WPF o «dotnet run» de la web?) o cambia Web:Url en appsettings.json.</x:String>
+    <x:String x:Key="Text.Room.Error.ServerFailed">No se pudo levantar el servidor web: {3}</x:String>
 
     <!-- Emotes (7TV) -->
     <x:String x:Key="Text.Emotes.ScreenTitle">EMOTES</x:String>

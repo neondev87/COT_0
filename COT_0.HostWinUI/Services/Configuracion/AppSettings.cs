@@ -11,4 +11,7 @@ public record AppSettings(
     UiSettings Ui,
     PathsSettings Paths,
     AudioSettings Audio,
-    LinksSettings Links);
+    LinksSettings Links,
+    TunnelSettings Tunnel,
+    QrSettings Qr,
+    WebSettings Web);

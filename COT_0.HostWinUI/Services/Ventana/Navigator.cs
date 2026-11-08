@@ -28,6 +28,19 @@ public static class Navigator
 
     public static void ShowMusic() => Go<MusicaPage>();
 
+    /// <summary>True si la pantalla anterior es la sala (Emotes y Música abiertas desde ahí regresan a ella).</summary>
+    public static bool CameFromRoom => PreviousPage == typeof(SalaPage);
+
+    /// <summary>Regresa a la sala o al dashboard según de dónde viniste; nunca al login.</summary>
+    public static void GoBack()
+    {
+        if (_frame is { CanGoBack: true } && PreviousPage != typeof(LoginPage)) _frame.GoBack();
+        else ShowDashboard();
+    }
+
+    private static Type? PreviousPage =>
+        _frame is { BackStack.Count: > 0 } frame ? frame.BackStack[frame.BackStack.Count - 1].SourcePageType : null;
+
     private static void Go<TPage>() where TPage : Page
     {
         if (_frame is null || _frame.Content is TPage) return;

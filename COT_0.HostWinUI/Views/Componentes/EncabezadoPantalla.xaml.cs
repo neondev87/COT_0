@@ -1,5 +1,7 @@
-// Encabezado con regreso al dashboard (clic en INICIO o Esc) y el título de la pantalla
+// Encabezado con regreso (clic o Esc) a la pantalla anterior, sala o dashboard, y el título de la pantalla
+using COT_0.HostWinUI.Services.Textos;
 using COT_0.HostWinUI.Services.Ventana;
+using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -10,7 +12,11 @@ public sealed partial class EncabezadoPantalla : UserControl
     public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
         nameof(Title), typeof(string), typeof(EncabezadoPantalla), new PropertyMetadata(string.Empty));
 
-    public EncabezadoPantalla() => InitializeComponent();
+    public EncabezadoPantalla()
+    {
+        InitializeComponent();
+        Loaded += OnLoaded;
+    }
 
     public string Title
     {
@@ -18,5 +24,13 @@ public sealed partial class EncabezadoPantalla : UserControl
         set => SetValue(TitleProperty, value);
     }
 
-    private void OnBackClick(object sender, RoutedEventArgs e) => Navigator.ShowDashboard();
+    // En Loaded la navegación ya terminó y el BackStack dice de dónde viniste
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        var text = UiText.Get(Navigator.CameFromRoom ? "Text.Header.BackToRoom" : "Text.Header.Back");
+        BackLabel.Text = text;
+        AutomationProperties.SetName(BackButton, text);
+    }
+
+    private void OnBackClick(object sender, RoutedEventArgs e) => Navigator.GoBack();
 }
