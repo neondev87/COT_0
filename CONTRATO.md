@@ -162,7 +162,7 @@ _(Anotar acá: agente, qué se necesita en Core y por qué.)_
   - Fondos (WinUI): `BackgroundCatalog` vive en el Host WPF y WinUI no puede referenciarlo; quedó copiado y adaptado como `COT_0.Host/Services/Fondos/FondoCatalog` (async, sin `BackgroundOption` de WPF), más `FondoStore` (`fondos.json`), `FondoService`, `FondoImages` y `FondoPlayer`. Son clases concretas porque usan tipos de WinUI (`BitmapImage`, `MediaPlayer`). Si se quiere interfaz en Core: `IBackgroundCatalog` (`Task<IReadOnlyList<...>> ScanAsync()`) con un modelo de fondo sin tipos de vista. Config nueva en el `appsettings.json` del Host WinUI: `Background:HeavyVideoMegabytes`, `ThumbnailSize`, `StillSize`, `VeilOpacity`, `PickerVeilOpacity` y `Storage:BackgroundsFile`.
   - Manual (WinUI): `ManualAssets` vive en el Host WPF; quedó copiado y adaptado (async) en `COT_0.Host/Services/Manual`, y `ManualSound` reescrito con `Windows.Media.Playback`. `ManualDemoFactory` no se migró (el manual de WinUI ya no usa vistas de muestra). Config nueva: `Manual:StagesFolder`, `StageExtension`, `StageDecodeSize`, `NoticeCounts`; los textos pasaron a `Textos.xaml`.
   - `.gitignore` de la raíz (no es carpeta de ningún agente): la regla `musica/` tapa `COT_0.Host/Services/Musica/`. Pedido: cambiarla a `/musica/`. Mientras, `COT_0.Host/.gitignore` la vuelve a incluir.
-  - Cierre de la migración (Agente 0): borrar el Host WPF, renombrar `COT_0.HostWinUI` a `COT_0.Host` y agregarlo a `COT_0.sln`. Lista completa en `docs/PENDIENTES_LIMPIEZA.md`.
+  - Cierre de la migración (Agente 0): borrar el Host WPF, renombrar el proyecto WinUI a `COT_0.Host` y agregarlo a `COT_0.sln`. Lista completa en `docs/PENDIENTES_LIMPIEZA.md`.
   - Sesiones de invitados: `SesionWatcher` se entera de quién entra comparando `GetUsersAsync()` en cada `UsersChanged` (igual que `VisitWatcher`). Un evento `event Action<User>? UserJoined` en `IChatService` lo haría directo.
 
 ### Resueltos por el Agente 0 (cierre 08/11, rama `host-winui`)
@@ -175,7 +175,7 @@ _(Anotar acá: agente, qué se necesita en Core y por qué.)_
 | Config `Tunnel:*`, `Qr:*`, `Web:JoinPath`, `Audio:*`, `Ui:*` | **Aplicado** | Ya estaban; `Links:GitHub` es `Branding:RepoUrl` y `Texts:*` vive en `Views/Estilos/Textos.xaml` |
 | Borrar `IAuthService` | **Aplicado** | Nadie lo usaba fuera del WPF |
 | `.gitignore`: `musica/` → `/musica/` y borrar `COT_0.Host/.gitignore` | **Aplicado** | Reglas de medios ancladas en la raíz; `git check-ignore` confirma que el código no se ignora |
-| Borrar el WPF, renombrar `COT_0.HostWinUI` → `COT_0.Host` y agregarlo a `COT_0.sln` | **Aplicado** | Pasos 2 y 3 de `docs/REPORTE_CIERRE.md` |
+| Borrar el WPF, renombrar el proyecto WinUI → `COT_0.Host` y agregarlo a `COT_0.sln` | **Aplicado** | Pasos 2 y 3 de `docs/REPORTE_CIERRE.md` |
 | `event Action<User>? UserJoined` en `IChatService` | **Descartado** | Cambia cuándo cuenta una entrada: hoy `GuestWatcher` compara la lista y cuenta como nueva a quien sale y vuelve; con un evento en `AddUserAsync` habría que revisar reconexiones (`PresenceTracker`). No es solo mover código |
 | `IHostAccountService`, `IVisitLog`, `IGuestSessions` | **Descartado** | `UserService`, `VisitService` y `SesionService` son estáticos; pasarlos a interfaz cambia cómo se llaman en todos los ViewModels. Queda como mejora en `docs/REPORTE_CIERRE.md` |
 | `MusicLibrary`/`CoverLibrary` a Core e `IMusicPlayer` | **Descartado** | El duplicado se fue con el WPF; leen `AppConfig` del Host y `MusicService` usa `Windows.Media.Playback` |

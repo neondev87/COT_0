@@ -7,7 +7,7 @@ Rama `host-winui`, creada desde `winui-migration` (tag de respaldo `pre-cierre-w
 | 0. Rama `host-winui` y tag `pre-cierre-winui` | — |
 | 1. Comparación WPF → WinUI (anexo al final) | `4d8d387` |
 | 2. Borrado del WPF y código muerto | `394274f` |
-| 3. `COT_0.HostWinUI` → `COT_0.Host` y agregado a `COT_0.sln` | `44a8209` |
+| 3. Proyecto WinUI renombrado a `COT_0.Host` y agregado a `COT_0.sln` | `44a8209` |
 | 4. Carpetas (`Views`/`Services` con subcarpetas en español), `MAPA_CARPETAS.md` | `06a1655` |
 | 5. Pedidos de `CONTRATO.md`, `IBackgroundCatalog` en Core y `.gitignore` de medios (`/musica/`…) | `8ded1d1` |
 | 6. Una clase por archivo, comentarios `///` y `CUMPLIMIENTO.md` | `c0d3fe2` |
@@ -99,7 +99,14 @@ git checkout winui-migration           # o la rama de la migración
 git checkout -b respaldo pre-cierre-winui   # si quieres trabajar sobre ese estado
 ```
 
-En ese estado el WPF es `COT_0.Host` y el WinUI es `COT_0.HostWinUI`; el login del WPF usa los user-secrets `Host:User` / `Host:Password`, que siguen en esta PC.
+En ese estado el WPF es `COT_0.Host` y el WinUI está en su propia carpeta, con su nombre de entonces; el login del WPF usa los user-secrets `Host:User` / `Host:Password`, que siguen en esta PC.
+
+## Verificación final (08/11)
+
+- `dotnet build COT_0.sln --no-incremental`: **0 errores, 0 warnings**.
+- `COT_0.Host.exe` lanzado 8 s: proceso vivo, ventana "COT_0" abierta y Kestrel escuchando en el puerto 5050. La ventana arranca en `LoginPage` (`MainWindow.xaml.cs` → `Navigator.ShowLogin()`); no se tomó captura, así que el aspecto no se revisó.
+- Búsqueda en todo el repo: cero "HostWinUI"; "WPF" solo en notas históricas de `docs/` y `CONTRATO.md` (y la regla `*_wpftmp.csproj` estándar del `.gitignore`); rutas viejas (`Pages/`, `Hubs/`, `Options/`, `Controls/`…) solo en la tabla de movimientos de `MAPA_CARPETAS.md` y en el registro histórico.
+- `git check-ignore`: ignorados `musica/`, `fondos/`, `portadas/`, `gifs/`, `manual/` (y `manual/pasos/`), sus copias dentro de `COT_0.Host/`, `COT_0.Host/cache/` y `*.jsonl`. **No** ignorados: `COT_0.Host/Services/Musica`, `Services/Fondos`, `Services/Manual`, `Views/Componentes/Manual`, `COT_0.Web/Services/Manual` y `wwwroot/img/flags/musica.png`.
 
 ## Anexo: comparación WPF → WinUI antes de borrar (histórico)
 
