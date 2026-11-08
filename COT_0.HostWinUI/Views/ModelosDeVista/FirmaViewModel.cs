@@ -1,4 +1,4 @@
-// Firma Neondev del login: controles chicos de la música (silencio, volumen y qué suena); el logo va aparte (LogoNeondev)
+// Firma Neondev (login, dashboard y sala): barra de volumen bajo el logo; el logo va aparte (LogoNeondev)
 using COT_0.HostWinUI.Services.Musica;
 
 namespace COT_0.HostWinUI.Views.ModelosDeVista;

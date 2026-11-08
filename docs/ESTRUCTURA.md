@@ -78,10 +78,10 @@ COT_0.HostWinUI/
     │   ├── AvisoLain             Notificación de Lain estilo celular, con transición de opacidad
     │   ├── BotonManual.cs        Botón del manual: atajo con tecla dibujada (ENTER, →, ←, ESC) o botón redondeado
     │   ├── PanelEmotes           Set de 7TV, reportes y emotes quitados (+ EmoteStatusBrushes.cs: color del estado)
-    │   ├── ControlVolumen        Nota (silencio), barra de volumen y número; lo usan la firma y MusicaPage
-    │   ├── Firma                 LogoNeondev y la música que suena, en el login
+    │   ├── ControlVolumen        Nota (silencio), barra de volumen y número de MusicaPage
+    │   ├── Firma                 LogoNeondev y debajo la barra de volumen (login, dashboard y sala)
     │   ├── LogoNeondev           Avatar + "Neondev" con brillo de vidrio (rescatado del SignatureBadge del WPF); clic abre Branding:RepoUrl.
-    │   │                         Está en el login (dentro de Firma), en el dashboard (abajo del estado de la sala) y en la sala (abajo de EN VIVO)
+    │   │                         Va dentro de Firma; sus medidas (avatar 80, nombre 50.4) están como recursos arriba del XAML
     │   ├── MusicGlyphs.cs        Iconos de play/pausa, nota/silencio y la bocina del manual según el estado
     │   └── AvatarTones.cs        Tono del avatar de cada fila
     ├── Estilos/

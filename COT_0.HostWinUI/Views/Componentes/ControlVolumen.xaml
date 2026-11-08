@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Nota (clic = silencio), barra de volumen y número: lo usan la firma del login y MusicaPage -->
+<!-- Nota (clic = silencio), barra de volumen y número de MusicaPage (la firma usa solo la barra, con el mismo volumen) -->
 <UserControl x:Class="COT_0.HostWinUI.Views.Componentes.ControlVolumen"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

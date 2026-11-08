@@ -77,14 +77,17 @@ Antes: `dotnet build COT_0.HostWinUI` en 0 errores y 0 warnings.
 3. Errores con InfoBar amarillo: carpeta que no existe, carpeta vacía, archivo que no es audio renombrado a `.mp3` (salta a la siguiente).
 4. ← INICIO no corta la música.
 
-## 8. Firma del login
+## 8. Firma y volumen
 
-1. Arriba a la derecha: avatar, **Neondev**, nota, barra de volumen y la canción que suena. La música empieza sola.
-2. Mouse encima: el nombre pasa a rojo y el borde del avatar se aclara (sin brillo).
-3. Clic en el nombre → abre el repo de GitHub.
-4. Clic en la nota → silencio (icono tachado); mover la barra quita el silencio.
-5. El volumen y la canción son los mismos que en MÚSICA (cambia uno y revisa el otro).
-6. Con `Audio:MusicFolder` en una carpeta que no existe → la firma dice **Sin música**.
+1. Abre la app: no se oye nada. La barra de la firma está en 0 y en **05 MÚSICA** el número dice **0**; la canción marcada es **Audio_01** (en pausa).
+2. Sube el volumen en la barra de la firma → empieza **Audio_01** desde el inicio.
+3. Cierra la app con el volumen arriba y ábrela de nuevo → vuelve a arrancar en 0 y en silencio.
+4. Mueve la barra de la firma y abre MÚSICA: su barra y su número están en el mismo valor. Muévela ahí, regresa: la de la firma se movió igual.
+5. Login, dashboard (abajo del estado de la sala) y sala (a la derecha del contador): avatar y **Neondev** en una fila, centrados entre sí; el nombre completo, sin "…" ni encimarse con nada; debajo la barra roja, del ancho de la firma, sin botones de reproducir ni lista.
+6. En la sala, la firma queda a media altura de la fila del contador (ni pegada arriba ni abajo).
+7. El brillo de vidrio cruza el avatar sin salirse de las esquinas redondeadas.
+8. Mouse encima del logo: el nombre pasa a rojo y el borde del avatar se aclara. Clic → abre el repo de GitHub.
+9. Con `Audio:MusicFolder` en una carpeta que no existe → la firma dice **Sin música** en lugar de la barra.
 
 ## 9. Fondos
 

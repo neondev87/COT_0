@@ -10,7 +10,8 @@ namespace COT_0.HostWinUI.Services.Musica;
 /// <summary>
 /// Una sola instancia para toda la app: la firma del login y MusicaPage ven lo mismo.
 /// Los eventos del reproductor llegan de otro hilo; StateChanged y Failed siempre se avisan en el hilo de la UI.
-/// El volumen inicia en Audio:DefaultVolume y no se guarda entre sesiones.
+/// El volumen inicia siempre en Audio:DefaultVolume (0, silencio) y no se guarda entre sesiones.
+/// Con volumen 0 la canción queda cargada pero en pausa (no avanza a la siguiente); empieza al subir el volumen.
 /// </summary>
 public sealed class MusicService : IDisposable
 {
@@ -20,6 +21,7 @@ public sealed class MusicService : IDisposable
     private readonly MusicLibrary _library;
     private IReadOnlyList<string> _tracks = [];
     private int _failures;
+    private bool _playWhenAudible;
 
     public MusicService(MusicLibrary library)
     {
@@ -52,6 +54,7 @@ public sealed class MusicService : IDisposable
         set
         {
             _player.Volume = Math.Clamp(value, 0, MaxVolume) / MaxVolume;
+            if (_playWhenAudible && _player.Volume > 0) Play();
             Notify();
         }
     }
@@ -84,7 +87,7 @@ public sealed class MusicService : IDisposable
     {
         if (Current is null) return;
         if (IsPlaying) _player.Pause();
-        else _player.Play();
+        else Play();
     }
 
     public Task NextAsync() => MoveAsync(1);
@@ -125,13 +128,24 @@ public sealed class MusicService : IDisposable
     {
         SetCurrent(track);
         _player.Source = MediaSource.CreateFromUri(new Uri(Path.GetFullPath(track)));
+        if (_player.Volume > 0) Play();
+        else _playWhenAudible = true;
+    }
+
+    private void Play()
+    {
+        _playWhenAudible = false;
         _player.Play();
     }
 
     private void SetCurrent(string? track)
     {
         Current = track;
-        if (track is null) _player.Source = null;
+        if (track is null)
+        {
+            _player.Source = null;
+            _playWhenAudible = false;
+        }
         Notify();
     }
 

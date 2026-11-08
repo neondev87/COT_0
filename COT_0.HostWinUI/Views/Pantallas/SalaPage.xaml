@@ -109,7 +109,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Contador a la izquierda; logo Neondev arriba a la derecha, un poco abajo de EN VIVO (columnas: no se enciman) -->
+            <!-- Contador a la izquierda; firma Neondev a la derecha, centrada a media altura de la fila (columnas: no se enciman) -->
             <Grid ColumnSpacing="24">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -122,7 +122,7 @@
                         <TextBlock Text="{StaticResource Text.Room.Count}" Margin="0,8,0,0" Style="{StaticResource CountLabelText}"/>
                     </StackPanel>
                 </StackPanel>
-                <componentes:LogoNeondev Grid.Column="1" VerticalAlignment="Top"/>
+                <componentes:Firma Grid.Column="1" VerticalAlignment="Center"/>
             </Grid>
 
             <componentes:ListaConectados Grid.Row="1" Margin="0,18"/>

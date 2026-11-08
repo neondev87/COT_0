@@ -79,7 +79,7 @@ Inicia sesión, toca **GENERAR QR** y comparte el código. Para probar solo la w
 - **Imágenes**: se reducen en el navegador antes de subirse, con vista previa. El servidor valida el formato y el tamaño, y hay un tope total por sala.
 - **Notas de voz**: se graban desde el celular. Si llegan en WebM/Opus se convierten a WAV en el servidor (Concentus, sin ffmpeg) para que suenen también en iPhone. Se sirven con soporte de `Range`, que Safari exige.
 - **Emotes de 7TV**: el host elige el set (ID, URL o `global`) en el panel EMOTES. Los invitados los usan desde el picker o escribiendo `:`, y pueden reportar uno; el host decide si lo quita, lo ignora o lo restaura.
-- **Música y portadas**: suena la música de `musica\` en orden y en loop, al 25 % de volumen al iniciar. El selector de canciones (estilo rofi) muestra cada canción con su portada; si no tiene, usa otra disponible. Si la carpeta está vacía, "Subir música" copia ahí los archivos que elijas.
+- **Música y portadas**: suena la música de `musica\` en orden y en loop, empezando por Audio_01; la app abre en silencio (volumen 0) y suena al subir el volumen. El selector de canciones (estilo rofi) muestra cada canción con su portada; si no tiene, usa otra disponible. Si la carpeta está vacía, "Subir música" copia ahí los archivos que elijas.
 - **Fondos**: "Cambiar fondo" muestra las miniaturas de `fondos\`. El fondo elegido se ve en el dashboard y en la sala; los videos se pausan si minimizas la ventana.
 - **Manual de Lain**: guía paso a paso en el Host, con Lain en video, avisos tipo notificación y estática de TV. Los invitados tienen su propio manual en `/manual` (enlace en `/join`).
 

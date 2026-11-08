@@ -58,8 +58,8 @@
                            Margin="12,0,0,0" Foreground="{StaticResource Text70Brush}"/>
             </StackPanel>
             <Rectangle Width="180" Height="1" Margin="0,10,0,0" HorizontalAlignment="Right" Fill="{StaticResource AccentFadeInBrush}"/>
-            <!-- Logo Neondev con brillo de vidrio, un poco abajo del estado de la SALA; abre el repositorio -->
-            <componentes:LogoNeondev Margin="0,28,0,0" HorizontalAlignment="Right"/>
+            <!-- Firma Neondev (logo con brillo de vidrio + volumen), un poco abajo del estado de la SALA -->
+            <componentes:Firma Margin="0,28,0,0" HorizontalAlignment="Right"/>
         </StackPanel>
 
         <!-- Menú en diagonal: cada tarjeta 26 px más a la derecha; entran desde la izquierda una tras otra -->

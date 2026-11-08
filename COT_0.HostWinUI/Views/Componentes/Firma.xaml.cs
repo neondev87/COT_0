@@ -1,4 +1,4 @@
-// Firma del login: toma su ViewModel del contenedor de servicios (comparte MusicService con MusicaPage)
+// Firma Neondev (login, dashboard y sala): toma su ViewModel del contenedor de servicios (comparte MusicService con MusicaPage)
 using COT_0.HostWinUI.Views.ModelosDeVista;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;

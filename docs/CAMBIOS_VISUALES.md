@@ -223,3 +223,16 @@ Las portadas reales miden 1024×1024 y 736×920: nunca hace falta ampliar, así 
 | Lugares: login (arriba a la derecha) y dashboard (abajo a la derecha, sobre el pie) | Login (dentro de `Firma`, mismo lugar), dashboard **arriba a la derecha, abajo del estado de la SALA** y sala **arriba a la derecha, abajo de EN VIVO** (donde se pidió). En el WPF del dashboard estaba abajo; si se quiere ahí, es mover una línea |
 
 No hubo que reconstruir nada pesado: el original no usaba shader ni blur, solo un degradado animado. En la migración anterior se había quitado ("App ligera"); ahora volvió.
+
+### Firma: tamaños, alineación y volumen
+
+| Antes | Ahora |
+|---|---|
+| Avatar de 64 px, esquinas de 14 | **80 px** (64 × 1.25) y esquinas de **17.5** (14 × 1.25); el brillo recorre de -80 a 80 y el `Border` redondeado lo sigue recortando |
+| "Neondev" a 36 px (`LineHeight` 36, `Margin` 16,2 y `VerticalAlignment="Top"`) | **50.4 px** (36 × 1.4), `VerticalAlignment="Center"`, `TextLineBounds="Tight"` (la caja es la de las letras, así el centro coincide con el del avatar), sin márgenes verticales y con `TextTrimming` por si falta espacio |
+| Avatar y nombre en un `StackPanel` horizontal | `Grid` de dos columnas `Auto` con `ColumnSpacing` 16, los dos centrados en vertical |
+| Medidas repetidas en la plantilla | Recursos `LogoAvatarSize`, `LogoAvatarRadius`, `LogoNameFontSize`, `LogoShineStart` y `LogoShineEnd` arriba de `LogoNeondev.xaml` |
+| Firma del login: nota, barra de 130 px, número y nombre de la canción | Solo la barra de volumen, roja (`VolumeSlider` + acento del proyecto), del ancho del logo. Reproducir, siguiente y lista quedan en MÚSICA |
+| Dashboard y sala: solo `LogoNeondev` | `Firma` completa (logo + barra) en login, dashboard y sala. En la sala va centrada a media altura de la fila del contador (antes arriba) |
+
+Un solo volumen: las tres firmas y MÚSICA leen el mismo `MusicService`. Arranca siempre en 0 (`Audio:DefaultVolume`, no se guarda entre sesiones) con `Audio_01.mp3` (`Audio:DefaultFile`) cargada en pausa; empieza a sonar al subir el volumen, así no avanza a otra canción mientras está en silencio.

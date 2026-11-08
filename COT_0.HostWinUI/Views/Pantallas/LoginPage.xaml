@@ -70,7 +70,7 @@
             </Rectangle>
         </Grid>
 
-        <!-- Firma con la música, arriba a la derecha (misma posición que en el WPF) -->
+        <!-- Firma con el volumen, arriba a la derecha (misma posición que en el WPF) -->
         <componentes:Firma Margin="0,44,32,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
 
         <!-- Formulario centrado; cada bloque entra subiendo 18 px, uno tras otro -->
