@@ -13,7 +13,8 @@ namespace COT_0.HostWinUI.Views.ModelosDeVista;
 
 /// <summary>
 /// Misma lógica que el ManualViewModel del WPF (pasos, fases, despedida, silencio) pero como página:
-/// EnterAsync al cargar y Leave al salir. Opacidades en lugar de DataTrigger; FlashOpacity es el destello
+/// EnterAsync al cargar y Leave al salir. Phase llega a la vista de ejemplo para sus resaltados.
+/// Opacidades en lugar de DataTrigger; FlashOpacity es el destello
 /// corto que sustituye a la pérdida de señal (SignalLossLayer). Archivos que faltan: aviso en InfoBar.
 /// </summary>
 public partial class ManualViewModel : ObservableObject
@@ -43,6 +44,9 @@ public partial class ManualViewModel : ObservableObject
     private double _flashOpacity;
 
     [ObservableProperty]
+    private int _phase;
+
+    [ObservableProperty]
     private bool _isErrorOpen;
 
     [ObservableProperty]
@@ -56,7 +60,7 @@ public partial class ManualViewModel : ObservableObject
         _timeline = timeline;
         _images = images;
         Steps = ManualStepViewModel.FromTexts();
-        timeline.PhaseChanged += OnPhaseChanged;
+        timeline.PhaseChanged += OnTimelinePhase;
     }
 
     public IReadOnlyList<ManualStepViewModel> Steps { get; }
@@ -129,8 +133,9 @@ public partial class ManualViewModel : ObservableObject
 
     partial void OnIsMutedChanged(bool value) => _sound.IsMuted = value;
 
-    private void OnPhaseChanged(int phase)
+    private void OnTimelinePhase(int phase)
     {
+        Phase = phase;
         if (Current.Apply(phase)) _sound.PlayNotice();
     }
 
@@ -147,13 +152,14 @@ public partial class ManualViewModel : ObservableObject
         FlashOpacity = 1;
         await Task.Delay(AppConfig.Settings.Manual.StepChangeMilliseconds);
         Current.Apply(0);
+        Phase = 0;
         Index = index;
         IsLeaving = false;
         FlashOpacity = 0;
         _timeline.Start(Current.LastPhase);
     }
 
-    // Capturas opcionales: un paso sin la suya muestra la lista de avisos
+    // Capturas opcionales: un paso sin la suya muestra su vista de ejemplo
     private async Task LoadStagesAsync()
     {
         foreach (var step in Steps.Where(s => s.Stage is null))

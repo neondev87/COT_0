@@ -71,26 +71,26 @@
             </StackPanel.ChildrenTransitions>
             <componentes:TarjetaMenu Style="{StaticResource TarjetaMenuStyle}" Number="01"
                                      Content="{x:Bind ViewModel.QrTitle, Mode=OneWay}" Subtitle="{x:Bind ViewModel.QrSubtitle, Mode=OneWay}"
-                                     Icon="M3,3 H10 V10 H3 Z M14,3 H21 V10 H14 Z M3,14 H10 V21 H3 Z M14,14 H17 V17 H14 Z M20,14 V14.01 M14,20 H14.01 M17,20 H21 V17"
+                                     Icon="{StaticResource MenuIcon.Qr}"
                                      Command="{x:Bind ViewModel.ShowRoomCommand}"/>
             <componentes:TarjetaMenu Style="{StaticResource TarjetaMenuStyle}" Number="02" Margin="26,0,0,0" Command="{x:Bind ViewModel.ShowBackgroundsCommand}"
                                      Content="{StaticResource Text.Dashboard.BackgroundTitle}" Subtitle="{StaticResource Text.Dashboard.BackgroundSubtitle}"
-                                     Icon="M4,4 H20 A1,1 0 0 1 21,5 V19 A1,1 0 0 1 20,20 H4 A1,1 0 0 1 3,19 V5 A1,1 0 0 1 4,4 Z M7.4,9.5 A1.6,1.6 0 1 0 10.6,9.5 A1.6,1.6 0 1 0 7.4,9.5 Z M21,16 L15.5,10.5 L5,20"/>
+                                     Icon="{StaticResource MenuIcon.Background}"/>
             <componentes:TarjetaMenu Style="{StaticResource TarjetaMenuStyle}" Number="03" Margin="52,0,0,0"
                                      Content="{StaticResource Text.Dashboard.ManualTitle}" Subtitle="{StaticResource Text.Dashboard.ManualSubtitle}"
-                                     Icon="M4,4.5 A1.5,1.5 0 0 1 5.5,3 H20 V18 H5.5 A1.5,1.5 0 0 0 4,19.5 Z M4,19.5 A1.5,1.5 0 0 0 5.5,21 H20 M9,8 H16 M9,11 H14"
+                                     Icon="{StaticResource MenuIcon.Manual}"
                                      Command="{x:Bind ViewModel.ShowManualCommand}"/>
             <componentes:TarjetaMenu Style="{StaticResource TarjetaMenuStyle}" Number="04" Margin="78,0,0,0"
                                      Content="{StaticResource Text.Dashboard.EmotesTitle}" Subtitle="{StaticResource Text.Dashboard.EmotesSubtitle}"
-                                     Icon="M12,3 A9,9 0 1 0 12,21 A9,9 0 1 0 12,3 Z M8.5,14 C9.5,15.6 14.5,15.6 15.5,14 M9,9.5 V10 M15,9.5 V10"
+                                     Icon="{StaticResource MenuIcon.Emotes}"
                                      Command="{x:Bind ViewModel.ShowEmotesCommand}"/>
             <componentes:TarjetaMenu Style="{StaticResource TarjetaMenuStyle}" Number="05" Margin="104,0,0,0"
                                      Content="{StaticResource Text.Dashboard.MusicTitle}" Subtitle="{StaticResource Text.Dashboard.MusicSubtitle}"
-                                     Icon="M9,18 V5 L20,3 V16 M9,18 A3,3 0 1 1 3,18 A3,3 0 1 1 9,18 Z M20,16 A3,3 0 1 1 14,16 A3,3 0 1 1 20,16 Z"
+                                     Icon="{StaticResource MenuIcon.Music}"
                                      Command="{x:Bind ViewModel.ShowMusicCommand}"/>
             <componentes:TarjetaMenu Style="{StaticResource TarjetaMenuStyle}" Number="06" Margin="130,0,0,0"
                                      Content="{StaticResource Text.Dashboard.ExitTitle}" Subtitle="{StaticResource Text.Dashboard.ExitSubtitle}"
-                                     Icon="M9,21 H5 A2,2 0 0 1 3,19 V5 A2,2 0 0 1 5,3 H9 M16,17 L21,12 L16,7 M21,12 H9"
+                                     Icon="{StaticResource MenuIcon.Exit}"
                                      Command="{x:Bind ViewModel.LogoutCommand}"/>
         </StackPanel>
 

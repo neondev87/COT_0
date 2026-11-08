@@ -91,6 +91,7 @@ public partial class App : Application
             .AddSingleton<ManualVideo>()
             .AddTransient<ManualTimeline>()
             .AddTransient<ManualViewModel>()
+            .AddTransient<ManualDemoViewModel>()
             .BuildServiceProvider();
     }
 

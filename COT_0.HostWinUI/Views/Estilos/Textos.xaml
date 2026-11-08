@@ -198,9 +198,8 @@
     <x:String x:Key="Text.ExitDialog.Confirm">CERRAR SALA Y SALIR</x:String>
     <x:String x:Key="Text.ExitDialog.Cancel">CANCELAR</x:String>
 
-    <!-- Manual de Lain (el paso 1 no tiene título) -->
+    <!-- Manual de Lain: cada paso explica su vista de ejemplo; el aviso N va con el resaltado N -->
     <x:String x:Key="Text.Manual.ScreenTitle">MANUAL</x:String>
-    <x:String x:Key="Text.Manual.Heading">Bienvenido a COT_0</x:String>
     <x:String x:Key="Text.Manual.KeyStart">ENTER</x:String>
     <x:String x:Key="Text.Manual.Start">empezar</x:String>
     <x:String x:Key="Text.Manual.KeyNext">→</x:String>
@@ -221,37 +220,39 @@
     <x:String x:Key="Text.Manual.Error.Missing">Faltan archivos del manual: {0}. Sigue sin ellos; revisa Paths:MediaRoot y Manual:* en appsettings.json.</x:String>
     <x:String x:Key="Text.Manual.Error.Unreadable">No se pudo abrir «{0}». El manual sigue sin ese archivo.</x:String>
 
-    <x:String x:Key="Text.Manual.Step1.Text">Un chat grupal para platicar en vivo con todo el salón.</x:String>
-    <x:String x:Key="Text.Manual.Step1.Notice1">Hola, soy Lain. Te acompaño en este recorrido.</x:String>
-    <x:String x:Key="Text.Manual.Step1.Notice2">Todo empieza con una sala y un código QR.</x:String>
-    <x:String x:Key="Text.Manual.Step1.Notice3">Son seis pasos. Presiona ENTER para empezar.</x:String>
+    <x:String x:Key="Text.Manual.Step1.Title">Abre la app y entra</x:String>
+    <x:String x:Key="Text.Manual.Step1.Text">Al abrir COT_0 ves el acceso del host: desde aquí manejas la sala.</x:String>
+    <x:String x:Key="Text.Manual.Step1.Notice1">Hola, soy Lain. Te enseño COT_0 en seis pasos. Esta es la pantalla de acceso.</x:String>
+    <x:String x:Key="Text.Manual.Step1.Notice2">Escribe tu usuario y tu contraseña. Si es tu primera vez, crea tu cuenta.</x:String>
+    <x:String x:Key="Text.Manual.Step1.Notice3">Toca ENTRAR y llegas al inicio. Aquí, ENTER te lleva al siguiente paso.</x:String>
 
-    <x:String x:Key="Text.Manual.Step2.Title">Generar el QR y entrar a la sala</x:String>
-    <x:String x:Key="Text.Manual.Step2.Text">El host crea la sala. Tú entras desde tu celular.</x:String>
-    <x:String x:Key="Text.Manual.Step2.Notice1">El host inicia sesión y toca GENERAR QR.</x:String>
-    <x:String x:Key="Text.Manual.Step2.Notice2">Tú escaneas el código con la cámara de tu celular.</x:String>
-    <x:String x:Key="Text.Manual.Step2.Notice3">Elige tu nombre, tu foto y la bandera de tu facultad. Luego entra.</x:String>
+    <x:String x:Key="Text.Manual.Step2.Title">El inicio: genera el QR</x:String>
+    <x:String x:Key="Text.Manual.Step2.Text">El inicio muestra la hora, el estado de la sala y el menú.</x:String>
+    <x:String x:Key="Text.Manual.Step2.Notice1">Arriba a la derecha ves si hay sala. Al entrar está inactiva.</x:String>
+    <x:String x:Key="Text.Manual.Step2.Notice2">Toca 01 GENERAR QR. La app levanta el servidor y el túnel; tarda unos segundos.</x:String>
+    <x:String x:Key="Text.Manual.Step2.Notice3">El resto del menú: fondo, este manual, emotes, música y salir.</x:String>
 
-    <x:String x:Key="Text.Manual.Step3.Title">El chat: texto, imágenes y notas de voz</x:String>
-    <x:String x:Key="Text.Manual.Step3.Text">Aquí platicas con todos, en vivo.</x:String>
-    <x:String x:Key="Text.Manual.Step3.Notice1">Escribe tu mensaje y presiona ENTER para enviarlo.</x:String>
-    <x:String x:Key="Text.Manual.Step3.Notice2">Con el botón de imagen compartes fotos.</x:String>
-    <x:String x:Key="Text.Manual.Step3.Notice3">Nota de voz: toca el micrófono para grabar. Toca otra vez para enviarla.</x:String>
+    <x:String x:Key="Text.Manual.Step3.Title">Comparte el QR o el enlace</x:String>
+    <x:String x:Key="Text.Manual.Step3.Text">Con la sala abierta aparecen el QR y el enlace para entrar desde el celular.</x:String>
+    <x:String x:Key="Text.Manual.Step3.Notice1">Tus invitados escanean el QR con la cámara de su celular.</x:String>
+    <x:String x:Key="Text.Manual.Step3.Notice2">¿Alguien no puede escanear? Toca COPIAR y mándale el enlace.</x:String>
+    <x:String x:Key="Text.Manual.Step3.Notice3">EN VIVO y el tiempo te avisan que la sala sigue abierta.</x:String>
 
-    <x:String x:Key="Text.Manual.Step4.Title">Emotes y cómo reportarlos</x:String>
-    <x:String x:Key="Text.Manual.Step4.Text">Los emotes se mueven, como en Kick y Twitch.</x:String>
-    <x:String x:Key="Text.Manual.Step4.Notice1">Abre el panel de emotes y toca uno para enviarlo.</x:String>
-    <x:String x:Key="Text.Manual.Step4.Notice2">¿Ves un emote ofensivo? Tócalo y elige Reportar.</x:String>
+    <x:String x:Key="Text.Manual.Step4.Title">Ve quién está conectado</x:String>
+    <x:String x:Key="Text.Manual.Step4.Text">Cada invitado elige su nombre, su foto y su facultad, y aparece en tu lista.</x:String>
+    <x:String x:Key="Text.Manual.Step4.Notice1">El número grande cuenta a las personas conectadas.</x:String>
+    <x:String x:Key="Text.Manual.Step4.Notice2">En la lista ves quién entró y hace cuánto. La ✕ saca a alguien de la sala.</x:String>
+    <x:String x:Key="Text.Manual.Step4.Notice3">Al terminar, CERRAR SALA saca a todos y apaga el túnel.</x:String>
 
-    <x:String x:Key="Text.Manual.Step5.Title">Música y fondos</x:String>
-    <x:String x:Key="Text.Manual.Step5.Text">La música y el fondo ambientan la sala.</x:String>
-    <x:String x:Key="Text.Manual.Step5.Notice1">En el inicio, 05 MÚSICA abre la biblioteca con sus portadas.</x:String>
-    <x:String x:Key="Text.Manual.Step5.Notice2">02 CAMBIAR FONDO pone una imagen o un video detrás del inicio y la sala.</x:String>
-    <x:String x:Key="Text.Manual.Step5.Notice3">La música arranca bajito, al 25 % de volumen.</x:String>
+    <x:String x:Key="Text.Manual.Step5.Title">Emotes de 7TV</x:String>
+    <x:String x:Key="Text.Manual.Step5.Text">En EMOTES eliges los emotes animados que todos usan en el chat.</x:String>
+    <x:String x:Key="Text.Manual.Step5.Notice1">Pega el ID o la URL de un set de 7TV y toca APLICAR.</x:String>
+    <x:String x:Key="Text.Manual.Step5.Notice2">Si un invitado reporta un emote, aparece en REPORTES. Tú decides: QUITAR o IGNORAR.</x:String>
+    <x:String x:Key="Text.Manual.Step5.Notice3">Un emote quitado se ve como texto. RESTAURAR lo regresa.</x:String>
 
-    <x:String x:Key="Text.Manual.Step6.Title">Cerrar la sala y salir</x:String>
-    <x:String x:Key="Text.Manual.Step6.Text">Cuando acaben, el host cierra la sala.</x:String>
-    <x:String x:Key="Text.Manual.Step6.Notice1">El host toca CERRAR SALA o SALIR cuando termina la sesión.</x:String>
-    <x:String x:Key="Text.Manual.Step6.Notice2">Con SALIR, elige «Cerrar sala y salir» para apagar la sala y el túnel.</x:String>
-    <x:String x:Key="Text.Manual.Step6.Notice3">Los demás solo cierran la pestaña. Nos vemos en la Wired.</x:String>
+    <x:String x:Key="Text.Manual.Step6.Title">Música y fondo</x:String>
+    <x:String x:Key="Text.Manual.Step6.Text">En MÚSICA eliges qué suena mientras platican.</x:String>
+    <x:String x:Key="Text.Manual.Step6.Notice1">Toca una canción de la biblioteca para ponerla.</x:String>
+    <x:String x:Key="Text.Manual.Step6.Notice2">Cambia de canción con las flechas y sube el volumen: la música arranca en silencio.</x:String>
+    <x:String x:Key="Text.Manual.Step6.Notice3">Con ← INICIO regresas al menú: ahí cambias el fondo o sales. Nos vemos en la Wired.</x:String>
 </ResourceDictionary>

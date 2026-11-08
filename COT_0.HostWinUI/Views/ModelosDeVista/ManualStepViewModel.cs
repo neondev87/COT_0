@@ -1,4 +1,4 @@
-// Un paso del manual: número, título, texto, sus notificaciones y su captura opcional
+// Un paso del manual: número, título, texto, sus notificaciones y su captura opcional (si no hay, la vista de ejemplo)
 using COT_0.HostWinUI.Services.Configuracion;
 using COT_0.HostWinUI.Services.Textos;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -9,7 +9,8 @@ namespace COT_0.HostWinUI.Views.ModelosDeVista;
 /// <summary>
 /// Copia del WPF: la notificación i entra en la fase 2i+1 y sale en la 2i+2; la última se queda hasta cambiar de paso.
 /// Los textos salen de Textos.xaml (Text.Manual.StepN.*) y cuántos avisos hay, de Manual:NoticeCounts.
-/// Stage reemplaza a la vista de muestra con resaltados del WPF: una captura de manual\pasos o nada.
+/// La vista de ejemplo del paso la pone VistaEjemploManual según Number; Stage es la captura opcional de manual\pasos,
+/// que si existe se muestra en su lugar.
 /// </summary>
 public partial class ManualStepViewModel : ObservableObject
 {

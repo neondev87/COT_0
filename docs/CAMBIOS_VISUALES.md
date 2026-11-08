@@ -155,14 +155,49 @@ Lo que WinUI 3 no soporta igual que WPF y cómo se simplificó. Prioridad: que a
 | Golpes de estática cortos en cada ráfaga (`ManualSound.PlayStaticHit`) | Quitados | Iban atados a `SignalLossLayer` |
 | Niebla con `BlurEffect`, 5 franjas de interferencia y línea que bajan a distinto ritmo | **Quitadas**; queda el degradado azul noche, la viñeta y un solo barrido tenue (Storyboard de traslación, 14 s) | Sin blur en WinUI; la traslación corre en el compositor |
 | Scanlines (`DrawingBrush` en mosaico de 3 px) encima de todo | Quitadas | WinUI 3 no tiene `DrawingBrush` |
-| Ejemplo de cada paso con las **vistas reales** (Dashboard, Sala, SongPicker, diálogo) llenas con datos de muestra (`ManualDemoFactory`) y recuadros con flecha que las seguían (`ManualHighlight`, `ManualCue`) | Captura opcional por paso (`manual\pasos\pasoN.png`); sin captura, la **lista de avisos del paso**: los que ya salieron se encienden | Instanciar 6 pantallas de muestra dentro de un `Viewbox` era pesado y obligaba a que cada ViewModel aceptara datos falsos; las páginas de WinUI toman su ViewModel del contenedor. `ManualHighlight` buscaba elementos por nombre en el árbol en cada `LayoutUpdated` |
+| Ejemplo de cada paso con las **vistas reales** (Dashboard, Sala, SongPicker, diálogo) llenas con datos de muestra (`ManualDemoFactory`) y recuadros con flecha que las seguían (`ManualHighlight`, `ManualCue`) | **Recuperado** (ver "Manual: vistas de ejemplo"): una réplica ligera por pantalla (`VistaEjemplo*`) con datos de `Manual:Demo` y `ResaltadoManual` al lado de cada elemento. La captura `manual\pasos\pasoN.png` queda como alternativa | Las páginas reales toman su ViewModel del contenedor (sala, túnel, música reales); las réplicas usan los mismos estilos y textos sin tocar nada de eso |
 | Notificación estilo iPhone con `DropShadowEffect`, escala 0.96→1 y caída de 24 px (`DataTrigger` + Storyboard) | Componente `AvisoLain` igual de forma y colores, sin sombra; entra y sale con `OpacityTransition` | WinUI 3 no tiene `DropShadowEffect`; la transición implícita corre en el compositor |
 | Paso que sale con fundido y entra subiendo 18 px (`EntryAnimation`) | Fundido de 0.25 s con `OpacityTransition` | Sin `EventTrigger`/`DataTrigger`; un solo efecto |
 | Atajos con `KeyBinding` en la ventana | `KeyboardAccelerators` de la página (ENTER, →, ←, ESC); el ← INICIO del encabezado no se queda con Esc | Lo nativo de WinUI |
 | Keycaps y botones con `ControlTemplate.Triggers` | `BotonManual` (un `Button` con tecla opcional) y `VisualStateManager` | WinUI 3 no tiene `Trigger` en plantillas; un solo control para atajos y botones |
 | Icono de bocina con `Path` y `DataTrigger` (ondas tachadas) | Glifo de Segoe Fluent Icons (`MusicGlyphs.Speaker`) | Igual que la música |
-| Paso 5 "Música y selector de canciones" (bocina de la firma y `SongPicker`) | "Música y fondos" (tarjetas 05 MÚSICA y 02 CAMBIAR FONDO) | En WinUI el selector de canciones es una pantalla y los fondos también |
+| Paso 5 "Música y selector de canciones" (bocina de la firma y `SongPicker`) | Paso 6 "Música y fondo" con la réplica de MÚSICA | En WinUI el selector de canciones es una pantalla y los fondos también |
 | Textos del manual en `appsettings.json` (`Texts:Manual`) | En `Textos.xaml` (`Text.Manual.*`); en `appsettings.json` solo rutas, volúmenes y tiempos | Igual que el resto de la app WinUI |
+
+### Manual: vistas de ejemplo (recuperado del WPF)
+
+Antes de esto el manual solo mostraba el texto de Lain y una lista de avisos. Ahora cada paso tiene, a la derecha, la pantalla que explica
+(réplica quieta a 1280×720 escalada con `Viewbox`, como el `ManualStepView` del WPF), y cada aviso de Lain enciende su resaltado.
+
+| Paso (WPF) | Paso (WinUI) | Vista de ejemplo | Resaltados (aviso 1 / 2 / 3) |
+|---|---|---|---|
+| 1 Bienvenida (dashboard, GENERAR QR) | 1 Abre la app y entra | `VistaEjemploLogin` | título / usuario y contraseña / ENTRAR |
+| 2 QR y entrada (sala) | 2 El inicio: genera el QR | `VistaEjemploInicio` (TarjetaMenu reales) | ESTADO / 01 GENERAR QR / tarjetas 02-06 |
+| 3 El chat (sala) | 3 Comparte el QR o el enlace | `VistaEjemploSala` | QR / URL + COPIAR / EN VIVO |
+| — | 4 Ve quién está conectado | `VistaEjemploSala` (ListaConectados real) | contador / lista / CERRAR SALA |
+| 4 Emotes (bloque de la sala) | 5 Emotes de 7TV | `VistaEjemploEmotes` | set + APLICAR / REPORTES / QUITADOS |
+| 5 Música (SongPicker) | 6 Música y fondo | `VistaEjemploMusica` | biblioteca / controles + volumen / ← INICIO |
+| 6 Salir (SALIR + diálogo) | dentro de 4 y 6 (CERRAR SALA, ← INICIO) | — | — |
+
+Los textos se reescribieron para contar el recorrido real del host (abrir, entrar, GENERAR QR, compartir, conectados, emotes, música);
+el chat del invitado ya no tiene paso propio porque el host no lo ve. "Bienvenido a COT_0" (`Text.Manual.Heading`) se quitó para dejarle
+alto a la vista; el paso 1 ahora tiene título.
+
+| WPF | WinUI 3 | Motivo |
+|---|---|---|
+| `ManualHighlight` buscaba el elemento por `x:Name` en el árbol en cada `LayoutUpdated` | `ResaltadoManual` va en la misma celda que el elemento, con margen negativo | Sin recorrer el árbol ni recalcular en cada layout |
+| Recuadro verde azulado con `DropShadowEffect`, pulso y flecha que se movía | Borde rojo del proyecto (3 px) + halo de 2 px que late con opacidad y escala (`Storyboard`, corre en el compositor); **sin flecha** | Sin sombras; el rojo es el acento de la app |
+| `ManualCue.Phase` heredada por todo el escenario | `VistaEjemplo.Phase` → `x:Bind` a cada `ResaltadoManual` (From/To, y `OnlyInStep` en la sala que sirve a dos pasos) | WinUI no hereda propiedades adjuntas |
+| `ManualDemoFactory` con el QR real de la URL de muestra | `ManualDemoViewModel` con `Manual:Demo`; el QR es un `Path` de adorno que no se puede escanear | Nada de QR real ni red |
+| Portadas reales en la muestra del SongPicker | Recuadro con nota (el de "sin portada") | Las portadas son archivos locales del host |
+| Miniaturas de emotes vacías | Recuadro con la inicial del emote | `EmoteRowViewModel` descarga de 7TV |
+| Firma (logo + volumen) en las muestras | Quitada de las réplicas | Su barra está atada al volumen real |
+| `EncabezadoPantalla` | `EncabezadoEjemplo` (solo dibujo) | El real se queda con Esc y navega |
+| `IsEnabled=False` en el escenario | `IsHitTestVisible=False`, `IsTabStop=False` y el foco se cancela (`GettingFocus`) | Deshabilitar cambia los colores; así ENTER siempre es del manual |
+| Cambio de paso: fundido + entrada subiendo 18 px | Fundido de 0.25 s (el mismo del texto) | Un solo efecto |
+
+Sigue simplificado: sin flechas en los resaltados, sin niebla/estática/scanlines (ver arriba), réplicas sin animaciones de entrada y la de EMOTES
+dibujada aparte (no reutiliza `PanelEmotes` porque toma la sala real).
 
 ## Correcciones después de probar la app (08/11)
 

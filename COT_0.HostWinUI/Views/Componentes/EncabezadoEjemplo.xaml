@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Réplica sin botón de EncabezadoPantalla (← INICIO | TÍTULO) para las vistas de ejemplo: el real se queda con Esc y navega -->
+<UserControl x:Class="COT_0.HostWinUI.Views.Componentes.EncabezadoEjemplo"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             IsTabStop="False">
+    <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Horizontal" Padding="0,0,8,0">
+            <FontIcon Glyph="&#xE72B;" FontFamily="{StaticResource FontIcons}" FontSize="14" Foreground="{StaticResource Text62Brush}"/>
+            <TextBlock Text="{StaticResource Text.Header.Back}" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="{StaticResource Text62Brush}"
+                       FontFamily="{StaticResource FontCondensedMedium}" FontSize="14" CharacterSpacing="300"/>
+        </StackPanel>
+        <Rectangle Width="1" Height="22" Margin="28,0" Fill="{StaticResource Light28Brush}"/>
+        <TextBlock Text="{x:Bind Title, Mode=OneWay}" VerticalAlignment="Center" FontFamily="{StaticResource FontCondensedBold}"
+                   FontWeight="Bold" FontSize="28" CharacterSpacing="160" Foreground="{StaticResource TextBrush}"/>
+    </StackPanel>
+</UserControl>

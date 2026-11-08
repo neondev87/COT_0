@@ -118,15 +118,30 @@ Antes: `dotnet build COT_0.HostWinUI` en 0 errores y 0 warnings.
 
 ## 10. Manual de Lain
 
-1. **03 MANUAL** → fondo azul noche, ← INICIO | MANUAL arriba a la izquierda, atajos ENTER / → / ← / ESC arriba a la derecha y "Bienvenido a COT_0".
+1. **03 MANUAL** → fondo azul noche, ← INICIO | MANUAL arriba a la izquierda y atajos ENTER / → / ← / ESC arriba a la derecha.
+   A la derecha, "Paso 01 / 06", el título del paso, su texto y debajo la **vista de ejemplo** del paso (una réplica quieta de la pantalla).
 2. Abajo a la izquierda, el video de Lain en bucle (sin quitar el negro: se ve sobre el azul con el borde de arriba fundido).
-3. Arriba a la izquierda salen las notificaciones de Lain una por una con fundido y el sonido de aviso; la última se queda. En el recuadro del paso, los avisos que ya salieron se encienden.
-4. ENTER o → → paso siguiente con un destello corto; ← regresa. En el paso 1, ← está apagado; en el 6, → también.
-5. Bocina (abajo a la derecha) → silencio (icono tachado): ya no suena el aviso.
-6. "Gracias, pero no necesito ayuda" o ESC → despedida: el video cambia al de despedida, al centro y más tenue, con estática de fondo y "Gracias por estar aquí. Vuelve pronto."
-7. **Cerrar**, ENTER o ESC en la despedida → regresa al dashboard. ← INICIO en cualquier momento también regresa y corta video y sonidos.
-8. Vuelve a abrir el manual: empieza otra vez en el paso 1 y sin silencio.
-9. Capturas opcionales: pon `paso2.png` en `manual\pasos\` → el recuadro del paso 2 muestra la imagen en lugar de la lista.
+3. Arriba a la izquierda salen las notificaciones de Lain una por una con fundido y el sonido de aviso; la última se queda.
+   **Cada aviso enciende su resaltado** en la vista de ejemplo: borde rojo del proyecto con un halo que late. El anterior se apaga al entrar el siguiente.
+4. Revisa cada paso (ENTER o → avanza con destello y fundido corto; ← regresa):
+
+   | Paso | Vista de ejemplo | Resaltado 1 | Resaltado 2 | Resaltado 3 |
+   |---|---|---|---|---|
+   | 01 Abre la app y entra | Login con `host_demo` y contraseña de puntos | COT_0 + ACCESO DEL HOST | USUARIO y CONTRASEÑA | ENTRAR |
+   | 02 El inicio: genera el QR | Dashboard con la hora actual y SALA INACTIVA | ESTADO (arriba a la derecha) | 01 GENERAR QR | Tarjetas 02 a 06 |
+   | 03 Comparte el QR o el enlace | Sala con QR de adorno, `#7F3K` y el enlace de ejemplo | QR | URL DE LA SALA + COPIAR | EN VIVO + tiempo |
+   | 04 Ve quién está conectado | La misma sala: "04" y 4 invitados ficticios en la lista | Contador | Lista de conectados | CERRAR SALA |
+   | 05 Emotes de 7TV | EMOTES: set `global`, 48 emotes, OK, 2 reportes y 1 quitado | Set + APLICAR | REPORTES | QUITADOS |
+   | 06 Música y fondo | MÚSICA: 5 canciones (Duvet suena, barra roja), volumen 25 | Biblioteca | Controles + volumen | ← INICIO |
+
+5. Nada de la vista de ejemplo se puede tocar ni toma el foco: el mouse no hace nada encima y Tab no entra. ENTER siempre avanza de paso.
+   La lista de conectados de ejemplo no muestra a los invitados reales aunque haya sala abierta, y la ✕ no hace nada.
+6. Bocina (abajo a la derecha) → silencio (icono tachado): ya no suena el aviso; los resaltados siguen.
+7. "Gracias, pero no necesito ayuda" o ESC → despedida: el video cambia al de despedida, al centro y más tenue, con estática de fondo y "Gracias por estar aquí. Vuelve pronto."
+8. **Cerrar**, ENTER o ESC en la despedida → regresa al dashboard. ← INICIO en cualquier momento también regresa y corta video y sonidos.
+9. Vuelve a abrir el manual: empieza otra vez en el paso 1, sin silencio y sin resaltados hasta que entra el primer aviso.
+10. Capturas opcionales: pon `paso2.png` en `manual\pasos\` → el recuadro del paso 2 muestra la imagen en lugar de la vista de ejemplo (sin resaltados). Quítala y vuelve a abrir: regresa la vista de ejemplo.
+11. Fluidez: con el Administrador de tareas abierto, recorre los 6 pasos; el uso de CPU no debe subir de forma notable (solo opacidad y escala animadas).
 
 ### Errores (InfoBar amarillo abajo a la derecha)
 

@@ -10,7 +10,7 @@ COT_0.HostWinUI/
 ├── App.xaml.cs                   Arranque: arma los servicios, crea la ventana, arranca la música y levanta la web
 ├── MainWindow.xaml               Única ventana: CapaFondo (fondo elegido) y encima el Frame (RootFrame)
 ├── appsettings.json              Ventana, archivos JSON, seguridad, validación, preguntas secretas, reloj, Audio (música y portadas),
-│                                 Background (fondos y cuadro fijo con ffmpeg), Manual (videos, sonidos y tiempos de Lain),
+│                                 Background (fondos y cuadro fijo con ffmpeg), Manual (videos, sonidos y tiempos de Lain, y Demo: datos ficticios de las vistas de ejemplo),
 │                                 Branding (RepoUrl: el logo abre el repo) y la config de la web/túnel
 ├── .gitignore                    Vuelve a incluir Services/Musica (la regla musica/ de la raíz la tapaba) e ignora fondos/gifs/manual,
 │                                 cache/ y *.jsonl sueltos
@@ -35,6 +35,7 @@ COT_0.HostWinUI/
 │   │                             video sin códec, video que no decodifica y video sin cuadro fijo (Text.Backgrounds.Error.*)
 │   ├── MediaLogEntry.cs          Una línea de registro-medios.jsonl: hora, origen, archivo, ErrorCode (HRESULT) y detalle
 │   ├── CoverArt.cs               Portada grande decodificada y su tamaño en pantalla
+│   ├── ManualDemoRow.cs          Fila ficticia de las vistas de ejemplo del manual (emote o canción) e inicial del recuadro
 │   └── ConfirmTexts.cs           Textos del diálogo sí/no
 ├── Services/
 │   ├── Almacenamiento/           JsonStore: lee y guarda cualquier clase en %LocalAppData%\COT_0\*.json (async)
@@ -42,6 +43,7 @@ COT_0.HostWinUI/
 │   ├── Registro/                 MediaLog: ErrorCode/ExtendedErrorCode de MediaFailed, miniaturas y portadas en registro-medios.jsonl
 │   ├── Configuracion/            AppConfig + un record por sección de appsettings.json (Window, Storage, Security, Validation, Recovery, Ui, Paths,
 │   │                             Audio, Background, Manual, Links, Web, Tunnel, Qr)
+│   │                             (Manual:Demo → ManualDemoSettings + ManualDemoGuest/Emote/Song)
 │   ├── Dialogos/                 ConfirmDialogService: abre el diálogo sí/no sobre la ventana
 │   ├── Fondos/                   FondoCatalog (lee la carpeta; antes BackgroundCatalog del WPF), FondoStore (fondos.json), FondoService (catálogo,
 │   │                             elegido y último error con su código), FondoImages (imagen o cuadro fijo decodificado al tamaño pedido),
@@ -68,7 +70,7 @@ COT_0.HostWinUI/
 └── Views/
     ├── Componentes/              Piezas reutilizables
     │   ├── ConfirmacionDialogo   ContentDialog sí/no
-    │   ├── ListaConectados       Invitados conectados (ListView)
+    │   ├── ListaConectados       Invitados conectados (ListView); con SampleUsers muestra los de ejemplo del manual
     │   ├── FormularioRecuperacion  Pregunta secreta → contraseña nueva, dentro del login
     │   ├── TarjetaMenu.cs        Tarjeta inclinada del menú (Button con número, subtítulo e icono)
     │   ├── PuntoPulso            Punto rojo con pulso (sala activa)
@@ -77,6 +79,15 @@ COT_0.HostWinUI/
     │   ├── CapaFondo             Fondo detrás del Frame: degradado, imagen/cuadro fijo o video, velo y viñeta (solo en Dashboard, Sala y Fondos)
     │   ├── AvisoLain             Notificación de Lain estilo celular, con transición de opacidad
     │   ├── BotonManual.cs        Botón del manual: atajo con tecla dibujada (ENTER, →, ←, ESC) o botón redondeado
+    │   ├── VistaEjemploManual    Escenario del manual: crea la vista de ejemplo del paso a 1280×720 (Window) en un Viewbox y le pasa la fase
+    │   ├── VistaEjemplo.cs       Base de las vistas de ejemplo: Step, Phase y Demo (ManualDemoViewModel); sin toque ni foco
+    │   ├── VistaEjemploLogin     Paso 1: réplica del login (usuario de muestra)
+    │   ├── VistaEjemploInicio    Paso 2: réplica del dashboard con las TarjetaMenu reales sin comando
+    │   ├── VistaEjemploSala      Pasos 3 y 4: sala con QR de adorno (no escaneable), enlace de ejemplo y ListaConectados con invitados ficticios
+    │   ├── VistaEjemploEmotes    Paso 5: EMOTES simplificado (inicial en vez de la miniatura de 7TV)
+    │   ├── VistaEjemploMusica    Paso 6: MÚSICA con canciones ficticias y sin portadas
+    │   ├── ResaltadoManual       Borde rojo + halo que late; visible entre las fases From y To (y OnlyInStep si la vista sirve a dos pasos)
+    │   ├── EncabezadoEjemplo     ← INICIO | TÍTULO dibujado, sin botón ni Esc (el real navega)
     │   ├── PanelEmotes           Set de 7TV, reportes y emotes quitados (+ EmoteStatusBrushes.cs: color del estado)
     │   ├── ControlVolumen        Nota (silencio), barra de volumen y número de MusicaPage
     │   ├── Firma                 LogoNeondev y debajo la barra de volumen (login, dashboard y sala)
@@ -89,11 +100,11 @@ COT_0.HostWinUI/
     │   ├── Dashboard.xaml        Reloj, fecha, estado de la sala y botón sin aspecto (lo mezcla DashboardPage)
     │   ├── Sala.xaml             Medidas del QR, fuente mono, textos del contador, EN VIVO y la nota de CERRAR SALA (lo mezcla SalaPage)
     │   ├── Manual.xaml           Paleta de Lain, fondo azul noche, barrido, textos y estilos de BotonManual (lo mezcla ManualPage)
-    │   └── TarjetaMenu.xaml      Plantilla de TarjetaMenu con sus estados (normal, mouse encima, apagada)
+    │   └── TarjetaMenu.xaml      Plantilla de TarjetaMenu con sus estados (normal, mouse encima, apagada) y los trazos de sus iconos (MenuIcon.*)
     ├── ModelosDeVista/           ViewModels: Login (+ LoginStep, FormViewModel), Recovery, SecurityQuestion,
     │                             Dashboard, Sala, ConnectedUsers, UserRow, Emotes + EmoteRow,
     │                             MusicControls (base) → Musica y Firma, SongRow, CapaFondo, Fondos + FondoRow, LogoNeondev,
-    │                             Manual + ManualStep + ManualNotice
+    │                             Manual + ManualStep + ManualNotice + ManualDemo (datos de las vistas de ejemplo)
     └── Pantallas/                Páginas del Frame: Login, Dashboard, Sala, Emotes, Musica, Fondos, Manual
 ```
 
@@ -159,7 +170,11 @@ En `%LocalAppData%\COT_0\`:
 
 - Archivos fuera del repo (`Manual:*`, relativos a `Paths:MediaRoot`): `gifs\lain_tele_web.mp4`, `gifs\lain_despedida.mp4`, `manual\notificacion.mp3`, `manual\estatica.wav` y, opcional, una captura por paso en `manual\pasos\paso1.png`…`paso6.png`.
 - Al abrir: `ManualAssets.RefreshAsync()` revisa qué existe; lo que falte sale en un InfoBar y el manual sigue sin eso.
-- Pasos: textos en `Textos.xaml` (`Text.Manual.StepN.Title/Text/NoticeM`); cuántos avisos tiene cada uno, en `Manual:NoticeCounts`. El paso 1 no tiene título (`UiText.Find` regresa `null`).
+- Pasos: textos en `Textos.xaml` (`Text.Manual.StepN.Title/Text/NoticeM`); cuántos avisos tiene cada uno, en `Manual:NoticeCounts` (3 por paso). El aviso N explica el resaltado N.
+- Vistas de ejemplo: `VistaEjemploManual` elige la del paso (1 login, 2 inicio, 3 y 4 sala, 5 emotes, 6 música). Los datos ficticios salen de `Manual:Demo`
+  (usuario, código, enlace, invitados, set y reportes, canciones, volumen) y los arma `ManualDemoViewModel`; la hora es la del reloj. No tocan la sala, el túnel, 7TV ni la música.
+- Resaltados: `ManualViewModel.Phase` llega a la vista; cada `ResaltadoManual` dice en qué fases se ve (aviso 1 → fases 1-2, aviso 2 → 3-4, aviso 3 → 5 en adelante).
+- Si hay captura `manual\pasos\pasoN.png`, se muestra en lugar de la vista de ejemplo de ese paso.
 - Fases (igual que el WPF): la fase 2i+1 muestra el aviso i y la 2i+2 lo quita; la última se queda. Los tiempos salen de `Manual:CueSeconds`.
 - Atajos: ENTER siguiente (después del último, despedida; en la despedida, cerrar), → / ← cambian de paso, ESC despedida y luego cerrar. ← INICIO regresa al dashboard en cualquier momento.
 - La despedida usa el mismo video y el mismo reproductor: un `StateTrigger` lo mueve al centro con menos opacidad.
