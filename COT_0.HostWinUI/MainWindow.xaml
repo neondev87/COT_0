@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Única ventana de la app: un Frame que muestra una página a la vez -->
+<Window x:Class="COT_0.HostWinUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="COT_0">
+    <Frame x:Name="RootFrame"/>
+</Window>

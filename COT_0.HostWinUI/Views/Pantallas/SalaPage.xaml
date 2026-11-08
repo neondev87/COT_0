@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sala activa: QR, URL pública, lista de conectados y cerrar sala (vacía: se migra del WPF en un paso posterior) -->
+<Page x:Class="COT_0.HostWinUI.Views.Pantallas.SalaPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Background="{StaticResource WindowBackgroundBrush}">
+    <TextBlock Text="{StaticResource Text.Pending}" Style="{StaticResource FooterText}" HorizontalAlignment="Center"/>
+</Page>
