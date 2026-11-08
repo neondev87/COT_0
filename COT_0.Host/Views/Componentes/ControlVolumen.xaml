@@ -3,11 +3,12 @@
 <UserControl x:Class="COT_0.Host.Views.Componentes.ControlVolumen"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:componentes="using:COT_0.Host.Views.Componentes">
+             xmlns:componentes="using:COT_0.Host.Views.Componentes"
+    xmlns:convertidores="using:COT_0.Host.Views.Convertidores">
     <StackPanel Orientation="Horizontal">
         <Button Style="{StaticResource TextButton}" Padding="10,0" Command="{x:Bind ViewModel.ToggleMuteCommand, Mode=OneWay}"
                 ToolTipService.ToolTip="{StaticResource Text.Music.Mute}" AutomationProperties.Name="{StaticResource Text.Music.Mute}">
-            <FontIcon Glyph="{x:Bind componentes:MusicGlyphs.Note(ViewModel.IsMuted), Mode=OneWay}"
+            <FontIcon Glyph="{x:Bind convertidores:MusicGlyphs.Note(ViewModel.IsMuted), Mode=OneWay}"
                       FontFamily="{StaticResource FontIcons}" FontSize="18"/>
         </Button>
         <Slider Style="{StaticResource VolumeSlider}" Margin="6,0,0,0" AutomationProperties.Name="{StaticResource Text.Music.Volume}"

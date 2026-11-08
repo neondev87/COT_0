@@ -9,6 +9,20 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.11" />
   </ItemGroup>
 
+  <!-- Namespaces de Web (uno por carpeta de Services), importados una vez para todo el C# -->
+  <ItemGroup>
+    <Using Include="COT_0.Web" />
+    <Using Include="COT_0.Web.Models" />
+    <Using Include="COT_0.Web.Services.Configuracion" />
+    <Using Include="COT_0.Web.Services.Emotes" />
+    <Using Include="COT_0.Web.Services.Imagenes" />
+    <Using Include="COT_0.Web.Services.Manual" />
+    <Using Include="COT_0.Web.Services.Mensajes" />
+    <Using Include="COT_0.Web.Services.Perfil" />
+    <Using Include="COT_0.Web.Services.Sala" />
+    <Using Include="COT_0.Web.Services.Voz" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>

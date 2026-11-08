@@ -4,6 +4,7 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:componentes="using:COT_0.Host.Views.Componentes"
+    xmlns:convertidores="using:COT_0.Host.Views.Convertidores"
       xmlns:vm="using:COT_0.Host.Views.ModelosDeVista"
       Background="{StaticResource WindowBackgroundBrush}">
 
@@ -49,7 +50,7 @@
                 </Button>
                 <Button Style="{StaticResource TextButton}" Command="{x:Bind ViewModel.TogglePlayCommand}" Padding="14,0"
                         ToolTipService.ToolTip="{StaticResource Text.Music.PlayPause}" AutomationProperties.Name="{StaticResource Text.Music.PlayPause}">
-                    <FontIcon Glyph="{x:Bind componentes:MusicGlyphs.PlayPause(ViewModel.IsPlaying), Mode=OneWay}"
+                    <FontIcon Glyph="{x:Bind convertidores:MusicGlyphs.PlayPause(ViewModel.IsPlaying), Mode=OneWay}"
                               FontFamily="{StaticResource FontIcons}" FontSize="26" Foreground="{StaticResource LightBrush}"/>
                 </Button>
                 <Button Style="{StaticResource TextButton}" Command="{x:Bind ViewModel.NextCommand}"

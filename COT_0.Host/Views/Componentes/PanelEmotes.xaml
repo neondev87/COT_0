@@ -4,6 +4,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:componentes="using:COT_0.Host.Views.Componentes"
+    xmlns:convertidores="using:COT_0.Host.Views.Convertidores"
              xmlns:vm="using:COT_0.Host.Views.ModelosDeVista">
 
     <UserControl.Resources>
@@ -58,7 +59,7 @@
                 </Button>
                 <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Text="{x:Bind ViewModel.StatusText, Mode=OneWay}" TextWrapping="WrapWholeWords"
                            FontFamily="{StaticResource FontCondensedBold}" FontWeight="Bold" FontSize="13" CharacterSpacing="200"
-                           Foreground="{x:Bind componentes:EmoteStatusBrushes.For(ViewModel.Status), Mode=OneWay}"/>
+                           Foreground="{x:Bind convertidores:EmoteStatusBrushes.For(ViewModel.Status), Mode=OneWay}"/>
             </Grid>
 
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
