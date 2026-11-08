@@ -17,7 +17,12 @@ Cosas que sobran o que hay que borrar/cambiar cuando termine la migración a Win
 - **`Text.Pending`** ("Pantalla en migración a WinUI 3.") en `SalaPage` y `ManualPage`: quitarlo cuando se migren.
 - **Tarjeta 02 (CAMBIAR FONDO) apagada** y su texto `Text.Dashboard.BackgroundSubtitle` ("Próximamente en WinUI"): cambiar al migrar el selector de fondos.
 - **Tarjeta 01 solo navega**: al migrar `SalaPage`, que abra la sala (`RoomSession.OpenAsync`) como el WPF y conectar `SesionWatcher` (ver `docs/ESTRUCTURA.md`).
-- **`SalaPage` y `ManualPage` no tienen botón de regresar** al dashboard: agregarlo al migrarlas.
+- **`ManualPage` no tiene botón de regresar**: usar `EncabezadoPantalla` al migrarla (Sala, Emotes y Música ya lo tienen).
+- **SUBIR MÚSICA** de la firma del WPF no se migró (necesita `FileOpenPicker` con el HWND de la ventana). Si se quiere, va en `MusicaPage`.
+- **`.gitignore` de la raíz** solo ignora `*.mp3` y `*.wav`: si alguien copia música dentro del repo, `.m4a`, `.aac` y `.wma` (extensiones de `Audio:Extensions`) y las portadas `.jpg/.png/.webp` sueltas no quedan ignoradas. Agregar esas reglas (está fuera de las carpetas de este agente).
+- **Duplicados con el WPF**: `MusicLibrary` y `CoverLibrary` quedaron copiados en `COT_0.HostWinUI/Services/Musica` (WinUI no puede referenciar el proyecto WPF). Al borrar el WPF, desaparece el duplicado.
+- **TagLibSharp, `CoverDecoder`, `SongPicker`, `SignatureBadge`, `EmotePanel`, `Themes/Emotes.xaml`, `Themes/SongPicker.xaml`** del WPF: ya tienen reemplazo en WinUI; se van con el WPF.
+- **Sección `Texts:Emotes`, `Texts:Music`, `Texts:Songs`, `Texts:Signature`** del `appsettings.json` del WPF: en WinUI esos textos están en `Textos.xaml`.
 - **Cuentas de prueba**: si probaste el registro, `%LocalAppData%\COT_0\usuarios.json` puede tener una cuenta sin pregunta (de antes de este cambio). La app te pide configurarla al entrar; si quieres empezar de cero, borra el archivo.
 
 ## Archivos temporales

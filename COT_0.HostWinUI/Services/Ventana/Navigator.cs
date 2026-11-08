@@ -24,6 +24,10 @@ public static class Navigator
 
     public static void ShowManual() => Go<ManualPage>();
 
+    public static void ShowEmotes() => Go<EmotesPage>();
+
+    public static void ShowMusic() => Go<MusicaPage>();
+
     private static void Go<TPage>() where TPage : Page
     {
         if (_frame is null || _frame.Content is TPage) return;

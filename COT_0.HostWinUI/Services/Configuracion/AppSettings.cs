@@ -8,4 +8,7 @@ public record AppSettings(
     SecuritySettings Security,
     ValidationSettings Validation,
     RecoverySettings Recovery,
-    UiSettings Ui);
+    UiSettings Ui,
+    PathsSettings Paths,
+    AudioSettings Audio,
+    LinksSettings Links);

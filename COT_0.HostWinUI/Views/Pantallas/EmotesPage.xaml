@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Emotes de la sala (en el WPF era un bloque de la sala): encabezado con regreso y el panel de 7TV -->
+<Page x:Class="COT_0.HostWinUI.Views.Pantallas.EmotesPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:componentes="using:COT_0.HostWinUI.Views.Componentes"
+      Background="{StaticResource WindowBackgroundBrush}">
+    <Grid Margin="64,52,64,48">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <componentes:EncabezadoPantalla Title="{StaticResource Text.Emotes.ScreenTitle}"/>
+        <componentes:PanelEmotes Grid.Row="1" Margin="0,32,0,0" MaxWidth="720" HorizontalAlignment="Left"/>
+    </Grid>
+</Page>

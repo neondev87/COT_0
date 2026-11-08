@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Sala activa: por ahora solo la lista de conectados (QR, URL y cerrar sala se migran después) -->
+<!-- Sala activa: encabezado con regreso y lista de conectados (QR, URL y cerrar sala se migran después) -->
 <Page x:Class="COT_0.HostWinUI.Views.Pantallas.SalaPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:componentes="using:COT_0.HostWinUI.Views.Componentes"
       Background="{StaticResource WindowBackgroundBrush}">
     <Grid>
+        <componentes:EncabezadoPantalla Title="{StaticResource Text.Room.Title}" Margin="64,52,64,0" VerticalAlignment="Top"/>
         <TextBlock Text="{StaticResource Text.Pending}" Style="{StaticResource FooterText}" Margin="64,124,0,0"
                    HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <!-- Misma posición que en el WPF: columna derecha -->

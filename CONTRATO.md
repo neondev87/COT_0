@@ -158,6 +158,8 @@ _(Anotar acá: agente, qué se necesita en Core y por qué.)_
 - **Agente A (WinUI, rama `winui-migration`)**: no hizo falta tocar Core. Pedidos para cuando termine la migración:
   - `IAuthService` ya no lo usa el Host WinUI (login con `UserService` + `usuarios.json`, contraseña y respuesta secreta con PBKDF2). Propuesta: borrarlo de Core junto con el WPF, o cambiarlo por `IHostAccountService` (`HasUsersAsync`, `RegisterAsync(user, password, questionKey, answer)`, `LoginAsync`) si se quiere cumplir "interfaz en Core".
   - Los servicios del Host WinUI (`UserService`, `PasswordRecoveryService`, `VisitService`, `SesionService`) son clases estáticas sin interfaz en Core. Si se pide interfaz: `IVisitLog` (`RecordAsync(name)`, `GetAllAsync()`) e `IGuestSessions` (`StartAsync()`, `AddGuestAsync(name)`, `EndAsync()`, `GetAllAsync()`); los modelos `Visit`/`SesionInvitados` pasarían a Core.
+  - Música (WinUI): `MusicLibrary` y `CoverLibrary` viven en el Host WPF, no en Core, y WinUI no puede referenciar un proyecto WPF; quedaron copiadas en `COT_0.HostWinUI/Services/Musica`. Si se quieren compartidas: moverlas a Core (no dependen de WPF; solo de `MediaPath` y de la config `Audio:*`) e `IMusicPlayer` (`StartAsync`, `PlayAsync(path)`, `TogglePlay`, `NextAsync`, `PreviousAsync`, `Volume`, `IsMuted`, `Current`, `event StateChanged`).
+  - Emotes (WinUI): se usa `IRoomEmotes` tal cual, sin cambios.
   - Sesiones de invitados: `SesionWatcher` se entera de quién entra comparando `GetUsersAsync()` en cada `UsersChanged` (igual que `VisitWatcher`). Un evento `event Action<User>? UserJoined` en `IChatService` lo haría directo.
 
 ### Resueltos por el Agente 0 (auditoría 05/11)

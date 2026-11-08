@@ -14,7 +14,7 @@ Lo que WinUI 3 no soporta igual que WPF y cómo se simplificó. Prioridad: que a
 | `EntryAnimation` (cada bloque sube 18 px con retraso) | `EntranceThemeTransition` escalonada | Animación del sistema, mismo resultado |
 | Campo con plantilla propia (línea inferior que pasa al acento) | `TextBox`/`PasswordBox` de WinUI con sus colores cambiados | Mismo look sin rehacer la plantilla |
 | Error en un `TextBlock` rojo | `InfoBar` de error | Pedido del cambio |
-| Firma (avatar + música) y selector de canciones | Pendiente | Se migra junto con la música |
+| Firma (avatar + música) y selector de canciones | Firma migrada (ver "Firma del login"); el selector pasó a `MusicaPage` | Ver abajo |
 
 ## Diálogo de confirmación
 
@@ -59,6 +59,51 @@ Lo que WinUI 3 no soporta igual que WPF y cómo se simplificó. Prioridad: que a
 | Tarjeta CAMBIAR FONDO abre el selector | Tarjeta visible pero apagada ("Próximamente en WinUI") | El selector de fondos se migra después |
 | GENERAR QR abre túnel + sala | Por ahora solo lleva a `SalaPage` | Abrir la sala se migra con `SalaPage` |
 | Firma con música (`SignatureBadge`) sobre el pie | Quitada por ahora | Se migra con la música |
+
+## Dashboard: tarjetas nuevas
+
+| WPF | WinUI 3 | Motivo |
+|---|---|---|
+| 4 tarjetas (QR, fondo, manual, salir) | 6 tarjetas: se suman 04 EMOTES y 05 MÚSICA; SALIR pasa a 06 | Emotes y música ahora son pantallas propias |
+| Regresar a INICIO solo desde la sala | `EncabezadoPantalla` (← INICIO \| TÍTULO) en Sala, Emotes y Música; Esc también regresa | Una sola pieza para todas las pantallas internas |
+| `BackLinkButton` con `Trigger IsMouseOver` + 2 `Storyboard` | `TextButton` con `VisualStateManager` (se aclara y se corre 4 px) | WinUI 3 no tiene `Trigger` en estilos |
+
+## Emotes
+
+| WPF | WinUI 3 | Motivo |
+|---|---|---|
+| Bloque dentro de la sala (`EmotePanel`) | Pantalla `EmotesPage` con el componente `PanelEmotes` | Pedido de la migración; la sala queda más limpia |
+| Color del estado con 3 `DataTrigger` (OK / error / resto) | `EmoteStatusBrushes.For(Status)` con `x:Bind` | WinUI 3 no tiene `DataTrigger` |
+| "Sin reportes" / "No has quitado emotes" con `DataTrigger` sobre `Tag` | Propiedades `NoReports` / `NoRemoved` del ViewModel → `Visibility` | Igual |
+| Filas que entran con opacidad + desplazamiento (`EventTrigger Loaded`) | Filas sin animación de entrada | Sin `EventTrigger`; las listas son cortas y así no parpadean al refrescar |
+| Fondo tenue al pasar el mouse por la fila | Quitado | Las filas van en `ItemsControl` (dentro de un solo scroll); el `ListView` anidado se comía la rueda del mouse |
+| Botones de fila con `RelativeSource AncestorType` al comando | `Click` en el componente que pasa la fila al comando | WinUI 3 no tiene `AncestorType` |
+| Miniatura con `RenderOptions.BitmapScalingMode` | `BitmapImage.DecodePixelWidth = 64` (gif de 7TV si hay; webp si no) | WinUI decodifica a ese tamaño y anima el gif solo |
+
+## Música
+
+| WPF | WinUI 3 | Motivo |
+|---|---|---|
+| `SongPicker` flotante estilo rofi sobre el login (buscador, flechas, Enter) | Pantalla `MusicaPage`: canción actual (portada 300 px, título, ◀ ▶‖ ▶) y biblioteca en `ListView` | Pedido de la migración; sin capa flotante encima del fondo animado |
+| `System.Windows.Media.MediaPlayer` | `Windows.Media.Playback.MediaPlayer` (controles de Windows apagados) | El de WPF no existe en WinUI |
+| Duración con TagLibSharp | `StorageFile.Properties.GetMusicPropertiesAsync()` | Nativo y async; un paquete menos |
+| Portadas con `CoverDecoder` (decodifica, congela y recorta a cuadrado) | `BitmapImage.DecodePixelWidth` + `Stretch="UniformToFill"` | El recorte lo hace la vista; nada de `Freeze` |
+| Iconos con `Path` y `DataTrigger` (nota / nota tachada) | Glifos de Segoe Fluent Icons (`MusicGlyphs`) | Heredan el color del botón; sin plantillas extra |
+| `Slider` con plantilla propia (riel de 2 px) | `Slider` de WinUI con el acento | Mismo uso, sin rehacer la plantilla |
+| Errores en `MessageBox` | `InfoBar` de aviso (carpeta no encontrada, carpeta vacía, archivo ilegible) | Pedido del cambio |
+| SUBIR MÚSICA (copiar archivos a la carpeta) | Quitado por ahora | Necesita `FileOpenPicker` con el HWND; ver pendientes |
+
+## Firma del login
+
+| WPF | WinUI 3 | Motivo |
+|---|---|---|
+| Brillo "aero" que cruza el avatar (degradado animado) | Quitado | App ligera |
+| Nombre con brillo de acento (`DropShadowEffect`) al pasar el mouse | El nombre pasa al acento y el borde del avatar se aclara (`VisualStateManager`) | WinUI 3 no tiene `DropShadowEffect` |
+| 14 `DataTrigger` (hover del enlace, nota, barra de volumen, sin música) | Estados del botón + propiedades `IsMuted` / `IsMusicAvailable` / `IsMusicMissing` con `x:Bind` | WinUI 3 no tiene `DataTrigger` |
+| Barra de volumen escondida que aparece con el mouse (opacidad + escala) | Siempre visible | Menos estados; se ve que se puede mover |
+| Botón de lista que abría el `SongPicker` | Nombre de la canción que suena debajo del volumen | La biblioteca ahora es `MusicaPage` (después de entrar) |
+| Nota sin música → SUBIR MÚSICA | Texto "Sin música" | Sin `FileOpenPicker` todavía |
+| Ceniza y scanlines del fondo | Siguen fuera (ver Login) | WinUI 3 no tiene `DrawingBrush` ni `OnRender` |
 
 ## Pendiente (se llena al migrar cada pantalla)
 

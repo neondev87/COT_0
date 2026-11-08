@@ -81,6 +81,59 @@
     <x:String x:Key="Text.Dashboard.ExitTitle">SALIR</x:String>
     <x:String x:Key="Text.Dashboard.ExitSubtitle">Cerrar sesión</x:String>
 
+    <x:String x:Key="Text.Dashboard.EmotesTitle">EMOTES</x:String>
+    <x:String x:Key="Text.Dashboard.EmotesSubtitle">Set de 7TV y reportes</x:String>
+    <x:String x:Key="Text.Dashboard.MusicTitle">MÚSICA</x:String>
+    <x:String x:Key="Text.Dashboard.MusicSubtitle">Biblioteca y reproductor</x:String>
+
+    <!-- Encabezado de las pantallas internas -->
+    <x:String x:Key="Text.Header.Back">INICIO</x:String>
+    <x:String x:Key="Text.Room.Title">SALA</x:String>
+
+    <!-- Emotes (7TV) -->
+    <x:String x:Key="Text.Emotes.ScreenTitle">EMOTES</x:String>
+    <x:String x:Key="Text.Emotes.Title">SET DE 7TV</x:String>
+    <x:String x:Key="Text.Emotes.Placeholder">ID o URL del set de 7TV</x:String>
+    <x:String x:Key="Text.Emotes.Apply">APLICAR</x:String>
+    <x:String x:Key="Text.Emotes.Count">{0} emotes cargados</x:String>
+    <x:String x:Key="Text.Emotes.Status.Off">SIN EMOTES</x:String>
+    <x:String x:Key="Text.Emotes.Status.Loading">CARGANDO… (7TV PUEDE TARDAR HASTA UN MINUTO)</x:String>
+    <x:String x:Key="Text.Emotes.Status.Ready">OK</x:String>
+    <x:String x:Key="Text.Emotes.Status.NotFound">ERROR · NO SE ENCONTRÓ EL SET</x:String>
+    <x:String x:Key="Text.Emotes.Status.Failed">ERROR · NO SE PUDO CARGAR EL SET</x:String>
+    <x:String x:Key="Text.Emotes.Error.InvalidId">ERROR · ESE ID O URL NO ES DE UN SET DE 7TV</x:String>
+    <x:String x:Key="Text.Emotes.Error.NotFound">ERROR · 7TV NO TIENE UN SET CON ESE ID (404)</x:String>
+    <x:String x:Key="Text.Emotes.Error.Timeout">ERROR · 7TV TARDÓ DEMASIADO EN RESPONDER, INTÉNTALO DE NUEVO</x:String>
+    <x:String x:Key="Text.Emotes.Error.Network">ERROR · SIN CONEXIÓN CON 7TV (REVISA TU INTERNET)</x:String>
+    <x:String x:Key="Text.Emotes.Error.HttpError">ERROR · 7TV RESPONDIÓ CON ERROR {0}</x:String>
+    <x:String x:Key="Text.Emotes.Error.BadJson">ERROR · 7TV MANDÓ UNA RESPUESTA QUE NO SE PUDO LEER</x:String>
+    <x:String x:Key="Text.Emotes.Reports">REPORTES</x:String>
+    <x:String x:Key="Text.Emotes.NoReports">Sin reportes</x:String>
+    <x:String x:Key="Text.Emotes.ReportCount">{0} reporte(s)</x:String>
+    <x:String x:Key="Text.Emotes.Removed">QUITADOS</x:String>
+    <x:String x:Key="Text.Emotes.NoRemoved">No has quitado emotes</x:String>
+    <x:String x:Key="Text.Emotes.RemovedDetail">Se muestra como texto</x:String>
+    <x:String x:Key="Text.Emotes.Remove">QUITAR</x:String>
+    <x:String x:Key="Text.Emotes.Ignore">IGNORAR</x:String>
+    <x:String x:Key="Text.Emotes.Restore">RESTAURAR</x:String>
+
+    <!-- Música -->
+    <x:String x:Key="Text.Music.ScreenTitle">MÚSICA</x:String>
+    <x:String x:Key="Text.Music.ErrorTitle">Música</x:String>
+    <x:String x:Key="Text.Music.Error.FolderMissing">No se encontró la carpeta de música: {0}. Créala o cambia Paths:MediaRoot / Audio:MusicFolder en appsettings.json.</x:String>
+    <x:String x:Key="Text.Music.Error.NoTracks">La carpeta {0} no tiene canciones (.mp3, .wav, .m4a, .aac o .wma).</x:String>
+    <x:String x:Key="Text.Music.Error.Unreadable">No se pudo leer «{0}»; sigue la siguiente canción.</x:String>
+    <x:String x:Key="Text.Music.PlayPause">Reproducir o pausar</x:String>
+    <x:String x:Key="Text.Music.Previous">Anterior</x:String>
+    <x:String x:Key="Text.Music.Next">Siguiente</x:String>
+    <x:String x:Key="Text.Music.Mute">Silenciar o quitar el silencio</x:String>
+    <x:String x:Key="Text.Music.Volume">Volumen</x:String>
+
+    <!-- Firma del login -->
+    <x:String x:Key="Text.Signature.Name">Neondev</x:String>
+    <x:String x:Key="Text.Signature.Link">Abrir el repositorio en GitHub</x:String>
+    <x:String x:Key="Text.Signature.NoMusic">Sin música</x:String>
+
     <!-- Lista de conectados -->
     <x:String x:Key="Text.Room.ColumnUser">USUARIO</x:String>
     <x:String x:Key="Text.Room.ColumnConnected">CONECTADO</x:String>

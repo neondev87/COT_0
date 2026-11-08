@@ -1,4 +1,4 @@
-// Dashboard: reloj, estado de la sala y menú (QR / sala, fondo, manual, salir)
+// Dashboard: reloj, estado de la sala y menú (QR / sala, fondo, manual, emotes, música, salir)
 using System.Globalization;
 using COT_0.Core.Services;
 using COT_0.HostWinUI.Services.Configuracion;
@@ -69,6 +69,12 @@ public partial class DashboardViewModel : ObservableObject
 
     [RelayCommand]
     private void ShowManual() => Navigator.ShowManual();
+
+    [RelayCommand]
+    private void ShowEmotes() => Navigator.ShowEmotes();
+
+    [RelayCommand]
+    private void ShowMusic() => Navigator.ShowMusic();
 
     /// <summary>SALIR: con sala activa pregunta primero; luego cierra sala y túnel y vuelve al login.</summary>
     [RelayCommand]

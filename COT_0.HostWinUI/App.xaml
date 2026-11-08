@@ -104,6 +104,7 @@
             <FontFamily x:Key="FontCondensedLight">ms-appx:///Assets/Fuentes/BarlowCondensed-300.ttf#Barlow Condensed Light</FontFamily>
             <FontFamily x:Key="FontCondensedBold">ms-appx:///Assets/Fuentes/BarlowCondensed-700.ttf#Barlow Condensed</FontFamily>
             <FontFamily x:Key="FontCondensedExtraLight">ms-appx:///Assets/Fuentes/BarlowCondensed-200.ttf#Barlow Condensed ExtraLight</FontFamily>
+            <FontFamily x:Key="FontRedaction">ms-appx:///Assets/Fuentes/Redaction50-400.ttf#Redaction 50</FontFamily>
             <FontFamily x:Key="FontCondensedExtraBold">ms-appx:///Assets/Fuentes/BarlowCondensed-800Italic.ttf#Barlow Condensed ExtraBold</FontFamily>
             <FontFamily x:Key="FontInter">ms-appx:///Assets/Fuentes/Inter-400.ttf#Inter</FontFamily>
             <FontFamily x:Key="FontInterMedium">ms-appx:///Assets/Fuentes/Inter-500.ttf#Inter</FontFamily>
@@ -405,6 +406,122 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
+            <!-- Botón de solo texto (INICIO, QUITAR, IGNORAR, RESTAURAR, controles de música):
+                 se aclara con el mouse y se corre 4 px a la izquierda -->
+            <Style x:Key="TextButton" TargetType="Button">
+                <Setter Property="MinHeight" Value="{StaticResource MinHitSize}"/>
+                <Setter Property="Padding" Value="8,0"/>
+                <Setter Property="Foreground" Value="{StaticResource Text62Brush}"/>
+                <Setter Property="FontFamily" Value="{StaticResource FontCondensedBold}"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="CharacterSpacing" Value="200"/>
+                <Setter Property="UseSystemFocusVisuals" Value="True"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid x:Name="Root" Background="Transparent" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter x:Name="Content" VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}">
+                                    <ContentPresenter.RenderTransform>
+                                        <TranslateTransform x:Name="Shift"/>
+                                    </ContentPresenter.RenderTransform>
+                                </ContentPresenter>
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualStateGroup.Transitions>
+                                            <VisualTransition GeneratedDuration="0:0:0.2"/>
+                                        </VisualStateGroup.Transitions>
+                                        <VisualState x:Name="Normal"/>
+                                        <VisualState x:Name="PointerOver">
+                                            <VisualState.Setters>
+                                                <Setter Target="Content.Foreground" Value="{StaticResource WhiteBrush}"/>
+                                                <Setter Target="Shift.X" Value="-4"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="Pressed">
+                                            <VisualState.Setters>
+                                                <Setter Target="Content.Foreground" Value="{StaticResource AccentBrush}"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="Disabled">
+                                            <VisualState.Setters>
+                                                <Setter Target="Root.Opacity" Value="0.4"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- APLICAR: bloque claro como las tarjetas del menú; con el mouse pasa al acento -->
+            <Style x:Key="SolidButton" TargetType="Button">
+                <Setter Property="Height" Value="{StaticResource InputHeight}"/>
+                <Setter Property="Padding" Value="16,0"/>
+                <Setter Property="Foreground" Value="{StaticResource DarkInkBrush}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid x:Name="Root" Background="{StaticResource CardFaceBrush}" Padding="{TemplateBinding Padding}">
+                                <Border x:Name="Hover" Background="{StaticResource AccentBrush}" Opacity="0" Margin="-16,0"/>
+                                <TextBlock x:Name="Label" Text="{TemplateBinding Content}" VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}"
+                                           FontFamily="{StaticResource FontCondensedBold}" FontWeight="Bold" FontSize="15" CharacterSpacing="300"/>
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualStateGroup.Transitions>
+                                            <VisualTransition GeneratedDuration="0:0:0.2"/>
+                                        </VisualStateGroup.Transitions>
+                                        <VisualState x:Name="Normal"/>
+                                        <VisualState x:Name="PointerOver">
+                                            <VisualState.Setters>
+                                                <Setter Target="Hover.Opacity" Value="1"/>
+                                                <Setter Target="Label.Foreground" Value="{StaticResource WhiteBrush}"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="Pressed">
+                                            <VisualState.Setters>
+                                                <Setter Target="Hover.Opacity" Value="1"/>
+                                                <Setter Target="Label.Foreground" Value="{StaticResource WhiteBrush}"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="Disabled">
+                                            <VisualState.Setters>
+                                                <Setter Target="Root.Opacity" Value="0.5"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Filas de ListView sin selección ni bordes de WinUI -->
+            <Style x:Key="FlatListItem" TargetType="ListViewItem">
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="Margin" Value="0"/>
+                <Setter Property="MinHeight" Value="0"/>
+                <Setter Property="CornerRadius" Value="0"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            </Style>
+
+            <!-- Volumen: riel fino con el acento -->
+            <Style x:Key="VolumeSlider" TargetType="Slider" BasedOn="{StaticResource DefaultSliderStyle}">
+                <Setter Property="Width" Value="130"/>
+                <Setter Property="Minimum" Value="0"/>
+                <Setter Property="Maximum" Value="100"/>
+                <Setter Property="StepFrequency" Value="1"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="IsThumbToolTipEnabled" Value="False"/>
+                <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+            </Style>
+
+            <!-- Iconos de los botones: glifos de Segoe Fluent Icons (heredan el color del botón, sin Path ni sombras) -->
+            <FontFamily x:Key="FontIcons">Segoe Fluent Icons,Segoe MDL2 Assets</FontFamily>
 
             <!-- Textos de la lista de conectados -->
             <Style x:Key="ColumnHeaderText" TargetType="TextBlock">

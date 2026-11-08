@@ -1,6 +1,7 @@
 // Punto de entrada: arma los servicios, muestra la ventana y levanta la web en segundo plano
 using COT_0.Core.Services;
 using COT_0.HostWinUI.Services.Dialogos;
+using COT_0.HostWinUI.Services.Musica;
 using COT_0.HostWinUI.Services.Sala;
 using COT_0.HostWinUI.Services.Sesiones;
 using COT_0.HostWinUI.Services.Tiempo;
@@ -32,6 +33,9 @@ public partial class App : Application
         _window.Closed += (_, _) => Services.Dispose();
         _window.Activate();
 
+        // Igual que el WPF: la música suena desde el login (si falta la carpeta, MusicaPage lo avisa)
+        _ = Services.GetRequiredService<MusicService>().StartAsync();
+
         // Igual que el WPF: la web arranca mientras el host escribe su contraseña
         await TryStartWebServerAsync();
     }
@@ -50,6 +54,7 @@ public partial class App : Application
             // Mismas instancias que usa el hub: salen del contenedor de la app web
             .AddSingleton(sp => sp.GetRequiredService<WebServerHost>().Services.GetRequiredService<IChatService>())
             .AddSingleton(sp => sp.GetRequiredService<WebServerHost>().Services.GetRequiredService<IRoomService>())
+            .AddSingleton(sp => sp.GetRequiredService<WebServerHost>().Services.GetRequiredService<IRoomEmotes>())
             .AddSingleton<RoomSession>()
             .AddSingleton<ClockService>()
             .AddSingleton<ConfirmDialogService>()
@@ -58,6 +63,13 @@ public partial class App : Application
             .AddSingleton<SesionWatcher>()
             .AddSingleton<ConnectedUsersViewModel>()
             .AddSingleton<DashboardViewModel>()
+            .AddSingleton<EmotesViewModel>()
+            .AddSingleton<MusicLibrary>()
+            .AddSingleton<CoverLibrary>()
+            .AddSingleton<SongCatalog>()
+            .AddSingleton<MusicService>()
+            .AddSingleton<MusicaViewModel>()
+            .AddSingleton<FirmaViewModel>()
             .BuildServiceProvider();
     }
 
