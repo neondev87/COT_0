@@ -5,6 +5,7 @@ using COT_0.HostWinUI.Services.Sala;
 using COT_0.HostWinUI.Services.Tiempo;
 using COT_0.HostWinUI.Services.Tunel;
 using COT_0.HostWinUI.Services.Visitas;
+using COT_0.HostWinUI.Views.ModelosDeVista;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
@@ -52,6 +53,7 @@ public partial class App : Application
             .AddSingleton<ClockService>()
             .AddSingleton<ConfirmDialogService>()
             .AddSingleton<VisitWatcher>()
+            .AddSingleton<ConnectedUsersViewModel>()
             .BuildServiceProvider();
     }
 
