@@ -231,7 +231,7 @@
 
     <x:String x:Key="Text.Manual.Step1.Title">Abre la app y entra</x:String>
     <x:String x:Key="Text.Manual.Step1.Notice1">Hola, soy Lain. Te enseño COT_0 en seis pasos. Esta es la pantalla de acceso.</x:String>
-    <x:String x:Key="Text.Manual.Step1.Notice2">Escribe tu usuario y tu contraseña. Si es tu primera vez, crea tu cuenta.</x:String>
+    <x:String x:Key="Text.Manual.Step1.Notice2">Si es tu primera vez, toca Registrar usuario.</x:String>
     <x:String x:Key="Text.Manual.Step1.Notice3">Toca ENTRAR y llegas al inicio. Aquí, ENTER te lleva al siguiente paso.</x:String>
 
     <x:String x:Key="Text.Manual.Step2.Title">El inicio: genera el QR</x:String>

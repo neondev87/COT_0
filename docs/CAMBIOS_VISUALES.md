@@ -315,3 +315,8 @@ Evitado por ligereza: sombras del thumb, brillo del tramo rojo, animación del a
 - **Recuperación**: ahora el primer campo es USUARIO con botón CONTINUAR; la pregunta y la respuesta aparecen debajo cuando se encuentra el usuario.
 - InfoBar verde reutilizado: "Usuario registrado…" o "Tu contraseña cambió…", según de dónde regreses.
 
+### Manual de Lain: paso 1 con el login nuevo
+
+- Aviso 2 del paso 1 (`Text.Manual.Step1.Notice2`): "Escribe tu usuario y tu contraseña. Si es tu primera vez, crea tu cuenta." → "Si es tu primera vez, toca Registrar usuario." Mismo sonido, orden y tiempos.
+- Réplica del login (`VistaEjemploLogin`): bajo la contraseña, alineados a la derecha como en el login real, **¿Olvidaste tu contraseña?** | **Registrar usuario** con `LoginLinkButton` y `LoginLinkSeparator` (sin estilos nuevos). Botón ENTRAR igual.
+- Resaltado 2 del paso 1: pasa de USUARIO y CONTRASEÑA al enlace **Registrar usuario**. Los resaltados 1 (título) y 3 (ENTRAR) no cambian.

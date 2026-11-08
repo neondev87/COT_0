@@ -144,7 +144,7 @@ Antes: `dotnet build COT_0.sln` en 0 errores y 0 warnings.
 
    | Paso | Vista de ejemplo | Resaltado 1 | Resaltado 2 | Resaltado 3 |
    |---|---|---|---|---|
-   | 01 Abre la app y entra | Login con `host_demo` y contraseña de puntos | COT_0 + ACCESO DEL HOST | USUARIO y CONTRASEÑA | ENTRAR |
+   | 01 Abre la app y entra | Login con `host_demo`, contraseña de puntos y los enlaces ¿Olvidaste tu contraseña? \| Registrar usuario | COT_0 + ACCESO DEL HOST | Enlace Registrar usuario | ENTRAR |
    | 02 El inicio: genera el QR | Dashboard con la hora actual y SALA INACTIVA | ESTADO (arriba a la derecha) | 01 GENERAR QR | Tarjetas 02 a 06 |
    | 03 Comparte el QR o el enlace | Sala con QR de adorno, `#7F3K` y el enlace de ejemplo | QR | URL DE LA SALA + COPIAR | EN VIVO + tiempo |
    | 04 Ve quién está conectado | La misma sala: "04" y 4 invitados ficticios en la lista | Contador | Lista de conectados | CERRAR SALA |
@@ -158,7 +158,8 @@ Antes: `dotnet build COT_0.sln` en 0 errores y 0 warnings.
 8. **Cerrar**, ENTER o ESC en la despedida → regresa al dashboard. ← INICIO en cualquier momento también regresa y corta video y sonidos.
 9. Vuelve a abrir el manual: empieza otra vez en el paso 1, sin silencio y sin resaltados hasta que entra el primer aviso.
 10. Capturas opcionales: pon `paso2.png` en `manual\pasos\` → el recuadro del paso 2 muestra la imagen en lugar de la vista de ejemplo (sin resaltados). Quítala y vuelve a abrir: regresa la vista de ejemplo.
-11. Fluidez: con el Administrador de tareas abierto, recorre los 6 pasos; el uso de CPU no debe subir de forma notable (solo opacidad y escala animadas).
+11. Paso 1: el aviso 2 dice "Si es tu primera vez, toca Registrar usuario." y resalta **solo** el enlace "Registrar usuario" de la réplica (borde rojo con halo). La réplica muestra bajo la contraseña, a la derecha, "¿Olvidaste tu contraseña?" | "Registrar usuario" con la barra vertical sutil, igual que el login real. Achica la ventana: los dos enlaces siguen en una línea, sin encimarse ni cortarse, y el resaltado sigue sobre el enlace.
+12. Fluidez: con el Administrador de tareas abierto, recorre los 6 pasos; el uso de CPU no debe subir de forma notable (solo opacidad y escala animadas).
 
 ### Errores (InfoBar amarillo abajo a la derecha)
 
