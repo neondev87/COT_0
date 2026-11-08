@@ -8,7 +8,7 @@ Acuerdo entre agentes. Si algo de acá tiene que cambiar, se anota en **Pedidos 
 COT_0.sln
 COT_0.Core/   class library   → solo Agente 0
 COT_0.Web/    Blazor Server   → Agente B (menos wwwroot) / Agente C (wwwroot)
-COT_0.Host/   WPF             → Agente A
+COT_0.Host/   WinUI 3         → Agente A
 ```
 
 Referencias: `Host → Web, Core` · `Web → Core`. Core no referencia a nadie.
@@ -106,23 +106,16 @@ Emotes de la sala desde un set de 7TV. Modelos en `COT_0.Core.Models`: `RoomEmot
 - `Task<string> StartAsync(string localUrl, CancellationToken ct = default)` – lanza `cloudflared tunnel --url {localUrl}` y devuelve la URL pública.
 - `Task StopAsync()` – cierra cloudflared.
 
-### `IAuthService` – implementa Agente A (en Host)
-Login del host contra `appsettings.json` → `Host:User` / `Host:Password`.
-- `bool IsAuthenticated`
-- `Task<bool> LoginAsync(string user, string password)`
-- `void Logout()`
+## Clases principales
 
-## Clases existentes (stubs)
-
-- Host: `LoginWindow`, `MainWindow`, `Services/WebServerHost` (funciona), `Services/CloudflareTunnelService`, `Services/QrService` (QRCoder ya instalado).
+- Host: `App`, `MainWindow` (un `Frame` con las páginas de `Views/Pantallas`), `Services/Sala/WebServerHost`, `Services/Tunel/CloudflareTunnelService`, `Services/Sala/QrService` (QRCoder). Ver `docs/ESTRUCTURA.md`.
 - Web: `WebApp` (arma la app), `Hubs/ChatHub`, `Pages/Join`, `Pages/Chat`, `Layout/MainLayout`.
 
 ## Configuración
 
 Un solo `appsettings.json`, en `COT_0.Host/` (se copia a la salida y Web lo lee al estar hospedado):
 
-- `Host:User` / `Host:Password` **no** van en `appsettings.json` (quedan vacíos): se cargan con `dotnet user-secrets` del Host:
-  `dotnet user-secrets set "Host:User" "..." --project COT_0.Host` (y lo mismo con `Host:Password`).
+- La cuenta del host no va en `appsettings.json`: se registra en la app y se guarda en `%LocalAppData%\COT_0\usuarios.json` (contraseña y respuesta secreta con PBKDF2).
 - `Paths:MediaRoot`: única ruta absoluta de la PC (carpeta con `fondos`, `musica`, `portadas`, `gifs`, `manual`). Las rutas de `Background:Folder`, `Audio:MusicFolder`, `Audio:CoversFolder`, `Manual:*` y `GuestManual:AssetsFolder` van relativas a ella (`COT_0.Core/Services/MediaPath`).
 - `Web:Url`: URL local del servidor.
 
@@ -158,12 +151,12 @@ _(Anotar acá: agente, qué se necesita en Core y por qué.)_
 - **Agente A (WinUI, rama `winui-migration`)**: no hizo falta tocar Core. Pedidos para cuando termine la migración:
   - `IAuthService` ya no lo usa el Host WinUI (login con `UserService` + `usuarios.json`, contraseña y respuesta secreta con PBKDF2). Propuesta: borrarlo de Core junto con el WPF, o cambiarlo por `IHostAccountService` (`HasUsersAsync`, `RegisterAsync(user, password, questionKey, answer)`, `LoginAsync`) si se quiere cumplir "interfaz en Core".
   - Los servicios del Host WinUI (`UserService`, `PasswordRecoveryService`, `VisitService`, `SesionService`) son clases estáticas sin interfaz en Core. Si se pide interfaz: `IVisitLog` (`RecordAsync(name)`, `GetAllAsync()`) e `IGuestSessions` (`StartAsync()`, `AddGuestAsync(name)`, `EndAsync()`, `GetAllAsync()`); los modelos `Visit`/`SesionInvitados` pasarían a Core.
-  - Música (WinUI): `MusicLibrary` y `CoverLibrary` viven en el Host WPF, no en Core, y WinUI no puede referenciar un proyecto WPF; quedaron copiadas en `COT_0.HostWinUI/Services/Musica`. Si se quieren compartidas: moverlas a Core (no dependen de WPF; solo de `MediaPath` y de la config `Audio:*`) e `IMusicPlayer` (`StartAsync`, `PlayAsync(path)`, `TogglePlay`, `NextAsync`, `PreviousAsync`, `Volume`, `IsMuted`, `Current`, `event StateChanged`).
+  - Música (WinUI): `MusicLibrary` y `CoverLibrary` viven en el Host WPF, no en Core, y WinUI no puede referenciar un proyecto WPF; quedaron copiadas en `COT_0.Host/Services/Musica`. Si se quieren compartidas: moverlas a Core (no dependen de WPF; solo de `MediaPath` y de la config `Audio:*`) e `IMusicPlayer` (`StartAsync`, `PlayAsync(path)`, `TogglePlay`, `NextAsync`, `PreviousAsync`, `Volume`, `IsMuted`, `Current`, `event StateChanged`).
   - Emotes (WinUI): se usa `IRoomEmotes` tal cual, sin cambios.
-  - Fondos (WinUI): `BackgroundCatalog` vive en el Host WPF y WinUI no puede referenciarlo; quedó copiado y adaptado como `COT_0.HostWinUI/Services/Fondos/FondoCatalog` (async, sin `BackgroundOption` de WPF), más `FondoStore` (`fondos.json`), `FondoService`, `FondoImages` y `FondoPlayer`. Son clases concretas porque usan tipos de WinUI (`BitmapImage`, `MediaPlayer`). Si se quiere interfaz en Core: `IBackgroundCatalog` (`Task<IReadOnlyList<...>> ScanAsync()`) con un modelo de fondo sin tipos de vista. Config nueva en el `appsettings.json` del Host WinUI: `Background:HeavyVideoMegabytes`, `ThumbnailSize`, `StillSize`, `VeilOpacity`, `PickerVeilOpacity` y `Storage:BackgroundsFile`.
-  - Manual (WinUI): `ManualAssets` vive en el Host WPF; quedó copiado y adaptado (async) en `COT_0.HostWinUI/Services/Manual`, y `ManualSound` reescrito con `Windows.Media.Playback`. `ManualDemoFactory` no se migró (el manual de WinUI ya no usa vistas de muestra). Config nueva: `Manual:StagesFolder`, `StageExtension`, `StageDecodeSize`, `NoticeCounts`; los textos pasaron a `Textos.xaml`.
-  - `.gitignore` de la raíz (no es carpeta de ningún agente): la regla `musica/` tapa `COT_0.HostWinUI/Services/Musica/`. Pedido: cambiarla a `/musica/`. Mientras, `COT_0.HostWinUI/.gitignore` la vuelve a incluir.
-  - Cierre de la migración (Agente 0): borrar `COT_0.Host` (WPF), renombrar `COT_0.HostWinUI` a `COT_0.Host` y agregarlo a `COT_0.sln`. Lista completa en `docs/PENDIENTES_LIMPIEZA.md`.
+  - Fondos (WinUI): `BackgroundCatalog` vive en el Host WPF y WinUI no puede referenciarlo; quedó copiado y adaptado como `COT_0.Host/Services/Fondos/FondoCatalog` (async, sin `BackgroundOption` de WPF), más `FondoStore` (`fondos.json`), `FondoService`, `FondoImages` y `FondoPlayer`. Son clases concretas porque usan tipos de WinUI (`BitmapImage`, `MediaPlayer`). Si se quiere interfaz en Core: `IBackgroundCatalog` (`Task<IReadOnlyList<...>> ScanAsync()`) con un modelo de fondo sin tipos de vista. Config nueva en el `appsettings.json` del Host WinUI: `Background:HeavyVideoMegabytes`, `ThumbnailSize`, `StillSize`, `VeilOpacity`, `PickerVeilOpacity` y `Storage:BackgroundsFile`.
+  - Manual (WinUI): `ManualAssets` vive en el Host WPF; quedó copiado y adaptado (async) en `COT_0.Host/Services/Manual`, y `ManualSound` reescrito con `Windows.Media.Playback`. `ManualDemoFactory` no se migró (el manual de WinUI ya no usa vistas de muestra). Config nueva: `Manual:StagesFolder`, `StageExtension`, `StageDecodeSize`, `NoticeCounts`; los textos pasaron a `Textos.xaml`.
+  - `.gitignore` de la raíz (no es carpeta de ningún agente): la regla `musica/` tapa `COT_0.Host/Services/Musica/`. Pedido: cambiarla a `/musica/`. Mientras, `COT_0.Host/.gitignore` la vuelve a incluir.
+  - Cierre de la migración (Agente 0): borrar el Host WPF, renombrar `COT_0.HostWinUI` a `COT_0.Host` y agregarlo a `COT_0.sln`. Lista completa en `docs/PENDIENTES_LIMPIEZA.md`.
   - Sesiones de invitados: `SesionWatcher` se entera de quién entra comparando `GetUsersAsync()` en cada `UsersChanged` (igual que `VisitWatcher`). Un evento `event Action<User>? UserJoined` en `IChatService` lo haría directo.
 
 ### Resueltos por el Agente 0 (auditoría 05/11)

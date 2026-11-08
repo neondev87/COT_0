@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sala activa: encabezado con código y tiempo; a la izquierda el QR y la URL (o el aviso de abriendo/error);
+     a la derecha el contador, la lista de conectados, accesos a Emotes, Música y Fondo, y CERRAR SALA.
+     Transparente: el fondo lo pinta CapaFondo detrás del Frame -->
+<Page x:Class="COT_0.Host.Views.Pantallas.SalaPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:componentes="using:COT_0.Host.Views.Componentes"
+      Background="Transparent">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Views/Estilos/Sala.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+        <Grid Margin="64,52,64,0" VerticalAlignment="Top" ColumnSpacing="24">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <componentes:EncabezadoPantalla Title="{StaticResource Text.Room.Title}"/>
+                <TextBlock Text="{x:Bind ViewModel.Code, Mode=OneWay}" Style="{StaticResource MonoText}" Margin="28,0,0,0" CharacterSpacing="100"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"
+                        Visibility="{x:Bind ViewModel.IsRoomOpen, Mode=OneWay}">
+                <componentes:PuntoPulso VerticalAlignment="Center"/>
+                <TextBlock Text="{StaticResource Text.Room.Live}" Style="{StaticResource LiveText}" Margin="12,0"/>
+                <TextBlock Text="{x:Bind ViewModel.Elapsed, Mode=OneWay}" Style="{StaticResource MonoText}" FontSize="14"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Columna izquierda: QR + URL, o los avisos mientras no hay sala -->
+        <StackPanel Width="{StaticResource QrPanelSize}" Margin="64,124,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <StackPanel.Transitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition FromHorizontalOffset="-60" FromVerticalOffset="0"/>
+                </TransitionCollection>
+            </StackPanel.Transitions>
+
+            <StackPanel Spacing="12" Visibility="{x:Bind ViewModel.IsStatusVisible, Mode=OneWay}">
+                <InfoBar Severity="Informational" IsClosable="False" IsOpen="{x:Bind ViewModel.IsOpening, Mode=OneWay}"
+                         Title="{StaticResource Text.Room.OpeningTitle}" Message="{StaticResource Text.Room.OpeningMessage}">
+                    <ProgressBar IsIndeterminate="True" Margin="0,0,0,12" Foreground="{StaticResource AccentBrush}"/>
+                </InfoBar>
+                <InfoBar Severity="Error" IsClosable="False" IsOpen="{x:Bind ViewModel.IsErrorOpen, Mode=OneWay}"
+                         Title="{StaticResource Text.Room.ErrorTitle}" Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}">
+                    <InfoBar.ActionButton>
+                        <Button Content="{StaticResource Text.Room.Retry}" Style="{StaticResource SolidButton}" Command="{x:Bind ViewModel.OpenCommand}"/>
+                    </InfoBar.ActionButton>
+                </InfoBar>
+            </StackPanel>
+
+            <StackPanel Visibility="{x:Bind ViewModel.IsRoomOpen, Mode=OneWay}">
+                <!-- Placa con esquinas cortadas (Path en vez de Clip) y borde de acento en vez del brillo -->
+                <Grid Width="{StaticResource QrPanelSize}" Height="{StaticResource QrPanelSize}">
+                    <Path Data="M28,0 L420,0 L420,392 L392,420 L0,420 L0,28 Z" Fill="{StaticResource CardFaceBrush}"
+                          Stroke="{StaticResource AccentBrush}" StrokeThickness="1"/>
+                    <Image Source="{x:Bind ViewModel.QrImage, Mode=OneWay}" Width="{StaticResource QrSize}" Height="{StaticResource QrSize}"
+                           AutomationProperties.Name="{StaticResource Text.Room.QrDescription}"/>
+                    <Border Width="66" Height="66" Background="{StaticResource DarkInkBrush}" BorderBrush="{StaticResource CardFaceBrush}"
+                            BorderThickness="6" RenderTransformOrigin="0.5,0.5">
+                        <Border.RenderTransform>
+                            <RotateTransform Angle="45"/>
+                        </Border.RenderTransform>
+                    </Border>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="{StaticResource Text.Room.QrMarkStart}" Style="{StaticResource QrMarkText}" Foreground="{StaticResource CardFaceBrush}"/>
+                        <TextBlock Text="{StaticResource Text.Room.QrMarkEnd}" Style="{StaticResource QrMarkText}" Foreground="{StaticResource AccentBrush}"/>
+                    </StackPanel>
+                    <TextBlock Text="{StaticResource Text.Room.Scan}" Margin="0,14,18,0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                               FontFamily="{StaticResource FontCondensedExtraBold}" FontWeight="ExtraBold" FontStyle="Italic"
+                               FontSize="13" CharacterSpacing="200" Foreground="{StaticResource AccentBrush}"/>
+                </Grid>
+
+                <Grid Margin="0,14,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Height="{StaticResource RoomFieldHeight}" Padding="16,0" Background="{StaticResource UrlFieldBrush}"
+                            BorderBrush="{StaticResource Text25Brush}" BorderThickness="0,0,0,1">
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="{StaticResource Text.Room.UrlLabel}" Style="{StaticResource SmallLabelText}"/>
+                            <TextBlock Text="{x:Bind ViewModel.JoinUrl, Mode=OneWay}" Margin="0,2,0,0" Style="{StaticResource MonoText}"
+                                       TextTrimming="CharacterEllipsis" IsTextSelectionEnabled="True"/>
+                        </StackPanel>
+                    </Border>
+                    <Button Grid.Column="1" Style="{StaticResource SolidButton}" Height="{StaticResource RoomFieldHeight}" Padding="22,0"
+                            Content="{x:Bind ViewModel.CopyLabel, Mode=OneWay}" Command="{x:Bind ViewModel.CopyCommand}"/>
+                </Grid>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Columna derecha: contador + lista + accesos + cerrar -->
+        <Grid Margin="560,124,64,40">
+            <Grid.Transitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition FromHorizontalOffset="40" FromVerticalOffset="0"/>
+                </TransitionCollection>
+            </Grid.Transitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Contador a la izquierda; firma Neondev a la derecha, centrada a media altura de la fila (columnas: no se enciman) -->
+            <Grid ColumnSpacing="24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{x:Bind ViewModel.TotalText, Mode=OneWay}" Style="{StaticResource CountText}"/>
+                    <StackPanel Margin="18,0,0,8" VerticalAlignment="Bottom">
+                        <Rectangle Width="32" Height="1" HorizontalAlignment="Left" Fill="{StaticResource AccentBrush}"/>
+                        <TextBlock Text="{StaticResource Text.Room.Count}" Margin="0,8,0,0" Style="{StaticResource CountLabelText}"/>
+                    </StackPanel>
+                </StackPanel>
+                <componentes:Firma Grid.Column="1" VerticalAlignment="Center"/>
+            </Grid>
+
+            <componentes:ListaConectados Grid.Row="1" Margin="0,18"/>
+
+            <!-- Barra de abajo: accesos (ancho automático) | aviso (lo que sobre, con wrap y recorte) | CERRAR SALA (ancho fijo).
+                 El aviso es lo primero que se encoge: nunca tapa los botones ni empuja CERRAR SALA fuera de la ventana -->
+            <Grid Grid.Row="2" ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="{StaticResource CloseRoomWidth}"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" Margin="-8,0,0,0">
+                    <Button Style="{StaticResource TextButton}" Command="{x:Bind ViewModel.ShowEmotesCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE76E;" FontFamily="{StaticResource FontIcons}" FontSize="14"/>
+                            <TextBlock Text="{StaticResource Text.Room.Emotes}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource TextButton}" Command="{x:Bind ViewModel.ShowMusicCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE8D6;" FontFamily="{StaticResource FontIcons}" FontSize="14"/>
+                            <TextBlock Text="{StaticResource Text.Room.Music}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource TextButton}" Command="{x:Bind ViewModel.ShowBackgroundsCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE91B;" FontFamily="{StaticResource FontIcons}" FontSize="14"/>
+                            <TextBlock Text="{StaticResource Text.Room.Background}"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <TextBlock Grid.Column="1" Text="{StaticResource Text.Room.CloseHint}" Style="{StaticResource HintText}"
+                           HorizontalAlignment="Right" TextAlignment="Right" TextWrapping="WrapWholeWords" MaxLines="2" TextTrimming="CharacterEllipsis"/>
+                <Button Grid.Column="2" Style="{StaticResource ConfirmButton}" Content="{StaticResource Text.Room.Close}" Margin="0"
+                        Command="{x:Bind ViewModel.CloseRoomCommand}" IsEnabled="{x:Bind ViewModel.IsRoomOpen, Mode=OneWay}"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

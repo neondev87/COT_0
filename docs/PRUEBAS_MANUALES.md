@@ -1,11 +1,11 @@
 # Pruebas manuales (Host WinUI)
 
-No hay proyectos de prueba: esto se revisa a mano con `dotnet run --project COT_0.HostWinUI`.
-Antes: `dotnet build COT_0.HostWinUI` en 0 errores y 0 warnings.
+No hay proyectos de prueba: esto se revisa a mano con `dotnet run --project COT_0.Host`.
+Antes: `dotnet build COT_0.Host` en 0 errores y 0 warnings.
 
 ## Preparación
 
-- `Paths:MediaRoot` en `COT_0.HostWinUI/appsettings.json` apunta a tu carpeta `COT_0_P` (fuera del repo), con `musica\` (2 o 3 canciones), `portadas\`,
+- `Paths:MediaRoot` en `COT_0.Host/appsettings.json` apunta a tu carpeta `COT_0_P` (fuera del repo), con `musica\` (2 o 3 canciones), `portadas\`,
   `fondos\` (al menos una imagen y un video), `gifs\` (videos de Lain) y `manual\` (sonidos del manual).
 - `cloudflared` instalado (`winget install Cloudflare.cloudflared`) o su ruta en `Tunnel:CloudflaredPath`.
 - Para empezar de cero, borra `%LocalAppData%\COT_0\` (ahí viven `usuarios.json`, `visitas.json`, `sesiones.json` y `fondos.json`).

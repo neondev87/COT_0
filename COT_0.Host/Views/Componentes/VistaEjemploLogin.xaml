@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Paso 1 del manual: réplica quieta del login (sin niebla ni barrido) con usuario y contraseña de muestra.
+     Resaltados: título, campos y ENTRAR -->
+<componentes:VistaEjemplo x:Class="COT_0.Host.Views.Componentes.VistaEjemploLogin"
+                          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                          xmlns:componentes="using:COT_0.Host.Views.Componentes">
+    <Grid Background="{StaticResource LoginBackgroundBrush}">
+        <Image Source="ms-appx:///Assets/Imagenes/ascii-bg.png" Stretch="UniformToFill" Opacity="{StaticResource LoginImageOpacity}"/>
+        <Rectangle Fill="{StaticResource LoginShadeBrush}"/>
+        <Rectangle Fill="{StaticResource LoginPlateBrush}"/>
+        <Rectangle Fill="{StaticResource VignetteBrush}"/>
+
+        <StackPanel Width="{StaticResource LoginFormWidth}" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid Margin="0,0,0,44">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="{StaticResource Text.Login.TitleStart}" Style="{StaticResource LoginTitleText}"/>
+                        <TextBlock Text="{StaticResource Text.Login.TitleCursor}" Style="{StaticResource LoginTitleText}" Foreground="{StaticResource AccentBrush}"/>
+                        <TextBlock Text="{StaticResource Text.Login.TitleEnd}" Style="{StaticResource LoginTitleText}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,12,0,0">
+                        <Rectangle Width="34" Height="1" Fill="{StaticResource AccentFadeInBrush}" VerticalAlignment="Center"/>
+                        <TextBlock Text="{StaticResource Text.Login.Subtitle.SignIn}" Margin="10,0" VerticalAlignment="Center"
+                                   FontFamily="{StaticResource FontCondensedMedium}" FontSize="13" CharacterSpacing="500"
+                                   Foreground="{StaticResource Light62Brush}"/>
+                        <Rectangle Width="34" Height="1" Fill="{StaticResource AccentFadeOutBrush}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+                <componentes:ResaltadoManual Margin="-24,-14" Phase="{x:Bind Phase, Mode=OneWay}" From="1" To="2"/>
+            </Grid>
+
+            <Grid>
+                <StackPanel>
+                    <StackPanel Margin="0,0,0,22">
+                        <TextBlock Text="{StaticResource Text.Login.User}" Style="{StaticResource FieldLabelText}"/>
+                        <TextBox Style="{StaticResource LoginTextBox}" Text="{x:Bind Demo.User}" IsReadOnly="True" IsTabStop="False"/>
+                    </StackPanel>
+                    <TextBlock Text="{StaticResource Text.Login.Password}" Style="{StaticResource FieldLabelText}"/>
+                    <PasswordBox Style="{StaticResource LoginPasswordBox}" Password="{StaticResource Text.Login.PasswordPlaceholder}" IsTabStop="False"/>
+                </StackPanel>
+                <componentes:ResaltadoManual Margin="-16,-12" Phase="{x:Bind Phase, Mode=OneWay}" From="3" To="4"/>
+            </Grid>
+
+            <Grid Margin="0,24,0,0">
+                <Button Style="{StaticResource LoginButton}" Content="{StaticResource Text.Login.Button.SignIn}" IsTabStop="False"/>
+                <componentes:ResaltadoManual Margin="-10" Phase="{x:Bind Phase, Mode=OneWay}" From="5"/>
+            </Grid>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,30">
+            <TextBlock Text="{StaticResource Text.Login.Footer}" Style="{StaticResource FooterText}"/>
+            <Rectangle Style="{StaticResource Diamond}"/>
+            <TextBlock Text="{StaticResource Text.App.Version}" Style="{StaticResource FooterText}"/>
+        </StackPanel>
+    </Grid>
+</componentes:VistaEjemplo>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Paso 2 del manual: réplica del inicio (dashboard) con la sala inactiva y las tarjetas reales (TarjetaMenu) sin comando.
+     Resaltados: estado de la sala, 01 GENERAR QR y el resto del menú -->
+<componentes:VistaEjemplo x:Class="COT_0.Host.Views.Componentes.VistaEjemploInicio"
+                          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                          xmlns:componentes="using:COT_0.Host.Views.Componentes">
+
+    <componentes:VistaEjemplo.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Views/Estilos/Dashboard.xaml"/>
+                <ResourceDictionary Source="ms-appx:///Views/Estilos/TarjetaMenu.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="DemoCard" TargetType="componentes:TarjetaMenu" BasedOn="{StaticResource TarjetaMenuStyle}">
+                <Setter Property="IsTabStop" Value="False"/>
+            </Style>
+        </ResourceDictionary>
+    </componentes:VistaEjemplo.Resources>
+
+    <Grid Background="{StaticResource LoginBackgroundBrush}">
+        <!-- Reloj -->
+        <StackPanel Margin="44,34,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{x:Bind Demo.Time}" Style="{StaticResource ClockText}"/>
+                <TextBlock Text="{x:Bind Demo.Seconds}" Style="{StaticResource ClockSecondsText}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="6,6,0,0">
+                <Rectangle Width="28" Height="1" Fill="{StaticResource AccentBrush}" Opacity="0.8" VerticalAlignment="Center"/>
+                <TextBlock Text="{x:Bind Demo.Date}" Style="{StaticResource DateText}"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Estado: sala inactiva -->
+        <Grid Margin="0,56,48,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+            <StackPanel>
+                <TextBlock Text="{StaticResource Text.Dashboard.Status}" Style="{StaticResource StatusLabelText}"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                    <Ellipse Width="9" Height="9" Stroke="{StaticResource Text55Brush}" StrokeThickness="1" VerticalAlignment="Center"/>
+                    <TextBlock Text="{StaticResource Text.Dashboard.Inactive}" Style="{StaticResource StatusText}"
+                               Margin="12,0,0,0" Foreground="{StaticResource Text70Brush}"/>
+                </StackPanel>
+                <Rectangle Width="180" Height="1" Margin="0,10,0,0" HorizontalAlignment="Right" Fill="{StaticResource AccentFadeInBrush}"/>
+            </StackPanel>
+            <componentes:ResaltadoManual Margin="-18,-12" Phase="{x:Bind Phase, Mode=OneWay}" From="1" To="2"/>
+        </Grid>
+
+        <!-- Menú en diagonal -->
+        <StackPanel Margin="44,0,0,38" HorizontalAlignment="Left" VerticalAlignment="Bottom" Spacing="8">
+            <Grid HorizontalAlignment="Left">
+                <componentes:TarjetaMenu Style="{StaticResource DemoCard}" Number="01"
+                                         Content="{StaticResource Text.Dashboard.QrTitle}" Subtitle="{StaticResource Text.Dashboard.QrSubtitle}"
+                                         Icon="{StaticResource MenuIcon.Qr}"/>
+                <componentes:ResaltadoManual Margin="-10" Phase="{x:Bind Phase, Mode=OneWay}" From="3" To="4"/>
+            </Grid>
+            <Grid HorizontalAlignment="Left">
+                <StackPanel Spacing="8">
+                    <componentes:TarjetaMenu Style="{StaticResource DemoCard}" Number="02" Margin="26,0,0,0"
+                                             Content="{StaticResource Text.Dashboard.BackgroundTitle}" Subtitle="{StaticResource Text.Dashboard.BackgroundSubtitle}"
+                                             Icon="{StaticResource MenuIcon.Background}"/>
+                    <componentes:TarjetaMenu Style="{StaticResource DemoCard}" Number="03" Margin="52,0,0,0"
+                                             Content="{StaticResource Text.Dashboard.ManualTitle}" Subtitle="{StaticResource Text.Dashboard.ManualSubtitle}"
+                                             Icon="{StaticResource MenuIcon.Manual}"/>
+                    <componentes:TarjetaMenu Style="{StaticResource DemoCard}" Number="04" Margin="78,0,0,0"
+                                             Content="{StaticResource Text.Dashboard.EmotesTitle}" Subtitle="{StaticResource Text.Dashboard.EmotesSubtitle}"
+                                             Icon="{StaticResource MenuIcon.Emotes}"/>
+                    <componentes:TarjetaMenu Style="{StaticResource DemoCard}" Number="05" Margin="104,0,0,0"
+                                             Content="{StaticResource Text.Dashboard.MusicTitle}" Subtitle="{StaticResource Text.Dashboard.MusicSubtitle}"
+                                             Icon="{StaticResource MenuIcon.Music}"/>
+                    <componentes:TarjetaMenu Style="{StaticResource DemoCard}" Number="06" Margin="130,0,0,0"
+                                             Content="{StaticResource Text.Dashboard.ExitTitle}" Subtitle="{StaticResource Text.Dashboard.ExitSubtitle}"
+                                             Icon="{StaticResource MenuIcon.Exit}"/>
+                </StackPanel>
+                <componentes:ResaltadoManual Margin="16,-10,-10,-10" Phase="{x:Bind Phase, Mode=OneWay}" From="5"/>
+            </Grid>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Margin="0,0,48,34" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <TextBlock Text="{StaticResource Text.Dashboard.Footer}" Style="{StaticResource FooterText}" Foreground="{StaticResource Text55Brush}"/>
+            <Rectangle Style="{StaticResource Diamond}"/>
+            <TextBlock Text="{StaticResource Text.App.Version}" Style="{StaticResource FooterText}" Foreground="{StaticResource Text55Brush}"/>
+        </StackPanel>
+    </Grid>
+</componentes:VistaEjemplo>

@@ -1,0 +1,16 @@
+// Firma Neondev (login, dashboard y sala): barra de volumen bajo el logo; el logo va aparte (LogoNeondev)
+using COT_0.Host.Services.Musica;
+
+namespace COT_0.Host.Views.ModelosDeVista;
+
+/// <summary>Usa el mismo MusicService que MusicaPage, así que lo que cambies en una se ve en la otra.</summary>
+public partial class FirmaViewModel(MusicService music) : MusicControlsViewModel(music)
+{
+    public bool IsMusicMissing => !IsMusicAvailable;
+
+    protected override void OnMusicStateChanged()
+    {
+        base.OnMusicStateChanged();
+        OnPropertyChanged(nameof(IsMusicMissing));
+    }
+}

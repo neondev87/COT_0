@@ -1,11 +1,11 @@
-# Estructura de COT_0.HostWinUI
+# Estructura de COT_0.Host
 
 Host de COT_0 en WinUI 3. Una sola ventana con un `Frame`; cada pantalla es una `Page`.
 Las carpetas de primer nivel van en inglés; las de adentro, en español y con el nombre de lo que hacen.
 Una clase por archivo.
 
 ```
-COT_0.HostWinUI/
+COT_0.Host/
 ├── App.xaml                      Paleta, fuentes, medidas y estilos comunes (login, TextButton, SolidButton, VolumeSlider, filas de lista)
 ├── App.xaml.cs                   Arranque: arma los servicios, crea la ventana, arranca la música y levanta la web
 ├── MainWindow.xaml               Única ventana: CapaFondo (fondo elegido) y encima el Frame (RootFrame)

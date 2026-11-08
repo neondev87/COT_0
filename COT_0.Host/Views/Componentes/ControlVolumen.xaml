@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Nota (clic = silencio), barra de volumen y número de MusicaPage (la firma usa solo la barra, con el mismo volumen) -->
+<UserControl x:Class="COT_0.Host.Views.Componentes.ControlVolumen"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:componentes="using:COT_0.Host.Views.Componentes">
+    <StackPanel Orientation="Horizontal">
+        <Button Style="{StaticResource TextButton}" Padding="10,0" Command="{x:Bind ViewModel.ToggleMuteCommand, Mode=OneWay}"
+                ToolTipService.ToolTip="{StaticResource Text.Music.Mute}" AutomationProperties.Name="{StaticResource Text.Music.Mute}">
+            <FontIcon Glyph="{x:Bind componentes:MusicGlyphs.Note(ViewModel.IsMuted), Mode=OneWay}"
+                      FontFamily="{StaticResource FontIcons}" FontSize="18"/>
+        </Button>
+        <Slider Style="{StaticResource VolumeSlider}" Margin="6,0,0,0" AutomationProperties.Name="{StaticResource Text.Music.Volume}"
+                Value="{x:Bind ViewModel.Volume, Mode=TwoWay}"/>
+        <TextBlock Text="{x:Bind ViewModel.VolumeText, Mode=OneWay}" Margin="10,0,0,0" MinWidth="24" VerticalAlignment="Center"
+                   FontFamily="{StaticResource FontRedaction}" FontSize="13" Foreground="{StaticResource Light60Brush}"/>
+    </StackPanel>
+</UserControl>
