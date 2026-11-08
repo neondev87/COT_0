@@ -84,13 +84,13 @@ public partial class FondosViewModel : ObservableObject
 
         CanUseStill = selected?.Kind == FondoKind.Video;
         SelectedUsesStill = selected?.UseStill ?? false;
-        ShowError(_fondos.Error, _fondos.ErrorDetail);
+        ShowError(_fondos.Error, _fondos.ErrorDetail, _fondos.ErrorCode);
     }
 
-    // Carpeta que no existe, carpeta vacía, archivo ilegible o fondos.json que no se pudo leer/guardar
-    private void ShowError(FondoError error, string? detail)
+    // Carpeta que no existe o vacía, archivo ilegible (con la causa y el código de Windows) o fondos.json dañado
+    private void ShowError(FondoError error, string? detail, string? code)
     {
         IsErrorOpen = error != FondoError.None;
-        if (IsErrorOpen) ErrorMessage = string.Format(UiText.Get($"Text.Backgrounds.Error.{error}"), detail);
+        if (IsErrorOpen) ErrorMessage = string.Format(UiText.Get($"Text.Backgrounds.Error.{error}"), detail, code);
     }
 }

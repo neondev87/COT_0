@@ -13,7 +13,7 @@ public record AppSettings(
     AudioSettings Audio,
     BackgroundSettings Background,
     ManualSettings Manual,
-    LinksSettings Links,
+    BrandingSettings Branding,
     TunnelSettings Tunnel,
     QrSettings Qr,
     WebSettings Web);

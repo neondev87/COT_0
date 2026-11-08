@@ -7,6 +7,7 @@
              xmlns:vm="using:COT_0.HostWinUI.Views.ModelosDeVista">
 
     <UserControl.Resources>
+        <x:Double x:Key="EmoteApplyWidth">132</x:Double>
         <Style x:Key="SectionHeader" TargetType="Border">
             <Setter Property="Height" Value="36"/>
             <Setter Property="Padding" Value="16,0"/>
@@ -32,30 +33,33 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Set de 7TV -->
-            <StackPanel Margin="16,12,16,14">
-                <Grid>
-                    <TextBlock Text="{StaticResource Text.Emotes.Title}" Style="{StaticResource ColumnHeaderText}" HorizontalAlignment="Left"/>
-                    <TextBlock Text="{x:Bind ViewModel.CountText, Mode=OneWay}" Style="{StaticResource InterText}" HorizontalAlignment="Right"/>
-                </Grid>
-                <Grid Margin="0,10,0,0" ColumnSpacing="8">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox Style="{StaticResource LoginTextBox}" FontSize="13" PlaceholderText="{StaticResource Text.Emotes.Placeholder}"
-                             Text="{x:Bind ViewModel.SetInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button Grid.Column="1" Style="{StaticResource SolidButton}" Content="{StaticResource Text.Emotes.Apply}"
-                            Command="{x:Bind ViewModel.ApplyCommand}" KeyboardAcceleratorPlacementMode="Hidden">
-                        <Button.KeyboardAccelerators>
-                            <KeyboardAccelerator Key="Enter"/>
-                        </Button.KeyboardAccelerators>
-                    </Button>
-                </Grid>
-                <TextBlock Text="{x:Bind ViewModel.StatusText, Mode=OneWay}" Margin="0,10,0,0" TextWrapping="Wrap"
+            <!-- Set de 7TV: fila 1 título | contador; fila 2 campo | APLICAR (misma altura); fila 3 estado con wrap -->
+            <Grid Margin="16,12,16,14" ColumnSpacing="12" RowSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="{StaticResource Text.Emotes.Title}" Style="{StaticResource ColumnHeaderText}" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.CountText, Mode=OneWay}" Style="{StaticResource InterText}"
+                           VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                <TextBox Grid.Row="1" Style="{StaticResource LoginTextBox}" FontSize="13" PlaceholderText="{StaticResource Text.Emotes.Placeholder}"
+                         VerticalAlignment="Stretch" Text="{x:Bind ViewModel.SetInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource SolidButton}" Content="{StaticResource Text.Emotes.Apply}"
+                        MinWidth="{StaticResource EmoteApplyWidth}" Height="{StaticResource InputHeight}"
+                        Command="{x:Bind ViewModel.ApplyCommand}" KeyboardAcceleratorPlacementMode="Hidden">
+                    <Button.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="Enter"/>
+                    </Button.KeyboardAccelerators>
+                </Button>
+                <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Text="{x:Bind ViewModel.StatusText, Mode=OneWay}" TextWrapping="WrapWholeWords"
                            FontFamily="{StaticResource FontCondensedBold}" FontWeight="Bold" FontSize="13" CharacterSpacing="200"
                            Foreground="{x:Bind componentes:EmoteStatusBrushes.For(ViewModel.Status), Mode=OneWay}"/>
-            </StackPanel>
+            </Grid>
 
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                 <StackPanel>
@@ -74,7 +78,8 @@
                                     <Image Source="{x:Bind Thumbnail}" Width="32" Height="32" Stretch="Uniform"/>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                         <TextBlock Text="{x:Bind Name}" Style="{StaticResource RowNameText}" FontSize="13"/>
-                                        <TextBlock Text="{x:Bind Detail}" Style="{StaticResource InterText}" FontSize="11" Margin="0,2,0,0"/>
+                                        <TextBlock Text="{x:Bind Detail}" Style="{StaticResource InterText}" FontSize="11" Margin="0,2,0,0"
+                                                   TextTrimming="CharacterEllipsis"/>
                                     </StackPanel>
                                     <StackPanel Grid.Column="2" Orientation="Horizontal">
                                         <Button Style="{StaticResource TextButton}" Content="{StaticResource Text.Emotes.Remove}" Click="OnRemoveClick"/>
@@ -102,7 +107,8 @@
                                     <Image Source="{x:Bind Thumbnail}" Width="32" Height="32" Stretch="Uniform"/>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                         <TextBlock Text="{x:Bind Name}" Style="{StaticResource RowNameText}" FontSize="13"/>
-                                        <TextBlock Text="{x:Bind Detail}" Style="{StaticResource InterText}" FontSize="11" Margin="0,2,0,0"/>
+                                        <TextBlock Text="{x:Bind Detail}" Style="{StaticResource InterText}" FontSize="11" Margin="0,2,0,0"
+                                                   TextTrimming="CharacterEllipsis"/>
                                     </StackPanel>
                                     <Button Grid.Column="2" Style="{StaticResource TextButton}" Content="{StaticResource Text.Emotes.Restore}"
                                             Click="OnRestoreClick"/>

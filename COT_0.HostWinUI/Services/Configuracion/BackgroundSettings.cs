@@ -4,6 +4,8 @@ namespace COT_0.HostWinUI.Services.Configuracion;
 /// <summary>
 /// Carpeta de fondos (relativa a Paths:MediaRoot), extensiones, fondo inicial, desde cuántos MB un video
 /// arranca como cuadro fijo, tamaños de decodificación y opacidad del velo (normal y con el selector abierto).
+/// FrameSeconds/FrameMaxWidth: el cuadro que se saca de cada video (miniatura y cuadro fijo) y CacheFolder,
+/// su carpeta dentro de Storage:CacheFolder. FfmpegPath: "ffmpeg" lo busca junto a la app y en el PATH.
 /// </summary>
 public record BackgroundSettings(
     string Folder,
@@ -14,4 +16,9 @@ public record BackgroundSettings(
     uint ThumbnailSize,
     uint StillSize,
     double VeilOpacity,
-    double PickerVeilOpacity);
+    double PickerVeilOpacity,
+    string CacheFolder,
+    double FrameSeconds,
+    uint FrameMaxWidth,
+    string FfmpegPath,
+    int FfmpegTimeoutSeconds);

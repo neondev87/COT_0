@@ -57,6 +57,34 @@
             <SolidColorBrush x:Key="AvatarTone4Brush" Color="#2B2B2F"/>
             <SolidColorBrush x:Key="DialogVeilBrush" Color="#B3080809"/>
 
+            <!-- Acento de Windows → rojo del proyecto: sin esto CheckBox, Slider y demás salen con el azul del sistema.
+                 En tema oscuro WinUI rellena con Light2, por eso Light2 es el mismo rojo de la línea de acento -->
+            <Color x:Key="SystemAccentColor">#B3122E</Color>
+            <Color x:Key="SystemAccentColorLight1">#A51029</Color>
+            <Color x:Key="SystemAccentColorLight2">#B3122E</Color>
+            <Color x:Key="SystemAccentColorLight3">#C82A44</Color>
+            <Color x:Key="SystemAccentColorDark1">#9A0F27</Color>
+            <Color x:Key="SystemAccentColorDark2">#800C20</Color>
+            <Color x:Key="SystemAccentColorDark3">#660A19</Color>
+            <SolidColorBrush x:Key="AccentPressedBrush" Color="#8E0E24"/>
+            <SolidColorBrush x:Key="AccentLightBrush" Color="#C82A44"/>
+            <!-- Mismos colores por llave de control (lightweight styling), por si el tema no toma el acento de arriba -->
+            <StaticResource x:Key="CheckBoxCheckBackgroundFillChecked" ResourceKey="AccentBrush"/>
+            <StaticResource x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" ResourceKey="AccentLightBrush"/>
+            <StaticResource x:Key="CheckBoxCheckBackgroundFillCheckedPressed" ResourceKey="AccentPressedBrush"/>
+            <StaticResource x:Key="CheckBoxCheckBackgroundStrokeChecked" ResourceKey="AccentBrush"/>
+            <StaticResource x:Key="CheckBoxCheckBackgroundStrokeCheckedPointerOver" ResourceKey="AccentLightBrush"/>
+            <StaticResource x:Key="CheckBoxCheckBackgroundStrokeCheckedPressed" ResourceKey="AccentPressedBrush"/>
+            <StaticResource x:Key="CheckBoxCheckGlyphForegroundChecked" ResourceKey="WhiteBrush"/>
+            <StaticResource x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" ResourceKey="WhiteBrush"/>
+            <StaticResource x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" ResourceKey="WhiteBrush"/>
+            <StaticResource x:Key="SliderTrackValueFill" ResourceKey="AccentBrush"/>
+            <StaticResource x:Key="SliderTrackValueFillPointerOver" ResourceKey="AccentLightBrush"/>
+            <StaticResource x:Key="SliderTrackValueFillPressed" ResourceKey="AccentPressedBrush"/>
+            <StaticResource x:Key="SliderThumbBackground" ResourceKey="AccentBrush"/>
+            <StaticResource x:Key="SliderThumbBackgroundPointerOver" ResourceKey="AccentLightBrush"/>
+            <StaticResource x:Key="SliderThumbBackgroundPressed" ResourceKey="AccentPressedBrush"/>
+
             <LinearGradientBrush x:Key="AccentFadeInBrush" StartPoint="0,0" EndPoint="1,0">
                 <GradientStop Color="{StaticResource TransparentAccentColor}" Offset="0"/>
                 <GradientStop Color="{StaticResource AccentColor}" Offset="1"/>
@@ -117,6 +145,7 @@
 
             <!-- Medidas del login -->
             <x:Double x:Key="LoginFormWidth">360</x:Double>
+            <x:Double x:Key="LoginSubtitleMaxWidth">272</x:Double>
             <x:Double x:Key="InputHeight">46</x:Double>
             <x:Double x:Key="ButtonHeight">48</x:Double>
             <x:Double x:Key="LoginImageOpacity">0.375</x:Double>
@@ -467,7 +496,8 @@
                         <ControlTemplate TargetType="Button">
                             <Grid x:Name="Root" Background="{StaticResource CardFaceBrush}" Padding="{TemplateBinding Padding}">
                                 <Border x:Name="Hover" Background="{StaticResource AccentBrush}" Opacity="0" Margin="-16,0"/>
-                                <TextBlock x:Name="Label" Text="{TemplateBinding Content}" VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}"
+                                <TextBlock x:Name="Label" Text="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                           Foreground="{TemplateBinding Foreground}"
                                            FontFamily="{StaticResource FontCondensedBold}" FontWeight="Bold" FontSize="15" CharacterSpacing="300"/>
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="CommonStates">

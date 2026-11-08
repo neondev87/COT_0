@@ -48,3 +48,12 @@ Fondos y Manual ya están migrados: el Host WinUI tiene todas las pantallas del 
 5. Actualizar `CONTRATO.md` (la tabla de la solución dice `COT_0.Host/ WPF`), `docs/DOCUMENTACION.md` y la nota de `CLAUDE.md` ("COT_0.Host: WPF").
 6. Borrar los user-secrets del WPF (`dotnet user-secrets clear --project COT_0.Host`) antes de renombrar.
 7. Cambiar `musica/` por `/musica/` en el `.gitignore` de la raíz y borrar `COT_0.HostWinUI/.gitignore` (ver arriba).
+
+## Cachés y registros generados (08/11)
+
+- **`%LocalAppData%\COT_0\cache\fondos\*.jpg`**: un cuadro por video (≈ 12–90 KB cada uno). La llave lleva ruta + tamaño + fecha, así que si cambias o borras un video su JPEG viejo **se queda** (no hay limpieza automática). Se puede borrar la carpeta completa sin problema: se regenera al abrir FONDOS. Puede quedar algún `*.part.jpg` si la app se cerró a medio generar.
+- **`%LocalAppData%\COT_0\registro-medios.jsonl`**: crece sin tope (una línea por falla). Si estorba, borrarlo o rotarlo.
+- Ninguno vive en el repo. Por si alguien los copia ahí, `COT_0.HostWinUI/.gitignore` ignora `/cache/` y `*.jsonl`.
+- **`Links:GitHub`** se cambió por **`Branding:RepoUrl`** en el `appsettings.json` de WinUI. El WPF sigue leyendo `Links:GitHub` del suyo; se va con el WPF.
+- **ffmpeg**: no se instaló ni se copió nada. La app usa el que ya esté en el `PATH` (en esta PC: el de WinGet, `yt-dlp.FFmpeg` / `Gyan.FFmpeg`) o un `ffmpeg.exe` junto al `.exe`. Sin ffmpeg funciona igual con los intentos de Windows.
+- Pruebas hechas en una carpeta temporal (`%LocalAppData%\COT_0_diag`) y en el scratchpad de la sesión: **ya se borraron**.

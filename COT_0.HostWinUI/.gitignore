@@ -7,3 +7,7 @@
 /gifs/
 /manual/
 /pasos/
+
+# Caché de cuadros de video y registro de medios: viven en %LocalAppData%\COT_0 (fuera del repo); por si alguien los copia aquí
+/cache/
+*.jsonl

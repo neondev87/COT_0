@@ -115,7 +115,7 @@ Lo que WinUI 3 no soporta igual que WPF y cómo se simplificó. Prioridad: que a
 
 | WPF | WinUI 3 | Motivo |
 |---|---|---|
-| Brillo "aero" que cruza el avatar (degradado animado) | Quitado | App ligera |
+| Brillo "aero" que cruza el avatar (degradado animado) | Recuperado en `LogoNeondev` (ver "Correcciones después de probar la app") | Es solo una traslación en el compositor |
 | Nombre con brillo de acento (`DropShadowEffect`) al pasar el mouse | El nombre pasa al acento y el borde del avatar se aclara (`VisualStateManager`) | WinUI 3 no tiene `DropShadowEffect` |
 | 14 `DataTrigger` (hover del enlace, nota, barra de volumen, sin música) | Estados del botón + propiedades `IsMuted` / `IsMusicAvailable` / `IsMusicMissing` con `x:Bind` | WinUI 3 no tiene `DataTrigger` |
 | Barra de volumen escondida que aparece con el mouse (opacidad + escala) | Siempre visible | Menos estados; se ve que se puede mover |
@@ -163,3 +163,63 @@ Lo que WinUI 3 no soporta igual que WPF y cómo se simplificó. Prioridad: que a
 | Icono de bocina con `Path` y `DataTrigger` (ondas tachadas) | Glifo de Segoe Fluent Icons (`MusicGlyphs.Speaker`) | Igual que la música |
 | Paso 5 "Música y selector de canciones" (bocina de la firma y `SongPicker`) | "Música y fondos" (tarjetas 05 MÚSICA y 02 CAMBIAR FONDO) | En WinUI el selector de canciones es una pantalla y los fondos también |
 | Textos del manual en `appsettings.json` (`Texts:Manual`) | En `Textos.xaml` (`Text.Manual.*`); en `appsettings.json` solo rutas, volúmenes y tiempos | Igual que el resto de la app WinUI |
+
+## Correcciones después de probar la app (08/11)
+
+### Fondos: video de Gojo y miniaturas vacías
+
+| Qué se veía | Causa real (verificada) | Qué quedó |
+|---|---|---|
+| Al elegir el video de Gojo salía "No se pudo abrir…" | **No era el video**: Gojo (H.264 High nivel 5.2, 4K 60 fps, 151 MB) abre y se reproduce bien con `MediaPlayer`, por `Uri` y por `StorageFile` (probado: 838 cuadros en 6 s). Como pesa más de 120 MB arranca como **cuadro fijo**, y el cuadro fijo pedía `GetThumbnailAsync(ThumbnailMode.SingleItem)`, que para estos videos regresa `ThumbnailType.Icon` (el icono del tipo de archivo). El código lo descartaba (`null`) y lo reportaba como "no se pudo abrir" | El cuadro fijo sale de `FondoFrameCache`: ffmpeg → miniatura de Windows con `VideosView` → `MediaComposition`. Se guarda una vez en `%LocalAppData%\COT_0\cache\fondos\<hash>.jpg` |
+| Las 3 miniaturas de la cuadrícula con el icono vacío | La misma: las tres regresaban `Icon` con `SingleItem` | La miniatura usa el mismo JPEG de la caché, con el nombre limpio abajo (sin el `[ID]` de YouTube y con `：＂｜` normales) y el nombre completo en el tooltip |
+| El aviso solo decía "No se pudo abrir" | Un solo `FondoError.Unreadable` para todo | `MediaFailed` guarda `Error` + `ExtendedErrorCode` en `registro-medios.jsonl` y `FondoFailures` lo traduce: archivo que ya no está, bloqueado, sin códec (HEVC/AV1), no decodifica o sin cuadro fijo. El InfoBar dice la causa y el código |
+| Nombres con `：`, `＂`, `｜`, corchetes | No eran la causa (`new Uri` los escapaba bien), pero era frágil | El video se abre con `StorageFile.GetFileFromPathAsync` + `MediaSource.CreateFromStorageFile`; ffmpeg recibe la ruta por `ArgumentList` |
+| CheckBox "Usar cuadro fijo" azul | Acento de Windows | `SystemAccentColor*` y las llaves `CheckBox*Checked*` / `Slider*` de `App.xaml` con el rojo `#B3122E` |
+| Aviso "Elige el fondo…" y los controles en la misma celda | Se enciman si el texto crece | Columnas `*` / `Auto`; el aviso hace wrap (2 líneas) y se recorta |
+
+Imágenes por tarjeta en el WPF: **no había**. El `BackgroundPicker` del WPF pintaba cada miniatura con un `MediaElement` pausado en `Background:PreviewSeconds` (3 s) o la imagen misma; en `COT_0.Host/Assets` solo están `ascii-bg.png` y `neondev-avatar.png`, que ya estaban en `Assets/Imagenes`. Por eso el cuadro se saca a los 3 s (`Background:FrameSeconds`).
+
+### Sala: barra de abajo
+
+| Antes | Ahora |
+|---|---|
+| Accesos (EMOTES, MÚSICA, CAMBIAR FONDO) y aviso + CERRAR SALA en la misma celda: a 1280 px la columna derecha mide 656 px y los botones (316) + CERRAR SALA (`MinWidth` 260 + 22 de margen) + el aviso (176) no cabían: se encimaban y CERRAR SALA se salía por la derecha | `Grid` de 3 columnas: accesos `Auto` \| aviso `*` (wrap a 2 líneas + recorte, alineado a la derecha) \| CERRAR SALA fijo de 196 px (`CloseRoomWidth`; el contenido mide 156). El aviso queda con ~112 px y se parte en "Al cerrar, todos / salen de la sala"; si falta espacio se encoge a 0 antes de tapar botones |
+| Encabezado (← INICIO \| SALA #código y EN VIVO) en la misma celda | Columnas `*` / `Auto` |
+
+Medidas sacadas con las fuentes del proyecto (Barlow, Barlow Condensed) y PIL, no a ojo.
+
+### Música: portadas
+
+| Antes | Causa | Ahora |
+|---|---|---|
+| Portada grande pixelada | Reusaba la imagen de la fila, decodificada a `Audio:CoverDecodeSize` (96 px), estirada a 300 | `CoverImages` la decodifica aparte: lee el tamaño real con `BitmapDecoder` y la muestra a lo más en `Audio:CoverLargeSize` (300) sin pasar de `Audio:CoverMaxUpscale` (2×) su tamaño; al reducir, el decodificador de Windows escala con alta calidad |
+| Recuadro más grande que la imagen y portada recortada | `Stretch="UniformToFill"` dentro de un `Border` fijo de 300×300 | `Stretch="Uniform"` y el `Border` toma el tamaño de la imagen (ej. `Audio_04.jpg` de 736×920 sale a 240×300). Sin portada queda el recuadro de 300 con la nota |
+| Miniaturas de la lista recortadas | `UniformToFill` | `Uniform` en su cuadro de 40 px |
+| Volumen azul | Acento de Windows | Rojo del proyecto (ver Fondos) |
+
+Las portadas reales miden 1024×1024 y 736×920: nunca hace falta ampliar, así que **no se generó** versión con ffmpeg/lanczos (no mejoraría nada frente al tope). Si algún día hay portadas chicas, el tope las muestra más chicas en lugar de pixeladas.
+
+### Emotes (7TV)
+
+| Antes | Causa | Ahora |
+|---|---|---|
+| "SET DE 7TV" encimado con "745 emotes cargados", campo y APLICAR desproporcionados, "OK" suelto | `EmotesPage` ponía el panel con `HorizontalAlignment="Left"` y `MaxWidth` sin ancho: se encogía a su contenido. Título y contador en la misma celda | El panel ocupa una columna de hasta 720 px. Arriba un `Grid` de 3 filas: título \| contador; campo \| APLICAR (misma altura `InputHeight`, `MinWidth` 132, texto centrado); estado abajo en las dos columnas con wrap |
+| Detalle de reportes y quitados sin recorte | — | `TextTrimming` |
+
+### Revisión general
+
+- **Login**: el subtítulo "CONFIGURA TU PREGUNTA SECRETA" mide 346 px y el hueco entre las dos líneas del formulario de 360 es de 264: empujaba la línea derecha fuera. Ahora tiene `MaxWidth` 272 y hace wrap centrado.
+- **Lista de conectados**: encabezado USUARIO / CONECTADO DESDE en columnas.
+- Dashboard, Manual, aviso de Lain, diálogo y recuperación: sin textos en la misma celda ni anchos fijos que corten.
+
+### Logo Neondev (rescatado del WPF)
+
+| WPF (`Controls/SignatureBadge.xaml`) | WinUI (`Views/Componentes/LogoNeondev`) |
+|---|---|
+| Avatar `neondev-avatar.png` de 64 px con esquinas de 14 sobre `#1C1C24`, borde de 1 px `#1FFFFFFF` (`#59FFFFFF` con el mouse) y "Neondev" en Redaction 50 a 36 px | Igual: mismas medidas, colores e imagen (ya estaba en `Assets/Imagenes`) |
+| Brillo "aero": `LinearGradientBrush` (`#00→#4D→#00` blanco, de 0,0 a 1,0.6) con `RelativeTransform` X de -1 a 1, 3 s, ida y vuelta, `SineEase`, desde `Loaded` (`EventTrigger`) | Mismo degradado en un `Rectangle` que se mueve con `TranslateTransform` de -64 a 64 (corre en el compositor). Sin `EventTrigger` en WinUI: el `Storyboard` vive en los estados `Normal` y `PointerOver` de la plantilla, así arranca solo. El `Border` con `CornerRadius` recorta el brillo |
+| Con el mouse: nombre al acento con `DropShadowEffect` (brillo rojo) | Nombre al acento y borde más claro; **sin** sombra (cara) |
+| Abría `Links:GitHub` | Abre `Branding:RepoUrl` (`https://github.com/neondev87/COT_0`) con `Launcher.LaunchUriAsync`; tooltip "Abrir el repositorio del proyecto" y cursor de mano |
+| Lugares: login (arriba a la derecha) y dashboard (abajo a la derecha, sobre el pie) | Login (dentro de `Firma`, mismo lugar), dashboard **arriba a la derecha, abajo del estado de la SALA** y sala **arriba a la derecha, abajo de EN VIVO** (donde se pidió). En el WPF del dashboard estaba abajo; si se quiere ahí, es mover una línea |
+
+No hubo que reconstruir nada pesado: el original no usaba shader ni blur, solo un degradado animado. En la migración anterior se había quitado ("App ligera"); ahora volvió.

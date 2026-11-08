@@ -15,6 +15,9 @@ public partial class SongRowViewModel(Song song, int coverSize) : ObservableObje
     public string Title { get; } = song.Title;
     public string Duration { get; } = song.Duration;
 
+    /// <summary>Archivo de la portada (la grande se decodifica aparte, a su tamaño).</summary>
+    public string? CoverPath { get; } = song.CoverPath;
+
     /// <summary>null si no hay ninguna portada en la carpeta.</summary>
     public BitmapImage? Cover { get; } = song.CoverPath is null
         ? null

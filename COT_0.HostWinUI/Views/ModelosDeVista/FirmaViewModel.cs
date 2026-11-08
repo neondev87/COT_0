@@ -1,7 +1,5 @@
-// Firma Neondev del login: enlace al repo y controles chicos de la música (silencio, volumen y qué suena)
-using COT_0.HostWinUI.Services.Configuracion;
+// Firma Neondev del login: controles chicos de la música (silencio, volumen y qué suena); el logo va aparte (LogoNeondev)
 using COT_0.HostWinUI.Services.Musica;
-using CommunityToolkit.Mvvm.Input;
 
 namespace COT_0.HostWinUI.Views.ModelosDeVista;
 
@@ -9,13 +7,6 @@ namespace COT_0.HostWinUI.Views.ModelosDeVista;
 public partial class FirmaViewModel(MusicService music) : MusicControlsViewModel(music)
 {
     public bool IsMusicMissing => !IsMusicAvailable;
-
-    [RelayCommand]
-    private async Task OpenGitHubAsync()
-    {
-        if (Uri.TryCreate(AppConfig.Settings.Links.GitHub, UriKind.Absolute, out var url))
-            await Windows.System.Launcher.LaunchUriAsync(url);
-    }
 
     protected override void OnMusicStateChanged()
     {

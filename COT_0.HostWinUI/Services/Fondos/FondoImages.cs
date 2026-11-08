@@ -1,55 +1,39 @@
-// Decodifica imágenes de fondo y cuadros de video (miniatura o cuadro fijo) a un tamaño chico, async
-using System.Runtime.InteropServices;
+// Decodifica imágenes de fondo y el cuadro fijo de los videos (miniatura o fondo) al tamaño pedido, async
 using COT_0.HostWinUI.Models;
+using COT_0.HostWinUI.Services.Registro;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Storage;
-using Windows.Storage.FileProperties;
 
 namespace COT_0.HostWinUI.Services.Fondos;
 
 /// <summary>
 /// Reemplaza a ThumbnailImage y VideoThumbnail del WPF (que pausaban un MediaElement por video).
-/// El cuadro de un video lo da Windows (la miniatura del explorador). Se llama desde el hilo de la UI;
-/// regresa null si el archivo no se pudo leer.
+/// El cuadro de un video sale de FondoFrameCache (un JPEG en caché). Se llama desde el hilo de la UI;
+/// regresa null si no se pudo leer (el motivo queda en el registro de medios).
 /// </summary>
-public class FondoImages
+public class FondoImages(FondoFrameCache frames)
 {
-    public Task<BitmapImage?> LoadAsync(string path, FondoKind kind, uint size) =>
-        kind == FondoKind.Image ? LoadImageAsync(path, size) : LoadVideoFrameAsync(path, size);
+    public async Task<BitmapImage?> LoadAsync(string path, FondoKind kind, uint width)
+    {
+        var source = kind == FondoKind.Image ? path : await frames.GetAsync(path);
+        return source is null ? null : await LoadImageAsync(source, width);
+    }
 
-    private static async Task<BitmapImage?> LoadImageAsync(string path, uint size)
+    /// <summary>Decodifica a lo ancho pedido (nunca más que el original) con la escala de alta calidad de WinUI.</summary>
+    public static async Task<BitmapImage?> LoadImageAsync(string path, uint width)
     {
         try
         {
             var file = await StorageFile.GetFileFromPathAsync(path);
             using var stream = await file.OpenReadAsync();
-            var image = new BitmapImage { DecodePixelWidth = (int)size };
+            var image = new BitmapImage { DecodePixelWidth = (int)width, DecodePixelType = DecodePixelType.Physical };
             await image.SetSourceAsync(stream);
             return image;
         }
-        catch (Exception ex) when (IsReadError(ex))
+        catch (Exception ex) when (FondoFailures.IsMediaException(ex))
         {
+            await MediaLog.WriteAsync("imagen", path, ex);
             return null;
         }
     }
-
-    private static async Task<BitmapImage?> LoadVideoFrameAsync(string path, uint size)
-    {
-        try
-        {
-            var file = await StorageFile.GetFileFromPathAsync(path);
-            using var thumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, size, ThumbnailOptions.ResizeThumbnail);
-            if (thumbnail is null || thumbnail.Type != ThumbnailType.Image) return null;
-            var image = new BitmapImage();
-            await image.SetSourceAsync(thumbnail);
-            return image;
-        }
-        catch (Exception ex) when (IsReadError(ex))
-        {
-            return null;
-        }
-    }
-
-    private static bool IsReadError(Exception ex) =>
-        ex is IOException or UnauthorizedAccessException or ArgumentException or COMException;
 }

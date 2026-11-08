@@ -88,9 +88,12 @@
                                Foreground="{StaticResource AccentBrush}"/>
                     <TextBlock Text="{StaticResource Text.Login.TitleEnd}" Style="{StaticResource LoginTitleText}"/>
                 </StackPanel>
+                <!-- Subtítulo entre dos líneas: con tope de ancho (360 del formulario - 2×34 - 2×10) hace wrap en vez de
+                     empujar la línea derecha fuera ("CONFIGURA TU PREGUNTA SECRETA" mide 346 px) -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,12,0,0">
                     <Rectangle Width="34" Height="1" Fill="{StaticResource AccentFadeInBrush}" VerticalAlignment="Center"/>
-                    <TextBlock Text="{x:Bind ViewModel.SubtitleText, Mode=OneWay}" Margin="14,0" VerticalAlignment="Center"
+                    <TextBlock Text="{x:Bind ViewModel.SubtitleText, Mode=OneWay}" Margin="10,0" VerticalAlignment="Center"
+                               MaxWidth="{StaticResource LoginSubtitleMaxWidth}" TextWrapping="WrapWholeWords" TextAlignment="Center"
                                FontFamily="{StaticResource FontCondensedMedium}" FontSize="13" CharacterSpacing="500"
                                Foreground="{StaticResource Light62Brush}"/>
                     <Rectangle Width="34" Height="1" Fill="{StaticResource AccentFadeOutBrush}" VerticalAlignment="Center"/>

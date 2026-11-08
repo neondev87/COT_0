@@ -5,6 +5,8 @@
 
     <x:Double x:Key="QrPanelSize">420</x:Double>
     <x:Double x:Key="QrSize">340</x:Double>
+    <!-- CERRAR SALA mide 156 px con su icono: 196 deja 20 px por lado. Con 1280 px de ventana el aviso queda con ~112 px (2 líneas) -->
+    <GridLength x:Key="CloseRoomWidth">196</GridLength>
     <FontFamily x:Key="FontMono">Consolas</FontFamily>
     <SolidColorBrush x:Key="UrlFieldBrush" Color="#0BFFFFFF"/>
     <SolidColorBrush x:Key="Text25Brush" Color="#40ECEAF0"/>

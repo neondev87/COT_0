@@ -27,6 +27,9 @@ public sealed class FondoService(FondoCatalog catalog, FondoStore store)
     /// <summary>Carpeta, archivo o motivo del último problema.</summary>
     public string? ErrorDetail { get; private set; }
 
+    /// <summary>Código de Windows (HRESULT en hex) del último problema, si lo hubo.</summary>
+    public string? ErrorCode { get; private set; }
+
     public string PathOf(Fondo fondo) => catalog.PathOf(fondo);
 
     // Nunca elegiste: el de Background:DefaultFile
@@ -72,10 +75,10 @@ public sealed class FondoService(FondoCatalog catalog, FondoStore store)
         Changed?.Invoke();
     }
 
-    /// <summary>El archivo no se pudo abrir (lo avisa la capa del fondo).</summary>
-    public void ReportUnreadable(Fondo fondo)
+    /// <summary>El archivo no se pudo abrir o no dio cuadro fijo (lo avisa la capa del fondo con la causa real).</summary>
+    public void ReportFailure(Fondo fondo, FondoError error, string? code)
     {
-        SetError(FondoError.Unreadable, fondo.FileName);
+        SetError(error, fondo.FileName, code);
         Changed?.Invoke();
     }
 
@@ -111,9 +114,10 @@ public sealed class FondoService(FondoCatalog catalog, FondoStore store)
         }
     }
 
-    private void SetError(FondoError error, string? detail)
+    private void SetError(FondoError error, string? detail, string? code = null)
     {
         Error = error;
         ErrorDetail = detail;
+        ErrorCode = code;
     }
 }

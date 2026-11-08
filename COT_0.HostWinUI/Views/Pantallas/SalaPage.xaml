@@ -17,12 +17,16 @@
     </Page.Resources>
 
     <Grid>
-        <Grid Margin="64,52,64,0" VerticalAlignment="Top">
+        <Grid Margin="64,52,64,0" VerticalAlignment="Top" ColumnSpacing="24">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal">
                 <componentes:EncabezadoPantalla Title="{StaticResource Text.Room.Title}"/>
                 <TextBlock Text="{x:Bind ViewModel.Code, Mode=OneWay}" Style="{StaticResource MonoText}" Margin="28,0,0,0" CharacterSpacing="100"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center"
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"
                         Visibility="{x:Bind ViewModel.IsRoomOpen, Mode=OneWay}">
                 <componentes:PuntoPulso VerticalAlignment="Center"/>
                 <TextBlock Text="{StaticResource Text.Room.Live}" Style="{StaticResource LiveText}" Margin="12,0"/>
@@ -105,17 +109,32 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{x:Bind ViewModel.TotalText, Mode=OneWay}" Style="{StaticResource CountText}"/>
-                <StackPanel Margin="18,0,0,8" VerticalAlignment="Bottom">
-                    <Rectangle Width="32" Height="1" HorizontalAlignment="Left" Fill="{StaticResource AccentBrush}"/>
-                    <TextBlock Text="{StaticResource Text.Room.Count}" Margin="0,8,0,0" Style="{StaticResource CountLabelText}"/>
+            <!-- Contador a la izquierda; logo Neondev arriba a la derecha, un poco abajo de EN VIVO (columnas: no se enciman) -->
+            <Grid ColumnSpacing="24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{x:Bind ViewModel.TotalText, Mode=OneWay}" Style="{StaticResource CountText}"/>
+                    <StackPanel Margin="18,0,0,8" VerticalAlignment="Bottom">
+                        <Rectangle Width="32" Height="1" HorizontalAlignment="Left" Fill="{StaticResource AccentBrush}"/>
+                        <TextBlock Text="{StaticResource Text.Room.Count}" Margin="0,8,0,0" Style="{StaticResource CountLabelText}"/>
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
+                <componentes:LogoNeondev Grid.Column="1" VerticalAlignment="Top"/>
+            </Grid>
 
             <componentes:ListaConectados Grid.Row="1" Margin="0,18"/>
 
-            <Grid Grid.Row="2">
+            <!-- Barra de abajo: accesos (ancho automático) | aviso (lo que sobre, con wrap y recorte) | CERRAR SALA (ancho fijo).
+                 El aviso es lo primero que se encoge: nunca tapa los botones ni empuja CERRAR SALA fuera de la ventana -->
+            <Grid Grid.Row="2" ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="{StaticResource CloseRoomWidth}"/>
+                </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" Margin="-8,0,0,0">
                     <Button Style="{StaticResource TextButton}" Command="{x:Bind ViewModel.ShowEmotesCommand}">
                         <StackPanel Orientation="Horizontal" Spacing="8">
@@ -136,11 +155,10 @@
                         </StackPanel>
                     </Button>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <TextBlock Text="{StaticResource Text.Room.CloseHint}" Style="{StaticResource HintText}"/>
-                    <Button Style="{StaticResource ConfirmButton}" Content="{StaticResource Text.Room.Close}" MinWidth="260" Margin="22,0,0,0"
-                            Command="{x:Bind ViewModel.CloseRoomCommand}" IsEnabled="{x:Bind ViewModel.IsRoomOpen, Mode=OneWay}"/>
-                </StackPanel>
+                <TextBlock Grid.Column="1" Text="{StaticResource Text.Room.CloseHint}" Style="{StaticResource HintText}"
+                           HorizontalAlignment="Right" TextAlignment="Right" TextWrapping="WrapWholeWords" MaxLines="2" TextTrimming="CharacterEllipsis"/>
+                <Button Grid.Column="2" Style="{StaticResource ConfirmButton}" Content="{StaticResource Text.Room.Close}" Margin="0"
+                        Command="{x:Bind ViewModel.CloseRoomCommand}" IsEnabled="{x:Bind ViewModel.IsRoomOpen, Mode=OneWay}"/>
             </Grid>
         </Grid>
     </Grid>

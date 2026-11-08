@@ -21,9 +21,15 @@
         <InfoBar Grid.Row="1" Severity="Warning" Title="{StaticResource Text.Backgrounds.ErrorTitle}"
                  Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}" IsOpen="{x:Bind ViewModel.IsErrorOpen, Mode=TwoWay}"/>
 
-        <Grid Grid.Row="2">
-            <TextBlock Text="{StaticResource Text.Backgrounds.Hint}" Style="{StaticResource InterText}" VerticalAlignment="Center"/>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+        <!-- Aviso en su columna (se recorta antes de tapar los controles) y controles a la derecha -->
+        <Grid Grid.Row="2" ColumnSpacing="24">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="{StaticResource Text.Backgrounds.Hint}" Style="{StaticResource InterText}" VerticalAlignment="Center"
+                       TextWrapping="WrapWholeWords" MaxLines="2" TextTrimming="CharacterEllipsis"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
                 <CheckBox Content="{StaticResource Text.Backgrounds.UseStill}" Foreground="{StaticResource Text70Brush}"
                           IsChecked="{x:Bind ViewModel.SelectedUsesStill, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.CanUseStill, Mode=OneWay}"
                           Command="{x:Bind ViewModel.ToggleStillCommand}"/>
@@ -35,7 +41,7 @@
         <GridView Grid.Row="3" ItemsSource="{x:Bind ViewModel.Items}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="OnItemClick">
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="vm:FondoRowViewModel">
-                    <StackPanel Width="256" Margin="4,4,4,12">
+                    <StackPanel Width="256" Margin="4,4,4,12" ToolTipService.ToolTip="{x:Bind Fondo.FileName}">
                         <Grid Width="256" Height="144" Background="{StaticResource PanelBrush}">
                             <FontIcon Glyph="&#xE91B;" FontFamily="{StaticResource FontIcons}" FontSize="32" Foreground="{StaticResource Light28Brush}"/>
                             <Image Source="{x:Bind Thumbnail, Mode=OneWay}" Stretch="UniformToFill"/>
@@ -48,7 +54,7 @@
                             </Border>
                         </Grid>
                         <TextBlock Text="{x:Bind Name}" Margin="0,8,0,0" Style="{StaticResource RowNameText}" TextTrimming="CharacterEllipsis"/>
-                        <TextBlock Text="{x:Bind Detail}" Margin="0,2,0,0" Style="{StaticResource InterText}"/>
+                        <TextBlock Text="{x:Bind Detail}" Margin="0,2,0,0" Style="{StaticResource InterText}" TextTrimming="CharacterEllipsis"/>
                     </StackPanel>
                 </DataTemplate>
             </GridView.ItemTemplate>

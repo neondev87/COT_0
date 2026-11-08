@@ -30,12 +30,15 @@
 
         <!-- Canción actual -->
         <StackPanel Grid.Row="2">
-            <Border Width="300" Height="300" CornerRadius="4" Background="{StaticResource AvatarTone1Brush}"
-                    BorderBrush="{StaticResource PanelBorderBrush}" BorderThickness="1">
-                <Grid>
-                    <FontIcon Glyph="&#xE8D6;" FontFamily="{StaticResource FontIcons}" FontSize="48" Foreground="{StaticResource Light28Brush}"/>
-                    <Image Source="{x:Bind ViewModel.CurrentCover, Mode=OneWay}" Stretch="UniformToFill"/>
-                </Grid>
+            <!-- Portada: el recuadro toma el tamaño de la imagen (Uniform, sin recorte ni marco de más). Sin portada, recuadro con nota -->
+            <Border Width="300" Height="300" CornerRadius="4" Background="{StaticResource AvatarTone1Brush}" HorizontalAlignment="Left"
+                    BorderBrush="{StaticResource PanelBorderBrush}" BorderThickness="1" Visibility="{x:Bind ViewModel.IsCoverMissing, Mode=OneWay}">
+                <FontIcon Glyph="&#xE8D6;" FontFamily="{StaticResource FontIcons}" FontSize="48" Foreground="{StaticResource Light28Brush}"/>
+            </Border>
+            <Border CornerRadius="4" HorizontalAlignment="Left" BorderBrush="{StaticResource PanelBorderBrush}" BorderThickness="1"
+                    Visibility="{x:Bind ViewModel.HasCover, Mode=OneWay}">
+                <Image Source="{x:Bind ViewModel.CurrentCover.Image, Mode=OneWay}" Stretch="Uniform"
+                       Width="{x:Bind ViewModel.CurrentCover.Width, Mode=OneWay}" Height="{x:Bind ViewModel.CurrentCover.Height, Mode=OneWay}"/>
             </Border>
             <TextBlock Text="{x:Bind ViewModel.TrackTitle, Mode=OneWay}" Margin="0,18,0,0" TextTrimming="CharacterEllipsis"
                        FontFamily="{StaticResource FontCondensedBold}" FontWeight="Bold" FontSize="24" Foreground="{StaticResource TextBrush}"/>
@@ -74,8 +77,9 @@
                                 </Grid.ColumnDefinitions>
                                 <!-- Barra de acento en la que suena -->
                                 <Rectangle Fill="{StaticResource AccentBrush}" Visibility="{x:Bind IsPlaying, Mode=OneWay}"/>
+                                <!-- Miniatura entera (Uniform): sin estirar ni recortar; si no es cuadrada sobra fondo -->
                                 <Border Grid.Column="1" Width="40" Height="40" CornerRadius="4" Background="{StaticResource AvatarTone2Brush}">
-                                    <Image Source="{x:Bind Cover}" Stretch="UniformToFill"/>
+                                    <Image Source="{x:Bind Cover}" Stretch="Uniform"/>
                                 </Border>
                                 <TextBlock Grid.Column="2" Text="{x:Bind Title}" Style="{StaticResource RowNameText}" VerticalAlignment="Center"/>
                                 <TextBlock Grid.Column="3" Text="{x:Bind Duration}" Style="{StaticResource InterText}" VerticalAlignment="Center"/>

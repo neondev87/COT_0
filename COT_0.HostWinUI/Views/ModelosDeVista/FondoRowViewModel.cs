@@ -21,7 +21,8 @@ public partial class FondoRowViewModel(Fondo fondo) : ObservableObject
 
     public Fondo Fondo { get; } = fondo;
 
-    public string Name { get; } = Path.GetFileNameWithoutExtension(fondo.FileName);
+    /// <summary>Sin el ID de YouTube ni signos de ancho completo (FondoNames).</summary>
+    public string Name { get; } = FondoNames.Clean(fondo.FileName);
 
     public string Detail { get; } = string.Format(CultureInfo.CurrentCulture, UiText.Get("Text.Backgrounds.Detail"),
         UiText.Get($"Text.Backgrounds.Kind.{fondo.Kind}"), fondo.SizeBytes / BytesPerMegabyte);

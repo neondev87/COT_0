@@ -13,7 +13,7 @@ namespace COT_0.HostWinUI.Views.ModelosDeVista;
 /// <summary>
 /// Reemplaza al BackgroundLayer del WPF. Solo se ve en Dashboard, Sala y Fondos; en las demás páginas el
 /// video se pausa. Sin desenfoque: con el selector abierto el velo oscuro sube (PickerVeilOpacity).
-/// Si el video falla, cae a su cuadro fijo y FondoService guarda el aviso para FondosPage.
+/// Si el video falla, cae a su cuadro fijo (el JPEG de la caché) y FondoService guarda la causa para FondosPage.
 /// </summary>
 public partial class CapaFondoViewModel : ObservableObject
 {
@@ -81,7 +81,7 @@ public partial class CapaFondoViewModel : ObservableObject
         }
         if (fondo is { Kind: FondoKind.Video, UseStill: false } && !_failedVideos.Contains(_fondos.PathOf(fondo)))
         {
-            ShowVideo(_fondos.PathOf(fondo));
+            await ShowVideoAsync(_fondos.PathOf(fondo));
             return;
         }
 
@@ -90,10 +90,10 @@ public partial class CapaFondoViewModel : ObservableObject
         await ShowStillAsync(fondo, version);
     }
 
-    private void ShowVideo(string path)
+    private async Task ShowVideoAsync(string path)
     {
-        _player.Play(path);
         IsVideoVisible = true;
+        await _player.PlayAsync(path);
         OnPropertyChanged(nameof(IsStillVisible));
     }
 
@@ -110,15 +110,16 @@ public partial class CapaFondoViewModel : ObservableObject
 
         _stillPath = path;
         Still = image;
-        if (fondo is not null && path is not null && image is null && _failedStills.Add(path)) _fondos.ReportUnreadable(fondo);
+        if (fondo is null || path is null || image is not null || !_failedStills.Add(path)) return;
+        _fondos.ReportFailure(fondo, fondo.Kind == FondoKind.Video ? FondoError.NoFrame : FondoError.Unreadable, null);
     }
 
     // Video que no se pudo abrir: el aviso dispara ApplyAsync, que ya lo trata como cuadro fijo
-    private void OnVideoFailed()
+    private void OnVideoFailed(FondoError error, string code)
     {
         if (_fondos.Selected is not { } fondo || !_failedVideos.Add(_fondos.PathOf(fondo))) return;
         _player.Stop();
-        _fondos.ReportUnreadable(fondo);
+        _fondos.ReportFailure(fondo, error, code);
     }
 
     private void ForgetFailures()

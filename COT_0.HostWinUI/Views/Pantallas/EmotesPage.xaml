@@ -5,12 +5,18 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:componentes="using:COT_0.HostWinUI.Views.Componentes"
       Background="{StaticResource WindowBackgroundBrush}">
+    <!-- El panel ocupa la primera columna (hasta 720 px): con HorizontalAlignment="Left" solo, se encogía a su contenido
+         y el título, el contador y APLICAR se enciman -->
     <Grid Margin="64,52,64,48">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <componentes:EncabezadoPantalla Title="{StaticResource Text.Emotes.ScreenTitle}"/>
-        <componentes:PanelEmotes Grid.Row="1" Margin="0,32,0,0" MaxWidth="720" HorizontalAlignment="Left"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MaxWidth="720"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <componentes:EncabezadoPantalla Grid.ColumnSpan="2" Title="{StaticResource Text.Emotes.ScreenTitle}"/>
+        <componentes:PanelEmotes Grid.Row="1" Margin="0,32,0,0"/>
     </Grid>
 </Page>

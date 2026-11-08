@@ -129,3 +129,44 @@ Antes: `dotnet build COT_0.HostWinUI` en 0 errores y 0 warnings.
 
 - **Archivos que faltan**: renombra `gifs\lain_tele_web.mp4` → "Faltan archivos del manual: lain_tele_web.mp4…"; el manual sigue sin video.
 - **Archivo ilegible**: reemplaza `lain_despedida.mp4` por un `.txt` renombrado y llega a la despedida → "No se pudo abrir «lain_despedida.mp4»…".
+
+## 11. Correcciones visuales (08/11)
+
+### Fondos: video de Gojo y miniaturas
+
+1. Borra `%LocalAppData%\COT_0\cache\fondos\` (si existe) y abre **02 CAMBIAR FONDO**.
+2. Las 3 miniaturas (Batman, Jujutsu Kaisen…, "CHILL" NIGHT RIDE…) muestran un cuadro del video (no el icono vacío). Abajo, el nombre limpio: sin `[3-WVRBufuVw]` y con `:` / `"` / `|` normales. Pasa el mouse: el tooltip da el nombre completo del archivo.
+3. En `cache\fondos\` hay 3 `.jpg` (uno por video). Cierra y vuelve a abrir FONDOS: salen al instante y no se generan otros.
+4. Elige **Gojo**: dice PESADO y "Usar cuadro fijo" está marcado → el fondo es su cuadro fijo y **no** sale el InfoBar.
+5. Desmarca "Usar cuadro fijo" → el video de Gojo se reproduce. Si tu PC no pudiera, cae solo al cuadro fijo y el InfoBar dice la causa (sin códec, no decodifica…) con el código; el detalle queda en `%LocalAppData%\COT_0\registro-medios.jsonl`.
+6. El CheckBox marcado es **rojo**, no azul.
+7. Sin ffmpeg: renombra temporalmente `Background:FfmpegPath` a `noexiste` y borra la caché → las miniaturas salen igual (miniatura de Windows o `MediaComposition`, un poco más lento).
+8. Cuadro que no sale: renombra un `.txt` a `roto.mp4` en `fondos\` → su miniatura queda con el icono, y al elegirlo con cuadro fijo el InfoBar dice "No se pudo sacar un cuadro de «roto.mp4»…"; sin cuadro fijo, la causa de Windows y su código.
+
+### Sala: barra de abajo
+
+1. **01 GENERAR QR**. Abajo: EMOTES, MÚSICA y CAMBIAR FONDO a la izquierda; "Al cerrar, todos / salen de la sala" en dos líneas en medio; CERRAR SALA a la derecha, completo y con margen. Nada encimado.
+2. Pasa el mouse por CERRAR SALA: se corre a la izquierda y no se corta.
+
+### Música
+
+1. **05 MÚSICA**: la portada grande se ve nítida, sin marco de sobra y sin recortes. `Audio_04` (vertical) sale más angosta que las cuadradas.
+2. Las miniaturas de la lista se ven completas (las verticales con fondo a los lados).
+3. La barra de volumen y su bolita son rojas.
+
+### Emotes (7TV)
+
+1. **04 EMOTES**: arriba "SET DE 7TV" a la izquierda y "N emotes cargados" a la derecha, sin encimarse.
+2. El campo y APLICAR tienen la misma altura; APLICAR con el texto centrado.
+3. Abajo, el estado ("OK" o el error) alineado a la izquierda. Escribe un ID inválido y APLICAR: el error largo hace wrap.
+
+### Login
+
+1. Entra con una cuenta vieja sin pregunta (o fuerza el paso): el subtítulo "CONFIGURA TU PREGUNTA SECRETA" hace wrap entre sus dos líneas rojas; ninguna se sale del formulario.
+
+### Logo Neondev
+
+1. En el **login** (arriba a la derecha), el **dashboard** (abajo del estado de la sala) y la **sala** (abajo de EN VIVO): avatar de 64 px con esquinas redondeadas y "Neondev".
+2. Un brillo diagonal cruza el avatar de ida y vuelta (3 s por lado), sin trabar nada.
+3. Mouse encima: cursor de mano, tooltip "Abrir el repositorio del proyecto", el nombre pasa a rojo y el borde del avatar se aclara.
+4. Clic → abre https://github.com/neondev87/COT_0 en el navegador (cámbialo en `Branding:RepoUrl`).

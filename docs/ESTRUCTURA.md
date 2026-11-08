@@ -10,8 +10,10 @@ COT_0.HostWinUI/
 ├── App.xaml.cs                   Arranque: arma los servicios, crea la ventana, arranca la música y levanta la web
 ├── MainWindow.xaml               Única ventana: CapaFondo (fondo elegido) y encima el Frame (RootFrame)
 ├── appsettings.json              Ventana, archivos JSON, seguridad, validación, preguntas secretas, reloj, Audio (música y portadas),
-│                                 Background (fondos), Manual (videos, sonidos y tiempos de Lain), Links y la config de la web/túnel
-├── .gitignore                    Vuelve a incluir Services/Musica (la regla musica/ de la raíz la tapaba) e ignora fondos/gifs/manual sueltos
+│                                 Background (fondos y cuadro fijo con ffmpeg), Manual (videos, sonidos y tiempos de Lain),
+│                                 Branding (RepoUrl: el logo abre el repo) y la config de la web/túnel
+├── .gitignore                    Vuelve a incluir Services/Musica (la regla musica/ de la raíz la tapaba) e ignora fondos/gifs/manual,
+│                                 cache/ y *.jsonl sueltos
 ├── app.manifest                  Nitidez en pantallas con escala (DPI)
 ├── Assets/
 │   ├── Fuentes/                  TTF del diseño (Cinzel, Barlow, Barlow Condensed 200/300/500/700/800 itálica, Inter, Redaction 50 de la firma)
@@ -29,19 +31,28 @@ COT_0.HostWinUI/
 │   ├── Fondo.cs                  Fondo del catálogo: archivo, tipo, tamaño y si se muestra como cuadro fijo
 │   ├── FondoKind.cs              Imagen o video
 │   ├── FondosGuardados.cs        Contenido de fondos.json: catálogo y fondo elegido
-│   ├── FondoError.cs             Carpeta sin encontrar, vacía, archivo ilegible o fondos.json dañado (Text.Backgrounds.Error.*)
+│   ├── FondoError.cs             Carpeta sin encontrar o vacía, imagen ilegible, fondos.json dañado, archivo que ya no está o bloqueado,
+│   │                             video sin códec, video que no decodifica y video sin cuadro fijo (Text.Backgrounds.Error.*)
+│   ├── MediaLogEntry.cs          Una línea de registro-medios.jsonl: hora, origen, archivo, ErrorCode (HRESULT) y detalle
+│   ├── CoverArt.cs               Portada grande decodificada y su tamaño en pantalla
 │   └── ConfirmTexts.cs           Textos del diálogo sí/no
 ├── Services/
 │   ├── Almacenamiento/           JsonStore: lee y guarda cualquier clase en %LocalAppData%\COT_0\*.json (async)
+│   ├── Cache/                    CacheFolders: %LocalAppData%\COT_0\cache\<nombre> y la llave (hash de ruta + tamaño + fecha)
+│   ├── Registro/                 MediaLog: ErrorCode/ExtendedErrorCode de MediaFailed, miniaturas y portadas en registro-medios.jsonl
 │   ├── Configuracion/            AppConfig + un record por sección de appsettings.json (Window, Storage, Security, Validation, Recovery, Ui, Paths,
 │   │                             Audio, Background, Manual, Links, Web, Tunnel, Qr)
 │   ├── Dialogos/                 ConfirmDialogService: abre el diálogo sí/no sobre la ventana
 │   ├── Fondos/                   FondoCatalog (lee la carpeta; antes BackgroundCatalog del WPF), FondoStore (fondos.json), FondoService (catálogo,
-│   │                             elegido y último error), FondoImages (imagen o cuadro de video decodificado chico) y FondoPlayer (único MediaPlayer)
+│   │                             elegido y último error con su código), FondoImages (imagen o cuadro fijo decodificado al tamaño pedido),
+│   │                             FondoPlayer (único MediaPlayer; abre con StorageFile), FondoFrameCache (cuadro fijo en caché) con sus tres
+│   │                             intentos FfmpegFrames → ShellThumbnailFrames → CompositionFrames (+ FrameFiles: guarda el JPEG),
+│   │                             FondoFailures (HRESULT → FondoError) y FondoNames (nombre limpio para la miniatura)
 │   ├── Manual/                   ManualAssets (rutas de Lain, async; copiado del WPF), ManualSound (aviso + estática), ManualVideo (un MediaPlayer
 │   │                             para Lain y la despedida) y ManualTimeline (fases de cada paso con Manual:CueSeconds)
-│   ├── Musica/                   MusicLibrary y CoverLibrary (copiadas del WPF, sin tipos de WPF), SongCatalog (duración y portada, async)
-│   │                             y MusicService (Windows.Media.Playback.MediaPlayer: play/pausa, anterior/siguiente, volumen, silencio)
+│   ├── Musica/                   MusicLibrary y CoverLibrary (copiadas del WPF, sin tipos de WPF), SongCatalog (duración y portada, async),
+│   │                             MusicService (Windows.Media.Playback.MediaPlayer: play/pausa, anterior/siguiente, volumen, silencio)
+│   │                             y CoverImages (portada grande a su tamaño real, con tope de Audio:CoverLargeSize y CoverMaxUpscale)
 │   ├── Sala/                     WebServerHost (Kestrel con COT_0.Web), RoomSession (abrir/cerrar sala, vigilantes y apagado),
 │   │                             QrService (PNG de QRCoder → BitmapImage), RoomOpenErrors (error → RoomError + texto) y GuestWatcher (base: detecta quién entra)
 │   ├── Sesiones/                 SesionService (sesiones.json) y SesionWatcher (abre/cierra la sesión con la sala y anota invitados)
@@ -68,7 +79,9 @@ COT_0.HostWinUI/
     │   ├── BotonManual.cs        Botón del manual: atajo con tecla dibujada (ENTER, →, ←, ESC) o botón redondeado
     │   ├── PanelEmotes           Set de 7TV, reportes y emotes quitados (+ EmoteStatusBrushes.cs: color del estado)
     │   ├── ControlVolumen        Nota (silencio), barra de volumen y número; lo usan la firma y MusicaPage
-    │   ├── Firma                 Avatar + Neondev (abre el repo) y la música que suena, en el login
+    │   ├── Firma                 LogoNeondev y la música que suena, en el login
+    │   ├── LogoNeondev           Avatar + "Neondev" con brillo de vidrio (rescatado del SignatureBadge del WPF); clic abre Branding:RepoUrl.
+    │   │                         Está en el login (dentro de Firma), en el dashboard (abajo del estado de la sala) y en la sala (abajo de EN VIVO)
     │   ├── MusicGlyphs.cs        Iconos de play/pausa, nota/silencio y la bocina del manual según el estado
     │   └── AvatarTones.cs        Tono del avatar de cada fila
     ├── Estilos/
@@ -79,7 +92,7 @@ COT_0.HostWinUI/
     │   └── TarjetaMenu.xaml      Plantilla de TarjetaMenu con sus estados (normal, mouse encima, apagada)
     ├── ModelosDeVista/           ViewModels: Login (+ LoginStep, FormViewModel), Recovery, SecurityQuestion,
     │                             Dashboard, Sala, ConnectedUsers, UserRow, Emotes + EmoteRow,
-    │                             MusicControls (base) → Musica y Firma, SongRow, CapaFondo, Fondos + FondoRow,
+    │                             MusicControls (base) → Musica y Firma, SongRow, CapaFondo, Fondos + FondoRow, LogoNeondev,
     │                             Manual + ManualStep + ManualNotice
     └── Pantallas/                Páginas del Frame: Login, Dashboard, Sala, Emotes, Musica, Fondos, Manual
 ```
@@ -96,6 +109,8 @@ En `%LocalAppData%\COT_0\`:
 | `visitas.json` | Una línea por cada invitado que entra a la sala, con `EnteredAt`. Queda aunque se cierre el túnel. |
 | `fondos.json` | Catálogo de la última lectura de la carpeta de fondos (`FileName`, `Kind`, `SizeBytes`, `UseStill`) y `SelectedFile`: `null` = nunca elegiste (usa `Background:DefaultFile`), `""` = sin fondo. |
 | `sesiones.json` | Una entrada por cada vez que se abre la sala: `Number` (1, 2, 3…), `StartedAt`, `EndedAt` y `Guests` (nombre + hora de entrada). El host no cuenta. |
+| `registro-medios.jsonl` | Una línea JSON por falla de medios: video de fondo (`Error` + `ExtendedErrorCode` de `MediaFailed`), miniatura de Windows, ffmpeg, MediaComposition, imagen o portada. Crece sin tope (ver `PENDIENTES_LIMPIEZA.md`). |
+| `cache\fondos\<hash>.jpg` | Cuadro fijo de cada video (miniatura de FONDOS y fondo en modo cuadro fijo), máx. `Background:FrameMaxWidth` de ancho. El hash sale de ruta + tamaño + fecha: si el video cambia, se genera otro. |
 
 ## Login y recuperación
 
@@ -130,8 +145,14 @@ En `%LocalAppData%\COT_0\`:
 - Carpeta fuera del repo: `Paths:MediaRoot` + `Background:Folder` (imágenes `Background:ImageExtensions`, videos `Background:VideoExtensions`). La app no la crea.
 - `CapaFondo` vive en `MainWindow`, detrás del `Frame`, y es la única: Dashboard, Sala y Fondos son páginas transparentes. En las demás páginas se oculta y el video se pausa. La carpeta se lee la primera vez que entras al dashboard (el login no la toca).
 - Un solo `MediaPlayer` (`FondoPlayer`) en bucle y en silencio; cambiar de fondo solo cambia su `Source`.
-- Videos de más de `Background:HeavyVideoMegabytes` (120 MB) arrancan como **cuadro fijo** (miniatura de Windows a `Background:StillSize`). En FONDOS, "Usar cuadro fijo" lo cambia por video y se guarda en `fondos.json`.
-- Si un video no abre, cae solo a su cuadro fijo; el aviso queda en `FondoService` y lo muestra el InfoBar de FONDOS. Abrir FONDOS vuelve a intentar los archivos que fallaron.
+- Videos de más de `Background:HeavyVideoMegabytes` (120 MB) arrancan como **cuadro fijo**. En FONDOS, "Usar cuadro fijo" lo cambia por video y se guarda en `fondos.json`.
+- **Cuadro fijo** (`FondoFrameCache`): una sola vez por video, async, en `%LocalAppData%\COT_0\cache\fondos\<hash>.jpg`. Intentos en orden:
+  1. `ffmpeg` si ya está junto al `.exe` o en el `PATH` (`Background:FfmpegPath`; no se instala nada): cuadro en `Background:FrameSeconds` (3 s, como el `PreviewSeconds` del WPF), máx. `FrameMaxWidth` (1280) con `lanczos`.
+  2. Miniatura de Windows con `ThumbnailMode.VideosView` (con `SingleItem` Windows regresaba el **icono** del archivo, no un cuadro).
+  3. `MediaComposition.GetThumbnailAsync` (Media Foundation; en lugar del frame server de `MediaPlayer`, que pide una superficie Direct3D).
+- La miniatura de FONDOS y el cuadro fijo del fondo usan ese mismo JPEG (decodificado a `ThumbnailSize` o `StillSize`).
+- El video se abre con `StorageFile.GetFileFromPathAsync` + `MediaSource.CreateFromStorageFile` (no con `Uri`), así los nombres con `：`, `＂`, `｜`, corchetes o espacios no pasan por el escape de URL.
+- Si un video no abre, cae solo a su cuadro fijo; `FondoFailures` traduce el `ExtendedErrorCode` (archivo que ya no está, bloqueado, sin códec, no decodifica) y el InfoBar de FONDOS dice la causa con el código. Todo queda en `registro-medios.jsonl`. Abrir FONDOS vuelve a intentar los archivos que fallaron.
 - Velo negro: `Background:VeilOpacity` con fondo elegido, `Background:PickerVeilOpacity` en FONDOS (reemplaza el desenfoque).
 
 ## Manual de Lain

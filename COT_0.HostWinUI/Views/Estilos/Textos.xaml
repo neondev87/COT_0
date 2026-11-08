@@ -169,12 +169,17 @@
     <x:String x:Key="Text.Backgrounds.ErrorTitle">Fondos</x:String>
     <x:String x:Key="Text.Backgrounds.Error.FolderMissing">No se encontró la carpeta de fondos: {0}. Créala o cambia Paths:MediaRoot / Background:Folder en appsettings.json.</x:String>
     <x:String x:Key="Text.Backgrounds.Error.Empty">La carpeta {0} no tiene imágenes ni videos.</x:String>
-    <x:String x:Key="Text.Backgrounds.Error.Unreadable">No se pudo abrir «{0}». Si es un video, se muestra su cuadro fijo; si no, elige otro fondo.</x:String>
+    <x:String x:Key="Text.Backgrounds.Error.Unreadable">No se pudo abrir la imagen «{0}»: el archivo está dañado o no es una imagen. Elige otro fondo.</x:String>
+    <x:String x:Key="Text.Backgrounds.Error.FileMissing">«{0}» ya no está en la carpeta de fondos (se movió o se borró). Toca RECARGAR. Código {1}.</x:String>
+    <x:String x:Key="Text.Backgrounds.Error.FileLocked">Otro programa está usando «{0}» o no hay permiso para leerlo. Ciérralo y vuelve a abrir FONDOS. Código {1}.</x:String>
+    <x:String x:Key="Text.Backgrounds.Error.VideoCodec">Windows no tiene el códec para reproducir «{0}» (pasa con HEVC o AV1 si falta su extensión de Microsoft Store). Se muestra su cuadro fijo. Código {1}.</x:String>
+    <x:String x:Key="Text.Backgrounds.Error.VideoDecode">Windows abrió «{0}» pero no pudo reproducirlo (archivo dañado o demasiado pesado para la tarjeta de video). Se muestra su cuadro fijo. Código {1}.</x:String>
+    <x:String x:Key="Text.Backgrounds.Error.NoFrame">No se pudo sacar un cuadro de «{0}» para el cuadro fijo. Desmarca "Usar cuadro fijo" para reproducirlo; el detalle está en registro-medios.jsonl.</x:String>
     <x:String x:Key="Text.Backgrounds.Error.Storage">No se pudo leer o guardar fondos.json ({0}). Tu elección no se guardará hasta que se arregle.</x:String>
 
     <!-- Firma del login -->
     <x:String x:Key="Text.Signature.Name">Neondev</x:String>
-    <x:String x:Key="Text.Signature.Link">Abrir el repositorio en GitHub</x:String>
+    <x:String x:Key="Text.Signature.Link">Abrir el repositorio del proyecto</x:String>
     <x:String x:Key="Text.Signature.NoMusic">Sin música</x:String>
 
     <!-- Lista de conectados -->
