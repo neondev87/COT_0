@@ -19,7 +19,7 @@ public class FondoImages(FondoFrameCache frames)
         return source is null ? null : await LoadImageAsync(source, width);
     }
 
-    /// <summary>Decodifica a lo ancho pedido (nunca más que el original) con la escala de alta calidad de WinUI.</summary>
+    /// <summary>Decodifica a lo ancho pedido (nunca más que el original) con la escala de alta calidad del sistema.</summary>
     public static async Task<BitmapImage?> LoadImageAsync(string path, uint width)
     {
         try

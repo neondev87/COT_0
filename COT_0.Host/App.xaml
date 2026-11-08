@@ -58,7 +58,7 @@
             <SolidColorBrush x:Key="DialogVeilBrush" Color="#B3080809"/>
 
             <!-- Acento de Windows → rojo del proyecto: sin esto CheckBox, Slider y demás salen con el azul del sistema.
-                 En tema oscuro WinUI rellena con Light2, por eso Light2 es el mismo rojo de la línea de acento -->
+                 En tema oscuro el control rellena con Light2, por eso Light2 es el mismo rojo de la línea de acento -->
             <Color x:Key="SystemAccentColor">#B3122E</Color>
             <Color x:Key="SystemAccentColorLight1">#A51029</Color>
             <Color x:Key="SystemAccentColorLight2">#B3122E</Color>
@@ -539,7 +539,7 @@
                 </Setter>
             </Style>
 
-            <!-- Filas de ListView sin selección ni bordes de WinUI -->
+            <!-- Filas de ListView sin selección ni bordes del sistema -->
             <Style x:Key="FlatListItem" TargetType="ListViewItem">
                 <Setter Property="Padding" Value="0"/>
                 <Setter Property="Margin" Value="0"/>

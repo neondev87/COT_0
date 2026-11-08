@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <!-- Host de COT_0 en WinUI 3: una ventana con un Frame que navega entre páginas -->
+  <!-- Host de COT_0 (Windows App SDK): una ventana con un Frame que navega entre páginas -->
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
@@ -11,7 +11,7 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
-    <!-- Sin MSIX y con el runtime de WinUI dentro de la carpeta: no hay que instalar nada en Windows -->
+    <!-- Sin MSIX y con el runtime de Windows App SDK dentro de la carpeta: no hay que instalar nada en Windows -->
     <WindowsPackageType>None</WindowsPackageType>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <Nullable>enable</Nullable>

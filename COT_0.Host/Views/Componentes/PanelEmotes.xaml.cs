@@ -18,7 +18,7 @@ public sealed partial class PanelEmotes : UserControl
 
     private void OnRestoreClick(object sender, RoutedEventArgs e) => Run(sender, ViewModel.RestoreCommand);
 
-    // Cada botón trae su fila en el DataContext (en WinUI no hay RelativeSource AncestorType)
+    // Cada botón trae su fila en el DataContext (este XAML no tiene RelativeSource AncestorType)
     private static void Run(object sender, System.Windows.Input.ICommand command)
     {
         if (sender is FrameworkElement { DataContext: EmoteRowViewModel row }) command.Execute(row);

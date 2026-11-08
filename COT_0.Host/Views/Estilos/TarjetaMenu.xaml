@@ -27,7 +27,7 @@
                             <TranslateTransform x:Name="Shift"/>
                         </Grid.RenderTransform>
 
-                        <!-- Forma inclinada con Path (en WinUI el Clip solo acepta rectángulos) -->
+                        <!-- Forma inclinada con Path (el Clip solo acepta rectángulos) -->
                         <Path Data="M16,0 L340,0 L324,58 L0,58 Z" Fill="{StaticResource CardFaceBrush}"/>
                         <Path x:Name="Hover" Data="M16,0 L340,0 L324,58 L0,58 Z" Fill="{StaticResource AccentBrush}" Opacity="0"/>
 

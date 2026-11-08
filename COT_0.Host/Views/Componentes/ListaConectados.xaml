@@ -26,7 +26,7 @@
 
             <ListView x:Name="Guests" Grid.Row="1" SelectionMode="None" IsItemClickEnabled="False">
                 <ListView.Resources>
-                    <!-- Sin selección ni bordes de WinUI: solo el fondo tenue al pasar el mouse -->
+                    <!-- Sin selección ni bordes del sistema: solo el fondo tenue al pasar el mouse -->
                     <StaticResource x:Key="ListViewItemBackgroundPointerOver" ResourceKey="RowHoverBrush"/>
                     <StaticResource x:Key="ListViewItemBackgroundPressed" ResourceKey="RowHoverBrush"/>
                 </ListView.Resources>

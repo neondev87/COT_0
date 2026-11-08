@@ -40,7 +40,7 @@ public sealed class TarjetaMenu : Button
         set => SetValue(IconProperty, value);
     }
 
-    // Cada tarjeta necesita su propia Geometry: WinUI no deja compartir una entre dos Path
+    // Cada tarjeta necesita su propia Geometry: no se puede compartir una entre dos Path
     protected override void OnApplyTemplate()
     {
         base.OnApplyTemplate();

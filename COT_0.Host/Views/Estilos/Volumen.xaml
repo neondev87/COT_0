@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Volumen minimalista de la firma: bocina gris que pasa a blanco y una línea de 2 px (gris tenue + tramo rojo hasta el valor)
-     con un punto de 10 px que solo aparece con el mouse o el foco. Plantilla propia del Slider: sin los visuales ni el azul de WinUI.
+     con un punto de 10 px que solo aparece con el mouse o el foco. Plantilla propia del Slider: sin los visuales ni el azul del sistema.
      Solo opacidad y escala animadas (cortas). Se mezcla en Firma -->
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

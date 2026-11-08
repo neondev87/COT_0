@@ -1,4 +1,4 @@
-// Genera el QR de la sala con QRCoder y lo entrega como imagen de WinUI
+// Genera el QR de la sala con QRCoder y lo entrega como BitmapImage para la vista
 using System.Globalization;
 using System.Runtime.InteropServices.WindowsRuntime;
 using COT_0.Host.Services.Configuracion;

@@ -9,7 +9,7 @@ namespace COT_0.Host.Services.Dialogos;
 /// <summary>Lo usa cualquier parte del Host que necesite un "¿seguro?". Esc o CANCELAR regresan false.</summary>
 public class ConfirmDialogService
 {
-    // WinUI solo deja abrir un ContentDialog a la vez
+    // Solo se puede abrir un ContentDialog a la vez
     private bool _isOpen;
 
     public async Task<bool> ConfirmAsync(ConfirmTexts texts)

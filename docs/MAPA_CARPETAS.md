@@ -151,3 +151,18 @@ En Web, los namespaces nuevos se importan una sola vez: `<Using>` en `COT_0.Web.
 | `COT_0.Web/Models/` | Primer nivel válido (ya con una clase por archivo) |
 | `COT_0.Web/Services/Emotes/` | Ya agrupado; "emote" se usa igual en español |
 | `COT_0.Core/Models/`, `COT_0.Core/Services/` | Primer nivel válido, pocos archivos; los namespaces los usan Web y Host |
+
+## Renombres de cierre
+
+Inventario del 08/11 (tag de respaldo `pre-nombres-naturales`), con búsquedas insensibles a mayúsculas de `winui`, `wpf`, `hostwinui`, `xml`, `migracion`, `nuevo`, `new`, `v2`, `temp`, `old` y `copia` en carpetas, archivos, `.csproj`, `.sln`, namespaces, `x:Class`, clases, recursos, claves de textos, `appsettings.json`, `.gitignore` y docs.
+
+| Nombre actual | Nombre natural | Estado |
+|---|---|---|
+| `COT_0.HostWinUI/` y `COT_0.HostWinUI.csproj` | `COT_0.Host/` y `COT_0.Host.csproj` | Ya aplicado en el cierre anterior (`af5d06a`); `RootNamespace` `COT_0.Host`, ejecutable `COT_0.exe` y título de ventana `COT_0` |
+| Namespaces `COT_0.HostWinUI.*`, `x:Class`, `xmlns:using`, `ms-appx:///` | `COT_0.Host.*` | Ya aplicado; cero coincidencias |
+| Carpetas con sufijo de tecnología o formato (`TextosXml`, `XamlPantallas`…) | — | No existe ninguna: las vistas están en `Views/Pantallas` y los textos en `Views/Estilos/Textos.xaml` |
+| Clases o recursos con `New`/`Old`/`V2`/`Temp`/`Copia` | — | No existe ninguno (las coincidencias son `Template`, `NewPassword` y `Guid.NewGuid`, nombres reales) |
+| Comentario de `AppSettings.cs`: "Host WinUI" | "Host" | Cambiado |
+| Comentarios de código con "WinUI" (`App.xaml`, `COT_0.Host.csproj`, `ConfirmDialogService`, `FondoImages`, `QrService`, `ListaConectados.xaml`, `PanelEmotes.xaml.cs`, `TarjetaMenu.cs`, `AvatarTones`, `TarjetaMenu.xaml`, `Volumen.xaml`, `EmoteRowViewModel`) | Redacción neutra ("del sistema", "este XAML", "Windows App SDK") | Cambiado |
+
+Lo que se queda a propósito: `<UseWinUI>true</UseWinUI>` en `COT_0.Host.csproj` (propiedad obligatoria del SDK, no es un nombre nuestro), la regla estándar `*_wpftmp.csproj` del `.gitignore`, y las menciones en `docs/`, `README.md` y `CONTRATO.md` como explicación histórica.

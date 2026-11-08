@@ -11,7 +11,7 @@ public sealed class EmoteRowViewModel(RoomEmote emote, string detail, int thumbn
     public string Name { get; } = emote.Name;
     public string Detail { get; } = detail;
 
-    // Se prefiere el gif (WinUI lo anima sin códecs extra); webp solo si no hay otro
+    // Se prefiere el gif (la imagen lo anima sin códecs extra); webp solo si no hay otro
     public BitmapImage Thumbnail { get; } = new(new Uri(emote.Small.FallbackUrl ?? emote.Small.Url))
     {
         DecodePixelWidth = thumbnailSize,
