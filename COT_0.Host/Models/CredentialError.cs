@@ -15,4 +15,6 @@ public enum CredentialError
     QuestionEmpty,
     AnswerEmpty,
     AnswerTooLong,
+    UserTaken,
+    UsersFull,
 }

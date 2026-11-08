@@ -192,6 +192,15 @@
             </Style>
 
             <!-- Enlace del login ("¿Olvidaste tu contraseña?", "Volver"): solo texto que se aclara con el mouse -->
+            <!-- Barra vertical sutil entre los enlaces del login -->
+            <Style x:Key="LoginLinkSeparator" TargetType="Rectangle">
+                <Setter Property="Width" Value="1"/>
+                <Setter Property="Height" Value="12"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Fill" Value="{StaticResource Light55Brush}"/>
+                <Setter Property="Opacity" Value="0.5"/>
+            </Style>
+
             <Style x:Key="LoginLinkButton" TargetType="Button">
                 <Setter Property="HorizontalAlignment" Value="Right"/>
                 <Setter Property="Padding" Value="0,8"/>

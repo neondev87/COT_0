@@ -1,4 +1,5 @@
-// Lectura y escritura de usuarios.json, compartida por el login y la recuperación
+// Lectura y escritura de usuarios.json (hasta Usuarios:Maximo), compartida por el login, el registro y la recuperación
+using System.Text.Json;
 using COT_0.Host.Models;
 using COT_0.Host.Services.Almacenamiento;
 using COT_0.Host.Services.Configuracion;
@@ -6,18 +7,28 @@ using COT_0.Host.Services.Validaciones;
 
 namespace COT_0.Host.Services.Usuarios;
 
-/// <summary>Hay una sola cuenta de host: el archivo es una lista por compatibilidad y se usa la primera.</summary>
+/// <summary>Lista de usuarios; si el archivo trae una cuenta suelta (formato de una sola cuenta) se lee como el primero.</summary>
 public static class HostAccounts
 {
     private static string FileName => AppConfig.Settings.Storage.UsersFile;
 
-    public static Task<List<HostUser>> LoadAsync() => JsonStore.LoadAsync<List<HostUser>>(FileName);
+    public static int Maximum => AppConfig.Settings.Usuarios.Maximo;
+
+    /// <summary>Lee la lista tal cual: no valida ni recorta nombres, así no se pierde ninguna cuenta guardada.</summary>
+    public static async Task<List<HostUser>> LoadAsync()
+    {
+        var root = await JsonStore.LoadAsync<JsonElement>(FileName);
+        return root.ValueKind switch
+        {
+            JsonValueKind.Array => root.Deserialize<List<HostUser>>() ?? [],
+            JsonValueKind.Object => root.Deserialize<HostUser>() is { } single ? [single] : [],
+            _ => [],
+        };
+    }
 
     public static Task SaveAsync(List<HostUser> users) => JsonStore.SaveAsync(FileName, users);
 
-    /// <summary>La cuenta del host, o null si todavía no se registra.</summary>
-    public static HostUser? Host(List<HostUser> users) => users.FirstOrDefault();
-
+    /// <summary>Nombres sin distinguir mayúsculas y minúsculas.</summary>
     public static HostUser? Find(List<HostUser> users, string userName) =>
         users.FirstOrDefault(u => string.Equals(u.UserName, userName, StringComparison.OrdinalIgnoreCase));
 

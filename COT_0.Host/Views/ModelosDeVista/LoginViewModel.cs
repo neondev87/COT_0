@@ -1,4 +1,4 @@
-// Estado y acciones del login: entra o registra (con pregunta secreta), recupera la contraseña y pasa al dashboard
+// Estado y acciones del login: ENTRAR, registrar usuario, recuperar contraseña, pregunta secreta y paso al dashboard
 using COT_0.Host.Services.Almacenamiento;
 using COT_0.Host.Services.Textos;
 using COT_0.Host.Services.Usuarios;
@@ -9,7 +9,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace COT_0.Host.Views.ModelosDeVista;
 
-/// <summary>Una sola cuenta de host: si todavía no existe, el mismo formulario sirve para crearla.</summary>
+/// <summary>Hasta Usuarios:Maximo usuarios; todos entran a lo mismo y el dashboard no sabe cuál fue.</summary>
 public partial class LoginViewModel : FormViewModel
 {
     [ObservableProperty]
@@ -22,36 +22,55 @@ public partial class LoginViewModel : FormViewModel
     private bool _isSuccessOpen;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(SubtitleText), nameof(ButtonText), nameof(IsCredentialsVisible),
-        nameof(IsQuestionVisible), nameof(IsRecoverVisible), nameof(IsForgotVisible), nameof(IsSubmitVisible))]
+    private string _successMessage = string.Empty;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsNoUsersVisible))]
+    private bool _hasUsers = true;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SubtitleText), nameof(ButtonText), nameof(IsCredentialsVisible), nameof(IsQuestionVisible),
+        nameof(IsRegisterVisible), nameof(IsRecoverVisible), nameof(IsSubmitVisible), nameof(IsNoUsersVisible))]
     private LoginStep _step;
 
-    public LoginViewModel() => Recovery.Closed += OnRecoveryClosed;
+    public LoginViewModel()
+    {
+        Recovery.Closed += OnRecoveryClosed;
+        Register.Closed += OnRegisterClosed;
+    }
 
     public SecurityQuestionViewModel Question { get; } = new();
 
     public RecoveryViewModel Recovery { get; } = new();
 
-    public bool IsCredentialsVisible => Step is LoginStep.SignIn or LoginStep.Register;
+    public RegisterViewModel Register { get; } = new();
 
-    public bool IsQuestionVisible => Step is LoginStep.Register or LoginStep.SetupQuestion;
+    /// <summary>Usuario, contraseña, enlaces y ENTRAR.</summary>
+    public bool IsCredentialsVisible => Step == LoginStep.SignIn;
+
+    public bool IsQuestionVisible => Step == LoginStep.SetupQuestion;
+
+    public bool IsRegisterVisible => Step == LoginStep.Register;
 
     public bool IsRecoverVisible => Step == LoginStep.Recover;
 
-    public bool IsForgotVisible => Step == LoginStep.SignIn;
+    /// <summary>ENTRAR o GUARDAR Y ENTRAR; registro y recuperación traen su propio botón.</summary>
+    public bool IsSubmitVisible => Step is LoginStep.SignIn or LoginStep.SetupQuestion;
 
-    public bool IsSubmitVisible => Step != LoginStep.Recover;
+    /// <summary>Aviso de que todavía no hay nadie registrado.</summary>
+    public bool IsNoUsersVisible => Step == LoginStep.SignIn && !HasUsers;
 
     public string SubtitleText => UiText.Get($"Text.Login.Subtitle.{Step}");
 
-    public string ButtonText => UiText.Get($"Text.Login.Button.{Step}");
+    public string ButtonText => UiText.Get(Step == LoginStep.SetupQuestion ? "Text.Login.Button.SetupQuestion" : "Text.Login.Button.SignIn");
 
-    /// <summary>Revisa si ya existe el host para decidir entre ENTRAR y REGISTRARME.</summary>
+    /// <summary>Siempre arranca en ENTRAR; solo revisa si ya hay usuarios para el aviso.</summary>
     public async Task LoadAsync()
     {
+        Step = LoginStep.SignIn;
         try
         {
-            Step = await UserService.HasUsersAsync() ? LoginStep.SignIn : LoginStep.Register;
+            HasUsers = await UserService.HasUsersAsync();
         }
         catch (Exception ex) when (JsonStore.IsStorageError(ex))
         {
@@ -65,12 +84,7 @@ public partial class LoginViewModel : FormViewModel
         IsErrorOpen = IsSuccessOpen = false;
         try
         {
-            var done = Step switch
-            {
-                LoginStep.Register => await RegisterAsync(),
-                LoginStep.SetupQuestion => await SaveQuestionAsync(),
-                _ => await SignInAsync(),
-            };
+            var done = Step == LoginStep.SetupQuestion ? await SaveQuestionAsync() : await SignInAsync();
             if (done) Navigator.ShowDashboard();
         }
         catch (Exception ex) when (JsonStore.IsStorageError(ex))
@@ -80,11 +94,19 @@ public partial class LoginViewModel : FormViewModel
     }
 
     [RelayCommand]
-    private async Task ForgotAsync()
+    private void Forgot()
     {
         IsErrorOpen = IsSuccessOpen = false;
+        Recovery.Start(UserName);
         Step = LoginStep.Recover;
-        await Recovery.StartAsync();
+    }
+
+    [RelayCommand]
+    private async Task RegisterUserAsync()
+    {
+        IsErrorOpen = IsSuccessOpen = false;
+        Step = LoginStep.Register;
+        await Register.StartAsync();
     }
 
     private async Task<bool> SignInAsync()
@@ -98,19 +120,10 @@ public partial class LoginViewModel : FormViewModel
             return false;
         }
 
-        // Cuenta de antes de la recuperación: primero configura su pregunta
+        // Primera vez que entra este usuario: primero configura su pregunta
         if (!await UserService.NeedsSecurityQuestionAsync(UserName)) return true;
         Question.Clear();
         Step = LoginStep.SetupQuestion;
-        return false;
-    }
-
-    private async Task<bool> RegisterAsync()
-    {
-        if (!Check(CredentialValidator.Validate(UserName, Password)) || !Check(Question.Validate())) return false;
-
-        if (await UserService.RegisterAsync(UserName, Password, Question.QuestionKey, Question.Answer)) return true;
-        ShowError("Text.Error.UserTaken");
         return false;
     }
 
@@ -122,20 +135,29 @@ public partial class LoginViewModel : FormViewModel
         return true;
     }
 
-    private async void OnRecoveryClosed(bool changed)
+    private void OnRecoveryClosed(bool changed)
     {
         Step = LoginStep.SignIn;
         if (!changed) return;
 
+        UserName = Recovery.UserName;
+        ShowSuccess("Text.Recovery.Done");
+    }
+
+    private void OnRegisterClosed(string? registeredUserName)
+    {
+        Step = LoginStep.SignIn;
+        if (registeredUserName is null) return;
+
+        UserName = registeredUserName;
+        HasUsers = true;
+        ShowSuccess("Text.Register.Done");
+    }
+
+    private void ShowSuccess(string key)
+    {
         Password = string.Empty;
+        SuccessMessage = UiText.Get(key);
         IsSuccessOpen = true;
-        try
-        {
-            UserName = await PasswordRecoveryService.GetUserNameAsync();
-        }
-        catch (Exception ex) when (JsonStore.IsStorageError(ex))
-        {
-            ShowError("Text.Error.Storage");
-        }
     }
 }

@@ -11,18 +11,18 @@
     <x:String x:Key="Text.Login.TitleCursor">_</x:String>
     <x:String x:Key="Text.Login.TitleEnd">0</x:String>
     <x:String x:Key="Text.Login.Subtitle.SignIn">ACCESO DEL HOST</x:String>
-    <x:String x:Key="Text.Login.Subtitle.Register">CREA TU CUENTA DE HOST</x:String>
+    <x:String x:Key="Text.Login.Subtitle.Register">REGISTRA UN USUARIO</x:String>
     <x:String x:Key="Text.Login.Subtitle.Recover">RECUPERA TU CONTRASEÑA</x:String>
     <x:String x:Key="Text.Login.Subtitle.SetupQuestion">CONFIGURA TU PREGUNTA SECRETA</x:String>
     <x:String x:Key="Text.Login.User">USUARIO</x:String>
-    <x:String x:Key="Text.Login.UserPlaceholder">nombre del host</x:String>
+    <x:String x:Key="Text.Login.UserPlaceholder">tu usuario</x:String>
     <x:String x:Key="Text.Login.Password">CONTRASEÑA</x:String>
     <x:String x:Key="Text.Login.PasswordPlaceholder">••••••••</x:String>
     <x:String x:Key="Text.Login.Button.SignIn">ENTRAR</x:String>
-    <x:String x:Key="Text.Login.Button.Register">REGISTRARME</x:String>
-    <x:String x:Key="Text.Login.Button.Recover">CONTINUAR</x:String>
     <x:String x:Key="Text.Login.Button.SetupQuestion">GUARDAR Y ENTRAR</x:String>
     <x:String x:Key="Text.Login.Forgot">¿Olvidaste tu contraseña?</x:String>
+    <x:String x:Key="Text.Login.RegisterUser">Registrar usuario</x:String>
+    <x:String x:Key="Text.Login.NoUsers">Todavía no hay usuarios. Usa «Registrar usuario» para crear el primero.</x:String>
     <x:String x:Key="Text.Login.Footer">SALAS DE CHAT POR QR</x:String>
     <x:String x:Key="Text.Login.ErrorTitle">Revisa tus datos</x:String>
     <x:String x:Key="Text.Login.SuccessTitle">Listo</x:String>
@@ -39,9 +39,14 @@
     <x:String x:Key="Text.Question.Anime">¿Cuál es tu anime favorito?</x:String>
     <x:String x:Key="Text.Question.Song">¿Cuál es tu canción favorita?</x:String>
 
+    <!-- Registrar usuario -->
+    <x:String x:Key="Text.Register.Submit">REGISTRAR</x:String>
+    <x:String x:Key="Text.Register.Done">Usuario registrado. Escribe tu contraseña para entrar.</x:String>
+
     <!-- Recuperar contraseña -->
     <x:String x:Key="Text.Recovery.NewPassword">CONTRASEÑA NUEVA</x:String>
     <x:String x:Key="Text.Recovery.ConfirmPassword">ESCRÍBELA OTRA VEZ</x:String>
+    <x:String x:Key="Text.Recovery.Continue">CONTINUAR</x:String>
     <x:String x:Key="Text.Recovery.Verify">VERIFICAR</x:String>
     <x:String x:Key="Text.Recovery.Save">CAMBIAR CONTRASEÑA</x:String>
     <x:String x:Key="Text.Recovery.Back">Volver al inicio de sesión</x:String>
@@ -59,9 +64,10 @@
     <x:String x:Key="Text.Error.AnswerEmpty">Escribe tu respuesta.</x:String>
     <x:String x:Key="Text.Error.AnswerTooLong">Respuesta: máximo {0} caracteres.</x:String>
     <x:String x:Key="Text.Error.WrongAnswer">La respuesta no coincide.</x:String>
-    <x:String x:Key="Text.Error.NoQuestion">Tu cuenta no tiene pregunta secreta, así que no se puede recuperar la contraseña.</x:String>
+    <x:String x:Key="Text.Error.RecoveryFailed">No se pudo recuperar la contraseña con esos datos.</x:String>
     <x:String x:Key="Text.Error.WrongCredentials">Usuario o contraseña incorrectos.</x:String>
-    <x:String x:Key="Text.Error.UserTaken">Ya hay un host registrado en esta computadora.</x:String>
+    <x:String x:Key="Text.Error.UserTaken">Ya existe un usuario con ese nombre.</x:String>
+    <x:String x:Key="Text.Error.UsersFull">Ya hay {0} usuarios registrados, que es el máximo.</x:String>
     <x:String x:Key="Text.Error.Storage">No se pudo leer o guardar tu cuenta. Inténtalo de nuevo.</x:String>
 
     <!-- Dashboard -->

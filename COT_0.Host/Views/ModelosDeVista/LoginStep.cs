@@ -4,15 +4,15 @@ namespace COT_0.Host.Views.ModelosDeVista;
 /// <summary>El login es una sola pantalla que cambia según el paso.</summary>
 public enum LoginStep
 {
-    /// <summary>ENTRAR: ya hay host registrado.</summary>
+    /// <summary>ENTRAR con usuario y contraseña (siempre es el paso inicial).</summary>
     SignIn,
 
-    /// <summary>REGISTRARME: no hay host; pide también la pregunta secreta.</summary>
+    /// <summary>"Registrar usuario": nombre y contraseña dos veces.</summary>
     Register,
 
-    /// <summary>"¿Olvidaste tu contraseña?": pregunta secreta y contraseña nueva.</summary>
+    /// <summary>"¿Olvidaste tu contraseña?": usuario, su pregunta secreta y contraseña nueva.</summary>
     Recover,
 
-    /// <summary>Cuenta anterior sin pregunta: se configura después de ENTRAR.</summary>
+    /// <summary>Usuario sin pregunta: se configura después de ENTRAR por primera vez.</summary>
     SetupQuestion,
 }

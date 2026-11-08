@@ -2,6 +2,7 @@
 using System.Globalization;
 using COT_0.Host.Models;
 using COT_0.Host.Services.Textos;
+using COT_0.Host.Services.Usuarios;
 using COT_0.Host.Services.Validaciones;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -21,9 +22,14 @@ public abstract partial class FormViewModel : ObservableObject
     {
         if (error == CredentialError.None) return true;
         ShowError($"Text.Error.{error}");
-        // Los "demasiado largo" dicen el límite de Inputs:MaxCaracteres
-        if (error is CredentialError.UserTooLong or CredentialError.PasswordTooLong or CredentialError.AnswerTooLong)
-            ErrorMessage = string.Format(CultureInfo.CurrentCulture, ErrorMessage, InputLimits.MaxCharacters);
+        // Los "demasiado largo" dicen el límite de Inputs:MaxCaracteres y "ya no caben" el de Usuarios:Maximo
+        int? limit = error switch
+        {
+            CredentialError.UserTooLong or CredentialError.PasswordTooLong or CredentialError.AnswerTooLong => InputLimits.MaxCharacters,
+            CredentialError.UsersFull => HostAccounts.Maximum,
+            _ => null,
+        };
+        if (limit is not null) ErrorMessage = string.Format(CultureInfo.CurrentCulture, ErrorMessage, limit);
         return false;
     }
 

@@ -1,9 +1,9 @@
-// Cuenta del host tal como se guarda en usuarios.json (sin lógica)
+// Un usuario del login tal como se guarda en usuarios.json (sin lógica)
 namespace COT_0.Host.Models;
 
 /// <summary>
 /// Nunca guarda la contraseña ni la respuesta secreta: solo su hash y su salt.
-/// Las cuentas viejas no traen pregunta (SecurityQuestion vacío).
+/// La pregunta se configura después de entrar por primera vez (SecurityQuestion vacío hasta entonces).
 /// </summary>
 public class HostUser
 {

@@ -9,10 +9,23 @@ public static class CredentialValidator
     /// <summary>Te regresa el primer error que encuentre, o None si todo está bien.</summary>
     public static CredentialError Validate(string userName, string password)
     {
+        var error = ValidateUserName(userName);
+        return error != CredentialError.None ? error : ValidatePassword(password);
+    }
+
+    /// <summary>Registro: usuario válido y la contraseña escrita igual las dos veces.</summary>
+    public static CredentialError ValidateRegistration(string userName, string password, string confirmation)
+    {
+        var error = ValidateUserName(userName);
+        return error != CredentialError.None ? error : ValidateNewPassword(password, confirmation);
+    }
+
+    public static CredentialError ValidateUserName(string userName)
+    {
         if (string.IsNullOrEmpty(userName)) return CredentialError.UserEmpty;
         if (!IsAlphanumeric(userName)) return CredentialError.UserInvalid;
         if (InputLimits.IsTooLong(userName)) return CredentialError.UserTooLong;
-        return ValidatePassword(password);
+        return CredentialError.None;
     }
 
     public static CredentialError ValidatePassword(string password)

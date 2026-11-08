@@ -1,4 +1,4 @@
-// Secciones de appsettings.json que usa el Host WinUI
+// Secciones de appsettings.json que usa el Host
 namespace COT_0.Host.Services.Configuracion;
 
 /// <summary>Raíz de la configuración (las demás secciones las lee la web).</summary>
@@ -7,6 +7,7 @@ public record AppSettings(
     StorageSettings Storage,
     SecuritySettings Security,
     InputsSettings Inputs,
+    UsuariosSettings Usuarios,
     RecoverySettings Recovery,
     UiSettings Ui,
     PathsSettings Paths,
