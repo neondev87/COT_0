@@ -1,6 +1,6 @@
 namespace COT_0.Web.Services.Sala;
 
-// Nombres de los eventos que el hub manda a los clientes
+/// <summary>Nombres de los eventos que el hub manda a los clientes</summary>
 public static class ChatEvents
 {
     public const string MessageReceived = "MessageReceived";

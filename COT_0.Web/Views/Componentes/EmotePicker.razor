@@ -3,7 +3,7 @@
 @inject IOptions<ChatOptions> Options
 
 @* Picker de emotes estilo Kick: se abre con la carita (con buscador) o al escribir ":" (sugerencias del texto).
-   Si 7TV no responde, el chat sigue igual y acá se avisa *@
+   Si 7TV no responde, el chat sigue igual y aquí se avisa *@
 @if (Emotes.Status != EmoteSetStatus.Off)
 {
     var results = Emotes.Search(isOpen ? search : Query, Options.Value.EmotePickerLimit);

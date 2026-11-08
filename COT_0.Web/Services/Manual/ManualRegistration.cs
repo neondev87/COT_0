@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Manual;
 
-// Registro del manual del invitado (/manual) y de sus audios
+/// <summary>Registro del manual del invitado (/manual) y de sus audios</summary>
 public static class ManualRegistration
 {
     public static IServiceCollection AddManual(this IServiceCollection services, IConfiguration config)

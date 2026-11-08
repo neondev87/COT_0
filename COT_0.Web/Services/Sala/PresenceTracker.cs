@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Sala;
 
+/// <summary>Implementa IPresenceTracker: saca a quien perdió la conexión solo si no vuelve en Chat:LeaveGraceSeconds.</summary>
 public sealed class PresenceTracker(IChatService chat, IOptions<ChatOptions> options, ILogger<PresenceTracker> logger)
     : IPresenceTracker
 {

@@ -1,6 +1,6 @@
 namespace COT_0.Web.Services.Configuracion;
 
-// Configuración del chat (sección "Chat" de appsettings.json); los valores son defaults
+/// <summary>Configuración del chat (sección "Chat" de appsettings.json); los valores son defaults</summary>
 public class ChatOptions
 {
     public const string Section = "Chat";

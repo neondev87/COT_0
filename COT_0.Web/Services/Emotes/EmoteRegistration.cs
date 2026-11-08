@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Emotes;
 
-// Registro de los emotes de 7TV, aparte del resto del chat
+/// <summary>Registro de los emotes de 7TV, aparte del resto del chat</summary>
 public static class EmoteRegistration
 {
     public static IServiceCollection AddRoomEmotes(this IServiceCollection services)

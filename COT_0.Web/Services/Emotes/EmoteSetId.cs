@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace COT_0.Web.Services.Emotes;
 
-// Saca el ID de un set de 7TV de un ID suelto o de una URL (https://7tv.app/emote-sets/{id})
+/// <summary>Saca el ID de un set de 7TV de un ID suelto o de una URL (https://7tv.app/emote-sets/{id})</summary>
 public static partial class EmoteSetId
 {
     private const string SetsSegment = "emote-sets";

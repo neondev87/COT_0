@@ -2,7 +2,7 @@ using System.Globalization;
 
 namespace COT_0.Web.Services.Voz;
 
-// Formato de duraciones de las notas de voz
+/// <summary>Formato de duraciones de las notas de voz</summary>
 public static class VoiceFormat
 {
     // m:ss (0:00 si no es válida)

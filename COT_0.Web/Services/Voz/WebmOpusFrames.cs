@@ -2,7 +2,7 @@ using System.Numerics;
 
 namespace COT_0.Web.Services.Voz;
 
-// Lee los paquetes Opus de un WebM de MediaRecorder (EBML: Segment → Cluster → SimpleBlock)
+/// <summary>Lee los paquetes Opus de un WebM de MediaRecorder (EBML: Segment → Cluster → SimpleBlock)</summary>
 public static class WebmOpusFrames
 {
     private const uint Segment = 0x18538067;

@@ -3,8 +3,7 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Perfil;
 
-// localStorage cifrado (ProtectedLocalStorage). Si el navegador no deja guardar
-// (Safari privado, almacenamiento lleno, circuito caído) se sigue sin recordar nada.
+/// <summary>localStorage cifrado (ProtectedLocalStorage). Si el navegador no deja guardar (Safari privado, almacenamiento lleno, circuito caído) se sigue sin recordar nada.</summary>
 public class GuestStore(ProtectedLocalStorage storage, IOptions<ChatOptions> options, ILogger<GuestStore> logger)
     : IGuestStore
 {

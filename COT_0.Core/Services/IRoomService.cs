@@ -1,6 +1,6 @@
 namespace COT_0.Core.Services;
 
-// Estado de la sala: la abre el host y la ven los invitados
+/// <summary>Estado de la sala: la abre el host y la ven los invitados</summary>
 public interface IRoomService
 {
     // Se dispara al abrir o cerrar la sala

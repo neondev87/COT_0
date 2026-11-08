@@ -2,7 +2,7 @@ using COT_0.Core.Models;
 
 namespace COT_0.Core.Services;
 
-// Estado del chat en memoria: usuarios conectados e historial de mensajes
+/// <summary>Estado del chat en memoria: usuarios conectados e historial de mensajes</summary>
 public interface IChatService
 {
     // Se dispara cuando entra, sale o es expulsado un usuario, o se vacía la sala

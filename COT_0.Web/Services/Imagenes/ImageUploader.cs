@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Imagenes;
 
+/// <summary>Implementa IImageUploader: el navegador achica la imagen, se ve la vista previa y se sube al enviar (Scoped).</summary>
 public sealed class ImageUploader(IImageService images, IOptions<ChatOptions> options, ILogger<ImageUploader> logger) : IImageUploader
 {
     private readonly ChatOptions _options = options.Value;

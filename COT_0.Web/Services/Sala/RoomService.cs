@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Sala;
 
-// Estado de la sala en memoria (Singleton)
+/// <summary>Estado de la sala en memoria (Singleton)</summary>
 public class RoomService(IChatService chat, IVoiceStore voices, IImageStore images, IOptions<ChatOptions> options) : IRoomService
 {
     public event Action? Changed;

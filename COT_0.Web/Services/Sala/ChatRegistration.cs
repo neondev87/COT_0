@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Sala;
 
-// Registro de servicios y endpoints del chat
+/// <summary>Registro de servicios y endpoints del chat</summary>
 public static class ChatRegistration
 {
     public static IServiceCollection AddChat(this IServiceCollection services, IConfiguration config, string serverUrl)

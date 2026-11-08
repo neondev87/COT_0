@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace COT_0.Web.Services.Imagenes;
 
-// Adjunto de imagen del invitado (Scoped, uno por circuito): el navegador la achica, se ve la vista previa y se sube al enviar
+/// <summary>Adjunto de imagen del invitado (Scoped, uno por circuito): el navegador la achica, se ve la vista previa y se sube al enviar</summary>
 public interface IImageUploader
 {
     ImageUploadState State { get; }

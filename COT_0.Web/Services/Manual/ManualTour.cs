@@ -2,6 +2,7 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Manual;
 
+/// <summary>Implementa IManualTour: recorrido del manual (bienvenida, pasos y final).</summary>
 public sealed class ManualTour(IOptions<ManualOptions> options, IManualDemo demo, IEmoteActions emoteActions) : IManualTour
 {
     private readonly ManualOptions _options = options.Value;

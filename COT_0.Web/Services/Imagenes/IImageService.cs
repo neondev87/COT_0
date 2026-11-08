@@ -2,7 +2,7 @@ using COT_0.Core.Models;
 
 namespace COT_0.Web.Services.Imagenes;
 
-// Valida, guarda y publica las imágenes del chat
+/// <summary>Valida, guarda y publica las imágenes del chat</summary>
 public interface IImageService
 {
     Task<OperationResult<ImageClip>> SendAsync(string userId, Stream image);

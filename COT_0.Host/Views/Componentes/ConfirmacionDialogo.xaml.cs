@@ -1,9 +1,9 @@
-// Diálogo de confirmación: solo recibe los textos; quien lo abre es ConfirmDialogService
 using COT_0.Host.Models;
 using Microsoft.UI.Xaml.Controls;
 
 namespace COT_0.Host.Views.Componentes;
 
+/// <summary>Diálogo de confirmación: solo recibe los textos; quien lo abre es ConfirmDialogService</summary>
 public sealed partial class ConfirmacionDialogo : ContentDialog
 {
     public ConfirmacionDialogo(ConfirmTexts texts)

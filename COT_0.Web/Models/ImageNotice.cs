@@ -1,6 +1,6 @@
 namespace COT_0.Web.Models;
 
-// Avisos de imágenes para el invitado ({0} = megas permitidos)
+/// <summary>Avisos de imágenes para el invitado ({0} = megas permitidos)</summary>
 public static class ImageNotice
 {
     public const string TooLarge = "La imagen pesa más de {0} MB aunque se comprimió. Prueba con otra.";

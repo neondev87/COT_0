@@ -2,7 +2,7 @@ using COT_0.Core.Models;
 
 namespace COT_0.Web.Services.Sala;
 
-// Avisos del sistema (entró, salió, expulsado) guardados como ChatMessage con un autor reservado y su Kind
+/// <summary>Avisos del sistema (entró, salió, expulsado) guardados como ChatMessage con un autor reservado y su Kind</summary>
 public static class SystemNotice
 {
     public const string UserId = "system";

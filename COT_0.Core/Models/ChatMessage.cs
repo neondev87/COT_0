@@ -1,6 +1,6 @@
 namespace COT_0.Core.Models;
 
-// Mensaje del chat grupal
+/// <summary>Mensaje del chat grupal</summary>
 public class ChatMessage
 {
     public string Id { get; set; } = Guid.NewGuid().ToString("N");

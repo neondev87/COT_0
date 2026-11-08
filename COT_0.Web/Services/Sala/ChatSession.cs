@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Sala;
 
+/// <summary>Implementa IChatSession: conexión de una pestaña al ChatHub y su estado (Scoped).</summary>
 public sealed class ChatSession(IChatService chat, IOptions<ChatOptions> options, ILogger<ChatSession> logger) : IChatSession
 {
     private readonly ChatOptions _options = options.Value;

@@ -1,4 +1,3 @@
-// Quick tunnel de cloudflared hacia localhost:5050
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
@@ -7,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace COT_0.Host.Services.Tunel;
 
+/// <summary>Quick tunnel de cloudflared hacia localhost:5050</summary>
 public partial class CloudflareTunnelService(IConfiguration configuration) : ITunnelService, IDisposable
 {
     // cloudflared queda atado a la vida de COT_0, incluso si se cierra de golpe

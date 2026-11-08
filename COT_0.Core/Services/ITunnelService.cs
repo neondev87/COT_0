@@ -1,6 +1,6 @@
 namespace COT_0.Core.Services;
 
-// Túnel público hacia el servidor local (cloudflared quick tunnel)
+/// <summary>Túnel público hacia el servidor local (cloudflared quick tunnel)</summary>
 public interface ITunnelService
 {
     // URL pública (https://xxxx.trycloudflare.com), null si no está activo

@@ -2,7 +2,7 @@ using COT_0.Core.Models;
 
 namespace COT_0.Web.Services.Emotes;
 
-// Respuesta de 7TV ya traducida a emotes de la sala; HttpCode solo cuando 7TV respondió con error
+/// <summary>Respuesta de 7TV ya traducida a emotes de la sala; HttpCode solo cuando 7TV respondió con error</summary>
 public sealed record EmoteSetResult(EmoteSetStatus Status, string? Name, IReadOnlyList<RoomEmote> Emotes,
     EmoteSetError Error = EmoteSetError.None, int? HttpCode = null)
 {

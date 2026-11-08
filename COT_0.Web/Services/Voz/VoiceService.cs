@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Voz;
 
+/// <summary>Implementa IVoiceService: valida, guarda y publica las notas de voz.</summary>
 public sealed class VoiceService(IChatService chat, IVoiceStore store, IAudioTranscoder transcoder, IOptions<VoiceOptions> options)
     : IVoiceService
 {

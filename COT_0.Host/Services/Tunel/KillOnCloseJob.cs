@@ -1,4 +1,3 @@
-// Job de Windows: al morir COT_0 (aunque sea de golpe) el sistema cierra el handle y mata los procesos del job
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -6,6 +5,7 @@ using Microsoft.Win32.SafeHandles;
 
 namespace COT_0.Host.Services.Tunel;
 
+/// <summary>Job de Windows: al morir COT_0 (aunque sea de golpe) el sistema cierra el handle y mata los procesos del job</summary>
 public sealed class KillOnCloseJob : IDisposable
 {
     private const int ExtendedLimitInformationClass = 9;

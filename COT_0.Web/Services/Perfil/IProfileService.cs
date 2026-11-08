@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace COT_0.Web.Services.Perfil;
 
-// Alta y edición del perfil del invitado (foto + datos de perfil)
+/// <summary>Alta y edición del perfil del invitado (foto + datos de perfil)</summary>
 public interface IProfileService
 {
     Task<OperationResult<string>> SavePhotoAsync(IBrowserFile file);

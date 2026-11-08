@@ -2,7 +2,7 @@ using COT_0.Core.Models;
 
 namespace COT_0.Web.Services.Emotes;
 
-// Menú de un emote del chat (Scoped): se abre con clic derecho o manteniendo presionado
+/// <summary>Menú de un emote del chat (Scoped): se abre con clic derecho o manteniendo presionado</summary>
 public interface IEmoteActions
 {
     RoomEmote? Target { get; }

@@ -1,7 +1,6 @@
 namespace COT_0.Core.Services;
 
-// Archivos fuera del repo (fondos, música, manual): en la configuración van relativos a Paths:MediaRoot,
-// así en otra PC solo cambia esa ruta. Una ruta absoluta se respeta tal cual
+/// <summary>Archivos fuera del repo (fondos, música, manual): en la configuración van relativos a Paths:MediaRoot, así en otra PC solo cambia esa ruta. Una ruta absoluta se respeta tal cual</summary>
 public static class MediaPath
 {
     public const string RootKey = "Paths:MediaRoot";

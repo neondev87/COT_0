@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Emotes;
 
-// Cliente tipado: BaseAddress y Timeout salen de ChatOptions (ver EmoteRegistration)
+/// <summary>Cliente tipado: BaseAddress y Timeout salen de ChatOptions (ver EmoteRegistration)</summary>
 public sealed class SevenTvClient(HttpClient http, IOptions<ChatOptions> options, ILogger<SevenTvClient> logger) : ISevenTvClient
 {
     private static readonly JsonSerializerOptions Json = new()

@@ -1,6 +1,6 @@
 namespace COT_0.Core.Models;
 
-// Invitado conectado al chat (vive solo en memoria)
+/// <summary>Invitado conectado al chat (vive solo en memoria)</summary>
 public class User
 {
     public string Id { get; set; } = Guid.NewGuid().ToString("N");

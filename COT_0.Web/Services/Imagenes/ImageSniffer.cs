@@ -2,7 +2,7 @@ using System.Buffers.Binary;
 
 namespace COT_0.Web.Services.Imagenes;
 
-// Reconoce la imagen por sus magic bytes (no por la extensión ni el content-type) y lee su tamaño
+/// <summary>Reconoce la imagen por sus magic bytes (no por la extensión ni el content-type) y lee su tamaño</summary>
 public static class ImageSniffer
 {
     private static ReadOnlySpan<byte> PngMagic => [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];

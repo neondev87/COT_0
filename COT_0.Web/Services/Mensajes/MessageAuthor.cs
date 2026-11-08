@@ -2,7 +2,7 @@ using COT_0.Core.Models;
 
 namespace COT_0.Web.Services.Mensajes;
 
-// Copia los datos visibles del autor (nombre, foto, escudo) en un mensaje
+/// <summary>Copia los datos visibles del autor (nombre, foto, escudo) en un mensaje</summary>
 public static class MessageAuthor
 {
     public static void Apply(ChatMessage message, User author)

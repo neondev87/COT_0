@@ -2,7 +2,7 @@ using System.Globalization;
 
 namespace COT_0.Web.Models;
 
-// Partícula de ceniza del fondo; Style lleva las variables CSS que usa .cot-ash
+/// <summary>Partícula de ceniza del fondo; Style lleva las variables CSS que usa .cot-ash</summary>
 public record AshParticle(string Style)
 {
     // Mismo generador pseudoaleatorio que el diseño: con la misma semilla sale el mismo dibujo

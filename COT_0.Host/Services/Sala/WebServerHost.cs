@@ -1,10 +1,10 @@
-// Levanta COT_0.Web (Kestrel) en segundo plano dentro del proceso del Host
 using COT_0.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 
 namespace COT_0.Host.Services.Sala;
 
+/// <summary>Levanta COT_0.Web (Kestrel) en segundo plano dentro del proceso del Host</summary>
 public class WebServerHost(IConfiguration configuration)
 {
     private Lazy<WebApplication> _app = CreateLazy();

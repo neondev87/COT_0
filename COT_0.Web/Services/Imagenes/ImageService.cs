@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Imagenes;
 
+/// <summary>Implementa IImageService: valida, guarda y publica las imágenes del chat.</summary>
 public sealed class ImageService(IChatService chat, IImageStore store, IOptions<ChatOptions> options) : IImageService
 {
     private readonly ChatOptions _options = options.Value;

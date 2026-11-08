@@ -1,7 +1,6 @@
-
 namespace COT_0.Web.Services.Voz;
 
-// Notas de voz en memoria (Singleton)
+/// <summary>Notas de voz en memoria (Singleton)</summary>
 public interface IVoiceStore
 {
     void Save(VoiceClip clip);

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Imagenes;
 
+/// <summary>Implementa IImageStore: imágenes de la sala en memoria, con tope total; se vacía al cerrar la sala.</summary>
 public sealed class InMemoryImageStore(IOptions<ChatOptions> options) : IImageStore
 {
     private readonly ConcurrentDictionary<string, ImageClip> _images = new();

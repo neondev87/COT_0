@@ -4,6 +4,7 @@ using Microsoft.JSInterop;
 
 namespace COT_0.Web.Services.Mensajes;
 
+/// <summary>Implementa IComposerEditor: puente con composer.js para el cuadro de escritura (Scoped).</summary>
 public sealed class ComposerEditor(IJSRuntime js, ILogger<ComposerEditor> logger) : IComposerEditor
 {
     private DotNetObjectReference<ComposerEditor>? _self;

@@ -1,7 +1,6 @@
-
 namespace COT_0.Web;
 
-// Arma la app web. La usa Program.cs (modo standalone) y COT_0.Host (en segundo plano).
+/// <summary>Arma la app web. La usa Program.cs (modo standalone) y COT_0.Host (en segundo plano).</summary>
 public static class WebApp
 {
     public const string UrlKey = "Web:Url";

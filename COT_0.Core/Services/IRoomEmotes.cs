@@ -2,7 +2,7 @@ using COT_0.Core.Models;
 
 namespace COT_0.Core.Services;
 
-// Emotes de la sala (Singleton, implementa Web): set de 7TV elegido por el host, emotes quitados y reportes
+/// <summary>Emotes de la sala (Singleton, implementa Web): set de 7TV elegido por el host, emotes quitados y reportes</summary>
 public interface IRoomEmotes
 {
     string? SetId { get; }

@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Sala;
 
-// Estado del chat en memoria (Singleton)
+/// <summary>Estado del chat en memoria (Singleton)</summary>
 public class InMemoryChatService(IOptions<ChatOptions> options) : IChatService, IChatFeed
 {
     private readonly ChatOptions _options = options.Value;

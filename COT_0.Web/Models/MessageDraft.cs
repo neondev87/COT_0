@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace COT_0.Web.Models;
 
-// Texto que el invitado está escribiendo, con el límite de caracteres
+/// <summary>Texto que el invitado está escribiendo, con el límite de caracteres</summary>
 public sealed partial class MessageDraft(int maxLength)
 {
     // Desde este porcentaje del límite el contador se marca en rojo

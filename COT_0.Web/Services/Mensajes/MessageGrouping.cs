@@ -2,7 +2,7 @@ using COT_0.Core.Models;
 
 namespace COT_0.Web.Services.Mensajes;
 
-// Arma los grupos del chat a partir de la lista de mensajes (del más viejo al más nuevo)
+/// <summary>Arma los grupos del chat a partir de la lista de mensajes (del más viejo al más nuevo)</summary>
 public static class MessageGrouping
 {
     public static IReadOnlyList<MessageGroup> Group(IReadOnlyList<ChatMessage> messages, string? ownUserId, TimeSpan window)

@@ -3,6 +3,7 @@ using COT_0.Core.Services;
 
 namespace COT_0.Web.Services.Mensajes;
 
+/// <summary>Implementa IMessageFormatter: parte el texto en texto plano, links http(s) y emotes activos.</summary>
 public partial class MessageFormatter(IRoomEmotes emotes) : IMessageFormatter
 {
     // Signos que suelen cerrar una oración y no forman parte del link

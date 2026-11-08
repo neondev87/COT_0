@@ -1,5 +1,6 @@
 namespace COT_0.Core.Models;
 
+/// <summary>Estado del set de emotes de 7TV de la sala.</summary>
 public enum EmoteSetStatus
 {
     Off,
@@ -7,16 +8,4 @@ public enum EmoteSetStatus
     Ready,
     NotFound,
     Failed,
-}
-
-// Motivo concreto cuando el set no se pudo cargar (el Host lo muestra tal cual)
-public enum EmoteSetError
-{
-    None,
-    InvalidId,
-    NotFound,
-    Timeout,
-    Network,
-    HttpError,
-    BadJson,
 }

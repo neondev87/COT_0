@@ -1,7 +1,6 @@
-
 namespace COT_0.Web.Services.Voz;
 
-// Reconoce el audio por sus magic bytes (no por el tipo que dice el navegador)
+/// <summary>Reconoce el audio por sus magic bytes (no por el tipo que dice el navegador)</summary>
 public static class AudioSniffer
 {
     private static ReadOnlySpan<byte> WebmMagic => [0x1A, 0x45, 0xDF, 0xA3];

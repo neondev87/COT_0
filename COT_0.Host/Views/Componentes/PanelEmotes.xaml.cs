@@ -1,4 +1,3 @@
-// Panel de emotes: toma su ViewModel del contenedor de servicios; los botones de cada fila solo le pasan su emote
 using COT_0.Host.Views.ModelosDeVista;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -6,6 +5,7 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace COT_0.Host.Views.Componentes;
 
+/// <summary>Panel de emotes: toma su ViewModel del contenedor de servicios; los botones de cada fila solo le pasan su emote</summary>
 public sealed partial class PanelEmotes : UserControl
 {
     public EmotesViewModel ViewModel { get; } = App.Services.GetRequiredService<EmotesViewModel>();

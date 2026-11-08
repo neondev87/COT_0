@@ -2,7 +2,7 @@ using COT_0.Core.Models;
 
 namespace COT_0.Web.Services.Emotes;
 
-// Búsqueda del picker: primero los que empiezan con el texto, después los que lo contienen, los cortos antes
+/// <summary>Búsqueda del picker: primero los que empiezan con el texto, después los que lo contienen, los cortos antes</summary>
 internal static class EmoteSearch
 {
     public static IReadOnlyList<RoomEmote> Find(IReadOnlyList<RoomEmote> emotes, string? query, int max)

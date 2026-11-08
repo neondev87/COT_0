@@ -1,7 +1,6 @@
-
 namespace COT_0.Web.Services.Perfil;
 
-// Fotos de perfil en memoria, servidas en Chat:AvatarsPath/{id}
+/// <summary>Fotos de perfil en memoria, servidas en Chat:AvatarsPath/{id}</summary>
 public interface IAvatarStore
 {
     string Save(byte[] bytes, string contentType);

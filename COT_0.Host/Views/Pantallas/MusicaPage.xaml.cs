@@ -1,4 +1,3 @@
-// Pantalla de música: carga la biblioteca al abrirse y pasa el clic de una fila al ViewModel
 using COT_0.Host.Views.ModelosDeVista;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -6,6 +5,7 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace COT_0.Host.Views.Pantallas;
 
+/// <summary>Pantalla de música: carga la biblioteca al abrirse y pasa el clic de una fila al ViewModel</summary>
 public sealed partial class MusicaPage : Page
 {
     public MusicaViewModel ViewModel { get; } = App.Services.GetRequiredService<MusicaViewModel>();

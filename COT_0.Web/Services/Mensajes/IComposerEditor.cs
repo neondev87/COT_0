@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace COT_0.Web.Services.Mensajes;
 
-// Cuadro de escritura (Scoped, uno por circuito): composer.js muestra los emotes como imagen y le pasa a C# el texto con las claves
+/// <summary>Cuadro de escritura (Scoped, uno por circuito): composer.js muestra los emotes como imagen y le pasa a C# el texto con las claves</summary>
 public interface IComposerEditor : IAsyncDisposable
 {
     // Cambió el texto del borrador (para avisar "escribiendo" y volver a pintar)

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Emotes;
 
-// Cachea en memoria la lista del set (Chat:EmoteCacheMinutes); si 7TV falla se queda con la última que tenía
+/// <summary>Cachea en memoria la lista del set (Chat:EmoteCacheMinutes); si 7TV falla se queda con la última que tenía</summary>
 public sealed class RoomEmotes(ISevenTvClient client, IOptions<ChatOptions> options) : IRoomEmotes
 {
     private readonly object _gate = new();

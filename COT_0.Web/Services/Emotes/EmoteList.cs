@@ -2,7 +2,7 @@ using COT_0.Core.Models;
 
 namespace COT_0.Web.Services.Emotes;
 
-// Foto fija de los emotes del set: activos (con índice por nombre) y quitados por el host
+/// <summary>Foto fija de los emotes del set: activos (con índice por nombre) y quitados por el host</summary>
 internal sealed record EmoteList(IReadOnlyList<RoomEmote> Active, IReadOnlyList<RoomEmote> Removed, IReadOnlyDictionary<string, RoomEmote> ByName)
 {
     public static EmoteList Empty { get; } = new([], [], new Dictionary<string, RoomEmote>());

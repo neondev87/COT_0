@@ -3,7 +3,7 @@ using COT_0.Core.Models;
 
 namespace COT_0.Web.Models;
 
-// Datos del formulario de perfil (/join y editar perfil)
+/// <summary>Datos del formulario de perfil (/join y editar perfil)</summary>
 public class JoinForm
 {
     [Required(ErrorMessage = "Elige un nombre.")]

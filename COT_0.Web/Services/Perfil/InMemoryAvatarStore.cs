@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 
 namespace COT_0.Web.Services.Perfil;
 
+/// <summary>Implementa IAvatarStore: fotos de perfil de los invitados en memoria.</summary>
 public class InMemoryAvatarStore : IAvatarStore
 {
     private readonly ConcurrentDictionary<string, StoredAvatar> _avatars = new();

@@ -1,10 +1,10 @@
-// Notificación de Lain: solo recibe su ManualNoticeViewModel (la vista se enlaza a Opacity y Text)
 using COT_0.Host.Views.ModelosDeVista;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace COT_0.Host.Views.Componentes.Manual;
 
+/// <summary>Notificación de Lain: solo recibe su ManualNoticeViewModel (la vista se enlaza a Opacity y Text)</summary>
 public sealed partial class AvisoLain : UserControl
 {
     public static readonly DependencyProperty NoticeProperty = DependencyProperty.Register(

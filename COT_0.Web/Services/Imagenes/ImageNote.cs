@@ -1,6 +1,6 @@
 namespace COT_0.Web.Services.Imagenes;
 
-// Una imagen viaja como ChatMessage con Kind = Image e ImageUrl; el render todavía la reconoce por este texto reservado, igual que VoiceNote
+/// <summary>Una imagen viaja como ChatMessage con Kind = Image e ImageUrl; el render todavía la reconoce por este texto reservado, igual que VoiceNote</summary>
 public static class ImageNote
 {
     private const string Prefix = "\u0001image:";

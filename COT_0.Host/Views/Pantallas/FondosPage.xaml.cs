@@ -1,4 +1,3 @@
-// Pantalla de fondos: carga el catálogo al abrirse y pasa el clic de una miniatura al ViewModel
 using COT_0.Host.Views.ModelosDeVista;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -6,6 +5,7 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace COT_0.Host.Views.Pantallas;
 
+/// <summary>Pantalla de fondos: carga el catálogo al abrirse y pasa el clic de una miniatura al ViewModel</summary>
 public sealed partial class FondosPage : Page
 {
     public FondosViewModel ViewModel { get; } = App.Services.GetRequiredService<FondosViewModel>();

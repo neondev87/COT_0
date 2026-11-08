@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace COT_0.Web.Services.Sala;
 
-// Pasa los eventos de IChatService / IRoomService a los clientes del hub
-// (también los que dispara el Host: expulsar, cerrar la sala)
+/// <summary>Pasa los eventos de IChatService / IRoomService a los clientes del hub (también los que dispara el Host: expulsar, cerrar la sala)</summary>
 public sealed class ChatBroadcaster(
     IChatService chat, IChatFeed feed, IRoomService room, IHubContext<ChatHub> hub, ILogger<ChatBroadcaster> logger)
     : BackgroundService

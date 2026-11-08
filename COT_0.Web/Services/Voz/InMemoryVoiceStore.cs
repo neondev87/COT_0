@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Voz;
 
+/// <summary>Implementa IVoiceStore: notas de voz en memoria; se vacía al cerrar la sala.</summary>
 public sealed class InMemoryVoiceStore(IOptions<VoiceOptions> options) : IVoiceStore
 {
     private readonly ConcurrentDictionary<string, VoiceClip> _clips = new();

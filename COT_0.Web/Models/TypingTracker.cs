@@ -1,6 +1,6 @@
 namespace COT_0.Web.Models;
 
-// Quiénes están escribiendo; cada aviso vence solo después de "timeout"
+/// <summary>Quiénes están escribiendo; cada aviso vence solo después de "timeout"</summary>
 public sealed class TypingTracker(TimeSpan timeout) : IDisposable
 {
     private readonly Dictionary<string, (string Name, DateTime Until)> _typing = [];

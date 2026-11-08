@@ -4,7 +4,7 @@ using COT_0.Core.Models;
 
 namespace COT_0.Web.Services.Perfil;
 
-// Filtro del buscador de facultades (sin mayúsculas ni acentos)
+/// <summary>Filtro del buscador de facultades (sin mayúsculas ni acentos)</summary>
 public static class FlagSearch
 {
     public static IReadOnlyList<FlagOption> Filter(IEnumerable<FlagOption> flags, string? query)

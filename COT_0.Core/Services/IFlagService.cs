@@ -2,7 +2,7 @@ using COT_0.Core.Models;
 
 namespace COT_0.Core.Services;
 
-// Banderas de facultad de wwwroot/img/flags
+/// <summary>Banderas de facultad de wwwroot/img/flags</summary>
 public interface IFlagService
 {
     IReadOnlyList<FlagOption> GetFlags();

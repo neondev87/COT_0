@@ -1,6 +1,6 @@
 namespace COT_0.Web.Models;
 
-// Por qué un invitado vuelve a /join desde el chat (?reason=...)
+/// <summary>Por qué un invitado vuelve a /join desde el chat (?reason=...)</summary>
 public static class LeaveReason
 {
     public const string Kicked = "kicked";

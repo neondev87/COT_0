@@ -2,7 +2,7 @@ using COT_0.Core.Models;
 
 namespace COT_0.Web.Services.Emotes;
 
-// Traduce el JSON de 7TV a RoomEmote usando los nombres de archivo que manda la API (no se arman a mano)
+/// <summary>Traduce el JSON de 7TV a RoomEmote usando los nombres de archivo que manda la API (no se arman a mano)</summary>
 internal static class SevenTvMapper
 {
     public static IReadOnlyList<RoomEmote> Map(SevenTvSet set, ChatOptions options) =>

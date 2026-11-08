@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Manual;
 
+/// <summary>Implementa IManualDemo: datos de muestra para las vistas reales del manual (no se conectan a ninguna sala).</summary>
 public sealed class ManualDemo : IManualDemo
 {
     private const string ImageId = "demo-image";

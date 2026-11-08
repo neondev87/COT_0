@@ -4,6 +4,7 @@ using Microsoft.JSInterop;
 
 namespace COT_0.Web.Services.Sala;
 
+/// <summary>Implementa IChatBrowser: scroll automático y hora local del invitado vía chat.js (Scoped).</summary>
 public sealed class ChatBrowser(IJSRuntime js, IOptions<ChatOptions> options, ILogger<ChatBrowser> logger) : IChatBrowser
 {
     // Hasta saber la zona del navegador se usa la del servidor

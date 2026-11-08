@@ -2,7 +2,7 @@ using COT_0.Core.Models;
 
 namespace COT_0.Web.Services.Sala;
 
-// Conexión de una pestaña al ChatHub y su estado (Scoped, uno por circuito)
+/// <summary>Conexión de una pestaña al ChatHub y su estado (Scoped, uno por circuito)</summary>
 public interface IChatSession : IAsyncDisposable
 {
     User? CurrentUser { get; }

@@ -1,7 +1,6 @@
-
 namespace COT_0.Web.Services.Configuracion;
 
-// Manual del invitado (sección "GuestManual" de appsettings.json); los valores son defaults
+/// <summary>Manual del invitado (sección "GuestManual" de appsettings.json); los valores son defaults</summary>
 public class ManualOptions
 {
     public const string Section = "GuestManual";

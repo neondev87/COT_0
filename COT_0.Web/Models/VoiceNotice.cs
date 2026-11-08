@@ -1,6 +1,6 @@
 namespace COT_0.Web.Models;
 
-// Avisos para el invitado; los códigos de error los manda voice.js
+/// <summary>Avisos para el invitado; los códigos de error los manda voice.js</summary>
 public static class VoiceNotice
 {
     public const string TooShort = "La nota de voz es muy corta. Toca el micrófono para grabar y otra vez para enviar.";

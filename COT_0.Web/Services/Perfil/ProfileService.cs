@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Perfil;
 
+/// <summary>Implementa IProfileService: alta y edición del perfil del invitado (foto y datos).</summary>
 public class ProfileService(
     IChatService chat, IRoomService room, IAvatarStore avatars, IGuestStore guests, IOptions<ChatOptions> options)
     : IProfileService

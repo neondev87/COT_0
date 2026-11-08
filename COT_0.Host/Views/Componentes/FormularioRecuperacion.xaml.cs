@@ -1,10 +1,10 @@
-// Recuperar contraseña: la página le pasa su RecoveryViewModel; la lógica vive ahí
 using COT_0.Host.Views.ModelosDeVista;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace COT_0.Host.Views.Componentes;
 
+/// <summary>Recuperar contraseña: la página le pasa su RecoveryViewModel; la lógica vive ahí</summary>
 public sealed partial class FormularioRecuperacion : UserControl
 {
     // Propiedad de dependencia: así x:Bind se entera cuando la página asigna el ViewModel

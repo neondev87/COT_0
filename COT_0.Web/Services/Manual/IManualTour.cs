@@ -1,7 +1,6 @@
-
 namespace COT_0.Web.Services.Manual;
 
-// Recorrido del manual: bienvenida (Index -1), los pasos y el final (Index = Steps.Count)
+/// <summary>Recorrido del manual: bienvenida (Index -1), los pasos y el final (Index = Steps.Count)</summary>
 public interface IManualTour
 {
     IReadOnlyList<ManualStep> Steps { get; }

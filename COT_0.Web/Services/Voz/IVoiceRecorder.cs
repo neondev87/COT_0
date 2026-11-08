@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace COT_0.Web.Services.Voz;
 
-// Micrófono del invitado (Scoped, uno por circuito): voice.js graba (un toque empieza, otro envía) y le avisa a C#
+/// <summary>Micrófono del invitado (Scoped, uno por circuito): voice.js graba (un toque empieza, otro envía) y le avisa a C#</summary>
 public interface IVoiceRecorder : IAsyncDisposable
 {
     VoiceState State { get; }

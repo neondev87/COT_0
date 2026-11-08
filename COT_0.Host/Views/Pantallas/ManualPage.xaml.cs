@@ -1,4 +1,3 @@
-// Manual de Lain: conecta el video con su reproductor, pasa los atajos al ViewModel y lo arranca/para con la página
 using COT_0.Host.Views.ModelosDeVista;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -7,6 +6,7 @@ using Microsoft.UI.Xaml.Input;
 
 namespace COT_0.Host.Views.Pantallas;
 
+/// <summary>Manual de Lain: conecta el video con su reproductor, pasa los atajos al ViewModel y lo arranca/para con la página</summary>
 public sealed partial class ManualPage : Page
 {
     public ManualViewModel ViewModel { get; } = App.Services.GetRequiredService<ManualViewModel>();

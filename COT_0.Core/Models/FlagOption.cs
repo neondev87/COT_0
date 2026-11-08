@@ -1,4 +1,4 @@
 namespace COT_0.Core.Models;
 
-// Bandera de facultad disponible en wwwroot/img/flags
+/// <summary>Bandera de facultad disponible en wwwroot/img/flags</summary>
 public record FlagOption(string Key, string Label, string Url);

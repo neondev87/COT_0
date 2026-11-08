@@ -5,8 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Sala;
 
-// Hub del chat grupal, mapeado en Chat:HubPath (/chathub).
-// Los mensajes, la lista de usuarios y los avisos de expulsión los manda ChatBroadcaster.
+/// <summary>Hub del chat grupal, mapeado en Chat:HubPath (/chathub). Los mensajes, la lista de usuarios y los avisos de expulsión los manda ChatBroadcaster.</summary>
 public class ChatHub(IChatService chat, IPresenceTracker presence, IOptions<ChatOptions> options) : Hub
 {
     private const string UserIdKey = "userId";

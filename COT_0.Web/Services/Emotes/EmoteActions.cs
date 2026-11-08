@@ -3,6 +3,7 @@ using COT_0.Core.Services;
 
 namespace COT_0.Web.Services.Emotes;
 
+/// <summary>Implementa IEmoteActions: menú de un emote del chat (Scoped); reportar le llega al host por IRoomEmotes.Reported.</summary>
 public sealed class EmoteActions(IRoomEmotes emotes) : IEmoteActions
 {
     public RoomEmote? Target { get; private set; }

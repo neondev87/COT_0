@@ -4,6 +4,7 @@ using Microsoft.JSInterop;
 
 namespace COT_0.Web.Services.Voz;
 
+/// <summary>Implementa IVoiceRecorder: micrófono del invitado con voice.js (Scoped).</summary>
 public sealed class VoiceRecorder(IJSRuntime js, IVoiceService voice, IOptions<VoiceOptions> options, ILogger<VoiceRecorder> logger)
     : IVoiceRecorder
 {

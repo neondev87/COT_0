@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Perfil;
 
-// Facultades de Chat:FlagNames; el escudo sale de wwwroot/img/flags/{clave}.png si existe
+/// <summary>Facultades de Chat:FlagNames; el escudo sale de wwwroot/img/flags/{clave}.png si existe</summary>
 public class FlagService(IWebHostEnvironment env, IOptions<ChatOptions> options) : IFlagService
 {
     private readonly ChatOptions _options = options.Value;

@@ -1,8 +1,8 @@
-// Punto con pulso: arranca su animación al aparecer y la para al salir de la pantalla
 using Microsoft.UI.Xaml.Controls;
 
 namespace COT_0.Host.Views.Componentes;
 
+/// <summary>Punto con pulso: arranca su animación al aparecer y la para al salir de la pantalla</summary>
 public sealed partial class PuntoPulso : UserControl
 {
     public PuntoPulso()

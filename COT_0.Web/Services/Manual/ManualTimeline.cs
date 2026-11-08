@@ -2,7 +2,7 @@ using System.Globalization;
 
 namespace COT_0.Web.Services.Manual;
 
-// Tiempos de los avisos de Lain y de los resaltados, como variables CSS (--in / --out)
+/// <summary>Tiempos de los avisos de Lain y de los resaltados, como variables CSS (--in / --out)</summary>
 public static class ManualTimeline
 {
     public static IReadOnlyList<ManualCue> Cues(IReadOnlyList<string> texts, ManualOptions options) =>
@@ -28,5 +28,3 @@ public static class ManualTimeline
 
     public static string Seconds(double value) => value.ToString("0.##", CultureInfo.InvariantCulture) + "s";
 }
-
-public sealed record ManualFocus(string Keys, string Style);

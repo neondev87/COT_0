@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Voz;
 
-// Decodifica con Concentus (Opus en C#) directo a mono, a la frecuencia de Voice:WavSampleRate
+/// <summary>Decodifica con Concentus (Opus en C#) directo a mono, a la frecuencia de Voice:WavSampleRate</summary>
 public sealed class OpusWavTranscoder(IOptions<VoiceOptions> options, ILogger<OpusWavTranscoder> logger) : IAudioTranscoder
 {
     // Un paquete Opus dura como mucho 120 ms

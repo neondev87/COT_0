@@ -2,7 +2,7 @@ using COT_0.Core.Models;
 
 namespace COT_0.Web.Services.Manual;
 
-// Datos de muestra para las vistas reales del manual (no se conectan a ninguna sala)
+/// <summary>Datos de muestra para las vistas reales del manual (no se conectan a ninguna sala)</summary>
 public interface IManualDemo
 {
     string RoomCode { get; }

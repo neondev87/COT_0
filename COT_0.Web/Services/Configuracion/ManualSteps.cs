@@ -1,7 +1,6 @@
-
 namespace COT_0.Web.Services.Configuracion;
 
-// Los cinco pasos del invitado que entra por QR (textos cortos, sin voseo)
+/// <summary>Los cinco pasos del invitado que entra por QR (textos cortos, sin voseo)</summary>
 public static class ManualSteps
 {
     public static List<ManualStep> Default() =>

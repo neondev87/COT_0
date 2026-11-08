@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 
 namespace COT_0.Web.Services.Voz;
 
-// Arma un WAV PCM de 16 bits mono (suena en cualquier navegador, iPhone incluido)
+/// <summary>Arma un WAV PCM de 16 bits mono (suena en cualquier navegador, iPhone incluido)</summary>
 public static class WavWriter
 {
     private const short Channels = 1;

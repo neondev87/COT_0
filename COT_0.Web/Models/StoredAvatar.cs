@@ -1,4 +1,4 @@
 namespace COT_0.Web.Models;
 
-// Foto de perfil guardada en memoria
+/// <summary>Foto de perfil guardada en memoria</summary>
 public record StoredAvatar(byte[] Bytes, string ContentType);

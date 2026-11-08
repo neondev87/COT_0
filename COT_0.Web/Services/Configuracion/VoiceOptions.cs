@@ -1,6 +1,6 @@
 namespace COT_0.Web.Services.Configuracion;
 
-// Notas de voz (sección "Voice" de appsettings.json); los valores son defaults
+/// <summary>Notas de voz (sección "Voice" de appsettings.json); los valores son defaults</summary>
 public class VoiceOptions
 {
     public const string Section = "Voice";
