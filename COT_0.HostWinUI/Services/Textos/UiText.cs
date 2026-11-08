@@ -1,7 +1,7 @@
 // Busca un texto de Views/Estilos/Textos.xaml por su clave
 using Microsoft.UI.Xaml;
 
-namespace COT_0.HostWinUI.Views.ModelosDeVista;
+namespace COT_0.HostWinUI.Services.Textos;
 
 /// <summary>Atajo para que los ViewModels usen los mismos textos que el XAML.</summary>
 public static class UiText

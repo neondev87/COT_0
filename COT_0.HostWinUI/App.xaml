@@ -29,6 +29,23 @@
             <SolidColorBrush x:Key="InputBrush" Color="#09FFFFFF"/>
             <SolidColorBrush x:Key="InputFocusBrush" Color="#0EFFFFFF"/>
             <SolidColorBrush x:Key="ButtonBrush" Color="#8C0A0A0A"/>
+            <SolidColorBrush x:Key="AccentSoftBrush" Color="#2EB3122E"/>
+            <SolidColorBrush x:Key="TextBrush" Color="#ECEAF0"/>
+            <SolidColorBrush x:Key="Text62Brush" Color="#9EECEAF0"/>
+            <SolidColorBrush x:Key="Light60Brush" Color="#99E6E6E6"/>
+
+            <!-- Paneles, filas y avatares de la sala -->
+            <SolidColorBrush x:Key="PanelBrush" Color="#05FFFFFF"/>
+            <SolidColorBrush x:Key="PanelBorderBrush" Color="#14FFFFFF"/>
+            <SolidColorBrush x:Key="RowBorderBrush" Color="#12FFFFFF"/>
+            <SolidColorBrush x:Key="RowHoverBrush" Color="#06FFFFFF"/>
+            <SolidColorBrush x:Key="AvatarBorderBrush" Color="#1AFFFFFF"/>
+            <SolidColorBrush x:Key="AvatarTone0Brush" Color="#2A2A2E"/>
+            <SolidColorBrush x:Key="AvatarTone1Brush" Color="#26262A"/>
+            <SolidColorBrush x:Key="AvatarTone2Brush" Color="#2E2E32"/>
+            <SolidColorBrush x:Key="AvatarTone3Brush" Color="#232327"/>
+            <SolidColorBrush x:Key="AvatarTone4Brush" Color="#2B2B2F"/>
+            <SolidColorBrush x:Key="DialogVeilBrush" Color="#B3080809"/>
 
             <LinearGradientBrush x:Key="AccentFadeInBrush" StartPoint="0,0" EndPoint="1,0">
                 <GradientStop Color="{StaticResource TransparentAccentColor}" Offset="0"/>
@@ -74,6 +91,16 @@
             <FontFamily x:Key="FontBarlowMedium">ms-appx:///Assets/Fuentes/Barlow-500.ttf#Barlow Medium</FontFamily>
             <FontFamily x:Key="FontCondensedMedium">ms-appx:///Assets/Fuentes/BarlowCondensed-500.ttf#Barlow Condensed Medium</FontFamily>
             <FontFamily x:Key="FontCinzel">ms-appx:///Assets/Fuentes/Cinzel-700.ttf#Cinzel</FontFamily>
+            <FontFamily x:Key="FontCondensedLight">ms-appx:///Assets/Fuentes/BarlowCondensed-300.ttf#Barlow Condensed Light</FontFamily>
+            <FontFamily x:Key="FontCondensedBold">ms-appx:///Assets/Fuentes/BarlowCondensed-700.ttf#Barlow Condensed</FontFamily>
+            <FontFamily x:Key="FontInter">ms-appx:///Assets/Fuentes/Inter-400.ttf#Inter</FontFamily>
+            <FontFamily x:Key="FontInterMedium">ms-appx:///Assets/Fuentes/Inter-500.ttf#Inter</FontFamily>
+
+            <!-- Medidas de la sala -->
+            <x:Double x:Key="UserRowHeight">62</x:Double>
+            <x:Double x:Key="AvatarSize">36</x:Double>
+            <x:Double x:Key="MinHitSize">44</x:Double>
+            <x:Double x:Key="RoomFieldHeight">48</x:Double>
 
             <!-- Medidas del login -->
             <x:Double x:Key="LoginFormWidth">360</x:Double>
@@ -189,6 +216,186 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
+            </Style>
+
+            <!-- Confirmar (CERRAR SALA, etc.): relleno tenue de acento; con el mouse, acento sólido y se corre 6 px -->
+            <Style x:Key="ConfirmButton" TargetType="Button">
+                <Setter Property="Height" Value="{StaticResource RoomFieldHeight}"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="Margin" Value="14,0,0,0"/>
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid x:Name="Root">
+                                <Grid.RenderTransform>
+                                    <TranslateTransform x:Name="Shift"/>
+                                </Grid.RenderTransform>
+                                <Border Background="{StaticResource AccentSoftBrush}" BorderBrush="{StaticResource AccentBrush}" BorderThickness="1"/>
+                                <Border x:Name="Hover" Background="{StaticResource AccentBrush}" Opacity="0"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Path x:Name="Icon" Data="M12,3 V12 M6.3,6.3 A8,8 0 1 0 17.7,6.3" Width="24" Height="24" Stretch="None"
+                                          Stroke="{TemplateBinding Foreground}" StrokeThickness="1.8" StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
+                                    <TextBlock x:Name="Label" Text="{TemplateBinding Content}" Margin="12,0,0,0" VerticalAlignment="Center"
+                                               Foreground="{TemplateBinding Foreground}" FontFamily="{StaticResource FontCondensedBold}"
+                                               FontWeight="Bold" FontSize="17" CharacterSpacing="200"/>
+                                </StackPanel>
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualStateGroup.Transitions>
+                                            <VisualTransition GeneratedDuration="0:0:0.3"/>
+                                        </VisualStateGroup.Transitions>
+                                        <VisualState x:Name="Normal"/>
+                                        <VisualState x:Name="PointerOver">
+                                            <VisualState.Setters>
+                                                <Setter Target="Hover.Opacity" Value="1"/>
+                                                <Setter Target="Shift.X" Value="-6"/>
+                                                <Setter Target="Label.Foreground" Value="{StaticResource WhiteBrush}"/>
+                                                <Setter Target="Icon.Stroke" Value="{StaticResource WhiteBrush}"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="Pressed">
+                                            <VisualState.Setters>
+                                                <Setter Target="Hover.Opacity" Value="1"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="Disabled">
+                                            <VisualState.Setters>
+                                                <Setter Target="Root.Opacity" Value="0.6"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- CANCELAR: solo texto; con el mouse se pone blanco y se corre 4 px a la izquierda -->
+            <Style x:Key="CancelButton" TargetType="Button">
+                <Setter Property="Height" Value="{StaticResource RoomFieldHeight}"/>
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="Padding" Value="12,0"/>
+                <Setter Property="Foreground" Value="{StaticResource Text62Brush}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid Background="Transparent" Padding="{TemplateBinding Padding}">
+                                <TextBlock x:Name="Label" Text="{TemplateBinding Content}" VerticalAlignment="Center"
+                                           Foreground="{TemplateBinding Foreground}" FontFamily="{StaticResource FontCondensedBold}"
+                                           FontWeight="Bold" FontSize="17" CharacterSpacing="200">
+                                    <TextBlock.RenderTransform>
+                                        <TranslateTransform x:Name="Shift"/>
+                                    </TextBlock.RenderTransform>
+                                </TextBlock>
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualStateGroup.Transitions>
+                                            <VisualTransition GeneratedDuration="0:0:0.3"/>
+                                        </VisualStateGroup.Transitions>
+                                        <VisualState x:Name="Normal"/>
+                                        <VisualState x:Name="PointerOver">
+                                            <VisualState.Setters>
+                                                <Setter Target="Label.Foreground" Value="{StaticResource WhiteBrush}"/>
+                                                <Setter Target="Shift.X" Value="-4"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="Pressed"/>
+                                        <VisualState x:Name="Disabled"/>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Expulsar: icono ✕ que se pone del color de acento con el mouse -->
+            <Style x:Key="KickButton" TargetType="Button">
+                <Setter Property="Width" Value="{StaticResource MinHitSize}"/>
+                <Setter Property="Height" Value="{StaticResource MinHitSize}"/>
+                <Setter Property="Foreground" Value="{StaticResource Light50Brush}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid Background="Transparent">
+                                <Path x:Name="Icon" Data="M7,7 L17,17 M17,7 L7,17" Width="24" Height="24" Stretch="None"
+                                      HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5"
+                                      Stroke="{TemplateBinding Foreground}" StrokeThickness="1.25" StrokeStartLineCap="Round" StrokeEndLineCap="Round">
+                                    <Path.RenderTransform>
+                                        <ScaleTransform ScaleX="0.67" ScaleY="0.67"/>
+                                    </Path.RenderTransform>
+                                </Path>
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal"/>
+                                        <VisualState x:Name="PointerOver">
+                                            <VisualState.Setters>
+                                                <Setter Target="Icon.Stroke" Value="{StaticResource AccentBrush}"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="Pressed">
+                                            <VisualState.Setters>
+                                                <Setter Target="Icon.Stroke" Value="{StaticResource AccentBrush}"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="Disabled"/>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Textos de la lista de conectados -->
+            <Style x:Key="ColumnHeaderText" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource FontInterMedium}"/>
+                <Setter Property="FontWeight" Value="Medium"/>
+                <Setter Property="FontSize" Value="11"/>
+                <Setter Property="CharacterSpacing" Value="140"/>
+                <Setter Property="Foreground" Value="{StaticResource Light55Brush}"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+            <Style x:Key="InterText" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource FontInter}"/>
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="Foreground" Value="{StaticResource Light55Brush}"/>
+            </Style>
+            <Style x:Key="RowNameText" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource FontInterMedium}"/>
+                <Setter Property="FontWeight" Value="Medium"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Foreground" Value="{StaticResource LightBrush}"/>
+                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            </Style>
+            <Style x:Key="RowSinceText" TargetType="TextBlock" BasedOn="{StaticResource InterText}">
+                <Setter Property="Margin" Value="16,0"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Foreground" Value="{StaticResource Light60Brush}"/>
+            </Style>
+            <Style x:Key="InitialsText" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource FontInterMedium}"/>
+                <Setter Property="FontWeight" Value="Medium"/>
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="Foreground" Value="{StaticResource LightBrush}"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+            <Style x:Key="Avatar" TargetType="Border">
+                <Setter Property="Width" Value="{StaticResource AvatarSize}"/>
+                <Setter Property="Height" Value="{StaticResource AvatarSize}"/>
+                <Setter Property="CornerRadius" Value="4"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="{StaticResource AvatarBorderBrush}"/>
+                <Setter Property="Margin" Value="0,0,16,0"/>
+            </Style>
+            <Style x:Key="UserRow" TargetType="Grid">
+                <Setter Property="Height" Value="{StaticResource UserRowHeight}"/>
+                <Setter Property="Padding" Value="24,0,10,0"/>
+                <Setter Property="BorderBrush" Value="{StaticResource RowBorderBrush}"/>
+                <Setter Property="BorderThickness" Value="0,0,0,1"/>
             </Style>
 
             <!-- Rombo separador del pie -->

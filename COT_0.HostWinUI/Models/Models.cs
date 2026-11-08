@@ -28,3 +28,6 @@ public enum CredentialError
     PasswordInvalid,
     PasswordTooLong,
 }
+
+/// <summary>Textos de un diálogo de confirmación: mensaje, botón de confirmar y de cancelar.</summary>
+public record ConfirmTexts(string Message, string Confirm, string Cancel);

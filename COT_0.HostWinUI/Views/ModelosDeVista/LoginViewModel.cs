@@ -2,6 +2,7 @@
 using System.Text.Json;
 using COT_0.HostWinUI.Models;
 using COT_0.HostWinUI.Services.Usuarios;
+using COT_0.HostWinUI.Services.Textos;
 using COT_0.HostWinUI.Services.Validaciones;
 using COT_0.HostWinUI.Services.Ventana;
 using CommunityToolkit.Mvvm.ComponentModel;

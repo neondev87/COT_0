@@ -24,12 +24,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Kestrel / ASP.NET Core para hospedar COT_0.Web dentro del proceso -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\COT_0.Core\COT_0.Core.csproj" />
+    <ProjectReference Include="..\COT_0.Web\COT_0.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\**\*" CopyToOutputDirectory="PreserveNewest" />
     <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Archivos estáticos de la web junto al .exe -->
+    <None Include="..\COT_0.Web\wwwroot\**\*" LinkBase="wwwroot" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

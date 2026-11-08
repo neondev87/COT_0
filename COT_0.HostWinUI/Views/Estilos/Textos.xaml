@@ -32,6 +32,22 @@
     <x:String x:Key="Text.Error.UserTaken">Ese usuario ya existe. Elige otro.</x:String>
     <x:String x:Key="Text.Error.Storage">No se pudo leer o guardar tu cuenta. Inténtalo de nuevo.</x:String>
 
+    <!-- Lista de conectados -->
+    <x:String x:Key="Text.Room.ColumnUser">USUARIO</x:String>
+    <x:String x:Key="Text.Room.ColumnConnected">CONECTADO</x:String>
+    <x:String x:Key="Text.Room.HostName">Tú</x:String>
+    <x:String x:Key="Text.Room.HostInitials">HO</x:String>
+    <x:String x:Key="Text.Room.HostRole">Host de la sala</x:String>
+    <x:String x:Key="Text.Room.HostSince">anfitrión</x:String>
+    <x:String x:Key="Text.Room.GuestRole">Invitado</x:String>
+    <x:String x:Key="Text.Room.Since">hace {0} min</x:String>
+    <x:String x:Key="Text.Room.Kick">Sacar de la sala</x:String>
+
+    <!-- Confirmación al salir con sala activa -->
+    <x:String x:Key="Text.ExitDialog.Message">Hay una sala activa. ¿Cerrar la sala y salir?</x:String>
+    <x:String x:Key="Text.ExitDialog.Confirm">CERRAR SALA Y SALIR</x:String>
+    <x:String x:Key="Text.ExitDialog.Cancel">CANCELAR</x:String>
+
     <!-- Pantallas pendientes de migrar -->
     <x:String x:Key="Text.Pending">Pantalla en migración a WinUI 3.</x:String>
 </ResourceDictionary>
