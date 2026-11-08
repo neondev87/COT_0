@@ -53,3 +53,15 @@ Se comparó `COT_0.Host` (WPF) contra `COT_0.HostWinUI` en pantallas, servicios,
 | `Manual:StaticHitVolume` | Golpes de estática quitados con `SignalLossLayer` |
 | `Diagnostics:*` | `StartupTrace` no se migró |
 | `Texts:*` (110 claves) | Los textos viven en `Textos.xaml` |
+
+## Paso 2: código muerto borrado
+
+- `COT_0.Host/` (WPF) completo, con `git rm -r`, y su entrada en `COT_0.sln`.
+- `COT_0.Core/Services/IAuthService.cs`: nadie lo implementa ni lo usa fuera del WPF (búsqueda en toda la solución).
+- `COT_0.Web/wwwroot/emotes/.gitkeep`: la carpeta no se usa desde los emotes de 7TV (`CONTRATO.md`).
+- `COT_0.Web/wwwroot/img/.gitkeep`: la carpeta ya tiene archivos.
+- Revisado sin hallazgos: tipos sin referencia (solo falsos positivos: `VistaEjemplo` es base, `*Registration` son métodos de extensión), claves del `appsettings.json` sin lectura (solo `Logging`, que la lee ASP.NET), assets sin uso (todas las fuentes e imágenes se usan), `bin/`, `obj/`, `.vs/` trackeados (ninguno), scripts, CI y tareas de VS Code (no hay).
+
+### Dudas (no se borró)
+
+- **user-secrets `Host:User` / `Host:Password`** del WPF (`UserSecretsId cot0-host-7fc7…`): no se borraron porque `main` y `winui-migration` siguen usando el WPF como respaldo y su login los necesita. Si ya no vas a usar el respaldo: `dotnet user-secrets clear --id cot0-host-7fc7bba9-727e-4d80-9300-10219506c924`.
