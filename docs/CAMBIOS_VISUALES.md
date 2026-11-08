@@ -306,3 +306,12 @@ Sin desenfoque, sombras ni `OpacityMask`: todo es degradados quietos. Notificaci
 | En silencio la barra seguía marcando el volumen | En silencio la barra marca **0 sin perder el volumen**; al quitar el silencio regresa. Si subes la barra estando en silencio, se quita solo. MÚSICA usa el mismo `MusicControlsViewModel.Volume`, así que su barra y su número también marcan 0 |
 
 Evitado por ligereza: sombras del thumb, brillo del tramo rojo, animación del ancho y el panel que se abría con hover del WPF. Solo opacidad y escala del punto (0.15 s). Sigue habiendo un solo `MusicService`: arranca en 0 con `Audio_01` cargada y el silencio no se guarda entre sesiones.
+
+### Login: Registrar usuario (varios usuarios)
+
+- El botón principal siempre dice **ENTRAR**; ya no cambia a REGISTRARME cuando no hay cuenta. Sin usuarios, arriba de los campos sale un aviso tenue (Barlow 13, `Light62Brush`, centrado) que apunta a "Registrar usuario".
+- Abajo de la contraseña, alineados a la derecha en una sola línea: **¿Olvidaste tu contraseña?** | **Registrar usuario**. Los dos usan `LoginLinkButton` (mismo estilo) y los separa `LoginLinkSeparator`: barra vertical de 1×12 px, `Light55Brush` al 50 %, con 10 px a cada lado. Caben en los 360 px del formulario sin cortarse.
+- **Formulario de registro** (`Views/Componentes/FormularioRegistro`): mismo aspecto que la recuperación (etiquetas `FieldLabelText`, campos con línea de acento, InfoBar de error, botón `LoginButton` REGISTRAR y enlace "Volver al inicio de sesión"). Subtítulo: REGISTRA UN USUARIO. Pide solo usuario, contraseña y repetirla.
+- **Recuperación**: ahora el primer campo es USUARIO con botón CONTINUAR; la pregunta y la respuesta aparecen debajo cuando se encuentra el usuario.
+- InfoBar verde reutilizado: "Usuario registrado…" o "Tu contraseña cambió…", según de dónde regreses.
+

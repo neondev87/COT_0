@@ -98,10 +98,10 @@ COT_0.Host/
 │   ├── Fuentes/                  TTF del diseño (Cinzel, Barlow, Barlow Condensed 200/300/500/700/800 itálica, Inter, Redaction 50 de la firma)
 │   └── Imagenes/                 Imágenes fijas de la interfaz (fondo ASCII del login, avatar de la firma)
 ├── Models/                       Clases simples que se guardan en JSON o viajan entre capas (sin lógica)
-│   ├── HostUser.cs               Cuenta del host: hash + salt de la contraseña y de la respuesta secreta
+│   ├── HostUser.cs               Un usuario del login (hasta 5): hash + salt de la contraseña y de la respuesta secreta
 │   ├── HashedSecret.cs           Hash y salt en Base64
 │   ├── SecurityQuestionOption.cs Clave y texto de una pregunta secreta
-│   ├── CredentialError.cs        Por qué se rechazó lo que escribiste (cada valor tiene su Text.Error.*)
+│   ├── CredentialError.cs        Por qué se rechazó lo que escribiste, con nombre repetido y máximo de usuarios (cada valor tiene su Text.Error.*)
 │   ├── Visit.cs                  Nombre y hora de entrada de un invitado (visitas y sesiones)
 │   ├── SesionInvitados.cs        Sesión numerada: inicio, fin e invitados que entraron
 │   ├── RoomError.cs              Por qué no abrió la sala: cloudflared no encontrado, túnel lento o caído, puerto ocupado, servidor
@@ -119,7 +119,7 @@ COT_0.Host/
 │   ├── Cache/                    CacheFolders: %LocalAppData%\COT_0\cache\<nombre> y la llave (hash de ruta + tamaño + fecha)
 │   ├── Registro/                 MediaLog: fallas de video, miniaturas y portadas en registro-medios.jsonl
 │   ├── Configuracion/            AppConfig (LoadAsync de appsettings.json al arrancar) + AppSettings y un record por sección (Window, Storage, Security,
-│   │                             Inputs, Recovery, Ui, Paths, Audio, Background, Manual, ManualDemo*, Branding, Tunnel, Qr, Web)
+│   │                             Inputs, Usuarios, Recovery, Ui, Paths, Audio, Background, Manual, ManualDemo*, Branding, Tunnel, Qr, Web)
 │   ├── Dialogos/                 ConfirmDialogService: abre el diálogo sí/no sobre la ventana
 │   ├── Fondos/                   FondoCatalog (IBackgroundCatalog: lee la carpeta), FondoStore (fondos.json), FondoService (catálogo,
 │   │                             elegido y último error), FondoImages (imagen o cuadro fijo decodificado), FondoPlayer (único MediaPlayer),
@@ -135,14 +135,14 @@ COT_0.Host/
 │   ├── Textos/                   UiText: busca un texto de Textos.xaml desde C#
 │   ├── Tiempo/                   ClockService (tick de cada segundo) y UiThread (pasa eventos al hilo de la UI)
 │   ├── Tunel/                    CloudflareTunnelService (ITunnelService) y KillOnCloseJob (cloudflared muere con la app)
-│   ├── Usuarios/                 UserService (registro/login), PasswordRecoveryService (¿olvidaste tu contraseña?),
-│   │                             HostAccounts (usuarios.json) y SecretHasher (PBKDF2 + SHA-256 con salt)
+│   ├── Usuarios/                 UserService (registrar hasta Usuarios:Maximo, ENTRAR, pregunta al entrar), PasswordRecoveryService
+│   │                             (recuperación por usuario), HostAccounts (usuarios.json como lista; también lee la cuenta suelta) y SecretHasher (PBKDF2 + SHA-256 con salt)
 │   ├── Validaciones/             InputLimits (Inputs:MaxCaracteres), CredentialValidator (solo letras y números) y SecurityAnswerValidator (normaliza la respuesta)
 │   ├── Ventana/                  WindowSetup (tamaño y barra de título), Navigator (cambia de página) y CloseGuard (cerrar con sala activa)
 │   └── Visitas/                  VisitService (visitas.json) y VisitWatcher (anota a cada invitado que entra)
 └── Views/
     ├── Pantallas/                Páginas del Frame: LoginPage, DashboardPage, SalaPage, EmotesPage, MusicaPage, FondosPage, ManualPage
-    ├── ModelosDeVista/           ViewModels: Login (+ LoginStep, FormViewModel), Recovery, SecurityQuestion, Dashboard, Sala,
+    ├── ModelosDeVista/           ViewModels: Login (+ LoginStep, FormViewModel), Register, Recovery, SecurityQuestion, Dashboard, Sala,
     │                             ConnectedUsers + UserRow, Emotes + EmoteRow, MusicControls (base) → Musica y Firma, SongRow,
     │                             CapaFondo, Fondos + FondoRow, LogoNeondev, Manual + ManualStep + ManualNotice + ManualDemo
     ├── Componentes/              Piezas reutilizables
@@ -153,7 +153,8 @@ COT_0.Host/
     │   ├── EncabezadoPantalla    ← INICIO | TÍTULO de cada pantalla (clic o Esc regresa; ← SALA si viniste de la sala)
     │   ├── Firma                 LogoNeondev y debajo bocina + línea de volumen (login, dashboard y sala)
     │   ├── LogoNeondev           Avatar + "Neondev" con brillo de vidrio; clic abre Branding:RepoUrl
-    │   ├── FormularioRecuperacion  Pregunta secreta → contraseña nueva, dentro del login
+    │   ├── FormularioRecuperacion  Usuario → su pregunta secreta → contraseña nueva, dentro del login
+    │   ├── FormularioRegistro    Registrar usuario: nombre, contraseña y repetirla, dentro del login
     │   ├── ListaConectados       Invitados conectados (ListView)
     │   ├── PanelEmotes           Set de 7TV, reportes y emotes quitados
     │   ├── PuntoPulso            Punto rojo con pulso (sala activa)
@@ -184,7 +185,7 @@ En `%LocalAppData%\COT_0\`:
 
 | Archivo | Qué guarda |
 |---|---|
-| `usuarios.json` | Cuenta del host (una sola): usuario, hash + salt de la contraseña, clave de la pregunta secreta y hash + salt de la respuesta, fecha. Nunca la contraseña ni la respuesta. |
+| `usuarios.json` | Lista de usuarios del login (hasta `Usuarios:Maximo` = 5). Por cada uno: usuario, hash + salt de la contraseña, clave de la pregunta secreta y hash + salt de la respuesta, fecha. Nunca la contraseña ni la respuesta. |
 | `visitas.json` | Una línea por cada invitado que entra a la sala, con `EnteredAt`. Queda aunque se cierre el túnel. |
 | `fondos.json` | Catálogo de la última lectura de la carpeta de fondos (`FileName`, `Kind`, `SizeBytes`, `UseStill`) y `SelectedFile`: `null` = nunca elegiste (usa `Background:DefaultFile`), `""` = sin fondo. |
 | `sesiones.json` | Una entrada por cada vez que se abre la sala: `Number` (1, 2, 3…), `StartedAt`, `EndedAt` y `Guests` (nombre + hora de entrada). El host no cuenta. |
@@ -193,7 +194,10 @@ En `%LocalAppData%\COT_0\`:
 
 ## Login y recuperación
 
-- `LoginStep` decide qué se ve: `SignIn` (ENTRAR), `Register` (REGISTRARME + pregunta secreta), `Recover` (¿Olvidaste tu contraseña?) y `SetupQuestion` (cuenta vieja sin pregunta: se pide después de ENTRAR).
+- `LoginStep` decide qué se ve: `SignIn` (ENTRAR, siempre el paso inicial), `Register` (Registrar usuario: nombre y contraseña dos veces), `Recover` (¿Olvidaste tu contraseña?: usuario → su pregunta → contraseña nueva) y `SetupQuestion` (usuario sin pregunta: se pide después de ENTRAR por primera vez).
+- Hasta `Usuarios:Maximo` (5) usuarios, con nombre único sin distinguir mayúsculas y minúsculas. Todos entran a lo mismo: Dashboard, Sala, Emotes, Música, Fondos, Manual, sesiones y visitas no saben qué usuario entró.
+- Migración: `HostAccounts.LoadAsync` lee `usuarios.json` como `JsonElement`; si es una lista la usa tal cual y si es una cuenta suelta la convierte en el primer usuario. No valida ni recorta nada al leer, así que ninguna cuenta guardada se pierde (aunque su nombre pase del límite).
+- Recuperación: si el usuario no existe o no tiene pregunta, el mensaje es el mismo ("No se pudo recuperar la contraseña con esos datos.") para no revelar qué usuarios hay.
 - La respuesta se normaliza antes de hashear y al comparar: se recorta, se quitan todos los espacios y pasa a minúsculas (`SecurityAnswerValidator.Normalize`).
 - Las preguntas salen de `Recovery:QuestionKeys` (claves) y su texto de `Textos.xaml`. En `usuarios.json` se guarda la clave, no el texto.
 

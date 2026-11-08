@@ -10,7 +10,7 @@ El host abre la app en su PC, inicia sesión y toca **GENERAR QR**. En ese momen
 2. Abre un túnel de Cloudflare (`cloudflared`) que le da una URL pública `https://xxxx.trycloudflare.com`.
 3. Abre la sala con un código corto y muestra un QR que apunta a `{URL pública}/join`.
 
-Los invitados escanean el QR con el celular, eligen nombre, foto y escudo de facultad, y entran al chat en tiempo real. Todo vive en memoria: al cerrar la sala se borran usuarios, mensajes, notas de voz e imágenes. No hay base de datos; lo único que se guarda en disco son archivos JSON del host (cuenta, visitas, sesiones y fondo elegido).
+Los invitados escanean el QR con el celular, eligen nombre, foto y escudo de facultad, y entran al chat en tiempo real. Todo vive en memoria: al cerrar la sala se borran usuarios, mensajes, notas de voz e imágenes. No hay base de datos; lo único que se guarda en disco son archivos JSON del host (usuarios, visitas, sesiones y fondo elegido).
 
 ## 2. Proyectos
 
@@ -18,7 +18,7 @@ Los invitados escanean el QR con el celular, eligen nombre, foto y escudo de fac
 |---|---|
 | `COT_0.Core` | Modelos (`User`, `ChatMessage`, `RoomEmote`, `Fondo`…) e interfaces compartidas (`IChatService`, `IRoomService`, `IRoomEmotes`, `IFlagService`, `ITunnelService`, `IBackgroundCatalog`). No depende de nadie. |
 | `COT_0.Web` | Blazor Server + SignalR: páginas `/join`, `/chat` y `/manual`, el hub `/chathub`, el chat en memoria, voz, imágenes y emotes de 7TV. También corre sola para pruebas. |
-| `COT_0.Host` | App de escritorio **WinUI 3**: login del host, dashboard, sala (QR, conectados), emotes, música, fondos y manual de Lain. Levanta la web dentro de su propio proceso y maneja `cloudflared`. |
+| `COT_0.Host` | App de escritorio **WinUI 3**: login (hasta 5 usuarios), dashboard, sala (QR, conectados), emotes, música, fondos y manual de Lain. Levanta la web dentro de su propio proceso y maneja `cloudflared`. |
 
 Referencias: `Host → Web, Core` y `Web → Core`. El árbol completo está en `docs/ESTRUCTURA.md`.
 
@@ -43,7 +43,9 @@ dotnet build COT_0.sln
 dotnet run --project COT_0.Host
 ```
 
-La primera vez la app abre en **CREA TU CUENTA DE HOST**: eliges usuario, contraseña (solo letras y números) y una pregunta secreta. La cuenta se guarda en `%LocalAppData%\COT_0\usuarios.json` con la contraseña y la respuesta hasheadas (PBKDF2). Las siguientes veces sale **ACCESO DEL HOST**; si olvidas la contraseña, se recupera con la pregunta secreta.
+La app siempre abre en **ACCESO DEL HOST** (ENTRAR). La primera vez no hay usuarios: usa el enlace **Registrar usuario** (junto a "¿Olvidaste tu contraseña?") y escribe usuario y contraseña dos veces (solo letras y números, hasta `Inputs:MaxCaracteres` = 15). Caben hasta `Usuarios:Maximo` = 5 usuarios en `%LocalAppData%\COT_0\usuarios.json`, con la contraseña y la respuesta secreta hasheadas (PBKDF2 + SHA-256 con salt). La primera vez que cada usuario entra configura su pregunta secreta; si olvida la contraseña, la recupera escribiendo su usuario y contestando esa pregunta. Todos los usuarios entran a lo mismo.
+
+Si ya tenías la cuenta única de antes, se lee sola como el primer usuario: no hay que hacer nada.
 
 Para probar solo la web, sin host: `dotnet run --project COT_0.Web` (la sala se abre sola en `http://localhost:5050`).
 
@@ -92,7 +94,7 @@ Las demás rutas (`fondos`, `musica`, `gifs\lain_tele_web.mp4`…) son relativas
 - **7TV lento.** La API de 7TV a veces tarda; el panel muestra "CARGANDO…" y espera hasta `Chat:EmoteRequestTimeoutSeconds`. Si da "TARDÓ DEMASIADO", vuelve a aplicar el set.
 - **Audio en iPhone.** Safari solo deja sonar audio después de un toque. El micrófono solo funciona por `https` (la URL del túnel), no por `http://IP-local`.
 - **Celular que se desconecta.** Al bloquear la pantalla el celular corta la conexión; al volver, la página reconecta o recarga sola y conserva el perfil.
-- **Empezar de cero.** Borra `%LocalAppData%\COT_0\` (cuenta, visitas, sesiones, fondo elegido y caché de cuadros).
+- **Empezar de cero.** Borra `%LocalAppData%\COT_0\` (usuarios, visitas, sesiones, fondo elegido y caché de cuadros).
 
 ## 8. Documentación
 

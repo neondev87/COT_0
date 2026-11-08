@@ -158,7 +158,7 @@ Inventario del 08/11 (tag de respaldo `pre-nombres-naturales`), con búsquedas i
 
 | Nombre actual | Nombre natural | Estado |
 |---|---|---|
-| `COT_0.HostWinUI/` y `COT_0.HostWinUI.csproj` | `COT_0.Host/` y `COT_0.Host.csproj` | Ya aplicado en el cierre anterior (`af5d06a`); `RootNamespace` `COT_0.Host`, ejecutable `COT_0.exe` y título de ventana `COT_0` |
+| `COT_0.HostWinUI/` y `COT_0.HostWinUI.csproj` | `COT_0.Host/` y `COT_0.Host.csproj` | Ya aplicado en el cierre anterior (`af5d06a`); `RootNamespace` `COT_0.Host`; el ejecutable sigue siendo `COT_0.Host.exe` (nunca tuvo `AssemblyName` propio) y el título de la ventana sigue siendo `COT_0` |
 | Namespaces `COT_0.HostWinUI.*`, `x:Class`, `xmlns:using`, `ms-appx:///` | `COT_0.Host.*` | Ya aplicado; cero coincidencias |
 | Carpetas con sufijo de tecnología o formato (`TextosXml`, `XamlPantallas`…) | — | No existe ninguna: las vistas están en `Views/Pantallas` y los textos en `Views/Estilos/Textos.xaml` |
 | Clases o recursos con `New`/`Old`/`V2`/`Temp`/`Copia` | — | No existe ninguno (las coincidencias son `Template`, `NewPassword` y `Guid.NewGuid`, nombres reales) |

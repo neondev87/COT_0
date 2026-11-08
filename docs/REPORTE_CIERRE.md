@@ -19,7 +19,7 @@ Rutas relativas a `COT_0.Host/` salvo que digan otro proyecto. Las pantallas `X`
 
 | Qué | Vista | Lógica |
 |---|---|---|
-| **Login** (registro, entrar, pregunta secreta, recuperación) | `Views/Pantallas/LoginPage`, `Views/Componentes/FormularioRecuperacion` | `Views/ModelosDeVista/LoginViewModel.cs`, `LoginStep.cs`, `FormViewModel.cs`, `RecoveryViewModel.cs`, `SecurityQuestionViewModel.cs`; `Services/Usuarios/UserService.cs`, `PasswordRecoveryService.cs`, `HostAccounts.cs`, `SecretHasher.cs`; `Services/Validaciones/CredentialValidator.cs`, `SecurityAnswerValidator.cs`; `Models/HostUser.cs`, `HashedSecret.cs`, `SecurityQuestionOption.cs`, `CredentialError.cs` |
+| **Login** (hasta 5 usuarios: entrar, registrar usuario, pregunta secreta, recuperación por usuario) | `Views/Pantallas/LoginPage`, `Views/Componentes/FormularioRegistro`, `Views/Componentes/FormularioRecuperacion` | `Views/ModelosDeVista/LoginViewModel.cs`, `LoginStep.cs`, `FormViewModel.cs`, `RegisterViewModel.cs`, `RecoveryViewModel.cs`, `SecurityQuestionViewModel.cs`; `Services/Usuarios/UserService.cs`, `PasswordRecoveryService.cs`, `HostAccounts.cs`, `SecretHasher.cs`; `Services/Validaciones/CredentialValidator.cs`, `SecurityAnswerValidator.cs`; `Models/HostUser.cs`, `HashedSecret.cs`, `SecurityQuestionOption.cs`, `CredentialError.cs`; `Services/Configuracion/UsuariosSettings.cs` (`Usuarios:Maximo`) |
 | **Dashboard** | `Views/Pantallas/DashboardPage`, `Views/Componentes/TarjetaMenu.cs`, `Views/Estilos/Dashboard.xaml`, `Views/Estilos/TarjetaMenu.xaml` | `Views/ModelosDeVista/DashboardViewModel.cs`, `Services/Tiempo/ClockService.cs` |
 | **Sala** (QR, túnel, conectados, cerrar) | `Views/Pantallas/SalaPage`, `Views/Componentes/ListaConectados`, `Views/Componentes/PuntoPulso`, `Views/Estilos/Sala.xaml` | `Views/ModelosDeVista/SalaViewModel.cs`, `ConnectedUsersViewModel.cs`, `UserRowViewModel.cs`; `Services/Sala/RoomSession.cs`, `WebServerHost.cs`, `QrService.cs`, `RoomOpenErrors.cs`, `GuestWatcher.cs`; `Services/Tunel/CloudflareTunnelService.cs`, `KillOnCloseJob.cs`; `Services/Ventana/CloseGuard.cs`; `Models/RoomError.cs`. Del lado web: `COT_0.Web/Services/Sala/` (`RoomService`, `InMemoryChatService`, `ChatHub`) |
 | **Emotes** | `Views/Pantallas/EmotesPage`, `Views/Componentes/PanelEmotes`, `Views/Convertidores/EmoteStatusBrushes.cs` | `Views/ModelosDeVista/EmotesViewModel.cs`, `EmoteRowViewModel.cs`; `COT_0.Core/Services/IRoomEmotes.cs`; `COT_0.Web/Services/Emotes/RoomEmotes.cs`, `SevenTvClient.cs` |
@@ -32,7 +32,7 @@ Rutas relativas a `COT_0.Host/` salvo que digan otro proyecto. Las pantallas `X`
 | **Visitas** (`visitas.json`) | — | `Services/Visitas/VisitService.cs`, `VisitWatcher.cs`; `Models/Visit.cs` |
 | **JSON** (todo lo que se guarda) | — | `Services/Almacenamiento/JsonStore.cs` (lee/guarda en `%LocalAppData%\COT_0\`), `Services/Configuracion/StorageSettings.cs` (nombres de archivo), `Services/Fondos/FondoStore.cs` (`fondos.json`), `Services/Usuarios/HostAccounts.cs` (`usuarios.json`), `Services/Registro/MediaLog.cs` (`registro-medios.jsonl`) |
 | Configuración y textos | `Views/Estilos/Textos.xaml` | `appsettings.json`, `Services/Configuracion/AppConfig.cs` + un record por sección, `Services/Textos/UiText.cs` |
-| Límite de caracteres (`Inputs`) | `MaxLength` en `LoginPage`, `FormularioRecuperacion` y `PanelEmotes` | `Services/Configuracion/InputsSettings.cs` (reemplaza a `ValidationSettings.cs`), `Services/Validaciones/InputLimits.cs`, `CredentialValidator.cs`, `SecurityAnswerValidator.cs` |
+| Límite de caracteres (`Inputs`) | `MaxLength` en `LoginPage`, `FormularioRegistro`, `FormularioRecuperacion` y `PanelEmotes` | `Services/Configuracion/InputsSettings.cs` (reemplaza a `ValidationSettings.cs`), `Services/Validaciones/InputLimits.cs`, `CredentialValidator.cs`, `SecurityAnswerValidator.cs` |
 | Ventana y navegación | `MainWindow.xaml`, `Views/Componentes/EncabezadoPantalla`, `Views/Componentes/ConfirmacionDialogo` | `App.xaml.cs`, `Services/Ventana/WindowSetup.cs`, `Navigator.cs`, `Services/Dialogos/ConfirmDialogService.cs` |
 
 ## QUÉ SE BORRÓ
@@ -164,3 +164,17 @@ Se comparó `COT_0.Host` (WPF) contra el Host WinUI (entonces en otra carpeta) e
 
 - Archivos nuevos: `Views/Componentes/BotonBocina.cs`, `Views/Estilos/Volumen.xaml`, `Services/Validaciones/InputLimits.cs`. `Services/Configuracion/ValidationSettings.cs` pasó a `InputsSettings.cs` (sección `Validation` → `Inputs`).
 - `dotnet build COT_0.sln`: 0 errores, 0 warnings. El `.exe` se lanzó unos segundos para confirmar que abre; sin capturas, así que el aspecto del manual y de la barra no se revisó a ojo (ver `PRUEBAS_MANUALES.md`, sección 12).
+
+## Cierre final (08/11): varios usuarios, async en disco y nombres naturales
+
+| Tarea | Commit | Archivos |
+|---|---|---|
+| A. Login con hasta 5 usuarios | `3def19d` | Nuevos: `Services/Configuracion/UsuariosSettings.cs`, `Views/ModelosDeVista/RegisterViewModel.cs`, `Views/Componentes/FormularioRegistro.xaml(.cs)`. Cambiados: `appsettings.json` (`Usuarios:Maximo`), `AppSettings.cs`, `Models/HostUser.cs`, `Models/CredentialError.cs` (`UserTaken`, `UsersFull`), `Services/Usuarios/HostAccounts.cs`, `UserService.cs`, `PasswordRecoveryService.cs`, `Services/Validaciones/CredentialValidator.cs`, `Views/ModelosDeVista/LoginViewModel.cs`, `LoginStep.cs`, `FormViewModel.cs`, `RecoveryViewModel.cs`, `Views/Pantallas/LoginPage.xaml`, `Views/Componentes/FormularioRecuperacion.xaml`, `Views/Estilos/Textos.xaml`, `App.xaml` (`LoginLinkSeparator`) |
+| B. Async en todo acceso a disco | `72e6319` | Sin cambios de código: ya estaba resuelto en `b5b5824` (`AppConfig.LoadAsync`, `AsyncFiles`). Se reverificó con búsquedas y se anotó en `CUMPLIMIENTO.md` |
+| C. Nombres naturales | `992830b` | Tag `pre-nombres-naturales`. El proyecto ya era `COT_0.Host`; no había carpetas, archivos, clases ni recursos con sufijos de migración. Se limpiaron los comentarios de código que decían "WinUI" (12 archivos) y se agregó "Renombres de cierre" en `MAPA_CARPETAS.md` |
+| Documentación | último commit | `CUMPLIMIENTO.md`, `ESTRUCTURA.md`, `MAPA_CARPETAS.md`, este archivo, `README.md`, `CAMBIOS_VISUALES.md`, `PRUEBAS_MANUALES.md`, `PENDIENTES_LIMPIEZA.md` |
+
+- Lo único fuera del login que suponía una sola cuenta eran textos: el README ("CREA TU CUENTA DE HOST") y la descripción de `usuarios.json` en `ESTRUCTURA.md`; se actualizaron. Ningún servicio de adentro (Dashboard, Sala, Emotes, Música, Fondos, Manual, firma, `SesionService`, `VisitService`) leía la cuenta.
+- Volver atrás: `git checkout pre-nombres-naturales` (antes de la Tarea C) o `git checkout 648df7a` (antes de las tres tareas).
+- Verificación: `dotnet build COT_0.sln` en 0 errores y 0 warnings; `COT_0.Host.exe` lanzado 8 s: ventana "COT_0" abierta, respondiendo y Kestrel en el puerto 5050. Sin capturas: el aspecto de los enlaces y del formulario de registro no se revisó a ojo (`PRUEBAS_MANUALES.md`, secciones 1, 2 y 2b).
+

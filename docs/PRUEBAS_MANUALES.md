@@ -1,7 +1,7 @@
-# Pruebas manuales (COT_0.Host, WinUI 3)
+# Pruebas manuales (COT_0.Host)
 
 No hay proyectos de prueba: esto se revisa a mano con `dotnet run --project COT_0.Host`.
-Antes: `dotnet build COT_0.Host` en 0 errores y 0 warnings.
+Antes: `dotnet build COT_0.sln` en 0 errores y 0 warnings.
 
 ## Preparación
 
@@ -11,22 +11,37 @@ Antes: `dotnet build COT_0.Host` en 0 errores y 0 warnings.
 - Para empezar de cero, borra `%LocalAppData%\COT_0\` (ahí viven `usuarios.json`, `visitas.json`, `sesiones.json` y `fondos.json`).
 - Cierra otra instancia del Host y cualquier `dotnet run` de la web: usan el mismo puerto 5050.
 
-## 1. Registro con pregunta secreta
+## 1. Varios usuarios: registrar y entrar
 
-1. Sin `usuarios.json`, la app abre en **CREA TU CUENTA DE HOST**.
-2. REGISTRARME vacío → InfoBar "Escribe tu usuario.". Usuario con espacio o símbolo → "solo puede tener letras y números".
-3. Sin elegir pregunta → "Elige una pregunta secreta."; sin respuesta → "Escribe tu respuesta.".
-4. Llena todo y REGISTRARME → entra al dashboard. En `usuarios.json` hay hash y salt, nunca la contraseña ni la respuesta.
-5. Cierra y abre la app: ahora sale **ACCESO DEL HOST** (ENTRAR).
+1. Sin `usuarios.json`, la app abre en **ACCESO DEL HOST** (botón ENTRAR) con el aviso "Todavía no hay usuarios. Usa «Registrar usuario» para crear el primero.".
+2. Abajo de la contraseña, a la derecha: **¿Olvidaste tu contraseña?** | **Registrar usuario**, en una línea, separados por una barra tenue, sin encimarse ni cortarse.
+3. Clic en **Registrar usuario** → REGISTRA UN USUARIO con USUARIO, CONTRASEÑA y ESCRÍBELA OTRA VEZ (no pide pregunta secreta).
+4. REGISTRAR vacío → "Escribe tu usuario.". Usuario con espacio o símbolo → "solo puede tener letras y números".
+5. Contraseñas distintas → "Las dos contraseñas no coinciden.".
+6. Escribe o pega más de 15 caracteres en cualquier campo → se detiene en 15.
+7. Llena bien y REGISTRAR → vuelve a ENTRAR con el usuario ya escrito y el InfoBar verde "Usuario registrado…". En `usuarios.json` hay una lista con hash y salt, nunca la contraseña.
+8. Registra otro con el mismo nombre en otras mayúsculas (`neondev` vs `Neondev`) → "Ya existe un usuario con ese nombre.".
+9. Registra hasta tener 5. Al abrir Registrar usuario otra vez → "Ya hay 5 usuarios registrados, que es el máximo." y REGISTRAR no agrega a nadie.
+10. "Volver al inicio de sesión" regresa a ENTRAR sin registrar nada.
+11. **Entrar con cada usuario**: la primera vez de cada uno pide CONFIGURA TU PREGUNTA SECRETA → GUARDAR Y ENTRAR → dashboard. SALIR y entra con el siguiente; la segunda vez ya no pide la pregunta. Contraseña de otro usuario → "Usuario o contraseña incorrectos.".
+12. Dentro de la app todo se ve igual con cualquier usuario (dashboard, sala, emotes, música, fondos, manual, firma).
 
-## 2. Recuperación de contraseña
+## 2. Recuperación de contraseña (por usuario)
 
-1. En ACCESO DEL HOST, clic en **¿Olvidaste tu contraseña?** → RECUPERA TU CONTRASEÑA con tu pregunta guardada.
-2. Respuesta mal + VERIFICAR → "La respuesta no coincide.". Respuesta bien pero con mayúsculas y espacios de más → también pasa.
-3. Ya verificada, la respuesta queda fija y aparecen CONTRASEÑA NUEVA y ESCRÍBELA OTRA VEZ.
-4. Distintas en los dos campos → "Las dos contraseñas no coinciden.".
-5. CAMBIAR CONTRASEÑA → InfoBar verde "Tu contraseña cambió…". La vieja ya no entra; la nueva sí.
-6. "Volver al inicio de sesión" regresa sin cambiar nada.
+1. En ENTRAR, clic en **¿Olvidaste tu contraseña?** → RECUPERA TU CONTRASEÑA pidiendo primero USUARIO (máx. 15 caracteres) y CONTINUAR.
+2. Usuario que no existe, o uno que todavía no configura su pregunta → "No se pudo recuperar la contraseña con esos datos." (el mismo mensaje en los dos casos).
+3. Usuario válido → el usuario queda fijo y aparece SU pregunta (registra dos usuarios con preguntas distintas para comprobarlo).
+4. Respuesta mal + VERIFICAR → "La respuesta no coincide.". Respuesta bien pero con mayúsculas y espacios de más → también pasa.
+5. Ya verificada, la respuesta queda fija y aparecen CONTRASEÑA NUEVA y ESCRÍBELA OTRA VEZ. Distintas → "Las dos contraseñas no coinciden.".
+6. CAMBIAR CONTRASEÑA → vuelve a ENTRAR con ese usuario escrito e InfoBar verde "Tu contraseña cambió…". La vieja ya no entra; la nueva sí. Los demás usuarios siguen con su contraseña.
+7. "Volver al inicio de sesión" regresa sin cambiar nada.
+
+## 2b. Migración de la cuenta anterior y arranque
+
+1. Con el `usuarios.json` de antes (la cuenta única), abre la app: sale ENTRAR sin aviso de "no hay usuarios" y esa cuenta entra con su contraseña de siempre. Si no tenía pregunta, la pide al entrar.
+2. Si el archivo trae la cuenta como objeto suelto (`{ "UserName": … }` en vez de `[ … ]`), también entra; al registrar otro usuario o cambiar la contraseña se guarda ya como lista.
+3. Una cuenta guardada con nombre de más de 15 caracteres no se borra ni se corrompe (sigue en el archivo tal cual).
+4. La app arranca sin congelarse: la ventana aparece, la animación del login corre y se puede escribir de inmediato.
 
 ## 3. ENTRAR y SALIR
 
