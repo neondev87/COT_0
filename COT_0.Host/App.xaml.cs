@@ -75,7 +75,7 @@ public partial class App : Application
             .AddSingleton<MusicaViewModel>()
             .AddSingleton<FirmaViewModel>()
             .AddSingleton<LogoNeondevViewModel>()
-            .AddSingleton<FondoCatalog>()
+            .AddSingleton<IBackgroundCatalog, FondoCatalog>()
             .AddSingleton<FondoStore>()
             .AddSingleton<FondoService>()
             .AddSingleton<FfmpegFrames>()

@@ -1,4 +1,5 @@
 // Manual de Lain: seis pasos con notificaciones en el tiempo, atajos (ENTER, flechas, ESC) y despedida
+using COT_0.Core.Models;
 using COT_0.Host.Models;
 using COT_0.Host.Services.Configuracion;
 using COT_0.Host.Services.Fondos;

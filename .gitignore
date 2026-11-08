@@ -483,14 +483,28 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 
-# Música de fondo (local, nunca al repo)
-musica/
-
-# Videos, audios y manual de Lain (locales, fuera del repo)
-/gifs/
-/manual/
+# Medios locales: viven en Paths:MediaRoot, fuera del repo (música, fondos, portadas, gifs y manual de Lain).
+# Anclados con "/" para no tapar las carpetas de código Services/Musica, Services/Fondos ni Services/Manual
+/musica/
 /fondos/
 /portadas/
+/gifs/
+/manual/
+/pasos/
+# Por si alguien los copia dentro del Host
+/COT_0.Host/musica/
+/COT_0.Host/fondos/
+/COT_0.Host/portadas/
+/COT_0.Host/gifs/
+/COT_0.Host/manual/
+/COT_0.Host/pasos/
+# Audio y video sueltos (extensiones de Audio:Extensions y videos de fondo)
 *.mp4
 *.mp3
 *.wav
+*.m4a
+*.aac
+*.wma
+# Caché de cuadros de video y registro de medios (viven en %LocalAppData%\COT_0)
+/COT_0.Host/cache/
+*.jsonl

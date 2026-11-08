@@ -1,4 +1,5 @@
 // Miniatura del selector de fondos: nombre, tipo y tamaño, si es pesado y si es el elegido
+using COT_0.Core.Models;
 using System.Globalization;
 using COT_0.Host.Models;
 using COT_0.Host.Services.Fondos;

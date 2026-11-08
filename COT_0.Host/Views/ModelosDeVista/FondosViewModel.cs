@@ -1,4 +1,5 @@
 // Selector de fondos: miniaturas, elegir uno, cuadro fijo para videos, sin fondo y errores en InfoBar
+using COT_0.Core.Models;
 using System.Collections.ObjectModel;
 using COT_0.Host.Models;
 using COT_0.Host.Services.Configuracion;

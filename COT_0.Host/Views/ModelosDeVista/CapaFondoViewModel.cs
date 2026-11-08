@@ -1,4 +1,5 @@
 // Capa del fondo detrás del Frame: imagen, cuadro fijo o video según el fondo elegido y la página visible
+using COT_0.Core.Models;
 using COT_0.Host.Models;
 using COT_0.Host.Services.Configuracion;
 using COT_0.Host.Services.Fondos;

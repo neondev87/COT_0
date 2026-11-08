@@ -106,6 +106,12 @@ Emotes de la sala desde un set de 7TV. Modelos en `COT_0.Core.Models`: `RoomEmot
 - `Task<string> StartAsync(string localUrl, CancellationToken ct = default)` – lanza `cloudflared tunnel --url {localUrl}` y devuelve la URL pública.
 - `Task StopAsync()` – cierra cloudflared.
 
+### `IBackgroundCatalog` – implementa Host (`Services/Fondos/FondoCatalog.cs`, **Singleton**)
+Carpeta de fondos sin tipos de vista. Modelos `Fondo` (`FileName`, `Kind`, `SizeBytes`, `UseStill`) y `FondoKind` (`Image` / `Video`) en `COT_0.Core.Models`.
+- `string Folder` · `bool FolderExists`
+- `string PathOf(Fondo fondo)`
+- `Task<IReadOnlyList<Fondo>> ScanAsync()` – ordenados por nombre; vacío si no existe la carpeta.
+
 ## Clases principales
 
 - Host: `App`, `MainWindow` (un `Frame` con las páginas de `Views/Pantallas`), `Services/Sala/WebServerHost`, `Services/Tunel/CloudflareTunnelService`, `Services/Sala/QrService` (QRCoder). Ver `docs/ESTRUCTURA.md`.
@@ -158,6 +164,22 @@ _(Anotar acá: agente, qué se necesita en Core y por qué.)_
   - `.gitignore` de la raíz (no es carpeta de ningún agente): la regla `musica/` tapa `COT_0.Host/Services/Musica/`. Pedido: cambiarla a `/musica/`. Mientras, `COT_0.Host/.gitignore` la vuelve a incluir.
   - Cierre de la migración (Agente 0): borrar el Host WPF, renombrar `COT_0.HostWinUI` a `COT_0.Host` y agregarlo a `COT_0.sln`. Lista completa en `docs/PENDIENTES_LIMPIEZA.md`.
   - Sesiones de invitados: `SesionWatcher` se entera de quién entra comparando `GetUsersAsync()` en cada `UsersChanged` (igual que `VisitWatcher`). Un evento `event Action<User>? UserJoined` en `IChatService` lo haría directo.
+
+### Resueltos por el Agente 0 (cierre 08/11, rama `host-winui`)
+
+| Pedido | Estado | Razón |
+|---|---|---|
+| `IBackgroundCatalog` en Core | **Aplicado** | `COT_0.Core/Services/IBackgroundCatalog.cs`; `Fondo` y `FondoKind` pasaron a `COT_0.Core/Models`. `FondoCatalog` (Host) la implementa y `FondoService` la recibe por DI. Sin cambio de lógica |
+| Config `Background:*` (`HeavyVideoMegabytes`, `ThumbnailSize`, `StillSize`, `VeilOpacity`, `PickerVeilOpacity`) y `Storage:BackgroundsFile` | **Aplicado** | Ya estaban en `COT_0.Host/appsettings.json` |
+| Config `Manual:*` (`StagesFolder`, `StageExtension`, `StageDecodeSize`, `NoticeCounts`) | **Aplicado** | Ya estaban en `COT_0.Host/appsettings.json` |
+| Config `Tunnel:*`, `Qr:*`, `Web:JoinPath`, `Audio:*`, `Ui:*` | **Aplicado** | Ya estaban; `Links:GitHub` es `Branding:RepoUrl` y `Texts:*` vive en `Views/Estilos/Textos.xaml` |
+| Borrar `IAuthService` | **Aplicado** | Nadie lo usaba fuera del WPF |
+| `.gitignore`: `musica/` → `/musica/` y borrar `COT_0.Host/.gitignore` | **Aplicado** | Reglas de medios ancladas en la raíz; `git check-ignore` confirma que el código no se ignora |
+| Borrar el WPF, renombrar `COT_0.HostWinUI` → `COT_0.Host` y agregarlo a `COT_0.sln` | **Aplicado** | Pasos 2 y 3 de `docs/REPORTE_CIERRE.md` |
+| `event Action<User>? UserJoined` en `IChatService` | **Descartado** | Cambia cuándo cuenta una entrada: hoy `GuestWatcher` compara la lista y cuenta como nueva a quien sale y vuelve; con un evento en `AddUserAsync` habría que revisar reconexiones (`PresenceTracker`). No es solo mover código |
+| `IHostAccountService`, `IVisitLog`, `IGuestSessions` | **Descartado** | `UserService`, `VisitService` y `SesionService` son estáticos; pasarlos a interfaz cambia cómo se llaman en todos los ViewModels. Queda como mejora en `docs/REPORTE_CIERRE.md` |
+| `MusicLibrary`/`CoverLibrary` a Core e `IMusicPlayer` | **Descartado** | El duplicado se fue con el WPF; leen `AppConfig` del Host y `MusicService` usa `Windows.Media.Playback` |
+| `IQrService`, `IMusicService`, `IDialogService`, `IManualSound` | **Descartado** | Devuelven o usan tipos de WinUI (`BitmapImage`, `MediaPlayer`, `ContentDialog`); separar la parte sin vista es cambio de lógica |
 
 ### Resueltos por el Agente 0 (auditoría 05/11)
 

@@ -1,4 +1,6 @@
 // Estado de los fondos para toda la app: catálogo, fondo elegido y último problema; guarda en fondos.json
+using COT_0.Core.Models;
+using COT_0.Core.Services;
 using COT_0.Host.Models;
 using COT_0.Host.Services.Almacenamiento;
 using COT_0.Host.Services.Configuracion;
@@ -9,7 +11,7 @@ namespace COT_0.Host.Services.Fondos;
 /// Una sola instancia (la comparten la capa del fondo y FondosPage). Al releer la carpeta conserva lo que
 /// elegiste por archivo (cuadro fijo o video). Changed se avisa en el hilo de quien llamó (la UI).
 /// </summary>
-public sealed class FondoService(FondoCatalog catalog, FondoStore store)
+public sealed class FondoService(IBackgroundCatalog catalog, FondoStore store)
 {
     private FondosGuardados _data = new();
     private Task? _loading;

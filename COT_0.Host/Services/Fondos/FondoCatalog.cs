@@ -1,12 +1,12 @@
 // Lee la carpeta de fondos (Paths:MediaRoot + Background:Folder): imágenes y videos con su tamaño
 using COT_0.Core.Services;
-using COT_0.Host.Models;
+using COT_0.Core.Models;
 using COT_0.Host.Services.Configuracion;
 
 namespace COT_0.Host.Services.Fondos;
 
 /// <summary>Async y sin tipos de vista. La app no crea la carpeta.</summary>
-public class FondoCatalog
+public class FondoCatalog : IBackgroundCatalog
 {
     private static readonly StringComparer Order = StringComparer.OrdinalIgnoreCase;
 

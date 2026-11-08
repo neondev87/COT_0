@@ -1,4 +1,5 @@
 // Decodifica imágenes de fondo y el cuadro fijo de los videos (miniatura o fondo) al tamaño pedido, async
+using COT_0.Core.Models;
 using COT_0.Host.Models;
 using COT_0.Host.Services.Registro;
 using Microsoft.UI.Xaml.Media.Imaging;

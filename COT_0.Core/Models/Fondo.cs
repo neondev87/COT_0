@@ -1,5 +1,5 @@
 // Un archivo de la carpeta de fondos, tal como se guarda en fondos.json
-namespace COT_0.Host.Models;
+namespace COT_0.Core.Models;
 
 /// <summary>
 /// FileName es solo el nombre (la carpeta sale de Background:Folder). UseStill: el video se muestra
