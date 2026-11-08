@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Sala activa: encabezado con código y tiempo; a la izquierda el QR y la URL (o el aviso de abriendo/error);
-     a la derecha el contador, la lista de conectados, accesos a Emotes y Música, y CERRAR SALA -->
+     a la derecha el contador, la lista de conectados, accesos a Emotes, Música y Fondo, y CERRAR SALA.
+     Transparente: el fondo lo pinta CapaFondo detrás del Frame -->
 <Page x:Class="COT_0.HostWinUI.Views.Pantallas.SalaPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:componentes="using:COT_0.HostWinUI.Views.Componentes"
-      Background="{StaticResource WindowBackgroundBrush}">
+      Background="Transparent">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -126,6 +127,12 @@
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <FontIcon Glyph="&#xE8D6;" FontFamily="{StaticResource FontIcons}" FontSize="14"/>
                             <TextBlock Text="{StaticResource Text.Room.Music}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource TextButton}" Command="{x:Bind ViewModel.ShowBackgroundsCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE91B;" FontFamily="{StaticResource FontIcons}" FontSize="14"/>
+                            <TextBlock Text="{StaticResource Text.Room.Background}"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>

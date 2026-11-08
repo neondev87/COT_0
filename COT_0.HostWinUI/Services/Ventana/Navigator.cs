@@ -11,7 +11,14 @@ public static class Navigator
     private static Frame? _frame;
 
     /// <summary>Lo llama MainWindow al arrancar con su RootFrame.</summary>
-    public static void Attach(Frame frame) => _frame = frame;
+    public static void Attach(Frame frame)
+    {
+        _frame = frame;
+        frame.Navigated += (_, e) => PageChanged?.Invoke(e.SourcePageType);
+    }
+
+    /// <summary>Cambió la página visible (la capa del fondo decide si se ve o se pausa).</summary>
+    public static event Action<Type>? PageChanged;
 
     /// <summary>Raíz visual de la ventana: la necesitan los ContentDialog para saber dónde abrirse.</summary>
     public static XamlRoot? XamlRoot => _frame?.XamlRoot;
@@ -23,6 +30,8 @@ public static class Navigator
     public static void ShowRoom() => Go<SalaPage>();
 
     public static void ShowManual() => Go<ManualPage>();
+
+    public static void ShowBackgrounds() => Go<FondosPage>();
 
     public static void ShowEmotes() => Go<EmotesPage>();
 

@@ -1,6 +1,8 @@
 // Punto de entrada: arma los servicios, muestra la ventana y levanta la web en segundo plano
 using COT_0.Core.Services;
 using COT_0.HostWinUI.Services.Dialogos;
+using COT_0.HostWinUI.Services.Fondos;
+using COT_0.HostWinUI.Services.Manual;
 using COT_0.HostWinUI.Services.Musica;
 using COT_0.HostWinUI.Services.Sala;
 using COT_0.HostWinUI.Services.Tiempo;
@@ -71,6 +73,18 @@ public partial class App : Application
             .AddSingleton<MusicService>()
             .AddSingleton<MusicaViewModel>()
             .AddSingleton<FirmaViewModel>()
+            .AddSingleton<FondoCatalog>()
+            .AddSingleton<FondoStore>()
+            .AddSingleton<FondoService>()
+            .AddSingleton<FondoImages>()
+            .AddSingleton<FondoPlayer>()
+            .AddSingleton<CapaFondoViewModel>()
+            .AddSingleton<FondosViewModel>()
+            .AddSingleton<ManualAssets>()
+            .AddSingleton<ManualSound>()
+            .AddSingleton<ManualVideo>()
+            .AddTransient<ManualTimeline>()
+            .AddTransient<ManualViewModel>()
             .BuildServiceProvider();
     }
 

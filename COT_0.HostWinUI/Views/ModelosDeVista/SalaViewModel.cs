@@ -156,6 +156,9 @@ public partial class SalaViewModel : ObservableObject
     [RelayCommand]
     private void ShowMusic() => Navigator.ShowMusic();
 
+    [RelayCommand]
+    private void ShowBackgrounds() => Navigator.ShowBackgrounds();
+
     // Sala abierta → QR del enlace público; cerrada → se limpia todo
     private async Task RefreshAsync()
     {

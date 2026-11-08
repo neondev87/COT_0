@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Inicio del host: reloj, estado de la sala, menú en diagonal (QR, fondo, manual, emotes, música, salir) y pie. Sin fondo de video ni firma con música todavía -->
+<!-- Inicio del host: reloj, estado de la sala, menú en diagonal (QR, fondo, manual, emotes, música, salir) y pie.
+     Transparente: el fondo elegido (o el degradado del login) lo pinta CapaFondo detrás del Frame -->
 <Page x:Class="COT_0.HostWinUI.Views.Pantallas.DashboardPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:componentes="using:COT_0.HostWinUI.Views.Componentes"
-      Background="{StaticResource LoginBaseBrush}">
+      Background="Transparent">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -15,8 +16,7 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <Grid Background="{StaticResource LoginBackgroundBrush}">
-        <Rectangle Fill="{StaticResource VignetteBrush}" IsHitTestVisible="False"/>
+    <Grid>
 
         <!-- Reloj -->
         <StackPanel Margin="44,34,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
@@ -71,8 +71,7 @@
                                      Content="{x:Bind ViewModel.QrTitle, Mode=OneWay}" Subtitle="{x:Bind ViewModel.QrSubtitle, Mode=OneWay}"
                                      Icon="M3,3 H10 V10 H3 Z M14,3 H21 V10 H14 Z M3,14 H10 V21 H3 Z M14,14 H17 V17 H14 Z M20,14 V14.01 M14,20 H14.01 M17,20 H21 V17"
                                      Command="{x:Bind ViewModel.ShowRoomCommand}"/>
-            <!-- Fondos: se migran después (selector de fondos); la tarjeta queda visible pero apagada -->
-            <componentes:TarjetaMenu Style="{StaticResource TarjetaMenuStyle}" Number="02" Margin="26,0,0,0" IsEnabled="False"
+            <componentes:TarjetaMenu Style="{StaticResource TarjetaMenuStyle}" Number="02" Margin="26,0,0,0" Command="{x:Bind ViewModel.ShowBackgroundsCommand}"
                                      Content="{StaticResource Text.Dashboard.BackgroundTitle}" Subtitle="{StaticResource Text.Dashboard.BackgroundSubtitle}"
                                      Icon="M4,4 H20 A1,1 0 0 1 21,5 V19 A1,1 0 0 1 20,20 H4 A1,1 0 0 1 3,19 V5 A1,1 0 0 1 4,4 Z M7.4,9.5 A1.6,1.6 0 1 0 10.6,9.5 A1.6,1.6 0 1 0 7.4,9.5 Z M21,16 L15.5,10.5 L5,20"/>
             <componentes:TarjetaMenu Style="{StaticResource TarjetaMenuStyle}" Number="03" Margin="52,0,0,0"

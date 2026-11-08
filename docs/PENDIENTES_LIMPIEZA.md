@@ -14,9 +14,13 @@ Cosas que sobran o que hay que borrar/cambiar cuando termine la migración a Win
 
 ## En COT_0.HostWinUI
 
-- **`Text.Pending`** ("Pantalla en migración a WinUI 3."): ya solo lo usa `ManualPage`; borrar el texto de `Textos.xaml` al migrarla.
-- **Tarjeta 02 (CAMBIAR FONDO) apagada** y su texto `Text.Dashboard.BackgroundSubtitle` ("Próximamente en WinUI"): cambiar al migrar el selector de fondos.
-- **`ManualPage` no tiene botón de regresar**: usar `EncabezadoPantalla` al migrarla (Sala, Emotes y Música ya lo tienen).
+- **`.gitignore` de la raíz: la regla `musica/`** (sin `/` al inicio) también ignoraba `COT_0.HostWinUI/Services/Musica/`: `MusicLibrary`, `CoverLibrary`, `SongCatalog` y `MusicService` nunca se habían subido y un clon limpio no compilaba. Se arregló con `COT_0.HostWinUI/.gitignore` (`!Services/Musica/`). Lo correcto es cambiar la regla de la raíz a `/musica/` y borrar esa excepción (la raíz no es carpeta de este agente).
+- **`FondoImages` lo usa también el manual** (para las capturas `pasoN.png`): si crece, renombrarlo a algo general (`ImageDecoder`) en `Services/`.
+- **`ManualDemoFactory`, `ManualDemo`, `ManualHighlight`, `ManualCue`, `ManualStages.xaml`, `ManualStepView`, `ManualFarewellView`, `ManualBackdrop`, `ManualWindow`, `Themes/Manual*.xaml`** del WPF: no se migraron (ver `CAMBIOS_VISUALES.md`, "Manual de Lain"); se van con el WPF.
+- **`BackgroundPicker`, `BackgroundLayer`, `BackgroundPickerViewModel`, `BackgroundOption`, `ThumbnailImage`, `VideoThumbnail`, `LoopingVideo`** del WPF: ya tienen reemplazo (`FondosPage`, `CapaFondo`, `FondosViewModel`, `Fondo`, `FondoImages`, `FondoPlayer`); se van con el WPF.
+- **Secciones `Background:PreviewSeconds`, `Manual:StaticHitVolume`, `Manual:Demo` y `Texts:Manual`** del `appsettings.json` del WPF: WinUI no las usa.
+- **Duplicados con el WPF (fondos y manual)**: `FondoCatalog` (antes `BackgroundCatalog`) y `ManualAssets` quedaron copiados y adaptados en `COT_0.HostWinUI/Services`. Al borrar el WPF, desaparece el duplicado.
+- **Capturas del manual (`manual\pasos\paso1.png`…)**: no existen todavía; sin ellas cada paso muestra su lista de avisos. Si se hacen, van fuera del repo (en `Paths:MediaRoot`).
 - **SUBIR MÚSICA** de la firma del WPF no se migró (necesita `FileOpenPicker` con el HWND de la ventana). Si se quiere, va en `MusicaPage`.
 - **`.gitignore` de la raíz** solo ignora `*.mp3` y `*.wav`: si alguien copia música dentro del repo, `.m4a`, `.aac` y `.wma` (extensiones de `Audio:Extensions`) y las portadas `.jpg/.png/.webp` sueltas no quedan ignoradas. Agregar esas reglas (está fuera de las carpetas de este agente).
 - **Duplicados con el WPF**: `MusicLibrary` y `CoverLibrary` quedaron copiados en `COT_0.HostWinUI/Services/Musica` (WinUI no puede referenciar el proyecto WPF). Al borrar el WPF, desaparece el duplicado.
@@ -32,3 +36,15 @@ Cosas que sobran o que hay que borrar/cambiar cuando termine la migración a Win
 - `bin/` y `obj/` de los tres proyectos: ya están en `.gitignore`.
 - `diseno/inventario-winui.md` vive fuera del repo (en `COT_0_P/diseno`): no subirlo.
 - Música, fondos, portadas, gifs y manual: fuera del repo y en `.gitignore` (`musica/`, `/fondos/`, `/portadas/`, `/gifs/`, `/manual/`, `*.mp4`, `*.mp3`, `*.wav`).
+
+## Cierre de la migración (le toca al Agente 0, según `CONTRATO.md`)
+
+Fondos y Manual ya están migrados: el Host WinUI tiene todas las pantallas del WPF. No se hizo nada de esto todavía:
+
+1. Probar a mano todo `docs/PRUEBAS_MANUALES.md` en WinUI.
+2. Borrar `COT_0.Host/` (WPF) y quitarlo de `COT_0.sln`.
+3. Renombrar `COT_0.HostWinUI/` a `COT_0.Host/` (carpeta, `.csproj`, `RootNamespace` y los `namespace COT_0.HostWinUI…` / `using:COT_0.HostWinUI…` de C# y XAML).
+4. Agregar el proyecto renombrado a `COT_0.sln`.
+5. Actualizar `CONTRATO.md` (la tabla de la solución dice `COT_0.Host/ WPF`), `docs/DOCUMENTACION.md` y la nota de `CLAUDE.md` ("COT_0.Host: WPF").
+6. Borrar los user-secrets del WPF (`dotnet user-secrets clear --project COT_0.Host`) antes de renombrar.
+7. Cambiar `musica/` por `/musica/` en el `.gitignore` de la raíz y borrar `COT_0.HostWinUI/.gitignore` (ver arriba).

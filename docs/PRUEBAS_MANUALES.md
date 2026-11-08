@@ -5,9 +5,10 @@ Antes: `dotnet build COT_0.HostWinUI` en 0 errores y 0 warnings.
 
 ## Preparación
 
-- `Paths:MediaRoot` en `COT_0.HostWinUI/appsettings.json` apunta a tu carpeta `COT_0_P` (fuera del repo), con `musica\` (2 o 3 canciones) y `portadas\`.
+- `Paths:MediaRoot` en `COT_0.HostWinUI/appsettings.json` apunta a tu carpeta `COT_0_P` (fuera del repo), con `musica\` (2 o 3 canciones), `portadas\`,
+  `fondos\` (al menos una imagen y un video), `gifs\` (videos de Lain) y `manual\` (sonidos del manual).
 - `cloudflared` instalado (`winget install Cloudflare.cloudflared`) o su ruta en `Tunnel:CloudflaredPath`.
-- Para empezar de cero, borra `%LocalAppData%\COT_0\` (ahí viven `usuarios.json`, `visitas.json` y `sesiones.json`).
+- Para empezar de cero, borra `%LocalAppData%\COT_0\` (ahí viven `usuarios.json`, `visitas.json`, `sesiones.json` y `fondos.json`).
 - Cierra el Host WPF y cualquier `dotnet run` de la web: usan el mismo puerto 5050.
 
 ## 1. Registro con pregunta secreta
@@ -84,3 +85,47 @@ Antes: `dotnet build COT_0.HostWinUI` en 0 errores y 0 warnings.
 4. Clic en la nota → silencio (icono tachado); mover la barra quita el silencio.
 5. El volumen y la canción son los mismos que en MÚSICA (cambia uno y revisa el otro).
 6. Con `Audio:MusicFolder` en una carpeta que no existe → la firma dice **Sin música**.
+
+## 9. Fondos
+
+### Imagen
+
+1. Copia un `.jpg` o `.png` a `fondos\`. En el dashboard, **02 CAMBIAR FONDO** → pantalla FONDOS con miniaturas (nombre, IMAGEN · N MB).
+2. Detrás se ve el fondo actual con un velo oscuro (no hay desenfoque).
+3. Clic en la imagen → borde rojo en su miniatura y el fondo cambia detrás. ← INICIO (o Esc) → el dashboard tiene esa imagen con un velo más suave.
+4. **01 GENERAR QR**: la sala tiene el mismo fondo. En la sala, **CAMBIAR FONDO** (abajo a la izquierda) abre FONDOS y el encabezado dice **← SALA**.
+5. Cierra y abre la app: el fondo elegido sigue (está en `%LocalAppData%\COT_0\fondos.json`, `SelectedFile`).
+6. **SIN FONDO** → vuelve el degradado gris del login; en `fondos.json`, `SelectedFile` queda en `""`.
+
+### Video
+
+1. Elige un video ligero (menos de 120 MB): se reproduce detrás en bucle y **sin sonido**; la música sigue sonando igual.
+2. Elige un video de más de 120 MB: su miniatura dice **PESADO** y arranca como **cuadro fijo**. "Usar cuadro fijo (más ligero)" está marcado.
+3. Desmarca "Usar cuadro fijo" → el video se reproduce. Márcalo → vuelve el cuadro fijo. Se guarda por video en `fondos.json` (`UseStill`).
+4. Con un video de fondo, abre 05 MÚSICA o 03 MANUAL: el fondo no se ve ahí (y se pausa). Regresa al dashboard: sigue donde iba.
+5. En el Administrador de tareas, con el video corriendo en el dashboard, el uso de CPU no debería trabar la ventana (el reloj avanza cada segundo).
+
+### Errores (InfoBar amarillo en FONDOS)
+
+- **Carpeta faltante**: cambia `Background:Folder` a `noexiste` → "No se encontró la carpeta de fondos: …"; el dashboard queda con el degradado.
+- **Carpeta vacía**: apunta `Background:Folder` a una carpeta sin imágenes ni videos → "La carpeta … no tiene imágenes ni videos."
+- **Archivo ilegible**: renombra un `.txt` a `roto.mp4` (o `roto.png`) en `fondos\` y elígelo → el fondo cae a su cuadro fijo o al degradado y, al volver a FONDOS, "No se pudo abrir «roto.mp4»…".
+- **fondos.json dañado**: escribe basura en `fondos.json` y abre FONDOS → "No se pudo leer o guardar fondos.json…"; la lista sale igual.
+- **RECARGAR** después de arreglar la carpeta: el aviso se quita y aparecen las miniaturas.
+
+## 10. Manual de Lain
+
+1. **03 MANUAL** → fondo azul noche, ← INICIO | MANUAL arriba a la izquierda, atajos ENTER / → / ← / ESC arriba a la derecha y "Bienvenido a COT_0".
+2. Abajo a la izquierda, el video de Lain en bucle (sin quitar el negro: se ve sobre el azul con el borde de arriba fundido).
+3. Arriba a la izquierda salen las notificaciones de Lain una por una con fundido y el sonido de aviso; la última se queda. En el recuadro del paso, los avisos que ya salieron se encienden.
+4. ENTER o → → paso siguiente con un destello corto; ← regresa. En el paso 1, ← está apagado; en el 6, → también.
+5. Bocina (abajo a la derecha) → silencio (icono tachado): ya no suena el aviso.
+6. "Gracias, pero no necesito ayuda" o ESC → despedida: el video cambia al de despedida, al centro y más tenue, con estática de fondo y "Gracias por estar aquí. Vuelve pronto."
+7. **Cerrar**, ENTER o ESC en la despedida → regresa al dashboard. ← INICIO en cualquier momento también regresa y corta video y sonidos.
+8. Vuelve a abrir el manual: empieza otra vez en el paso 1 y sin silencio.
+9. Capturas opcionales: pon `paso2.png` en `manual\pasos\` → el recuadro del paso 2 muestra la imagen en lugar de la lista.
+
+### Errores (InfoBar amarillo abajo a la derecha)
+
+- **Archivos que faltan**: renombra `gifs\lain_tele_web.mp4` → "Faltan archivos del manual: lain_tele_web.mp4…"; el manual sigue sin video.
+- **Archivo ilegible**: reemplaza `lain_despedida.mp4` por un `.txt` renombrado y llega a la despedida → "No se pudo abrir «lain_despedida.mp4»…".

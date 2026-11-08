@@ -12,7 +12,7 @@ using CommunityToolkit.Mvvm.Input;
 namespace COT_0.HostWinUI.Views.ModelosDeVista;
 
 /// <summary>
-/// Igual que el DashboardViewModel del WPF, sin fondos (se migran después); la música es su propia pantalla.
+/// Igual que el DashboardViewModel del WPF; fondos, emotes y música son su propia pantalla.
 /// IsRoomActive / IsRoomInactive reemplazan al DataTrigger del estado.
 /// </summary>
 public partial class DashboardViewModel : ObservableObject
@@ -66,6 +66,9 @@ public partial class DashboardViewModel : ObservableObject
     // Tarjeta 01 y SALA ACTIVA: SalaPage abre la sala (túnel + QR) al cargar
     [RelayCommand]
     private void ShowRoom() => Navigator.ShowRoom();
+
+    [RelayCommand]
+    private void ShowBackgrounds() => Navigator.ShowBackgrounds();
 
     [RelayCommand]
     private void ShowManual() => Navigator.ShowManual();

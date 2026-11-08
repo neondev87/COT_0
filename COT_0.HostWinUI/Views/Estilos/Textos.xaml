@@ -75,7 +75,7 @@
     <x:String x:Key="Text.Dashboard.RoomTitle">SALA</x:String>
     <x:String x:Key="Text.Dashboard.RoomSubtitle">Volver a la sala activa</x:String>
     <x:String x:Key="Text.Dashboard.BackgroundTitle">CAMBIAR FONDO</x:String>
-    <x:String x:Key="Text.Dashboard.BackgroundSubtitle">Próximamente en WinUI</x:String>
+    <x:String x:Key="Text.Dashboard.BackgroundSubtitle">Imagen o video del inicio y la sala</x:String>
     <x:String x:Key="Text.Dashboard.ManualTitle">MANUAL</x:String>
     <x:String x:Key="Text.Dashboard.ManualSubtitle">Guía de uso</x:String>
     <x:String x:Key="Text.Dashboard.ExitTitle">SALIR</x:String>
@@ -103,6 +103,7 @@
     <x:String x:Key="Text.Room.Count">Personas conectadas</x:String>
     <x:String x:Key="Text.Room.Emotes">EMOTES</x:String>
     <x:String x:Key="Text.Room.Music">MÚSICA</x:String>
+    <x:String x:Key="Text.Room.Background">CAMBIAR FONDO</x:String>
     <x:String x:Key="Text.Room.CloseHint">Al cerrar, todos salen de la sala</x:String>
     <x:String x:Key="Text.Room.Close">CERRAR SALA</x:String>
     <x:String x:Key="Text.Room.OpeningTitle">Abriendo la sala</x:String>
@@ -155,6 +156,22 @@
     <x:String x:Key="Text.Music.Mute">Silenciar o quitar el silencio</x:String>
     <x:String x:Key="Text.Music.Volume">Volumen</x:String>
 
+    <!-- Fondos -->
+    <x:String x:Key="Text.Backgrounds.Title">FONDOS</x:String>
+    <x:String x:Key="Text.Backgrounds.Hint">Elige el fondo del inicio y de la sala. Los videos van en bucle y sin sonido.</x:String>
+    <x:String x:Key="Text.Backgrounds.UseStill">Usar cuadro fijo (más ligero)</x:String>
+    <x:String x:Key="Text.Backgrounds.None">SIN FONDO</x:String>
+    <x:String x:Key="Text.Backgrounds.Reload">RECARGAR</x:String>
+    <x:String x:Key="Text.Backgrounds.Heavy">PESADO</x:String>
+    <x:String x:Key="Text.Backgrounds.Detail">{0} · {1:0.#} MB</x:String>
+    <x:String x:Key="Text.Backgrounds.Kind.Image">IMAGEN</x:String>
+    <x:String x:Key="Text.Backgrounds.Kind.Video">VIDEO</x:String>
+    <x:String x:Key="Text.Backgrounds.ErrorTitle">Fondos</x:String>
+    <x:String x:Key="Text.Backgrounds.Error.FolderMissing">No se encontró la carpeta de fondos: {0}. Créala o cambia Paths:MediaRoot / Background:Folder en appsettings.json.</x:String>
+    <x:String x:Key="Text.Backgrounds.Error.Empty">La carpeta {0} no tiene imágenes ni videos.</x:String>
+    <x:String x:Key="Text.Backgrounds.Error.Unreadable">No se pudo abrir «{0}». Si es un video, se muestra su cuadro fijo; si no, elige otro fondo.</x:String>
+    <x:String x:Key="Text.Backgrounds.Error.Storage">No se pudo leer o guardar fondos.json ({0}). Tu elección no se guardará hasta que se arregle.</x:String>
+
     <!-- Firma del login -->
     <x:String x:Key="Text.Signature.Name">Neondev</x:String>
     <x:String x:Key="Text.Signature.Link">Abrir el repositorio en GitHub</x:String>
@@ -176,6 +193,60 @@
     <x:String x:Key="Text.ExitDialog.Confirm">CERRAR SALA Y SALIR</x:String>
     <x:String x:Key="Text.ExitDialog.Cancel">CANCELAR</x:String>
 
-    <!-- Pantallas pendientes de migrar -->
-    <x:String x:Key="Text.Pending">Pantalla en migración a WinUI 3.</x:String>
+    <!-- Manual de Lain (el paso 1 no tiene título) -->
+    <x:String x:Key="Text.Manual.ScreenTitle">MANUAL</x:String>
+    <x:String x:Key="Text.Manual.Heading">Bienvenido a COT_0</x:String>
+    <x:String x:Key="Text.Manual.KeyStart">ENTER</x:String>
+    <x:String x:Key="Text.Manual.Start">empezar</x:String>
+    <x:String x:Key="Text.Manual.KeyNext">→</x:String>
+    <x:String x:Key="Text.Manual.Next">siguiente</x:String>
+    <x:String x:Key="Text.Manual.KeyPrevious">←</x:String>
+    <x:String x:Key="Text.Manual.Previous">anterior</x:String>
+    <x:String x:Key="Text.Manual.KeyExit">ESC</x:String>
+    <x:String x:Key="Text.Manual.Exit">salir</x:String>
+    <x:String x:Key="Text.Manual.Skip">Gracias, pero no necesito ayuda</x:String>
+    <x:String x:Key="Text.Manual.Mute">Silenciar el manual</x:String>
+    <x:String x:Key="Text.Manual.NoticeApp">MENSAJES</x:String>
+    <x:String x:Key="Text.Manual.NoticeTime">ahora</x:String>
+    <x:String x:Key="Text.Manual.NoticeSender">Lain</x:String>
+    <x:String x:Key="Text.Manual.StepFormat">Paso {0:00} / {1:00}</x:String>
+    <x:String x:Key="Text.Manual.Farewell">Gracias por estar aquí. Vuelve pronto.</x:String>
+    <x:String x:Key="Text.Manual.Close">Cerrar</x:String>
+    <x:String x:Key="Text.Manual.ErrorTitle">Manual</x:String>
+    <x:String x:Key="Text.Manual.Error.Missing">Faltan archivos del manual: {0}. Sigue sin ellos; revisa Paths:MediaRoot y Manual:* en appsettings.json.</x:String>
+    <x:String x:Key="Text.Manual.Error.Unreadable">No se pudo abrir «{0}». El manual sigue sin ese archivo.</x:String>
+
+    <x:String x:Key="Text.Manual.Step1.Text">Un chat grupal para platicar en vivo con todo el salón.</x:String>
+    <x:String x:Key="Text.Manual.Step1.Notice1">Hola, soy Lain. Te acompaño en este recorrido.</x:String>
+    <x:String x:Key="Text.Manual.Step1.Notice2">Todo empieza con una sala y un código QR.</x:String>
+    <x:String x:Key="Text.Manual.Step1.Notice3">Son seis pasos. Presiona ENTER para empezar.</x:String>
+
+    <x:String x:Key="Text.Manual.Step2.Title">Generar el QR y entrar a la sala</x:String>
+    <x:String x:Key="Text.Manual.Step2.Text">El host crea la sala. Tú entras desde tu celular.</x:String>
+    <x:String x:Key="Text.Manual.Step2.Notice1">El host inicia sesión y toca GENERAR QR.</x:String>
+    <x:String x:Key="Text.Manual.Step2.Notice2">Tú escaneas el código con la cámara de tu celular.</x:String>
+    <x:String x:Key="Text.Manual.Step2.Notice3">Elige tu nombre, tu foto y la bandera de tu facultad. Luego entra.</x:String>
+
+    <x:String x:Key="Text.Manual.Step3.Title">El chat: texto, imágenes y notas de voz</x:String>
+    <x:String x:Key="Text.Manual.Step3.Text">Aquí platicas con todos, en vivo.</x:String>
+    <x:String x:Key="Text.Manual.Step3.Notice1">Escribe tu mensaje y presiona ENTER para enviarlo.</x:String>
+    <x:String x:Key="Text.Manual.Step3.Notice2">Con el botón de imagen compartes fotos.</x:String>
+    <x:String x:Key="Text.Manual.Step3.Notice3">Nota de voz: toca el micrófono para grabar. Toca otra vez para enviarla.</x:String>
+
+    <x:String x:Key="Text.Manual.Step4.Title">Emotes y cómo reportarlos</x:String>
+    <x:String x:Key="Text.Manual.Step4.Text">Los emotes se mueven, como en Kick y Twitch.</x:String>
+    <x:String x:Key="Text.Manual.Step4.Notice1">Abre el panel de emotes y toca uno para enviarlo.</x:String>
+    <x:String x:Key="Text.Manual.Step4.Notice2">¿Ves un emote ofensivo? Tócalo y elige Reportar.</x:String>
+
+    <x:String x:Key="Text.Manual.Step5.Title">Música y fondos</x:String>
+    <x:String x:Key="Text.Manual.Step5.Text">La música y el fondo ambientan la sala.</x:String>
+    <x:String x:Key="Text.Manual.Step5.Notice1">En el inicio, 05 MÚSICA abre la biblioteca con sus portadas.</x:String>
+    <x:String x:Key="Text.Manual.Step5.Notice2">02 CAMBIAR FONDO pone una imagen o un video detrás del inicio y la sala.</x:String>
+    <x:String x:Key="Text.Manual.Step5.Notice3">La música arranca bajito, al 25 % de volumen.</x:String>
+
+    <x:String x:Key="Text.Manual.Step6.Title">Cerrar la sala y salir</x:String>
+    <x:String x:Key="Text.Manual.Step6.Text">Cuando acaben, el host cierra la sala.</x:String>
+    <x:String x:Key="Text.Manual.Step6.Notice1">El host toca CERRAR SALA o SALIR cuando termina la sesión.</x:String>
+    <x:String x:Key="Text.Manual.Step6.Notice2">Con SALIR, elige «Cerrar sala y salir» para apagar la sala y el túnel.</x:String>
+    <x:String x:Key="Text.Manual.Step6.Notice3">Los demás solo cierran la pestaña. Nos vemos en la Wired.</x:String>
 </ResourceDictionary>

@@ -1,0 +1,9 @@
+# La regla "musica/" de la raíz (carpeta de canciones) también tapaba el código de Services/Musica: se vuelve a incluir
+!Services/Musica/
+
+# Fondos, videos de Lain y capturas del manual viven en Paths:MediaRoot (fuera del repo); por si alguien los copia aquí.
+# Anclados con "/" para no tapar Services/Fondos ni Services/Manual
+/fondos/
+/gifs/
+/manual/
+/pasos/

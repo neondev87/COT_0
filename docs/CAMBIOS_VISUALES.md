@@ -48,7 +48,7 @@ Lo que WinUI 3 no soporta igual que WPF y cómo se simplificó. Prioridad: que a
 
 | WPF | WinUI 3 | Motivo |
 |---|---|---|
-| Fondo de video en loop con `BlurEffect` y 12 `DataTrigger` (en `MainWindow`) | Degradado radial del login + viñeta | Sin video ni blur hasta migrar el selector de fondos; carga instantánea |
+| Fondo de video en loop con `BlurEffect` y 12 `DataTrigger` (en `MainWindow`) | `CapaFondo` detrás del `Frame` (ver "Fondos"); sin fondo elegido, el degradado radial del login + viñeta | Ver "Fondos" |
 | `MenuCard` con `Clip` en forma de paralelogramo | Dos `Path` con la forma (cara clara y capa de acento) | En WinUI `UIElement.Clip` solo acepta rectángulos |
 | Brillo de acento al pasar el mouse (`DropShadowEffect`, radio 16) | Quitado: solo cambia a acento sólido y se corre 18 px | WinUI 3 no tiene `DropShadowEffect`; `ThemeShadow` es caro y no da brillo de color |
 | Hover con `Trigger IsMouseOver` + 2 `Storyboard` (entrada/salida) | `VisualStateManager` (`PointerOver`, `Pressed`, `Disabled`) con transición de 0.35 s | Lo nativo de WinUI; un solo lugar para el estado |
@@ -56,7 +56,7 @@ Lo que WinUI 3 no soporta igual que WPF y cómo se simplificó. Prioridad: que a
 | Estado activo/inactivo con `DataTrigger` (`InactiveStatus`) | Dos propiedades del ViewModel (`IsRoomActive` / `IsRoomInactive`) con `x:Bind` a `Visibility` | WinUI 3 no tiene `DataTrigger` |
 | Punto con pulso (`EventTrigger` en una plantilla) | Componente `PuntoPulso` que arranca su `Storyboard` en `Loaded` | WinUI no tiene `EventTrigger` en plantillas; escala y opacidad corren en el compositor |
 | Entradas con `EntryAnimation` (tarjetas desde -408 px con retrasos fijos; reloj y estado con fundido de 1.2–1.4 s) | `EntranceThemeTransition` escalonada desde -120 px; reloj y estado con la transición del sistema | Animación del sistema, sin código propio |
-| Tarjeta CAMBIAR FONDO abre el selector | Tarjeta visible pero apagada ("Próximamente en WinUI") | El selector de fondos se migra después |
+| Tarjeta CAMBIAR FONDO abre el selector flotante | Tarjeta 02 abre la pantalla FONDOS | Ver "Fondos" |
 | GENERAR QR abre túnel + sala y luego cambia de vista | Lleva a `SalaPage` y ella abre la sala al cargar | El aviso de "abriendo" y los errores se ven en la sala |
 | Firma con música (`SignatureBadge`) sobre el pie | Solo en el login (ver "Firma del login"); en el dashboard está la tarjeta 05 MÚSICA | Una sola firma; la biblioteca es su pantalla |
 
@@ -123,7 +123,43 @@ Lo que WinUI 3 no soporta igual que WPF y cómo se simplificó. Prioridad: que a
 | Nota sin música → SUBIR MÚSICA | Texto "Sin música" | Sin `FileOpenPicker` todavía |
 | Ceniza y scanlines del fondo | Siguen fuera (ver Login) | WinUI 3 no tiene `DrawingBrush` ni `OnRender` |
 
-## Pendiente (se llena al migrar cada pantalla)
+## Fondos
 
-- Fondo de video: sin `BlurEffect`; bajar resolución del video si se traba.
-- Manual de Lain: shader `LumaKey` → video con transparencia; estática por pixeles → animación sencilla.
+| WPF | WinUI 3 | Motivo |
+|---|---|---|
+| `BackgroundPicker`: selector flotante sobre la ventana (abre con fundido, miniaturas que suben 28 px y se enciman 60 px) | Pantalla `FondosPage` con `GridView` de miniaturas de 256×144, sin encimarse ni animación de entrada | Una pantalla más, como Emotes y Música; el `GridView` virtualiza y ya trae scroll |
+| Al abrir el selector, el fondo se desenfocaba (`BlurEffect` animado hasta `BackgroundBlurRadius`) y la pantalla se desvanecía | El fondo sigue vivo detrás con un **velo negro** al 75 % (`Background:PickerVeilOpacity`) que entra con `OpacityTransition` | WinUI 3 no tiene `BlurEffect`; desenfocar un video en vivo es lo más caro de todo; el velo es una capa de opacidad en el compositor |
+| Miniatura de video: un `MediaElement` pausado por cada video (`VideoThumbnail`, en el segundo `PreviewSeconds`) | Miniatura de Windows (`StorageFile.GetThumbnailAsync`), decodificada a 320 px, una tras otra | Abrir un reproductor por miniatura trababa la PC; la miniatura del explorador ya está en caché |
+| Imagen con `ThumbnailImage` (decodificación congelada de WPF) | `BitmapImage.DecodePixelWidth` con `SetSourceAsync` (async) | Nativo de WinUI y async; si no se puede leer, se avisa |
+| Fondo de video con `LoopingVideo` (`MediaElement` que se reinicia al terminar) | Un solo `MediaPlayer` (`FondoPlayer`) con `IsLoopingEnabled` y en silencio, pintado por un `MediaPlayerElement` | Pedido del cambio: un solo reproductor reutilizado |
+| `VideoDimBrush` encima de imagen y video | Velo negro al 45 % (`Background:VeilOpacity`); sin fondo elegido, 0 | Mismo efecto, configurable |
+| Cada fondo nuevo aparecía con fundido de 0.9 s (`EventTrigger Loaded`) | Cambio directo | Sin `EventTrigger`; evita tener dos fondos a la vez durante el fundido |
+| Videos pesados (4K, 150 MB) se reproducían siempre | Más de 120 MB (`Background:HeavyVideoMegabytes`): etiqueta PESADO y arrancan como **cuadro fijo**; "Usar cuadro fijo (más ligero)" lo cambia por video | Lo que más se trababa en el Ryzen 5 era el video 4K de fondo |
+| Video que no abre: pantalla negra | Cae solo a su cuadro fijo y FONDOS lo avisa con InfoBar | Errores visibles (pedido del cambio) |
+| Carpeta faltante: lista vacía sin aviso | InfoBar "No se encontró la carpeta de fondos…" (también carpeta vacía y `fondos.json` dañado) | Pedido del cambio |
+| El fondo elegido no se guardaba (al abrir arrancaba con `Background:DefaultFile`) | Se guarda en `fondos.json` junto con el catálogo y el cuadro fijo de cada video | Pedido del cambio: catálogo y selección en JSON |
+| Fondo solo en dashboard y sala, debajo de todo | Igual (`CapaFondo` detrás del `Frame`); en las demás páginas se oculta y el video se pausa | Que no gaste mientras no se ve |
+| Sala con fondo liso `WindowBackgroundBrush` | Sala transparente: se ve el fondo elegido (o el degradado del dashboard) | Igual que el WPF, que compartía el fondo entre dashboard y sala |
+| Botón CAMBIAR FONDO solo en el dashboard | También en la sala (abajo a la izquierda, junto a EMOTES y MÚSICA); ← SALA regresa | Pedido del cambio |
+
+## Manual de Lain
+
+| WPF | WinUI 3 | Motivo |
+|---|---|---|
+| Ventana aparte (`ManualWindow`, modal sobre la principal) | Página `ManualPage` dentro del `Frame` con ← INICIO | WinUI 3 no tiene ventanas modales con dueño; pedido del cambio (botón de regreso) |
+| Video de Lain con shader `LumaKey` (`ShaderEffect` que volvía transparente el negro) | El mismo video con **opacidad fija** (0.9) sobre el azul noche del fondo | WinUI 3 no tiene `ShaderEffect`; Win2D agregaría un paquete y un efecto por cuadro. El fondo del video ya es oscuro y casi se funde |
+| `OpacityMask` con degradado sobre el video (borde de arriba que se desvanecía) | Un `Rectangle` con degradado del color del fondo a transparente encima del borde | WinUI 3 no tiene `OpacityMask`; un degradado encima da lo mismo y es gratis |
+| Despedida: segundo `LoopingVideo` con `LumaKey` "fantasma" (fuerza 0.32), máscara radial y escala 1.25 | Mismo reproductor: cambia el `Source` y un `StateTrigger` mueve el video al centro (720×440) con opacidad 0.45 | Un reproductor en vez de dos; sin shader ni máscara |
+| Estática por píxeles (`NoiseLayer`, `WriteableBitmap` redibujado cada cuadro) que subía en la despedida | **Quitada** | Redibujar píxeles en el hilo de la UI era lo más caro del manual; no hay reemplazo ligero que se parezca. El sonido de estática de la despedida sí se quedó |
+| Pérdida de señal (`SignalLossLayer`): ráfagas al azar con temblor, corrimiento del video, franjas y golpes de estática | Un **destello** tenue (rectángulo verde azulado con `OpacityTransition` de 0.15 s) al cambiar de paso | Sin temporizadores al azar ni transformaciones por cuadro; queda la idea de "cambio de canal" |
+| Golpes de estática cortos en cada ráfaga (`ManualSound.PlayStaticHit`) | Quitados | Iban atados a `SignalLossLayer` |
+| Niebla con `BlurEffect`, 5 franjas de interferencia y línea que bajan a distinto ritmo | **Quitadas**; queda el degradado azul noche, la viñeta y un solo barrido tenue (Storyboard de traslación, 14 s) | Sin blur en WinUI; la traslación corre en el compositor |
+| Scanlines (`DrawingBrush` en mosaico de 3 px) encima de todo | Quitadas | WinUI 3 no tiene `DrawingBrush` |
+| Ejemplo de cada paso con las **vistas reales** (Dashboard, Sala, SongPicker, diálogo) llenas con datos de muestra (`ManualDemoFactory`) y recuadros con flecha que las seguían (`ManualHighlight`, `ManualCue`) | Captura opcional por paso (`manual\pasos\pasoN.png`); sin captura, la **lista de avisos del paso**: los que ya salieron se encienden | Instanciar 6 pantallas de muestra dentro de un `Viewbox` era pesado y obligaba a que cada ViewModel aceptara datos falsos; las páginas de WinUI toman su ViewModel del contenedor. `ManualHighlight` buscaba elementos por nombre en el árbol en cada `LayoutUpdated` |
+| Notificación estilo iPhone con `DropShadowEffect`, escala 0.96→1 y caída de 24 px (`DataTrigger` + Storyboard) | Componente `AvisoLain` igual de forma y colores, sin sombra; entra y sale con `OpacityTransition` | WinUI 3 no tiene `DropShadowEffect`; la transición implícita corre en el compositor |
+| Paso que sale con fundido y entra subiendo 18 px (`EntryAnimation`) | Fundido de 0.25 s con `OpacityTransition` | Sin `EventTrigger`/`DataTrigger`; un solo efecto |
+| Atajos con `KeyBinding` en la ventana | `KeyboardAccelerators` de la página (ENTER, →, ←, ESC); el ← INICIO del encabezado no se queda con Esc | Lo nativo de WinUI |
+| Keycaps y botones con `ControlTemplate.Triggers` | `BotonManual` (un `Button` con tecla opcional) y `VisualStateManager` | WinUI 3 no tiene `Trigger` en plantillas; un solo control para atajos y botones |
+| Icono de bocina con `Path` y `DataTrigger` (ondas tachadas) | Glifo de Segoe Fluent Icons (`MusicGlyphs.Speaker`) | Igual que la música |
+| Paso 5 "Música y selector de canciones" (bocina de la firma y `SongPicker`) | "Música y fondos" (tarjetas 05 MÚSICA y 02 CAMBIAR FONDO) | En WinUI el selector de canciones es una pantalla y los fondos también |
+| Textos del manual en `appsettings.json` (`Texts:Manual`) | En `Textos.xaml` (`Text.Manual.*`); en `appsettings.json` solo rutas, volúmenes y tiempos | Igual que el resto de la app WinUI |

@@ -8,8 +8,12 @@ public static class MusicGlyphs
     private const string Pause = "\uE769";
     private const string NoteOn = "\uE8D6";
     private const string NoteMuted = "\uE74F";
+    private const string SpeakerOn = "\uE767";
 
     public static string PlayPause(bool isPlaying) => isPlaying ? Pause : Play;
 
     public static string Note(bool isMuted) => isMuted ? NoteMuted : NoteOn;
+
+    /// <summary>Bocina de SILENCIAR en el manual (tachada con el manual en silencio).</summary>
+    public static string Speaker(bool isMuted) => isMuted ? NoteMuted : SpeakerOn;
 }

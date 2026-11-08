@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fondo compartido de Dashboard, Sala y Fondos (va detrás del Frame): degradado del login, imagen o cuadro fijo,
+     video en bucle y en silencio, velo oscuro en lugar del desenfoque, y viñeta -->
+<UserControl x:Class="COT_0.HostWinUI.Views.Componentes.CapaFondo"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             IsHitTestVisible="False" IsTabStop="False"
+             Visibility="{x:Bind ViewModel.IsActive, Mode=OneWay}">
+    <Grid Background="{StaticResource LoginBaseBrush}">
+        <Rectangle Fill="{StaticResource LoginBackgroundBrush}"/>
+        <MediaPlayerElement x:Name="Video" Stretch="UniformToFill" AreTransportControlsEnabled="False"
+                            Visibility="{x:Bind ViewModel.IsVideoVisible, Mode=OneWay}"/>
+        <Image Source="{x:Bind ViewModel.Still, Mode=OneWay}" Stretch="UniformToFill"
+               Visibility="{x:Bind ViewModel.IsStillVisible, Mode=OneWay}"/>
+        <!-- El velo cambia con una transición implícita (corre en el compositor) -->
+        <Rectangle Fill="Black" Opacity="{x:Bind ViewModel.VeilOpacity, Mode=OneWay}">
+            <Rectangle.OpacityTransition>
+                <ScalarTransition Duration="0:0:0.3"/>
+            </Rectangle.OpacityTransition>
+        </Rectangle>
+        <Rectangle Fill="{StaticResource VignetteBrush}"/>
+    </Grid>
+</UserControl>

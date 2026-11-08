@@ -11,6 +11,8 @@ public record AppSettings(
     UiSettings Ui,
     PathsSettings Paths,
     AudioSettings Audio,
+    BackgroundSettings Background,
+    ManualSettings Manual,
     LinksSettings Links,
     TunnelSettings Tunnel,
     QrSettings Qr,
