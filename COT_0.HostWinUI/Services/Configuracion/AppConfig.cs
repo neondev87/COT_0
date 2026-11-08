@@ -3,20 +3,6 @@ using System.Text.Json;
 
 namespace COT_0.HostWinUI.Services.Configuracion;
 
-public record WindowSettings(int Width, int Height);
-
-public record StorageSettings(string Folder, string UsersFile, string VisitsFile);
-
-public record SecuritySettings(int SaltBytes, int HashBytes, int HashIterations);
-
-public record ValidationSettings(int MaxUserLength, int MaxPasswordLength);
-
-public record AppSettings(
-    WindowSettings Window,
-    StorageSettings Storage,
-    SecuritySettings Security,
-    ValidationSettings Validation);
-
 /// <summary>Configuración de la app, cargada de appsettings.json junto al .exe.</summary>
 public static class AppConfig
 {

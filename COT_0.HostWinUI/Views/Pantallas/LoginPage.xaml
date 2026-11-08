@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Login del host: mismo look que el WPF (fondo ASCII con niebla, título Cinzel, campos con línea de acento) -->
+<!-- Login del host: mismo look que el WPF (fondo ASCII con niebla, título Cinzel, campos con línea de acento), con registro + pregunta secreta y recuperación de contraseña -->
 <Page x:Class="COT_0.HostWinUI.Views.Pantallas.LoginPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:componentes="using:COT_0.HostWinUI.Views.Componentes"
       Background="{StaticResource LoginBaseBrush}">
 
     <Page.Resources>
@@ -93,24 +94,45 @@
                 </StackPanel>
             </StackPanel>
 
-            <StackPanel Margin="0,0,0,22">
-                <TextBlock Text="{StaticResource Text.Login.User}" Style="{StaticResource FieldLabelText}"/>
-                <TextBox x:Name="UserBox" Style="{StaticResource LoginTextBox}" PlaceholderText="{StaticResource Text.Login.UserPlaceholder}"
-                         Text="{x:Bind ViewModel.UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </StackPanel>
-
-            <StackPanel>
+            <!-- ENTRAR / REGISTRARME: usuario y contraseña -->
+            <StackPanel Visibility="{x:Bind ViewModel.IsCredentialsVisible, Mode=OneWay}">
+                <StackPanel Margin="0,0,0,22">
+                    <TextBlock Text="{StaticResource Text.Login.User}" Style="{StaticResource FieldLabelText}"/>
+                    <TextBox x:Name="UserBox" Style="{StaticResource LoginTextBox}" PlaceholderText="{StaticResource Text.Login.UserPlaceholder}"
+                             Text="{x:Bind ViewModel.UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
                 <TextBlock Text="{StaticResource Text.Login.Password}" Style="{StaticResource FieldLabelText}"/>
                 <PasswordBox Style="{StaticResource LoginPasswordBox}" PlaceholderText="{StaticResource Text.Login.PasswordPlaceholder}"
                              Password="{x:Bind ViewModel.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Style="{StaticResource LoginLinkButton}" Content="{StaticResource Text.Login.Forgot}"
+                        Visibility="{x:Bind ViewModel.IsForgotVisible, Mode=OneWay}" Command="{x:Bind ViewModel.ForgotCommand}"/>
             </StackPanel>
 
-            <!-- Errores de validación o de login -->
+            <!-- REGISTRARME o cuenta vieja sin pregunta: pregunta secreta y respuesta -->
+            <StackPanel Visibility="{x:Bind ViewModel.IsQuestionVisible, Mode=OneWay}" Margin="0,22,0,0">
+                <TextBlock Text="{StaticResource Text.Question.Label}" Style="{StaticResource FieldLabelText}"/>
+                <ComboBox Style="{StaticResource LoginComboBox}" PlaceholderText="{StaticResource Text.Question.Placeholder}"
+                          ItemsSource="{x:Bind ViewModel.Question.Questions}" DisplayMemberPath="Text"
+                          SelectedItem="{x:Bind ViewModel.Question.SelectedQuestion, Mode=TwoWay}"/>
+                <TextBlock Text="{StaticResource Text.Question.Answer}" Style="{StaticResource FieldLabelText}" Margin="0,22,0,8"/>
+                <TextBox Style="{StaticResource LoginTextBox}" PlaceholderText="{StaticResource Text.Question.AnswerPlaceholder}"
+                         Text="{x:Bind ViewModel.Question.Answer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+
+            <!-- ¿Olvidaste tu contraseña? -->
+            <componentes:FormularioRecuperacion ViewModel="{x:Bind ViewModel.Recovery}"
+                                                Visibility="{x:Bind ViewModel.IsRecoverVisible, Mode=OneWay}"/>
+
+            <!-- Errores de validación o de login, y aviso de contraseña cambiada -->
             <InfoBar Severity="Error" Margin="0,16,0,0" Title="{StaticResource Text.Login.ErrorTitle}"
                      Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
                      IsOpen="{x:Bind ViewModel.IsErrorOpen, Mode=TwoWay}"/>
+            <InfoBar Severity="Success" Margin="0,16,0,0" Title="{StaticResource Text.Login.SuccessTitle}"
+                     Message="{StaticResource Text.Recovery.Done}"
+                     IsOpen="{x:Bind ViewModel.IsSuccessOpen, Mode=TwoWay}"/>
 
             <Button Style="{StaticResource LoginButton}" Margin="0,24,0,0" Content="{x:Bind ViewModel.ButtonText, Mode=OneWay}"
+                    Visibility="{x:Bind ViewModel.IsSubmitVisible, Mode=OneWay}"
                     Command="{x:Bind ViewModel.SubmitCommand}" KeyboardAcceleratorPlacementMode="Hidden">
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="Enter"/>

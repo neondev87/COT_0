@@ -2,6 +2,7 @@
 using COT_0.Core.Services;
 using COT_0.HostWinUI.Services.Dialogos;
 using COT_0.HostWinUI.Services.Sala;
+using COT_0.HostWinUI.Services.Sesiones;
 using COT_0.HostWinUI.Services.Tiempo;
 using COT_0.HostWinUI.Services.Tunel;
 using COT_0.HostWinUI.Services.Visitas;
@@ -53,7 +54,10 @@ public partial class App : Application
             .AddSingleton<ClockService>()
             .AddSingleton<ConfirmDialogService>()
             .AddSingleton<VisitWatcher>()
+            // Registrado pero todavía sin crear: se resuelve al migrar SalaPage (ver docs/ESTRUCTURA.md)
+            .AddSingleton<SesionWatcher>()
             .AddSingleton<ConnectedUsersViewModel>()
+            .AddSingleton<DashboardViewModel>()
             .BuildServiceProvider();
     }
 

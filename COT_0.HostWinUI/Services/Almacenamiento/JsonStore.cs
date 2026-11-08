@@ -32,6 +32,10 @@ public static class JsonStore
         return await JsonSerializer.DeserializeAsync<T>(stream, _options) ?? new T();
     }
 
+    /// <summary>true si el error viene de leer o escribir el archivo (o de un JSON dañado).</summary>
+    public static bool IsStorageError(Exception ex) =>
+        ex is IOException or JsonException or UnauthorizedAccessException or FormatException;
+
     /// <summary>Escribe el objeto completo, con sangría para que se pueda leer a mano.</summary>
     public static async Task SaveAsync<T>(string fileName, T data)
     {

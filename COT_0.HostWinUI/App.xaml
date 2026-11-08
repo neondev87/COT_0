@@ -33,6 +33,16 @@
             <SolidColorBrush x:Key="TextBrush" Color="#ECEAF0"/>
             <SolidColorBrush x:Key="Text62Brush" Color="#9EECEAF0"/>
             <SolidColorBrush x:Key="Light60Brush" Color="#99E6E6E6"/>
+            <SolidColorBrush x:Key="Text70Brush" Color="#B3ECEAF0"/>
+            <SolidColorBrush x:Key="Text58Brush" Color="#94ECEAF0"/>
+            <SolidColorBrush x:Key="Text55Brush" Color="#8CECEAF0"/>
+            <SolidColorBrush x:Key="Text40Brush" Color="#66ECEAF0"/>
+
+            <!-- Tarjetas del menú del dashboard -->
+            <SolidColorBrush x:Key="CardFaceBrush" Color="#ECEAF0"/>
+            <SolidColorBrush x:Key="DarkInkBrush" Color="#15121B"/>
+            <SolidColorBrush x:Key="CardSubBrush" Color="#55505E"/>
+            <SolidColorBrush x:Key="WhiteSubBrush" Color="#E0FFFFFF"/>
 
             <!-- Paneles, filas y avatares de la sala -->
             <SolidColorBrush x:Key="PanelBrush" Color="#05FFFFFF"/>
@@ -93,6 +103,8 @@
             <FontFamily x:Key="FontCinzel">ms-appx:///Assets/Fuentes/Cinzel-700.ttf#Cinzel</FontFamily>
             <FontFamily x:Key="FontCondensedLight">ms-appx:///Assets/Fuentes/BarlowCondensed-300.ttf#Barlow Condensed Light</FontFamily>
             <FontFamily x:Key="FontCondensedBold">ms-appx:///Assets/Fuentes/BarlowCondensed-700.ttf#Barlow Condensed</FontFamily>
+            <FontFamily x:Key="FontCondensedExtraLight">ms-appx:///Assets/Fuentes/BarlowCondensed-200.ttf#Barlow Condensed ExtraLight</FontFamily>
+            <FontFamily x:Key="FontCondensedExtraBold">ms-appx:///Assets/Fuentes/BarlowCondensed-800Italic.ttf#Barlow Condensed ExtraBold</FontFamily>
             <FontFamily x:Key="FontInter">ms-appx:///Assets/Fuentes/Inter-400.ttf#Inter</FontFamily>
             <FontFamily x:Key="FontInterMedium">ms-appx:///Assets/Fuentes/Inter-500.ttf#Inter</FontFamily>
 
@@ -135,6 +147,51 @@
             <Style x:Key="LoginTextBox" TargetType="TextBox" BasedOn="{StaticResource LoginFieldStyle}"/>
             <Style x:Key="LoginPasswordBox" TargetType="PasswordBox" BasedOn="{StaticResource LoginFieldStyle}">
                 <Setter Property="PasswordRevealMode" Value="Hidden"/>
+            </Style>
+
+            <Style x:Key="LoginComboBox" TargetType="ComboBox" BasedOn="{StaticResource DefaultComboBoxStyle}">
+                <Setter Property="Height" Value="{StaticResource InputHeight}"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="FontFamily" Value="{StaticResource FontBarlow}"/>
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="CornerRadius" Value="0"/>
+                <Setter Property="Background" Value="{StaticResource InputBrush}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource Light28Brush}"/>
+                <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                <Setter Property="Foreground" Value="{StaticResource LightBrush}"/>
+            </Style>
+
+            <!-- Enlace del login ("¿Olvidaste tu contraseña?", "Volver"): solo texto que se aclara con el mouse -->
+            <Style x:Key="LoginLinkButton" TargetType="Button">
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="Padding" Value="0,8"/>
+                <Setter Property="Foreground" Value="{StaticResource Light55Brush}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid Background="Transparent" Padding="{TemplateBinding Padding}">
+                                <TextBlock x:Name="Label" Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}"
+                                           FontFamily="{StaticResource FontBarlow}" FontSize="13"/>
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal"/>
+                                        <VisualState x:Name="PointerOver">
+                                            <VisualState.Setters>
+                                                <Setter Target="Label.Foreground" Value="{StaticResource WhiteBrush}"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="Pressed">
+                                            <VisualState.Setters>
+                                                <Setter Target="Label.Foreground" Value="{StaticResource AccentBrush}"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="Disabled"/>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
 
             <!-- Textos con espaciado (CharacterSpacing va en milésimas de em) -->

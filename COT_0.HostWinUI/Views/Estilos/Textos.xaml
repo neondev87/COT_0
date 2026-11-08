@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Textos visibles de la app (español de México, con "tú"). Se usan con {StaticResource} -->
+<!-- Textos visibles de la app (español de México, con "tú"). Se usan con {StaticResource} o UiText.Get -->
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
@@ -10,16 +10,42 @@
     <x:String x:Key="Text.Login.TitleStart">COT</x:String>
     <x:String x:Key="Text.Login.TitleCursor">_</x:String>
     <x:String x:Key="Text.Login.TitleEnd">0</x:String>
-    <x:String x:Key="Text.Login.Subtitle">ACCESO DEL HOST</x:String>
-    <x:String x:Key="Text.Login.SubtitleRegister">CREA TU CUENTA DE HOST</x:String>
+    <x:String x:Key="Text.Login.Subtitle.SignIn">ACCESO DEL HOST</x:String>
+    <x:String x:Key="Text.Login.Subtitle.Register">CREA TU CUENTA DE HOST</x:String>
+    <x:String x:Key="Text.Login.Subtitle.Recover">RECUPERA TU CONTRASEÑA</x:String>
+    <x:String x:Key="Text.Login.Subtitle.SetupQuestion">CONFIGURA TU PREGUNTA SECRETA</x:String>
     <x:String x:Key="Text.Login.User">USUARIO</x:String>
     <x:String x:Key="Text.Login.UserPlaceholder">nombre del host</x:String>
     <x:String x:Key="Text.Login.Password">CONTRASEÑA</x:String>
     <x:String x:Key="Text.Login.PasswordPlaceholder">••••••••</x:String>
-    <x:String x:Key="Text.Login.Enter">ENTRAR</x:String>
-    <x:String x:Key="Text.Login.Register">REGISTRARME</x:String>
+    <x:String x:Key="Text.Login.Button.SignIn">ENTRAR</x:String>
+    <x:String x:Key="Text.Login.Button.Register">REGISTRARME</x:String>
+    <x:String x:Key="Text.Login.Button.Recover">CONTINUAR</x:String>
+    <x:String x:Key="Text.Login.Button.SetupQuestion">GUARDAR Y ENTRAR</x:String>
+    <x:String x:Key="Text.Login.Forgot">¿Olvidaste tu contraseña?</x:String>
     <x:String x:Key="Text.Login.Footer">SALAS DE CHAT POR QR</x:String>
     <x:String x:Key="Text.Login.ErrorTitle">Revisa tus datos</x:String>
+    <x:String x:Key="Text.Login.SuccessTitle">Listo</x:String>
+
+    <!-- Pregunta secreta -->
+    <x:String x:Key="Text.Question.Label">PREGUNTA SECRETA</x:String>
+    <x:String x:Key="Text.Question.Placeholder">Elige una pregunta</x:String>
+    <x:String x:Key="Text.Question.Answer">RESPUESTA</x:String>
+    <x:String x:Key="Text.Question.AnswerPlaceholder">tu respuesta</x:String>
+    <x:String x:Key="Text.Question.Fruit">¿Cuál es tu fruta favorita?</x:String>
+    <x:String x:Key="Text.Question.Pet">¿Cómo se llamaba tu primera mascota?</x:String>
+    <x:String x:Key="Text.Question.City">¿En qué ciudad naciste?</x:String>
+    <x:String x:Key="Text.Question.Teacher">¿Cómo se llamaba tu maestro favorito de la primaria?</x:String>
+    <x:String x:Key="Text.Question.Anime">¿Cuál es tu anime favorito?</x:String>
+    <x:String x:Key="Text.Question.Song">¿Cuál es tu canción favorita?</x:String>
+
+    <!-- Recuperar contraseña -->
+    <x:String x:Key="Text.Recovery.NewPassword">CONTRASEÑA NUEVA</x:String>
+    <x:String x:Key="Text.Recovery.ConfirmPassword">ESCRÍBELA OTRA VEZ</x:String>
+    <x:String x:Key="Text.Recovery.Verify">VERIFICAR</x:String>
+    <x:String x:Key="Text.Recovery.Save">CAMBIAR CONTRASEÑA</x:String>
+    <x:String x:Key="Text.Recovery.Back">Volver al inicio de sesión</x:String>
+    <x:String x:Key="Text.Recovery.Done">Tu contraseña cambió. Entra con la nueva.</x:String>
 
     <!-- Mensajes del login -->
     <x:String x:Key="Text.Error.UserEmpty">Escribe tu usuario.</x:String>
@@ -28,9 +54,32 @@
     <x:String x:Key="Text.Error.PasswordEmpty">Escribe tu contraseña.</x:String>
     <x:String x:Key="Text.Error.PasswordInvalid">Tu contraseña solo puede tener letras y números, sin espacios ni símbolos.</x:String>
     <x:String x:Key="Text.Error.PasswordTooLong">Tu contraseña es demasiado larga.</x:String>
+    <x:String x:Key="Text.Error.PasswordMismatch">Las dos contraseñas no coinciden.</x:String>
+    <x:String x:Key="Text.Error.QuestionEmpty">Elige una pregunta secreta.</x:String>
+    <x:String x:Key="Text.Error.AnswerEmpty">Escribe tu respuesta.</x:String>
+    <x:String x:Key="Text.Error.AnswerTooLong">Tu respuesta es demasiado larga.</x:String>
+    <x:String x:Key="Text.Error.WrongAnswer">La respuesta no coincide.</x:String>
+    <x:String x:Key="Text.Error.NoQuestion">Tu cuenta no tiene pregunta secreta, así que no se puede recuperar la contraseña.</x:String>
     <x:String x:Key="Text.Error.WrongCredentials">Usuario o contraseña incorrectos.</x:String>
-    <x:String x:Key="Text.Error.UserTaken">Ese usuario ya existe. Elige otro.</x:String>
+    <x:String x:Key="Text.Error.UserTaken">Ya hay un host registrado en esta computadora.</x:String>
     <x:String x:Key="Text.Error.Storage">No se pudo leer o guardar tu cuenta. Inténtalo de nuevo.</x:String>
+
+    <!-- Dashboard -->
+    <x:String x:Key="Text.Dashboard.Status">ESTADO</x:String>
+    <x:String x:Key="Text.Dashboard.Active">SALA ACTIVA</x:String>
+    <x:String x:Key="Text.Dashboard.Inactive">SALA INACTIVA</x:String>
+    <x:String x:Key="Text.Dashboard.Connected">· {0} conectados</x:String>
+    <x:String x:Key="Text.Dashboard.Footer">RED LOCAL</x:String>
+    <x:String x:Key="Text.Dashboard.QrTitle">GENERAR QR</x:String>
+    <x:String x:Key="Text.Dashboard.QrSubtitle">Crear una sala nueva</x:String>
+    <x:String x:Key="Text.Dashboard.RoomTitle">SALA</x:String>
+    <x:String x:Key="Text.Dashboard.RoomSubtitle">Volver a la sala activa</x:String>
+    <x:String x:Key="Text.Dashboard.BackgroundTitle">CAMBIAR FONDO</x:String>
+    <x:String x:Key="Text.Dashboard.BackgroundSubtitle">Próximamente en WinUI</x:String>
+    <x:String x:Key="Text.Dashboard.ManualTitle">MANUAL</x:String>
+    <x:String x:Key="Text.Dashboard.ManualSubtitle">Guía de uso</x:String>
+    <x:String x:Key="Text.Dashboard.ExitTitle">SALIR</x:String>
+    <x:String x:Key="Text.Dashboard.ExitSubtitle">Cerrar sesión</x:String>
 
     <!-- Lista de conectados -->
     <x:String x:Key="Text.Room.ColumnUser">USUARIO</x:String>

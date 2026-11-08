@@ -1,4 +1,4 @@
-// Revisa usuario y contraseña antes de intentar el login o el registro
+// Revisa usuario y contraseña antes del login, del registro o del cambio de contraseña
 using COT_0.HostWinUI.Models;
 using COT_0.HostWinUI.Services.Configuracion;
 
@@ -15,12 +15,23 @@ public static class CredentialValidator
         if (string.IsNullOrEmpty(userName)) return CredentialError.UserEmpty;
         if (!IsAlphanumeric(userName)) return CredentialError.UserInvalid;
         if (userName.Length > Limits.MaxUserLength) return CredentialError.UserTooLong;
+        return ValidatePassword(password);
+    }
 
+    public static CredentialError ValidatePassword(string password)
+    {
         if (string.IsNullOrEmpty(password)) return CredentialError.PasswordEmpty;
         if (!IsAlphanumeric(password)) return CredentialError.PasswordInvalid;
         if (password.Length > Limits.MaxPasswordLength) return CredentialError.PasswordTooLong;
-
         return CredentialError.None;
+    }
+
+    /// <summary>Contraseña nueva: mismas reglas y escrita igual las dos veces.</summary>
+    public static CredentialError ValidateNewPassword(string password, string confirmation)
+    {
+        var error = ValidatePassword(password);
+        if (error != CredentialError.None) return error;
+        return password == confirmation ? CredentialError.None : CredentialError.PasswordMismatch;
     }
 
     private static bool IsAlphanumeric(string text) => text.All(char.IsLetterOrDigit);
