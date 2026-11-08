@@ -1,5 +1,6 @@
 // Punto de entrada: arma los servicios, muestra la ventana y levanta la web en segundo plano
 using COT_0.Core.Services;
+using COT_0.Host.Services.Configuracion;
 using COT_0.Host.Services.Dialogos;
 using COT_0.Host.Services.Fondos;
 using COT_0.Host.Services.Manual;
@@ -28,6 +29,8 @@ public partial class App : Application
     protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
         UiThread.Attach(DispatcherQueue.GetForCurrentThread());
+        // Lee appsettings.json sin trabar la UI; todo lo demás depende de esto
+        await AppConfig.LoadAsync();
         Services = BuildServices();
 
         _window = new MainWindow();
@@ -45,10 +48,7 @@ public partial class App : Application
 
     private static ServiceProvider BuildServices()
     {
-        var configuration = new ConfigurationBuilder()
-            .SetBasePath(AppContext.BaseDirectory)
-            .AddJsonFile("appsettings.json", optional: false)
-            .Build();
+        var configuration = AppConfig.BuildConfiguration();
 
         return new ServiceCollection()
             .AddSingleton<IConfiguration>(configuration)

@@ -27,7 +27,7 @@ public static class JsonStore
         var path = Path.Combine(Folder, fileName);
         if (!File.Exists(path)) return new T();
 
-        await using var stream = File.OpenRead(path);
+        await using var stream = AsyncFiles.OpenRead(path);
         if (stream.Length == 0) return new T();
         return await JsonSerializer.DeserializeAsync<T>(stream, _options) ?? new T();
     }
@@ -40,7 +40,7 @@ public static class JsonStore
     public static async Task SaveAsync<T>(string fileName, T data)
     {
         var path = Path.Combine(Folder, fileName);
-        await using var stream = File.Create(path);
+        await using var stream = AsyncFiles.Create(path);
         await JsonSerializer.SerializeAsync(stream, data, _options);
     }
 }

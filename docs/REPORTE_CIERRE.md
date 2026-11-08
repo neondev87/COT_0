@@ -73,12 +73,11 @@ Por importancia:
 
 1. **Correr completo `PRUEBAS_MANUALES.md`** en la app final antes de entregar (túnel, QR, chat desde el celular, música, fondos, manual).
 2. **Interfaces en Core para los servicios del Host** que hoy son estáticos o concretos (`UserService`, `VisitService`, `SesionService`, `PasswordRecoveryService`, y la parte sin vista de `QrService`/`MusicService`), para cumplir "todo servicio tiene interfaz en Core" (propuestas en `CONTRATO.md`).
-3. **`AppConfig` async** (hoy lee `appsettings.json` con `File.ReadAllText` una vez al arrancar) y `FileStream` con `useAsync: true` en `JsonStore`/`FrameFiles`.
-4. **Partir `App.xaml` (621 líneas) y `Textos.xaml` (258)** en diccionarios por pantalla, respetando el límite de WinUI (un diccionario mezclado en `App.xaml` no ve las claves de `App.xaml`).
-5. **SUBIR MÚSICA** en `MusicaPage` con `FileOpenPicker`.
-6. **Pasar voz e imagen a `ChatMessage.Kind`** en el render y el hub (hoy se reconocen por texto reservado).
-7. **Limpieza automática** de `cache\fondos` (JPEG de videos que ya no existen) y tope o rotación de `registro-medios.jsonl`.
-8. Opcional: apagar Kestrel también al cerrar la sala; capturas reales del manual (`manual\pasos\pasoN.png`).
+3. **Partir `App.xaml` (621 líneas) y `Textos.xaml` (258)** en diccionarios por pantalla, respetando el límite de WinUI (un diccionario mezclado en `App.xaml` no ve las claves de `App.xaml`).
+4. **SUBIR MÚSICA** en `MusicaPage` con `FileOpenPicker`.
+5. **Pasar voz e imagen a `ChatMessage.Kind`** en el render y el hub (hoy se reconocen por texto reservado).
+6. **Limpieza automática** de `cache\fondos` (JPEG de videos que ya no existen) y tope o rotación de `registro-medios.jsonl`.
+7. Opcional: apagar Kestrel también al cerrar la sala; capturas reales del manual (`manual\pasos\pasoN.png`).
 
 ## CÓMO CORRERLO Y VOLVER ATRÁS
 

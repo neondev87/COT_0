@@ -1,4 +1,5 @@
 // Guarda en disco (JPEG) la imagen que entrega Windows para un cuadro de video
+using COT_0.Host.Services.Almacenamiento;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
 
@@ -12,7 +13,7 @@ public static class FrameFiles
     {
         var decoder = await BitmapDecoder.CreateAsync(source);
         using var bitmap = await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore);
-        await using var file = File.Create(output);
+        await using var file = AsyncFiles.Create(output);
         var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, file.AsRandomAccessStream());
         encoder.SetSoftwareBitmap(bitmap);
         await encoder.FlushAsync();
@@ -21,7 +22,7 @@ public static class FrameFiles
     /// <summary>Copia tal cual (MediaComposition ya entrega JPEG).</summary>
     public static async Task CopyAsync(IRandomAccessStream source, string output)
     {
-        await using var file = File.Create(output);
+        await using var file = AsyncFiles.Create(output);
         await source.AsStreamForRead().CopyToAsync(file);
     }
 }

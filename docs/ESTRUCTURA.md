@@ -115,10 +115,10 @@ COT_0.Host/
 │   ├── ManualDemoRow.cs          Fila ficticia de las vistas de ejemplo del manual (emote o canción)
 │   └── ConfirmTexts.cs           Textos del diálogo sí/no
 ├── Services/
-│   ├── Almacenamiento/           JsonStore: lee y guarda cualquier clase en %LocalAppData%\COT_0\*.json (async)
+│   ├── Almacenamiento/           JsonStore: lee y guarda cualquier clase en %LocalAppData%\COT_0\*.json (async); AsyncFiles: FileStream con useAsync
 │   ├── Cache/                    CacheFolders: %LocalAppData%\COT_0\cache\<nombre> y la llave (hash de ruta + tamaño + fecha)
 │   ├── Registro/                 MediaLog: fallas de video, miniaturas y portadas en registro-medios.jsonl
-│   ├── Configuracion/            AppConfig (lee appsettings.json) + AppSettings y un record por sección (Window, Storage, Security,
+│   ├── Configuracion/            AppConfig (LoadAsync de appsettings.json al arrancar) + AppSettings y un record por sección (Window, Storage, Security,
 │   │                             Validation, Recovery, Ui, Paths, Audio, Background, Manual, ManualDemo*, Branding, Tunnel, Qr, Web)
 │   ├── Dialogos/                 ConfirmDialogService: abre el diálogo sí/no sobre la ventana
 │   ├── Fondos/                   FondoCatalog (IBackgroundCatalog: lee la carpeta), FondoStore (fondos.json), FondoService (catálogo,

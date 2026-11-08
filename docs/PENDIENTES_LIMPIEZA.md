@@ -21,7 +21,7 @@ Solo lo que sigue pendiente después del cierre de la migración (08/11, rama `h
 - **Kestrel queda arriba con la sala cerrada** (se apaga al cerrar la ventana). Para apagarlo también al cerrar la sala habría que pedir `IChatService`/`IRoomService` a la web nueva en cada ViewModel (hoy se guardan una vez como Singleton).
 - **`ConnectedUsersViewModel` y `SalaViewModel`** se suscriben a eventos de la web y del reloj sin soltarlos: es intencional (viven lo que la app), pero si se cambian a Transient habría que desuscribir.
 - **`ChatMessage.Kind`**: el render y el hub todavía reconocen voz e imagen por el texto reservado (`VoiceNote` / `ImageNote`); pasar a `Kind` quedó para después (ver `CONTRATO.md`).
-- Incumplimientos menores anotados en `CUMPLIMIENTO.md`: `AppConfig` lee `appsettings.json` de forma síncrona, `App.xaml` y `Textos.xaml` pasan de 200 líneas, y varios servicios del Host no tienen interfaz en Core.
+- Incumplimientos menores anotados en `CUMPLIMIENTO.md`: `App.xaml` y `Textos.xaml` pasan de 200 líneas, y varios servicios del Host no tienen interfaz en Core. El acceso a disco ya es async (`AppConfig.LoadAsync`, `AsyncFiles`); lo que queda síncrono a propósito está en `CUMPLIMIENTO.md`.
 
 ## Opcional
 
