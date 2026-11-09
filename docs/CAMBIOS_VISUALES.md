@@ -351,3 +351,10 @@ Lain queda debajo de sus avisos (la figura empieza ~120 px más abajo del borde 
 | Video de 900 × 634 al 45 % con degradados de 120/40/40 px pensados para Lain y nada abajo: rectángulo azul (#06122C) con bordes marcados y una franja clara a la izquierda (la orilla izquierda del video original es más clara) | Mismo video, tamaño y opacidad, con **degradados hacia adentro en los cuatro lados** (180 px a los lados y 127 arriba y abajo, 20 % de cada lado) que llevan su azul al negro, y **franjas negras hacia afuera** (120 px a los lados, 80 arriba, esquinas radiales). Todo dentro de `VideoHost` con una sola opacidad (0.45): no queda borde ni parche de otro tono, solo una penumbra negra que se pierde en el velo |
 
 El panel de vidrio con "Gracias por estar aquí. Vuelve pronto." y CERRAR no cambia y queda encima. Sin blur, sin shader ni `OpacityMask` (WinUI no lo tiene en `UIElement`; una máscara por Composition sobre el video no se puede revisar sin ver la app).
+
+### Sin letreros de atajos ("Enter", "Esc", flechas)
+
+| Antes | Ahora |
+|---|---|
+| Al pasar el mouse por el Manual salía un letrero "Enter" (tooltip automático de WinUI para los `KeyboardAccelerators` de la página); igual "Esc" en ← INICIO de las pantallas internas | `KeyboardAcceleratorPlacementMode="Hidden"` en `ManualPage` y en el botón ← INICIO de `EncabezadoPantalla` (APLICAR de Emotes ya lo tenía). Por defecto: `ShortcutHints` en cada página al navegar y `Hidden` en los estilos de botón. Los atajos funcionan igual |
+| Tooltips en ✕ de conectados ("Sacar de la sala"), en cada fondo (nombre del archivo) y en anterior / reproducir / siguiente de Música | Quitados (se conserva su `AutomationProperties.Name`). Solo quedan el del logo Neondev y los de las bocinas |

@@ -77,7 +77,7 @@
                                 <TextBlock Text="{StaticResource Text.Room.GuestRole}" Style="{StaticResource InterText}" Margin="0,3,0,0"/>
                             </StackPanel>
                             <TextBlock Grid.Column="2" Text="{x:Bind Since, Mode=OneWay}" Style="{StaticResource RowSinceText}"/>
-                            <Button Grid.Column="3" Style="{StaticResource KickButton}" ToolTipService.ToolTip="{StaticResource Text.Room.Kick}"
+                            <Button Grid.Column="3" Style="{StaticResource KickButton}"
                                     AutomationProperties.Name="{StaticResource Text.Room.Kick}"
                                     Click="OnKickClick"/>
                         </Grid>

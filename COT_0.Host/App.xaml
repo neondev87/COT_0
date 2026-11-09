@@ -11,6 +11,11 @@
                 <ResourceDictionary Source="ms-appx:///Views/Estilos/Textos.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
+            <!-- Botones sin estilo propio: sin el letrero automático de sus atajos (ver Services/Ventana/ShortcutHints) -->
+            <Style TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+                <Setter Property="KeyboardAcceleratorPlacementMode" Value="Hidden"/>
+            </Style>
+
             <!-- Paleta base -->
             <Color x:Key="AccentColor">#B3122E</Color>
             <Color x:Key="TransparentAccentColor">#00B3122E</Color>
@@ -448,6 +453,7 @@
             <!-- Botón de solo texto (INICIO, QUITAR, IGNORAR, RESTAURAR, controles de música):
                  se aclara con el mouse y se corre 4 px a la izquierda -->
             <Style x:Key="TextButton" TargetType="Button">
+                <Setter Property="KeyboardAcceleratorPlacementMode" Value="Hidden"/>
                 <Setter Property="MinHeight" Value="{StaticResource MinHitSize}"/>
                 <Setter Property="Padding" Value="8,0"/>
                 <Setter Property="Foreground" Value="{StaticResource Text62Brush}"/>
@@ -497,6 +503,7 @@
 
             <!-- APLICAR: bloque claro como las tarjetas del menú; con el mouse pasa al acento -->
             <Style x:Key="SolidButton" TargetType="Button">
+                <Setter Property="KeyboardAcceleratorPlacementMode" Value="Hidden"/>
                 <Setter Property="Height" Value="{StaticResource InputHeight}"/>
                 <Setter Property="Padding" Value="16,0"/>
                 <Setter Property="Foreground" Value="{StaticResource DarkInkBrush}"/>

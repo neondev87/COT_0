@@ -9,7 +9,7 @@
     xmlns:manual="using:COT_0.Host.Views.Componentes.Manual"
     xmlns:convertidores="using:COT_0.Host.Views.Convertidores"
       xmlns:vm="using:COT_0.Host.Views.ModelosDeVista"
-      Background="Transparent" IsTabStop="True" UseSystemFocusVisuals="False">
+      Background="Transparent" IsTabStop="True" UseSystemFocusVisuals="False" KeyboardAcceleratorPlacementMode="Hidden">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -19,6 +19,7 @@
         </ResourceDictionary>
     </Page.Resources>
 
+    <!-- Atajos sin letrero flotante ("Enter", "Esc"…): KeyboardAcceleratorPlacementMode="Hidden" en la página -->
     <Page.KeyboardAccelerators>
         <KeyboardAccelerator Key="Enter" Invoked="OnStartKey"/>
         <KeyboardAccelerator Key="Right" Invoked="OnNextKey"/>

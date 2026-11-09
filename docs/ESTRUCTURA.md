@@ -138,7 +138,8 @@ COT_0.Host/
 │   ├── Usuarios/                 UserService (registrar hasta Usuarios:Maximo, ENTRAR, pregunta al entrar), PasswordRecoveryService
 │   │                             (recuperación por usuario), HostAccounts (usuarios.json como lista; también lee la cuenta suelta) y SecretHasher (PBKDF2 + SHA-256 con salt)
 │   ├── Validaciones/             InputLimits (Inputs:MaxCaracteres), CredentialValidator (solo letras y números) y SecurityAnswerValidator (normaliza la respuesta)
-│   ├── Ventana/                  WindowSetup (tamaño y barra de título), Navigator (cambia de página) y CloseGuard (cerrar con sala activa)
+│   ├── Ventana/                  WindowSetup (tamaño y barra de título), Navigator (cambia de página), CloseGuard (cerrar con sala activa)
+│   │                             y ShortcutHints (atajos de teclado sin letrero flotante)
 │   └── Visitas/                  VisitService (visitas.json) y VisitWatcher (anota a cada invitado que entra)
 └── Views/
     ├── Pantallas/                Páginas del Frame: LoginPage, DashboardPage, SalaPage, EmotesPage, MusicaPage, FondosPage, ManualPage
@@ -250,3 +251,13 @@ En `%LocalAppData%\COT_0\`:
 - Fases: la fase 2i+1 muestra el aviso i y la 2i+2 lo quita; la última se queda. Los tiempos salen de `Manual:CueSeconds`.
 - Atajos: ENTER siguiente (después del último, despedida; en la despedida, cerrar), → / ← cambian de paso, ESC despedida y luego cerrar. ← INICIO regresa al dashboard en cualquier momento.
 - La despedida usa el mismo video y el mismo reproductor: un `StateTrigger` lo mueve al centro con menos opacidad.
+
+## Atajos de teclado sin letrero
+
+WinUI muestra un tooltip con la tecla ("Enter", "Esc", flechas) al pasar el mouse por cualquier elemento con `KeyboardAccelerators`, salvo que tenga `KeyboardAcceleratorPlacementMode="Hidden"`. En COT_0 ningún atajo muestra letrero:
+
+- `Services/Ventana/ShortcutHints.Hide(elemento)`: `Navigator` lo aplica a **toda página** al navegar.
+- Estilos con `Hidden` por defecto: el estilo implícito de `Button` y `TextButton` / `SolidButton` (`App.xaml`), y `BotonManualStyle` (`Views/Estilos/Manual.xaml`).
+- Además, explícito en cada dueño de atajos: `ManualPage` (ENTER, →, ←, ESC), el botón ← INICIO de `EncabezadoPantalla` (Esc) y APLICAR de `PanelEmotes` (Enter).
+- Atajo nuevo en otro tipo de elemento: poner `KeyboardAcceleratorPlacementMode="Hidden"` en el XAML o llamar a `ShortcutHints.Hide`.
+- Tooltips que sí se quedan (intencionales): logo Neondev ("Abrir el repositorio del proyecto") y las bocinas (firma, música y manual).

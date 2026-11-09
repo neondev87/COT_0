@@ -14,7 +14,11 @@ public static class Navigator
     public static void Attach(Frame frame)
     {
         _frame = frame;
-        frame.Navigated += (_, e) => PageChanged?.Invoke(e.SourcePageType);
+        frame.Navigated += (_, e) =>
+        {
+            if (e.Content is UIElement page) ShortcutHints.Hide(page);
+            PageChanged?.Invoke(e.SourcePageType);
+        };
     }
 
     /// <summary>Cambió la página visible (la capa del fondo decide si se ve o se pausa).</summary>

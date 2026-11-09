@@ -109,6 +109,7 @@
     <!-- BotonManual: atajo (keycap + acción) o botón redondeado. Sin tabulación: ENTER siempre es "empezar" -->
     <Style x:Key="BotonManualStyle" TargetType="manual:BotonManual">
         <Setter Property="IsTabStop" Value="False"/>
+        <Setter Property="KeyboardAcceleratorPlacementMode" Value="Hidden"/>
         <Setter Property="MinHeight" Value="32"/>
         <Setter Property="Padding" Value="0"/>
         <Setter Property="FontFamily" Value="{StaticResource FontInter}"/>

@@ -45,16 +45,16 @@
                        FontFamily="{StaticResource FontCondensedBold}" FontWeight="Bold" FontSize="24" Foreground="{StaticResource TextBrush}"/>
             <StackPanel Orientation="Horizontal" Margin="-10,12,0,0">
                 <Button Style="{StaticResource TextButton}" Command="{x:Bind ViewModel.PreviousCommand}"
-                        ToolTipService.ToolTip="{StaticResource Text.Music.Previous}" AutomationProperties.Name="{StaticResource Text.Music.Previous}">
+                        AutomationProperties.Name="{StaticResource Text.Music.Previous}">
                     <FontIcon Glyph="&#xE892;" FontFamily="{StaticResource FontIcons}" FontSize="18"/>
                 </Button>
                 <Button Style="{StaticResource TextButton}" Command="{x:Bind ViewModel.TogglePlayCommand}" Padding="14,0"
-                        ToolTipService.ToolTip="{StaticResource Text.Music.PlayPause}" AutomationProperties.Name="{StaticResource Text.Music.PlayPause}">
+                        AutomationProperties.Name="{StaticResource Text.Music.PlayPause}">
                     <FontIcon Glyph="{x:Bind convertidores:MusicGlyphs.PlayPause(ViewModel.IsPlaying), Mode=OneWay}"
                               FontFamily="{StaticResource FontIcons}" FontSize="26" Foreground="{StaticResource LightBrush}"/>
                 </Button>
                 <Button Style="{StaticResource TextButton}" Command="{x:Bind ViewModel.NextCommand}"
-                        ToolTipService.ToolTip="{StaticResource Text.Music.Next}" AutomationProperties.Name="{StaticResource Text.Music.Next}">
+                        AutomationProperties.Name="{StaticResource Text.Music.Next}">
                     <FontIcon Glyph="&#xE893;" FontFamily="{StaticResource FontIcons}" FontSize="18"/>
                 </Button>
             </StackPanel>

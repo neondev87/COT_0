@@ -41,7 +41,7 @@
         <GridView Grid.Row="3" ItemsSource="{x:Bind ViewModel.Items}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="OnItemClick">
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="vm:FondoRowViewModel">
-                    <StackPanel Width="256" Margin="4,4,4,12" ToolTipService.ToolTip="{x:Bind Fondo.FileName}">
+                    <StackPanel Width="256" Margin="4,4,4,12">
                         <Grid Width="256" Height="144" Background="{StaticResource PanelBrush}">
                             <FontIcon Glyph="&#xE91B;" FontFamily="{StaticResource FontIcons}" FontSize="32" Foreground="{StaticResource Light28Brush}"/>
                             <Image Source="{x:Bind Thumbnail, Mode=OneWay}" Stretch="UniformToFill"/>
