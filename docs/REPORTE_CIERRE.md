@@ -205,3 +205,17 @@ Se comparó `COT_0.Host` (WPF) contra el Host WinUI (entonces en otra carpeta) e
 - El Host no tiene cuadro de mensajes de chat (el chat vive en la web), así que no hubo campo que dejar libre.
 - `MusicService.cs` tenía un cambio sin commit (`_failures =25` en `MediaOpened`); se regresó a `0` en el commit del volumen porque rompía el salto de canciones ilegibles.
 - Verificación: `dotnet build COT_0.sln` en 0 errores y 0 warnings. La app no se abrió (sin capturas): filtro, ✕, pantalla completa y volumen quedan para `PRUEBAS_MANUALES.md`, sección 13. Las portadas sí se revisaron a ojo como imagen (completas y con acercamiento a los bordes).
+
+## Video en el Manual, audio inicial, cierre limpio y despedida (09/11)
+
+| Tarea | Commit | Archivos |
+|---|---|---|
+| 1. Video de fondo en el Manual | `e94a995` | `CapaFondoViewModel.cs` (el Manual ya no fuerza cuadro fijo; `_isManual`), `FondoPlayer.cs` (`SetSilenced`), `BackgroundSettings.cs` y `appsettings.json` (`Background:VideoMuted`), comentarios de `CapaFondo.xaml`, `Manual.xaml`, `ManualPage.xaml` |
+| 2. Audio inicial | `a487668` | `MusicService.cs` (abre y reproduce), `AudioSettings.cs` y `appsettings.json` (`Audio:InitialTrack` = 2, `Audio:TrackNameFormat`; se quitó `Audio:DefaultFile`) |
+| 3. Cierre limpio | `951c94e` | Nuevo: `Services/Ventana/AppShutdown.cs`. Cambiados: `CloseGuard.cs`, `App.xaml.cs` (ya no `Services.Dispose()` en `Window.Closed`), `MusicService.cs` (`Stop`, handlers con nombre), `ClockService.cs` (`Stop`), `UiThread.cs` (`Detach`), `FondoPlayer.cs`, `ManualVideo.cs`, `ManualSound.cs` (sin `IDisposable`) |
+| 4. Despedida centrada | `eb8ee65` | `ManualPage.xaml` (`VideoLayer` + panel debajo del video), `Manual.xaml` (tamaños, esquinas de abajo, `ManualFarewellText`) |
+
+- **Causa del crash al cerrar**: `App` hacía `Services.Dispose()` en `Window.Closed`, que liberaba los `MediaPlayer` de los fondos, la música y el Manual mientras la ventana seguía montada. (a) Con video de fondo (Dashboard/Sala) `Window.Close()` se quedaba colgado en el desmontaje; (b) desde el Manual, WinUI dispara `ManualPage.Unloaded` **después** de cerrar → `ManualViewModel.Leave()` → `ManualSound.Stop()` sobre un `MediaPlayer` ya liberado → `COMException 0x80004004` sin manejar → 0xC000027B (el mismo código y módulo que el visor de eventos tenía de las pruebas del 08/11). Confirmado con trazas temporales (no se subieron).
+- **Arreglo**: `AppShutdown.StopAsync` (detiene reloj y reproductores, apaga sala, vigilantes, túnel y Kestrel con async, y suelta `UiThread`), luego `Window.Close()` y al final `Release` (job de cloudflared). Los `MediaPlayer` ya no se liberan con `Dispose`: quedan detenidos y sin archivo, y Windows los suelta al terminar el proceso.
+- Verificación: build de `COT_0.Host` en 0 errores y 0 warnings (en una carpeta aparte: la app abierta desde Visual Studio bloqueaba `bin\`). Cierre probado con UI Automation (sin capturas) en una segunda instancia: Login, Dashboard y Manual × (✕ + SALIR dos veces, Alt+F4) = 9 de 9 con código de salida 0 y sin eventos de error; antes, el Manual daba 0xC000027B y el Dashboard se quedaba colgado. Despedida medida con UI Automation a 1920 × 1080: Cerrar en x 927–996 (centro 961) y 16 px libres arriba y abajo del grupo.
+- No verificado: cierre con la sala abierta (túnel y Kestrel reales; la segunda instancia no podía usar el puerto 5050), la despedida a 1280 × 720 (se calculó: el `Viewbox` la reduce a ~68 %), y a ojo el video del Manual, el sonido de Audio_02 y las orillas de la despedida.

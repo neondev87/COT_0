@@ -138,7 +138,8 @@ COT_0.Host/
 │   ├── Usuarios/                 UserService (registrar hasta Usuarios:Maximo, ENTRAR, pregunta al entrar), PasswordRecoveryService
 │   │                             (recuperación por usuario), HostAccounts (usuarios.json como lista; también lee la cuenta suelta) y SecretHasher (PBKDF2 + SHA-256 con salt)
 │   ├── Validaciones/             InputRules (regla única: solo letras y números), InputLimits (Inputs:MaxCaracteres), CredentialValidator y SecurityAnswerValidator (normaliza la respuesta)
-│   ├── Ventana/                  WindowSetup (pantalla completa), Navigator (cambia de página), CloseGuard (✕ y Alt+F4: pregunta antes de cerrar)
+│   ├── Ventana/                  WindowSetup (pantalla completa), Navigator (cambia de página), CloseGuard (✕ y Alt+F4: pregunta antes de cerrar),
+│   │                             AppShutdown (apagado en orden: reloj y reproductores → sala, túnel y Kestrel → ventana)
 │   │                             y ShortcutHints (atajos de teclado sin letrero flotante)
 │   └── Visitas/                  VisitService (visitas.json) y VisitWatcher (anota a cada invitado que entra)
 └── Views/
@@ -215,7 +216,7 @@ En `%LocalAppData%\COT_0\`:
 | 4 | `IRoomService.Open()` → `SesionWatcher` abre la sesión N+1 | Detiene cloudflared |
 
 - Si abrir falla, se sueltan los vigilantes y el error sale en un `InfoBar` con REINTENTAR (`RoomOpenErrors`: cloudflared no encontrado, túnel que no da URL a tiempo, túnel caído, puerto ocupado, servidor).
-- Kestrel no se apaga al cerrar la sala: `IChatService`/`IRoomService` salen del contenedor de la web y los ViewModels (Singleton) guardan esas instancias. Se apaga al cerrar la ventana (`CloseGuard` → `RoomSession.ShutdownAsync`). Con la sala cerrada `/join` no deja entrar y sin túnel nadie de fuera llega.
+- Kestrel no se apaga al cerrar la sala: `IChatService`/`IRoomService` salen del contenedor de la web y los ViewModels (Singleton) guardan esas instancias. Se apaga al cerrar la ventana (`CloseGuard` → `AppShutdown.StopAsync` → `RoomSession.ShutdownAsync`). Los `MediaPlayer` se detienen pero no se liberan con `Dispose`: sus `MediaPlayerElement` y el `Unloaded` de `ManualPage` los siguen tocando después de cerrar la ventana. Con la sala cerrada `/join` no deja entrar y sin túnel nadie de fuera llega.
 - SALIR del dashboard y cerrar la ventana con sala activa usan `RoomSession.ConfirmLeaveAsync()`. CERRAR SALA no pregunta (es el botón explícito).
 - Si la app muere de golpe con la sala abierta, esa sesión se queda con `EndedAt = null`.
 
@@ -251,7 +252,7 @@ En `%LocalAppData%\COT_0\`:
 - Si hay captura `manual\pasos\pasoN.png`, se muestra en lugar de la vista de ejemplo de ese paso.
 - Fases: la fase 2i+1 muestra el aviso i y la 2i+2 lo quita; la última se queda. Los tiempos salen de `Manual:CueSeconds`.
 - Atajos: ENTER siguiente (después del último, despedida; en la despedida, cerrar), → / ← cambian de paso, ESC despedida y luego cerrar. ← INICIO regresa al dashboard en cualquier momento.
-- La despedida usa el mismo video y el mismo reproductor: un `StateTrigger` lo mueve al centro con menos opacidad.
+- La despedida usa el mismo video y el mismo reproductor: un `StateTrigger` centra en toda la pantalla el grupo video + texto (`VideoLayer`, un `Viewbox` que solo reduce) con menos opacidad.
 
 ## Atajos de teclado sin letrero
 

@@ -94,9 +94,9 @@ Antes: `dotnet build COT_0.sln` en 0 errores y 0 warnings.
 
 ## 8. Firma y volumen
 
-1. Abre la app: no se oye nada. La barra de la firma está en 0 y en **05 MÚSICA** el número dice **0**; la canción marcada es **Audio_01** (en pausa).
-2. Sube el volumen en la barra de la firma → empieza **Audio_01** desde el inicio.
-3. Cierra la app con el volumen arriba y ábrela de nuevo → vuelve a arrancar en 0 y en silencio.
+1. Abre la app: suena **Audio_02**. La barra de la firma está en 25 y en **05 MÚSICA** el número dice **25** (ver sección 14).
+2. Baja la barra a 0 y vuelve a subirla → la música sigue donde iba.
+3. Cierra la app con otro volumen y ábrela de nuevo → vuelve a arrancar en 25 con Audio_02.
 4. Mueve la barra de la firma y abre MÚSICA: su barra y su número están en el mismo valor. Muévela ahí, regresa: la de la firma se movió igual.
 5. Login, dashboard (abajo del estado de la sala) y sala (a la derecha del contador): avatar y **Neondev** en una fila, centrados entre sí; el nombre completo, sin "…" ni encimarse con nada; debajo la barra roja, del ancho de la firma, sin botones de reproducir ni lista.
 6. En la sala, la firma queda a media altura de la fila del contador (ni pegada arriba ni abajo).
@@ -282,3 +282,30 @@ Copia `hola mundo@2` y `ñandú  é!` al portapapeles y prueba en cada campo:
 4. SALIR del dashboard sigue pidiendo confirmación y regresa al login.
 5. Atajos: ENTER en el login y en los formularios, Esc en ← INICIO, ENTER / → / ← / ESC en el Manual y Enter en el set de Emotes funcionan igual. Al pasar el mouse por la ✕ y por los botones no sale ningún letrero de atajo.
 6. Se ve bien a la resolución del monitor (el diseño es de 1280×720: revisa que nada quede encimado ni perdido en una pantalla más grande).
+
+## 14. Video en el Manual, audio inicial, cierre limpio y despedida (09/11)
+
+### Video de fondo en el Manual
+
+1. Elige un fondo de **video** en 02 CAMBIAR FONDO y abre **03 MANUAL**: el video sigue moviéndose detrás del velo (60 %), sin sonido.
+2. Regresa con **← INICIO** y con **ESC**: el video sigue donde iba (no vuelve al inicio ni parpadea) y con su sonido normal (hoy en silencio, `Background:VideoMuted` = true; ponlo en `false` para oírlo fuera del Manual y comprobar que en el Manual se calla).
+3. Con un fondo de **imagen** o "Usar cuadro fijo", el Manual se ve igual que antes.
+
+### Audio inicial
+
+1. Abre la app: suena sola **Audio_02**. La barra de la firma marca 25 y en **05 MÚSICA** la barra y el número dicen 25 con Audio_02 marcada.
+2. Silencia y reactiva desde la firma y desde MÚSICA: se calla y vuelve a 25.
+3. En el Manual, el aviso de cada notificación suena y SILENCIAR lo calla, como antes.
+
+### Cerrar sin errores
+
+1. Cierra con la **✕** y confirma **SALIR**: la app se cierra sin ningún mensaje de error. Repite desde el login, el dashboard, la sala (con QR generado) y el Manual (también en la despedida).
+2. Lo mismo con **Alt+F4**.
+3. Con la sala abierta: "¿Cerrar la sala y salir?" → **CERRAR SALA Y SALIR**: se cierra limpio y `cloudflared.exe` ya no aparece en el Administrador de tareas.
+4. Visor de eventos → Registros de Windows → Aplicación: no aparece "Error de aplicación" de `COT_0.Host.exe`.
+
+### Despedida centrada
+
+1. En el Manual elige "Gracias, pero no necesito ayuda" (o ESC): el video de Lain y el texto "Gracias por estar aquí. Vuelve pronto." quedan juntos y al centro exacto de la pantalla, el texto debajo del video, sin encimarse.
+2. El video se ve más grande que antes, nítido, sin rectángulo negro ni orillas duras (las cuatro se pierden en el velo).
+3. En pantalla completa a 1920 × 1080 y en un monitor de 1280 × 720: nada se corta (en 720 el grupo se encoge completo) y el botón Cerrar funciona.

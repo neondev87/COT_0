@@ -369,3 +369,12 @@ El panel de vidrio con "Gracias por estar aquí. Vuelve pronto." y CERRAR no cam
 | Portadas 4 y 5 con fondo blanco (720×720 y 736×736) | Mismo proceso que la 1, 2 y 3 (`portadas/procesar.py`: rembg `isnet-anime`, sujeto al 80 % en lienzo de 1024 color `#0B0B0F`) y la máscara encogida 2 px para quitar el filo blanco. Ojo: la 1–3 no son PNG con alfa sino ese lienzo oscuro; la 4 y 5 quedaron igual |
 | Volumen al abrir: 0 | 25 (`Audio:DefaultVolume`) |
 | Ventana de 1280×720 centrada con los botones de Windows | Pantalla completa siempre (`AppWindowPresenterKind.FullScreen`). Como pantalla completa no tiene botones de Windows, una ✕ propia (46×32, arriba a la derecha, donde estaba la de Windows) hace lo mismo que la de antes: pregunta con su confirmación (`CloseGuard.RequestCloseAsync`). Alt+F4 también pasa por la confirmación. Ya no hay botón de minimizar |
+
+## Video en el Manual, audio inicial, cierre limpio y despedida centrada (09/11)
+
+| Antes | Ahora |
+|---|---|
+| Al entrar al Manual el video de fondo se detenía y se veía su cuadro fijo | El video sigue en bucle detrás del velo del Manual (60 %), **mudo** (`FondoPlayer.SetSilenced`). Al salir (← INICIO o ESC) recupera su sonido normal (`Background:VideoMuted`, hoy `true` = sin sonido, como siempre) sin reiniciarse ni parpadear: es el mismo reproductor y el mismo `Source`. Fondo de imagen o cuadro fijo: sin cambios |
+| La app abría con `Audio_01` cargada en pausa | Abre **sonando `Audio_02`** a 25 (`Audio:InitialTrack` = 2 con `Audio:TrackNameFormat` = `Audio_{0:00}`; `Audio:DefaultVolume` = 25). Si no existe, arranca con la primera; si no se puede leer, salta a la siguiente (como ya hacía) |
+| Al cerrar la app salía un error (0xC000027B en `Microsoft.UI.Xaml.dll`) o se quedaba colgada | Cierra limpio desde la ✕, Alt+F4 y SALIR del diálogo (ver causa en `REPORTE_CIERRE.md`) |
+| Despedida: video de 900 × 634 abajo y al centro, con el texto encima de la parte de abajo del video | Video de **1125 × 793** (+25 %, casi su tamaño real de 1022 × 720: no se pixela) con el texto **debajo** (34 px, +30 %, estilo `ManualFarewellText`) y los dos **centrados en toda la pantalla**. Se conservan las orillas fundidas hacia adentro (225 / 159) y las franjas negras hacia afuera, ahora también abajo (esquinas `EdgeCornerBottomLeft/RightBrush`). Un `Viewbox` que solo reduce (`DownOnly`) encoge el grupo completo en pantallas de menos de ~1050 px de alto en lugar de cortarlo |
