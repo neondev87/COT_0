@@ -112,11 +112,11 @@ public partial class SalaViewModel : ObservableObject
         }
     }
 
-    /// <summary>CERRAR SALA: saca a todos, cierra la sesión y el túnel, y regresa al dashboard.</summary>
+    /// <summary>CERRAR SALA: pide confirmación; saca a todos, cierra la sesión y el túnel, y regresa al dashboard.</summary>
     [RelayCommand]
     private async Task CloseRoomAsync()
     {
-        if (IsClosing) return;
+        if (IsClosing || !await _session.ConfirmCloseRoomAsync()) return;
 
         IsClosing = true;
         try

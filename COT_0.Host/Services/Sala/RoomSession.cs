@@ -62,10 +62,16 @@ public class RoomSession(WebServerHost webServer, ITunnelService tunnel, Confirm
     }
 
     /// <summary>"Hay una sala activa. ¿Cerrar la sala y salir?"; true si confirmaste.</summary>
-    public Task<bool> ConfirmLeaveAsync() => dialogs.ConfirmAsync(new ConfirmTexts(
-        UiText.Get("Text.ExitDialog.Message"),
-        UiText.Get("Text.ExitDialog.Confirm"),
-        UiText.Get("Text.ExitDialog.Cancel")));
+    public Task<bool> ConfirmLeaveAsync() => ConfirmAsync("ExitDialog");
+
+    /// <summary>CERRAR SALA: "¿Cerrar la sala?"; true si confirmaste.</summary>
+    public Task<bool> ConfirmCloseRoomAsync() => ConfirmAsync("CloseRoomDialog");
+
+    // Cada diálogo tiene Text.{clave}.Message, .Confirm y .Cancel
+    private Task<bool> ConfirmAsync(string dialogKey) => dialogs.ConfirmAsync(new ConfirmTexts(
+        UiText.Get($"Text.{dialogKey}.Message"),
+        UiText.Get($"Text.{dialogKey}.Confirm"),
+        UiText.Get($"Text.{dialogKey}.Cancel")));
 
     // Saca a los invitados, vacía el chat y deja guardada la hora de fin
     private async Task CloseRoomAsync()

@@ -207,6 +207,11 @@
     <x:String x:Key="Text.ExitDialog.Confirm">CERRAR SALA Y SALIR</x:String>
     <x:String x:Key="Text.ExitDialog.Cancel">CANCELAR</x:String>
 
+    <!-- Confirmación de CERRAR SALA -->
+    <x:String x:Key="Text.CloseRoomDialog.Message">¿Cerrar la sala? Todos los invitados van a salir y el enlace dejará de funcionar.</x:String>
+    <x:String x:Key="Text.CloseRoomDialog.Confirm">CERRAR SALA</x:String>
+    <x:String x:Key="Text.CloseRoomDialog.Cancel">CANCELAR</x:String>
+
     <!-- Manual de Lain: cada paso explica su vista de ejemplo; el aviso N va con el resaltado N -->
     <x:String x:Key="Text.Manual.ScreenTitle">MANUAL</x:String>
     <x:String x:Key="Text.Manual.KeyStart">ENTER</x:String>
