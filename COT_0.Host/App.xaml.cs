@@ -6,6 +6,7 @@ using COT_0.Host.Services.Fondos;
 using COT_0.Host.Services.Manual;
 using COT_0.Host.Services.Musica;
 using COT_0.Host.Services.Sala;
+using COT_0.Host.Services.Tienda;
 using COT_0.Host.Services.Tiempo;
 using COT_0.Host.Services.Tunel;
 using COT_0.Host.Services.Ventana;
@@ -58,6 +59,10 @@ public partial class App : Application
             .AddSingleton(sp => sp.GetRequiredService<WebServerHost>().Services.GetRequiredService<IChatService>())
             .AddSingleton(sp => sp.GetRequiredService<WebServerHost>().Services.GetRequiredService<IRoomService>())
             .AddSingleton(sp => sp.GetRequiredService<WebServerHost>().Services.GetRequiredService<IRoomEmotes>())
+            .AddSingleton<PurchaseStore>()
+            .AddSingleton<PurchaseService>()
+            .AddSingleton<EmoteShopCatalog>()
+            .AddSingleton<ChatEmoteImport>()
             .AddSingleton<RoomSession>()
             .AddSingleton<ClockService>()
             .AddSingleton<ConfirmDialogService>()
@@ -68,6 +73,10 @@ public partial class App : Application
             .AddSingleton<ConnectedUsersViewModel>()
             .AddSingleton<DashboardViewModel>()
             .AddSingleton<EmotesViewModel>()
+            .AddTransient<StoreUsersViewModel>()
+            .AddTransient<StoreShopViewModel>()
+            .AddTransient<StoreTicketsViewModel>()
+            .AddTransient<EmotesScreenViewModel>()
             .AddSingleton<MusicLibrary>()
             .AddSingleton<CoverLibrary>()
             .AddSingleton<SongCatalog>()

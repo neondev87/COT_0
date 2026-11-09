@@ -14,6 +14,7 @@ Revisión del 08/11 en la rama `host-winui` (actualizada el 09/11: reglas nuevas
 | Una clase por archivo | Se separaron 8 archivos con varios tipos (`ImageModels`, `VoiceModels`, `SevenTvDtos`, `ManualStep`, `MessageToken`, `ManualTimeline`, `EmoteSetStatus`, `RoomEmote`) | ✅ |
 | Comentario `///` en español en cada archivo | Todos los `.cs` tienen `/// <summary>` arriba del tipo (se agregó en 122). `.xaml` y `.razor` llevan `<!-- -->` / `@* *@` | ✅ |
 | async/await en disco | `AppConfig.LoadAsync` (se espera en `App.OnLaunched` antes de armar los servicios; `IConfiguration` sale de los mismos bytes), `JsonStore`, `FondoStore`, `MediaLog`, `FrameFiles`, `MusicLibrary`, `CoverLibrary`, `FondoCatalog`, `ManualAssets`. Todo `FileStream` se abre con `useAsync: true` (`Services/Almacenamiento/AsyncFiles.cs`). Sin `File.ReadAll*`/`WriteAll*` síncronos, `.Result`, `.Wait()` ni `GetResult()`. Reverificado al cierre con búsquedas de `File.(Read|Write|Open|Create)`, `new FileStream/StreamReader/StreamWriter`, `JsonSerializer.(De)Serialize`, `.Result`, `.Wait()` y `GetResult()` en los tres proyectos: lo único síncrono que queda es lo de la lista de abajo. `AppConfig` deserializa con `JsonSerializer.Deserialize` sobre bytes ya leídos con `CopyToAsync` (en memoria, no toca disco) | ✅ (excepciones abajo) |
+| Tienda de emotes (09/11) | `Services/Tienda/*`: compras en JSON (`compras.json` vía `JsonStore`, validado al leer y guardar), todo async (`LoadAsync`/`SaveAsync`, `AsyncFiles`, PDF con `PdfDocument.SaveAsync`), valores en `appsettings.json` → `Store:*` y `Storage:PurchasesFile`. PDF con PDFsharp (MIT, NuGet). Panel con degradado y opacidad, sin desenfoque ni sombras | ✅ |
 | Documentación en español | `README.md`, `docs/ESTRUCTURA.md`, `docs/CAMBIOS_VISUALES.md`, `docs/PRUEBAS_MANUALES.md`, `docs/MAPA_CARPETAS.md`, `docs/REPORTE_CIERRE.md` | ✅ |
 | App ligera | Ver abajo | ✅ |
 
@@ -24,7 +25,7 @@ Revisión del 08/11 en la rama `host-winui` (actualizada el 09/11: reglas nuevas
   - `File.Exists`, `Directory.Exists`, `Directory.CreateDirectory` y `Directory.EnumerateFiles` (`JsonStore.Folder`, `CacheFolders`, `FondoCatalog`, `MusicLibrary`, `CoverLibrary`, `ManualAssets`, `FfmpegFrames`): .NET no tiene versión async; son consultas de metadatos baratas y las pesadas ya van en `Task.Run`.
   - `IAvatarStore.Save` e `IVoiceStore.Save` (Web) se llaman `Save` pero guardan en memoria, no en disco.
 - **Archivos de más de 200 líneas**: `COT_0.Host/App.xaml` (621, paleta y estilos comunes) y `Views/Estilos/Textos.xaml` (258, todos los textos). Partir `App.xaml` tiene un límite de WinUI: un diccionario mezclado en `App.xaml` no ve las claves del propio `App.xaml`.
-- **Servicios sin interfaz en Core**: `UserService`, `VisitService`, `SesionService`, `PasswordRecoveryService` (estáticos) y los que usan tipos de WinUI (`MusicService`, `QrService`, `ConfirmDialogService`, `ManualSound`). Ver `CONTRATO.md`.
+- **Servicios sin interfaz en Core**: los de la tienda (`PurchaseService`, `EmoteShopCatalog`, `ChatEmoteImport`, estáticos de tickets) e `IPurchasedEmotes` (vive en Web; pedido anotado en `CONTRATO.md`), `UserService`, `VisitService`, `SesionService`, `PasswordRecoveryService` (estáticos) y los que usan tipos de WinUI (`MusicService`, `QrService`, `ConfirmDialogService`, `ManualSound`). Ver `CONTRATO.md`.
 
 ## App ligera
 
@@ -37,5 +38,6 @@ Efectos que siguen vivos (todos con `Storyboard` en el compositor, sin redibujar
 - Punto rojo con pulso de sala activa (`PuntoPulso.xaml`).
 - Manual: barrido tenue (14 s) y halo de los resaltados (`ManualPage.xaml`, `ResaltadoManual.xaml`). El fondo azul (`ManualBaseBrush`), la estática (una textura fija que solo se traslada con fotogramas discretos), los paneles de vidrio y las orillas fundidas de Lain son degradados quietos (sin desenfoque); el fondo de la app sigue debajo (su video en bucle y mudo) pero tapado; sigue habiendo un solo reproductor de fondo.
 - Volumen de la firma: solo opacidad y escala del punto (0.15 s) al pasar el mouse (`Views/Estilos/Volumen.xaml`).
+- EMOTES (09/11): el video de fondo sigue detrás de un panel con degradado al 84–90 % (sin desenfoque); miniaturas de 7TV sin animar (`AutoPlay = false`), en listas virtualizadas que bajan las imágenes al pintarse; el velo de los recuadros es solo opacidad.
 - Fondo en video (un solo `MediaPlayer` en bucle y en silencio). Lo más pesado que queda; los videos de más de `Background:HeavyVideoMegabytes` arrancan como cuadro fijo.
 - Web: ceniza del fondo con CSS (`AshLayer.razor`, `Chat:AshCount`) y animaciones CSS del manual del invitado.

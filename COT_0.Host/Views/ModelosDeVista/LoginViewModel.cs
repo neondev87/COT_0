@@ -9,7 +9,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace COT_0.Host.Views.ModelosDeVista;
 
-/// <summary>Hasta Usuarios:Maximo usuarios; todos entran a lo mismo y el dashboard no sabe cuál fue.</summary>
+/// <summary>Hasta Usuarios:Maximo usuarios; todos entran a lo mismo y el dashboard no sabe cuál fue (ActiveUser solo lo usa la tienda).</summary>
 public partial class LoginViewModel : FormViewModel
 {
     [ObservableProperty]
@@ -67,6 +67,7 @@ public partial class LoginViewModel : FormViewModel
     /// <summary>Siempre arranca en ENTRAR; solo revisa si ya hay usuarios para el aviso.</summary>
     public async Task LoadAsync()
     {
+        ActiveUser.SignOut();
         Step = LoginStep.SignIn;
         try
         {
@@ -85,7 +86,10 @@ public partial class LoginViewModel : FormViewModel
         try
         {
             var done = Step == LoginStep.SetupQuestion ? await SaveQuestionAsync() : await SignInAsync();
-            if (done) Navigator.ShowDashboard();
+            if (!done) return;
+            // Solo en memoria, para la tienda; la interfaz no lo muestra
+            ActiveUser.SignIn(UserName);
+            Navigator.ShowDashboard();
         }
         catch (Exception ex) when (JsonStore.IsStorageError(ex))
         {

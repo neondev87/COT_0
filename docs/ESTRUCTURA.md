@@ -98,7 +98,7 @@ COT_0.Host/
 │   ├── Fuentes/                  TTF del diseño (Cinzel, Barlow, Barlow Condensed 200/300/500/700/800 itálica, Inter, Redaction 50 de la firma)
 │   └── Imagenes/                 Imágenes fijas de la interfaz (fondo ASCII del login, avatar de la firma)
 ├── Models/                       Clases simples que se guardan en JSON o viajan entre capas (sin lógica)
-│   ├── HostUser.cs               Un usuario del login (hasta 5): hash + salt de la contraseña y de la respuesta secreta
+│   ├── HostUser.cs               Un usuario del login (hasta 20): hash + salt de la contraseña y de la respuesta secreta, RulesVersion (0 = cuenta vieja)
 │   ├── HashedSecret.cs           Hash y salt en Base64
 │   ├── SecurityQuestionOption.cs Clave y texto de una pregunta secreta
 │   ├── CredentialError.cs        Por qué se rechazó lo que escribiste, con nombre repetido y máximo de usuarios (cada valor tiene su Text.Error.*)
@@ -113,7 +113,10 @@ COT_0.Host/
 │   │                             video sin códec, que no decodifica o sin cuadro fijo
 │   ├── MediaLogEntry.cs          Una línea de registro-medios.jsonl: hora, origen, archivo, ErrorCode (HRESULT) y detalle
 │   ├── ManualDemoRow.cs          Fila ficticia de las vistas de ejemplo del manual (emote o canción)
-│   └── ConfirmTexts.cs           Textos del diálogo sí/no
+│   ├── ConfirmTexts.cs           Textos del diálogo sí/no
+│   ├── PurchasesData.cs, UserPurchases.cs, PurchasedEmote.cs, PurchaseTicket.cs  Contenido de compras.json (tienda de emotes)
+│   ├── QuotaInfo.cs, PurchaseOutcome.cs, PurchaseResult.cs  Cupo calculado y resultado de COMPRAR
+│   └── TicketLine.cs, TicketLineKind.cs  Renglones del ticket en PDF
 ├── Services/
 │   ├── Almacenamiento/           JsonStore: lee y guarda cualquier clase en %LocalAppData%\COT_0\*.json (async); AsyncFiles: FileStream con useAsync
 │   ├── Cache/                    CacheFolders: %LocalAppData%\COT_0\cache\<nombre> y la llave (hash de ruta + tamaño + fecha)
@@ -134,11 +137,15 @@ COT_0.Host/
 │   │                             QrService (PNG de QRCoder → BitmapImage), RoomOpenErrors (error → RoomError + texto) y GuestWatcher (base)
 │   ├── Sesiones/                 SesionService (sesiones.json) y SesionWatcher (abre/cierra la sesión con la sala y anota invitados)
 │   ├── Textos/                   UiText: busca un texto de Textos.xaml desde C#
+│   ├── Tienda/                   PurchaseStore (compras.json, se recrea si está dañado) + PurchasesValidator, QuotaCalculator (Store:DailyLimit cada
+│   │                             Store:CooldownHours, UTC), PurchaseService (COMPRAR y tickets), EmoteShopCatalog (páginas de 7TV con caché),
+│   │                             EmoteMapping, ChatEmoteImport (comprados → chat), TicketLines + TicketDocument (PDFsharp) + TicketDownloads (Escritorio)
 │   ├── Tiempo/                   ClockService (tick de cada segundo) y UiThread (pasa eventos al hilo de la UI)
 │   ├── Tunel/                    CloudflareTunnelService (ITunnelService) y KillOnCloseJob (cloudflared muere con la app)
-│   ├── Usuarios/                 UserService (registrar hasta Usuarios:Maximo, ENTRAR, pregunta al entrar), PasswordRecoveryService
+│   ├── Usuarios/                 UserService (registrar hasta Usuarios:Maximo, ENTRAR, cuentas viejas, pregunta al entrar), ActiveUser (quién hizo ENTRAR, solo para la tienda), PasswordRecoveryService
 │   │                             (recuperación por usuario), HostAccounts (usuarios.json como lista; también lee la cuenta suelta) y SecretHasher (PBKDF2 + SHA-256 con salt)
-│   ├── Validaciones/             InputRules (regla única: solo letras y números), InputLimits (Inputs:MaxCaracteres), CredentialValidator y SecurityAnswerValidator (normaliza la respuesta)
+│   ├── Validaciones/             InputRules (texto, usuario solo letras tipo "Erick" y contraseña con Inputs:PasswordSymbols; FieldKind), PasswordValidator
+│   │                             + PasswordProblems + PasswordMessages (cada regla que falla), InputLimits (Inputs:MaxCaracteres), CredentialValidator y SecurityAnswerValidator (normaliza la respuesta)
 │   ├── Ventana/                  WindowSetup (pantalla completa), Navigator (cambia de página), CloseGuard (✕ y Alt+F4: pregunta antes de cerrar),
 │   │                             AppShutdown (apagado en orden: reloj y reproductores → sala, túnel y Kestrel → ventana)
 │   │                             y ShortcutHints (atajos de teclado sin letrero flotante)
@@ -147,9 +154,11 @@ COT_0.Host/
     ├── Pantallas/                Páginas del Frame: LoginPage, DashboardPage, SalaPage, EmotesPage, MusicaPage, FondosPage, ManualPage
     ├── ModelosDeVista/           ViewModels: Login (+ LoginStep, FormViewModel), Register, Recovery, SecurityQuestion, Dashboard, Sala,
     │                             ConnectedUsers + UserRow, Emotes + EmoteRow, MusicControls (base) → Musica y Firma, SongRow,
-    │                             CapaFondo, Fondos + FondoRow, LogoNeondev, Manual + ManualStep + ManualNotice + ManualDemo
+    │                             CapaFondo, Fondos + FondoRow, LogoNeondev, Manual + ManualStep + ManualNotice + ManualDemo,
+    │                             EmotesScreen (pestañas y recuadros) + StoreUsers/StoreShop/StoreTickets, UserCard, UserStock, ShopEmote,
+    │                             ShopItemsCollection (carga por partes), Ticket, EmoteThumb, Notice, StoreTexts, StoreSection
     ├── Componentes/              Piezas reutilizables
-    │   ├── CapaFondo             Fondo detrás del Frame: degradado, imagen/cuadro fijo o video, velo y viñeta (Dashboard, Sala, Fondos y Manual)
+    │   ├── CapaFondo             Fondo detrás del Frame: degradado, imagen/cuadro fijo o video, velo y viñeta (Dashboard, Sala, Fondos, Emotes y Manual)
     │   ├── ConfirmacionDialogo   ContentDialog sí/no
     │   ├── BotonBocina.cs        Bocina de la firma: Button con cursor de mano
     │   ├── FiltroCampo.cs        Propiedad adjunta de LoginTextBox/LoginPasswordBox: quita espacios y símbolos al escribir o pegar
@@ -160,7 +169,8 @@ COT_0.Host/
     │   ├── FormularioRecuperacion  Usuario → su pregunta secreta → contraseña nueva, dentro del login
     │   ├── FormularioRegistro    Registrar usuario: nombre, contraseña y repetirla, dentro del login
     │   ├── ListaConectados       Invitados conectados (ListView)
-    │   ├── PanelEmotes           Set de 7TV, reportes y emotes quitados
+    │   ├── PanelEmotes           Set de 7TV, reportes y emotes quitados (en EMOTES, botón SET Y REPORTES)
+│   ├── Tienda/               SeccionUsuarios, SeccionTienda, SeccionTickets y RecuadroStock (pantalla EMOTES)
     │   ├── PuntoPulso            Punto rojo con pulso (sala activa)
     │   ├── TarjetaMenu.cs        Tarjeta inclinada del menú del dashboard
     │   └── Manual/               Piezas del manual de Lain
@@ -180,7 +190,9 @@ COT_0.Host/
         ├── Manual.xaml           Paneles de vidrio, medidas y estilos de BotonManual (lo mezcla ManualPage)
         ├── ManualFondo.xaml      Azul del Manual, barrido, estática, sombra y orillas de Lain y de la despedida (ManualPage, FondoManual, EstaticaManual)
         ├── Volumen.xaml          Volumen minimalista: plantilla del Slider, punto y bocina (lo mezcla Firma)
-        └── TarjetaMenu.xaml      Plantilla de TarjetaMenu y trazos de sus iconos
+        ├── TarjetaMenu.xaml      Plantilla de TarjetaMenu y trazos de sus iconos
+        ├── Tienda.xaml           Panel de EMOTES (ShopPanelBrush 84–90 %, borde de acento), tarjetas y recuadro (EmotesPage y sus secciones)
+        └── TiendaControles.xaml  Pestañas (ShopTab) y botón COMPRAR / DESCARGAR PDF (ShopActionButton)
 ```
 
 Los diccionarios de `Views/Estilos` que usan pinceles o fuentes de `App.xaml` se mezclan en los recursos de la página, no en `App.xaml`: un diccionario mezclado dentro de `App.xaml` no puede ver las claves del propio `App.xaml`.
@@ -192,6 +204,7 @@ En `%LocalAppData%\COT_0\`:
 | Archivo | Qué guarda |
 |---|---|
 | `usuarios.json` | Lista de usuarios del login (hasta `Usuarios:Maximo` = 20). Por cada uno: usuario, hash + salt de la contraseña, clave de la pregunta secreta y hash + salt de la respuesta, fecha. Nunca la contraseña ni la respuesta. |
+| `compras.json` | Tienda de emotes: `LastTicketNumber` y por usuario `UserName`, `WindowStart` (UTC, desde cuándo corre su ventana de 24 h), `Emotes` (id, nombre, URLs del CDN, `PurchasedAt` UTC) y `Tickets` (número, fecha, emotes, cupo que quedó y `ResetsAt`). Se valida al leer y al guardar; si está dañado se recrea vacío y la tienda lo avisa. |
 | `visitas.json` | Una línea por cada invitado que entra a la sala, con `EnteredAt`. Queda aunque se cierre el túnel. |
 | `fondos.json` | Catálogo de la última lectura de la carpeta de fondos (`FileName`, `Kind`, `SizeBytes`, `UseStill`) y `SelectedFile`: `null` = nunca elegiste (usa `Background:DefaultFile`), `""` = sin fondo. |
 | `sesiones.json` | Una entrada por cada vez que se abre la sala: `Number` (1, 2, 3…), `StartedAt`, `EndedAt` y `Guests` (nombre + hora de entrada). El host no cuenta. |
@@ -199,6 +212,8 @@ En `%LocalAppData%\COT_0\`:
 | `cache\fondos\<hash>.jpg` | Cuadro fijo de cada video (miniatura de FONDOS y fondo en modo cuadro fijo), máx. `Background:FrameMaxWidth` de ancho. El hash sale de ruta + tamaño + fecha: si el video cambia, se genera otro. |
 
 ## Login y recuperación
+
+- Reglas (09/11): usuario solo letras con la primera en mayúscula (el campo lo normaliza al escribir); contraseña de `Inputs:MinPasswordCaracteres` = 8 a `Inputs:MaxCaracteres` = 20 con un número y un símbolo de `Inputs:PasswordSymbols`, sin espacios. Una cuenta vieja (`RulesVersion` < 2 o nombre que ya no cumple) no entra: "Esta cuenta ya no cumple las reglas nuevas. Regístrala de nuevo."; registrar ese mismo nombre la reemplaza.
 
 - `LoginStep` decide qué se ve: `SignIn` (ENTRAR, siempre el paso inicial), `Register` (Registrar usuario: nombre y contraseña dos veces), `Recover` (¿Olvidaste tu contraseña?: usuario → su pregunta → contraseña nueva) y `SetupQuestion` (usuario sin pregunta: se pide después de ENTRAR por primera vez).
 - Hasta `Usuarios:Maximo` (20) usuarios, con nombre único sin distinguir mayúsculas y minúsculas. Todos entran a lo mismo: Dashboard, Sala, Emotes, Música, Fondos, Manual, sesiones y visitas no saben qué usuario entró.
@@ -268,3 +283,13 @@ WinUI muestra un tooltip con la tecla ("Enter", "Esc", flechas) al pasar el mous
 - Además, explícito en cada dueño de atajos: `ManualPage` (ENTER, →, ←, ESC), el botón ← INICIO de `EncabezadoPantalla` (Esc) y APLICAR de `PanelEmotes` (Enter).
 - Atajo nuevo en otro tipo de elemento: poner `KeyboardAcceleratorPlacementMode="Hidden"` en el XAML o llamar a `ShortcutHints.Hide`.
 - Tooltips que sí se quedan (intencionales): logo Neondev ("Abrir el repositorio del proyecto") y las bocinas (firma, música y manual).
+
+## Tienda de emotes (pantalla EMOTES)
+
+- Pestañas USUARIOS | TIENDA | TICKETS dentro de un solo panel (`ShopPanel`); el video de fondo sigue corriendo detrás (`EmotesPage` está en `CapaFondoViewModel.PagesWithBackground`). Abre en TIENDA.
+- USUARIOS: solo el nombre de cada cuenta de `usuarios.json`; clic → recuadro con su stock sobre el velo (`DialogVeilBrush`, sin desenfoque). ESC o clic en el velo cierran.
+- TIENDA: `EmoteShopCatalog` → `ISevenTvClient.SearchEmotesAsync` (Web, GraphQL v3 `https://7tv.io/v3/gql`, verificado el 09/11) en páginas de `Store:PageSize` = 50; `ShopItemsCollection` (`ISupportIncrementalLoading`) pide la siguiente al llegar al final del scroll. Caché en memoria por búsqueda y página. Si 7TV falla: motivo + REINTENTAR.
+- COMPRAR: `PurchaseService.BuyAsync` para `ActiveUser` (quien hizo ENTRAR; la interfaz no lo muestra). Ventana de 24 h desde la primera compra; al vencer, el cupo vuelve al leerlo. Cada compra = un ticket con número consecutivo global (así no chocan los PDF de varios usuarios).
+- Chat: `RoomSession.OpenAsync` llama a `ChatEmoteImport.ImportAsync` (comprados → `IPurchasedEmotes.SetPurchased`, misma instancia que `IRoomEmotes`); con la sala abierta, cada compra los vuelve a mandar. Al cerrar la sala se vacían. Si un nombre se repite con el set, gana el del set.
+- El set de 7TV, los reportes y los quitados siguen igual (`PanelEmotes`), ahora en el recuadro SET Y REPORTES.
+- PDF: PDFsharp 6.2.4 (MIT, todo .NET), 80 mm de ancho, `Store:TicketFont` = Courier New (el resolvedor de fuentes de Windows de PDFsharp no trae Consolas). Se guarda en `Escritorio\COT_0_tickets\ticket-0001.pdf`; si ya existe no se regenera.

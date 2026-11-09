@@ -22,7 +22,10 @@ public static class EmoteRegistration
             })
             .SetHandlerLifetime(Timeout.InfiniteTimeSpan);
 
-        services.AddSingleton<IRoomEmotes, RoomEmotes>();
+        // Una sola instancia para el set y los comprados en la tienda del Host
+        services.AddSingleton<RoomEmotes>();
+        services.AddSingleton<IRoomEmotes>(sp => sp.GetRequiredService<RoomEmotes>());
+        services.AddSingleton<IPurchasedEmotes>(sp => sp.GetRequiredService<RoomEmotes>());
         services.AddScoped<IEmoteActions, EmoteActions>();
         return services;
     }

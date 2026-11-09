@@ -1,22 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Emotes de la sala: encabezado con regreso y el panel de 7TV -->
+<!-- Emotes como mini tienda: encabezado con regreso y UN panel oscuro semitransparente (el video de fondo se intuye detrás)
+     con las pestañas USUARIOS | TIENDA | TICKETS. Encima, con velo, el stock de un usuario o el set de 7TV con reportes.
+     Transparente: el fondo lo pinta CapaFondo detrás del Frame. ESC cierra el recuadro o regresa -->
 <Page x:Class="COT_0.Host.Views.Pantallas.EmotesPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:componentes="using:COT_0.Host.Views.Componentes"
-      Background="{StaticResource WindowBackgroundBrush}">
-    <!-- El panel ocupa la primera columna (hasta 720 px): con HorizontalAlignment="Left" solo, se encogía a su contenido
-         y el título, el contador y APLICAR se enciman -->
-    <Grid Margin="64,52,64,48">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" MaxWidth="720"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-        <componentes:EncabezadoPantalla Grid.ColumnSpan="2" Title="{StaticResource Text.Emotes.ScreenTitle}"/>
-        <componentes:PanelEmotes Grid.Row="1" Margin="0,32,0,0"/>
+      xmlns:tienda="using:COT_0.Host.Views.Componentes.Tienda"
+      Background="Transparent"
+      KeyboardAcceleratorPlacementMode="Hidden">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Views/Estilos/Tienda.xaml"/>
+                <ResourceDictionary Source="ms-appx:///Views/Estilos/TiendaControles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Page.KeyboardAccelerators>
+        <KeyboardAccelerator Key="Escape" Invoked="OnEscapeInvoked"/>
+    </Page.KeyboardAccelerators>
+
+    <Grid>
+        <Grid Margin="64,48,64,40">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <componentes:EncabezadoPantalla Title="{StaticResource Text.Emotes.ScreenTitle}" HandlesEscape="False"/>
+
+            <Border Grid.Row="1" Style="{StaticResource ShopPanel}" Margin="0,24,0,0" MaxWidth="{StaticResource ShopPanelMaxWidth}">
+                <Grid RowSpacing="14">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Pestañas a la izquierda; a la derecha el set de 7TV y los reportes de siempre (en recuadro) -->
+                    <Grid BorderBrush="{StaticResource RowBorderBrush}" BorderThickness="0,0,0,1">
+                        <StackPanel Orientation="Horizontal" Spacing="28">
+                            <RadioButton Style="{StaticResource ShopTab}" GroupName="StoreTabs" Content="{StaticResource Text.Store.Tab.Users}"
+                                         IsChecked="{x:Bind ViewModel.IsUsersSection, Mode=TwoWay}"/>
+                            <RadioButton Style="{StaticResource ShopTab}" GroupName="StoreTabs" Content="{StaticResource Text.Store.Tab.Shop}"
+                                         IsChecked="{x:Bind ViewModel.IsShopSection, Mode=TwoWay}"/>
+                            <RadioButton Style="{StaticResource ShopTab}" GroupName="StoreTabs" Content="{StaticResource Text.Store.Tab.Tickets}"
+                                         IsChecked="{x:Bind ViewModel.IsTicketsSection, Mode=TwoWay}"/>
+                        </StackPanel>
+                        <Button Style="{StaticResource TextButton}" HorizontalAlignment="Right" Content="{StaticResource Text.Store.SetPanel}"
+                                Command="{x:Bind ViewModel.OpenSetPanelCommand}"/>
+                    </Grid>
+
+                    <tienda:SeccionUsuarios Grid.Row="1" ViewModel="{x:Bind ViewModel.Users}"
+                                            Visibility="{x:Bind ViewModel.IsUsersSection, Mode=OneWay}"/>
+                    <tienda:SeccionTienda Grid.Row="1" ViewModel="{x:Bind ViewModel.Shop}"
+                                          Visibility="{x:Bind ViewModel.IsShopSection, Mode=OneWay}"/>
+                    <tienda:SeccionTickets Grid.Row="1" ViewModel="{x:Bind ViewModel.Tickets}"
+                                           Visibility="{x:Bind ViewModel.IsTicketsSection, Mode=OneWay}"/>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Velo negro semitransparente (sin desenfoque) y el recuadro encima; clic en el velo o ESC cierran -->
+        <Grid Visibility="{x:Bind ViewModel.IsOverlayOpen, Mode=OneWay}">
+            <Rectangle Fill="{StaticResource DialogVeilBrush}" Tapped="OnVeilTapped"/>
+            <Border Style="{StaticResource ShopDialog}" Margin="48" MaxWidth="{StaticResource ShopDialogMaxWidth}"
+                    MaxHeight="{StaticResource ShopDialogMaxHeight}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Border.Transitions>
+                    <TransitionCollection>
+                        <EntranceThemeTransition FromVerticalOffset="16"/>
+                    </TransitionCollection>
+                </Border.Transitions>
+                <Grid>
+                    <tienda:RecuadroStock Stock="{x:Bind ViewModel.Users.Stock, Mode=OneWay}" CloseCommand="{x:Bind ViewModel.CloseOverlayCommand}"
+                                          Visibility="{x:Bind ViewModel.Users.IsStockOpen, Mode=OneWay}"/>
+                    <Grid RowSpacing="16" Visibility="{x:Bind ViewModel.IsSetPanelOpen, Mode=OneWay}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <componentes:PanelEmotes/>
+                        <Button Grid.Row="1" Style="{StaticResource TextButton}" HorizontalAlignment="Right"
+                                Content="{StaticResource Text.Store.Close}" Command="{x:Bind ViewModel.CloseOverlayCommand}"/>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </Page>

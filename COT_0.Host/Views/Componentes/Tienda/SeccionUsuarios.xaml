@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- USUARIOS: tarjetas con la inicial en color y el nombre de cada usuario registrado (nada más de su cuenta). Clic: su stock -->
+<UserControl x:Class="COT_0.Host.Views.Componentes.Tienda.SeccionUsuarios"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:convertidores="using:COT_0.Host.Views.Convertidores"
+             xmlns:vm="using:COT_0.Host.Views.ModelosDeVista">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Views/Estilos/Tienda.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid RowSpacing="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Spacing="4">
+            <TextBlock Text="{StaticResource Text.Store.Users.Title}" Style="{StaticResource ShopTitleText}"/>
+            <TextBlock Text="{StaticResource Text.Store.Users.Hint}" Style="{StaticResource InterText}"/>
+        </StackPanel>
+
+        <InfoBar Grid.Row="1" Title="{StaticResource Text.Store.NoticeTitle}" Message="{x:Bind ViewModel.Notice.Message, Mode=OneWay}"
+                 Severity="{x:Bind ViewModel.Notice.Severity, Mode=OneWay}" IsOpen="{x:Bind ViewModel.Notice.IsOpen, Mode=TwoWay}"/>
+
+        <GridView Grid.Row="2" ItemsSource="{x:Bind ViewModel.Users}" SelectionMode="None" IsItemClickEnabled="True"
+                  ItemClick="OnUserClick" ItemContainerStyle="{StaticResource ShopGridItem}">
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="vm:UserCardViewModel">
+                    <Border Style="{StaticResource ShopCard}" Width="{StaticResource ShopUserCardWidth}">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Style="{StaticResource Avatar}" Background="{x:Bind convertidores:AvatarTones.For(Tone)}"
+                                    BorderBrush="{StaticResource ShopPanelBorderBrush}">
+                                <TextBlock Text="{x:Bind Initial}" Style="{StaticResource InitialsText}"/>
+                            </Border>
+                            <TextBlock Text="{x:Bind Name}" Style="{StaticResource RowNameText}" VerticalAlignment="Center" MaxWidth="120"/>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+
+        <TextBlock Grid.Row="2" Text="{StaticResource Text.Store.Users.Empty}" Style="{StaticResource ShopEmptyText}" VerticalAlignment="Center"
+                   Visibility="{x:Bind ViewModel.IsEmpty, Mode=OneWay}"/>
+    </Grid>
+</UserControl>

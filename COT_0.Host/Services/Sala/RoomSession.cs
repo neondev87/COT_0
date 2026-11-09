@@ -4,6 +4,7 @@ using COT_0.Host.Models;
 using COT_0.Host.Services.Almacenamiento;
 using COT_0.Host.Services.Dialogos;
 using COT_0.Host.Services.Sesiones;
+using COT_0.Host.Services.Tienda;
 using COT_0.Host.Services.Textos;
 using COT_0.Host.Services.Visitas;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,12 +12,12 @@ using Microsoft.Extensions.DependencyInjection;
 namespace COT_0.Host.Services.Sala;
 
 /// <summary>
-/// Abrir: servidor → vigilantes (visitas y sesiones) → túnel → sala.
+/// Abrir: servidor → vigilantes (visitas y sesiones) → túnel → emotes comprados → sala.
 /// Cerrar: sala (y hora de fin de la sesión) → vigilantes → túnel.
 /// Kestrel sigue corriendo con la sala cerrada (los ViewModels guardan sus IChatService/IRoomService);
 /// se detiene al cerrar la app con ShutdownAsync.
 /// </summary>
-public class RoomSession(WebServerHost webServer, ITunnelService tunnel, ConfirmDialogService dialogs)
+public class RoomSession(WebServerHost webServer, ITunnelService tunnel, ConfirmDialogService dialogs, ChatEmoteImport emoteImport)
 {
     // Uno por sala abierta: se sueltan al cerrarla para no escuchar el chat de más
     private readonly List<IDisposable> _watchers = [];
@@ -38,6 +39,8 @@ public class RoomSession(WebServerHost webServer, ITunnelService tunnel, Confirm
             await webServer.StartAsync();
             AttachWatchers();
             await tunnel.StartAsync(webServer.Url);
+            // Los emotes comprados por quien hizo ENTRAR entran solos al chat
+            await emoteImport.ImportAsync();
             Room.Open();
         }
         catch
@@ -50,6 +53,7 @@ public class RoomSession(WebServerHost webServer, ITunnelService tunnel, Confirm
     public async Task CloseAsync()
     {
         await CloseRoomAsync();
+        emoteImport.Clear();
         ReleaseWatchers();
         await tunnel.StopAsync();
     }

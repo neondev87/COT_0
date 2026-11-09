@@ -386,3 +386,56 @@ En Registrar usuario (y igual en la contraseña nueva de ¿Olvidaste tu contrase
 2. Registra hasta 20: al abrir Registrar usuario otra vez → "Ya hay 20 usuarios registrados, que es el máximo." y REGISTRAR no agrega a nadie.
 3. Con 20 registrados, recrear una cuenta vieja con su mismo nombre (sección 17) sí se puede: la reemplaza, no suma.
 4. `usuarios.json` conserva las cuentas de antes tal cual (solo crece al registrar).
+
+## 19. Emotes como mini tienda (09/11)
+
+Antes: entra con un usuario que cumpla las reglas nuevas (ej. `Erick`). Para empezar de cero borra `%LocalAppData%\COT_0\compras.json`.
+
+### Picker del chat (bug)
+
+1. Con un set grande (más de 120 emotes) en SET Y REPORTES, abre el chat en el celular y en la PC, toca la carita sin escribir nada: haz scroll en el picker y llegas hasta el último emote del set, sin buscar. Escribir `:` + letras sigue sugiriendo.
+
+### Fondo y panel
+
+1. Abre **04 EMOTES** con un video de fondo elegido en FONDOS: el video **se sigue moviendo** detrás del panel en USUARIOS, TIENDA y TICKETS (no se pausa ni se tapa con negro).
+2. El panel se ve integrado: negro azulado que deja intuir el video, esquinas redondeadas, borde fino rojo que se apaga, sin recuadro negro plano ni sombras.
+3. A 1280×720 y en pantalla completa: márgenes parejos, nada cortado; el scroll de cada sección vive dentro del panel.
+4. Pasa el mouse por pestañas, botones y tarjetas: ningún letrero de atajo (ShortcutHints). ESC sin recuadro abierto regresa a INICIO (o a SALA si viniste de ahí).
+
+### USUARIOS
+
+1. Salen todos los usuarios de `usuarios.json` como tarjetas (inicial + nombre). Ningún hash, contraseña, pregunta ni respuesta en pantalla. No se marca quién hizo ENTRAR.
+2. Clic en un usuario sin compras → recuadro con velo oscuro: "Este usuario aún no ha comprado emotes.".
+3. Clic en uno con compras → miniaturas con nombre y "Tiene N emote(s). Hoy lleva X y le quedan Y de 10.".
+4. ESC cierra el recuadro (y no regresa de pantalla); clic fuera (en el velo) también; CERRAR también.
+
+### TIENDA
+
+1. Abre en TIENDA: aparece "Cargando emotes de 7TV…" y luego la cuadrícula. Baja con el scroll sin buscar: se cargan más páginas solas (50 por página) sin trabarse.
+2. Busca `cat` + ENTER o BUSCAR: solo emotes con ese nombre, también por páginas. Buscar algo inexistente (`zzzzqqq`) → "No se encontraron emotes con ese nombre.". El buscador no deja escribir espacios ni símbolos y se detiene en 20.
+3. Regresa a una búsqueda ya hecha: aparece al instante (caché en memoria).
+4. Sin internet: el motivo ("SIN CONEXIÓN CON 7TV…") y REINTENTAR; la app sigue. Reconecta y REINTENTAR carga.
+5. Arriba: "Te quedan 10 de 10".
+
+### Comprar, cupo y PDF
+
+1. COMPRAR un emote → "¿Quieres descargar tu ticket en PDF?". **NO** → InfoBar "Compraste … Tu ticket quedó guardado en TICKETS.", el botón dice COMPRADO y el contador baja a 9.
+2. Otro → **SÍ** → InfoBar "Ticket guardado en C:\Users\…\Desktop\COT_0_tickets\ticket-000N.pdf". Abre el PDF: título COT_0 con línea roja, número, fecha y hora, el emote, total, cupo restante y cuándo se reinicia.
+3. Compra hasta 10: COMPRAR se apaga en todas las tarjetas y sale "Ya compraste tus 10 emotes. Podrás comprar más en HH:MM horas" (≈ 24:00 justo después).
+4. Cierra y abre la app, entra con el mismo usuario: sigue en "Te quedan 0 de 10", los comprados marcados y el aviso de horas (`compras.json` sobrevivió).
+5. **Reinicio a las 24 h**: cierra la app, en `compras.json` cambia el `WindowStart` de ese usuario a un día antes (ej. `2026-11-08T10:00:00Z`), abre la app y la TIENDA: "Te quedan 10 de 10" y se puede comprar otra vez; los ya comprados siguen marcados y no se pueden repetir.
+6. **Por usuario**: SALIR, entra con otro usuario: su propio cupo (10 de 10) y sus propios tickets.
+7. JSON dañado: cierra la app, escribe `{basura` en `compras.json`, abre la TIENDA: aviso "compras.json estaba dañado y se recreó vacío…" y la app no truena.
+
+### Al chat
+
+1. Con compras, **01 GENERAR QR**: en el chat (celular y PC) los comprados salen en el picker sin preguntar nada, junto con los del set.
+2. Con la sala abierta, compra otro desde EMOTES: aparece en el picker del chat sin cerrar la sala.
+3. Un invitado reporta un emote comprado: llega a REPORTES (SET Y REPORTES); QUITAR y RESTAURAR funcionan igual.
+4. Entra con un usuario sin compras y abre la sala: abre normal, solo con el set.
+
+### TICKETS
+
+1. Usuario sin compras → "Aún no has comprado nada." + IR A LA TIENDA (cambia a la pestaña TIENDA).
+2. Con compras: el más nuevo primero, con número, fecha, hora, miniaturas y DESCARGAR PDF.
+3. DESCARGAR PDF de un ticket al que dijiste NO → se crea `Escritorio\COT_0_tickets\ticket-000N.pdf` y el InfoBar dice la ruta. Otra vez el mismo → misma ruta (no lo duplica).

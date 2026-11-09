@@ -12,6 +12,10 @@ internal static class SevenTvMapper
             .DistinctBy(e => e.Name, StringComparer.Ordinal)
             .ToList();
 
+    // Resultados de búsqueda: varios emotes distintos pueden llamarse igual, así que se separan por ID
+    public static IReadOnlyList<RoomEmote> MapMany(IEnumerable<SevenTvActiveEmote> emotes, ChatOptions options) =>
+        emotes.Select(e => Map(e, options)).OfType<RoomEmote>().DistinctBy(e => e.Id).ToList();
+
     private static RoomEmote? Map(SevenTvActiveEmote emote, ChatOptions options)
     {
         if (string.IsNullOrWhiteSpace(emote.Name) || emote.Data?.Host is not { Files: { } files } host) return null;

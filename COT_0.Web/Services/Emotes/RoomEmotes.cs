@@ -4,13 +4,17 @@ using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Emotes;
 
-/// <summary>Cachea en memoria la lista del set (Chat:EmoteCacheMinutes); si 7TV falla se queda con la última que tenía</summary>
-public sealed class RoomEmotes(ISevenTvClient client, IOptions<ChatOptions> options) : IRoomEmotes
+/// <summary>
+/// Cachea en memoria la lista del set (Chat:EmoteCacheMinutes); si 7TV falla se queda con la última que tenía.
+/// Los comprados en la tienda del Host se suman al set (si un nombre se repite, gana el del set)
+/// </summary>
+public sealed class RoomEmotes(ISevenTvClient client, IOptions<ChatOptions> options) : IRoomEmotes, IPurchasedEmotes
 {
     private readonly object _gate = new();
     private readonly HashSet<string> _removedIds = [];
     private readonly List<EmoteReport> _reports = [];
     private IReadOnlyList<RoomEmote> _all = [];
+    private IReadOnlyList<RoomEmote> _purchased = [];
     private EmoteList _list = EmoteList.Empty;
     private string? _setId = EmoteSetId.Parse(options.Value.EmoteSetId);
     private DateTime _expiresAt = DateTime.MinValue;
@@ -27,14 +31,21 @@ public sealed class RoomEmotes(ISevenTvClient client, IOptions<ChatOptions> opti
     public EmoteSetError Error { get; private set; }
     public int? ErrorCode { get; private set; }
 
-    // Sin set: Off, salvo que el host haya pasado un ID inválido (NotFound, para mostrar el aviso)
+    // Sin set: Ready si hay comprados; si no, Off, salvo que el host haya pasado un ID inválido (NotFound, para mostrar el aviso)
     public EmoteSetStatus Status => Fresh(() =>
-        _setId is null ? (_status == EmoteSetStatus.NotFound ? _status : EmoteSetStatus.Off)
+        _setId is null ? (_status == EmoteSetStatus.NotFound ? _status : _purchased.Count > 0 ? EmoteSetStatus.Ready : EmoteSetStatus.Off)
         : _loading is not null && _all.Count == 0 ? EmoteSetStatus.Loading
         : _status);
     public IReadOnlyList<RoomEmote> Active => Fresh(() => _list.Active);
     public IReadOnlyList<RoomEmote> Removed => Fresh(() => _list.Removed);
     public IReadOnlyList<EmoteReport> Reports { get { lock (_gate) return _reports.ToList(); } }
+    public IReadOnlyList<RoomEmote> Purchased { get { lock (_gate) return _purchased; } }
+
+    public void SetPurchased(IReadOnlyList<RoomEmote> emotes) => Update(() =>
+    {
+        _purchased = emotes.ToList();
+        return true;
+    });
 
     public async Task<EmoteSetStatus> UseSetAsync(string? setIdOrUrl)
     {
@@ -154,7 +165,8 @@ public sealed class RoomEmotes(ISevenTvClient client, IOptions<ChatOptions> opti
 
     private void Rebuild()
     {
-        _list = EmoteList.From(_all, _removedIds);
+        var merged = _all.Concat(_purchased).DistinctBy(e => e.Name, StringComparer.Ordinal).ToList();
+        _list = EmoteList.From(merged, _removedIds);
         Version++;
     }
 }

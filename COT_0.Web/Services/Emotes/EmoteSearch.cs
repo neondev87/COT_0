@@ -2,12 +2,16 @@ using COT_0.Core.Models;
 
 namespace COT_0.Web.Services.Emotes;
 
-/// <summary>Búsqueda del picker: primero los que empiezan con el texto, después los que lo contienen, los cortos antes</summary>
+/// <summary>
+/// Búsqueda del picker: primero los que empiezan con el texto, después los que lo contienen, los cortos antes.
+/// Sin texto regresa todos: el tope (Chat:EmotePickerLimit) solo aplica a las búsquedas; antes cortaba también
+/// la lista completa y lo que pasaba del tope solo salía buscando. Las imágenes cargan diferidas (loading="lazy")
+/// </summary>
 internal static class EmoteSearch
 {
     public static IReadOnlyList<RoomEmote> Find(IReadOnlyList<RoomEmote> emotes, string? query, int max)
     {
-        if (string.IsNullOrWhiteSpace(query)) return emotes.Take(max).ToList();
+        if (string.IsNullOrWhiteSpace(query)) return emotes;
 
         var text = query.Trim();
         return emotes

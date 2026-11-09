@@ -105,6 +105,8 @@ public class ChatOptions
     // EmoteSetId: ID o URL del set ("global" = set global de 7TV); el Host lo cambia con IRoomEmotes.UseSetAsync
     public string SevenTvApiUrl { get; set; } = "https://7tv.io/v3/";
     public string SevenTvEmoteSetPath { get; set; } = "emote-sets/{0}";
+    // Búsqueda en todo el catálogo de 7TV (GraphQL v3, con paginación) para la tienda del Host
+    public string SevenTvGqlPath { get; set; } = "gql";
     public string SevenTvCdnHost { get; set; } = "cdn.7tv.app";
     public string SevenTvUserAgent { get; set; } = "COT_0/1.0";
     public string EmoteSetId { get; set; } = "global";

@@ -164,6 +164,8 @@ _(Anotar acá: agente, qué se necesita en Core y por qué.)_
   - `.gitignore` de la raíz (no es carpeta de ningún agente): la regla `musica/` tapa `COT_0.Host/Services/Musica/`. Pedido: cambiarla a `/musica/`. Mientras, `COT_0.Host/.gitignore` la vuelve a incluir.
   - Cierre de la migración (Agente 0): borrar el Host WPF, renombrar el proyecto WinUI a `COT_0.Host` y agregarlo a `COT_0.sln`. Lista completa en `docs/PENDIENTES_LIMPIEZA.md`.
   - Sesiones de invitados: `SesionWatcher` se entera de quién entra comparando `GetUsersAsync()` en cada `UsersChanged` (igual que `VisitWatcher`). Un evento `event Action<User>? UserJoined` en `IChatService` lo haría directo.
+- **Agente Host → Agente 0 (09/11, tienda de emotes)**: para que la tienda del Host meta al chat los emotes comprados se agregó en Web `Services/Emotes/IPurchasedEmotes.cs` (`Purchased`, `SetPurchased`), implementada por la misma instancia de `RoomEmotes` que `IRoomEmotes` (`EmoteRegistration`). Pedido: mover esa interfaz a `COT_0.Core/Services` (o sumar `SetPurchased` a `IRoomEmotes`) para cumplir "todo servicio tiene interfaz en Core". También se sumó a `ISevenTvClient` (Web) `SearchEmotesAsync` (GraphQL v3 de 7TV, `Chat:SevenTvGqlPath`) y `EmoteCatalogPage`. No se tocó Core.
+- **Agente Host → Agente Web (09/11, picker)**: `EmoteSearch.Find` ya no corta la lista completa a `Chat:EmotePickerLimit` (el tope solo aplica a búsquedas) y `EmotePicker.razor` muestra la cuadrícula si hay emotes activos aunque el set esté apagado (comprados). No se tocó `wwwroot`.
 
 ### Resueltos por el Agente 0 (cierre 08/11, rama `host-winui`)
 

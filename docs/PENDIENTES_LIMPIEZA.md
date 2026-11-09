@@ -9,7 +9,7 @@ Solo lo que sigue pendiente después del cierre (08/11, rama `host-winui`; ya co
 ## En esta PC (fuera del repo)
 
 - **user-secrets del WPF viejo** (`Host:User` / `Host:Password`, `UserSecretsId cot0-host-7fc7bba9-727e-4d80-9300-10219506c924`): la app final no los lee. Se dejaron porque el respaldo (`main`, `winui-migration`, tag `pre-cierre-winui`) todavía los necesita para entrar. Si ya no vas a usar el respaldo: `dotnet user-secrets clear --id cot0-host-7fc7bba9-727e-4d80-9300-10219506c924`.
-- **Usuarios de prueba**: si registraste usuarios para probar el máximo de 5, quedan en `%LocalAppData%\COT_0\usuarios.json`. No hay pantalla para borrar usuarios: quítalos del archivo a mano (es una lista JSON) o bórralo para empezar de cero.
+- **Usuarios de prueba**: si registraste usuarios para probar el máximo de 20, quedan en `%LocalAppData%\COT_0\usuarios.json`. No hay pantalla para borrar usuarios: quítalos del archivo a mano (es una lista JSON) o bórralo para empezar de cero.
 - **`%LocalAppData%\COT_0\cache\fondos\*.jpg`**: un cuadro por video (≈ 12–90 KB cada uno). Si cambias o borras un video, su JPEG viejo **se queda** (no hay limpieza automática). Se puede borrar la carpeta completa: se regenera al abrir FONDOS. Puede quedar algún `*.part.jpg` si la app se cerró a medio generar.
 - **`%LocalAppData%\COT_0\registro-medios.jsonl`**: crece sin tope (una línea por falla). Si estorba, borrarlo o rotarlo.
 - **`COT_0_P/portadas/respaldo_4y5_2026-11-09/`** (09/11): originales de `Audio_04.png` y `Audio_05.png` con su fondo blanco (≈ 42 y 65 KB) y `portadas45.py`, el script que les quitó el fondo (mismo proceso que `procesar.py` + máscara encogida 2 px). Si las portadas nuevas se ven bien, se puede borrar la carpeta.
@@ -20,11 +20,16 @@ Solo lo que sigue pendiente después del cierre (08/11, rama `host-winui`; ya co
 
 - **Build de prueba de la música en el Manual (09/11)**: la salida de `dotnet build` quedó en `%LocalAppData%\Temp\claude\…\scratchpad\build\` (la app abierta bloqueaba `bin\`). Fuera del repo; se puede borrar.
 
+- **Tienda de emotes (09/11)**: al probar quedan `%LocalAppData%\COT_0\compras.json` (compras y tickets de prueba) y la carpeta `Escritorio\COT_0_tickets\` con los PDF. Borrarlos si estorban; la app recrea lo que necesite.
+- **Archivos temporales de la tienda (09/11)**: prueba de PDFsharp en el scratchpad de la sesión (`…\scratchpad\pdftest\`, `t.pdf`, `ticket.pdf`), fuera del repo y de `COT_0_P`. Nada temporal en el repo.
+
 ## En el código (no se tocó en el cierre: cambia lógica)
 
 - **`README.md`** (fuera de `COT_0.Host` y `docs`) todavía dice que la música "empieza por `Audio:DefaultFile`": ahora es `Audio:InitialTrack` (Audio_02).
 
 - **SUBIR MÚSICA** no existe en WinUI (necesita `FileOpenPicker` con el HWND de la ventana). Si se quiere, va en `Views/Pantallas/MusicaPage` + `Services/Musica`.
+- **Vista de ejemplo del paso 5 del Manual** (`VistaEjemploEmotes`): sigue dibujando el panel viejo (set + reportes); el texto de Lain ya habla de TIENDA y SET Y REPORTES.
+- **`IPurchasedEmotes`** vive en Web; pedido a Core anotado en `CONTRATO.md`.
 - **`FondoImages` también lo usa el manual** (`ManualViewModel`, para las capturas `pasoN.png`): si crece, renombrarlo a algo general (`ImageDecoder`).
 - **Kestrel queda arriba con la sala cerrada** (se apaga al cerrar la ventana). Para apagarlo también al cerrar la sala habría que pedir `IChatService`/`IRoomService` a la web nueva en cada ViewModel (hoy se guardan una vez como Singleton).
 - **`ConnectedUsersViewModel` y `SalaViewModel`** se suscriben a eventos de la web y del reloj sin soltarlos: es intencional (viven lo que la app), pero si se cambian a Transient habría que desuscribir.

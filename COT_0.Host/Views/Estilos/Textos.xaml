@@ -160,6 +160,56 @@
     <x:String x:Key="Text.Emotes.Ignore">IGNORAR</x:String>
     <x:String x:Key="Text.Emotes.Restore">RESTAURAR</x:String>
 
+    <!-- Emotes: tienda (USUARIOS | TIENDA | TICKETS) -->
+    <x:String x:Key="Text.Store.Tab.Users">USUARIOS</x:String>
+    <x:String x:Key="Text.Store.Tab.Shop">TIENDA</x:String>
+    <x:String x:Key="Text.Store.Tab.Tickets">TICKETS</x:String>
+    <x:String x:Key="Text.Store.SetPanel">SET Y REPORTES</x:String>
+    <x:String x:Key="Text.Store.Close">CERRAR</x:String>
+    <x:String x:Key="Text.Store.NoticeTitle">Tienda</x:String>
+    <x:String x:Key="Text.Store.Error.Storage">No se pudo leer o guardar compras.json. Inténtalo de nuevo.</x:String>
+    <x:String x:Key="Text.Store.Recreated">compras.json estaba dañado y se recreó vacío. Las compras de antes no se pudieron leer.</x:String>
+    <x:String x:Key="Text.Store.Users.Title">USUARIOS REGISTRADOS</x:String>
+    <x:String x:Key="Text.Store.Users.Hint">Toca un usuario para ver los emotes que tiene.</x:String>
+    <x:String x:Key="Text.Store.Users.Empty">Todavía no hay usuarios registrados.</x:String>
+    <x:String x:Key="Text.Store.Stock.Title">EMOTES DE {0}</x:String>
+    <x:String x:Key="Text.Store.Stock.Summary">Tiene {0} emote(s). Hoy lleva {1} y le quedan {2} de {3}.</x:String>
+    <x:String x:Key="Text.Store.Stock.Empty">Este usuario aún no ha comprado emotes.</x:String>
+    <x:String x:Key="Text.Store.Shop.Title">EMOTES DE 7TV</x:String>
+    <x:String x:Key="Text.Store.Shop.SearchPlaceholder">Buscar emote por nombre</x:String>
+    <x:String x:Key="Text.Store.Shop.Search">BUSCAR</x:String>
+    <x:String x:Key="Text.Store.Shop.Quota">Te quedan {0} de {1}</x:String>
+    <x:String x:Key="Text.Store.Shop.Buy">COMPRAR</x:String>
+    <x:String x:Key="Text.Store.Shop.Owned">COMPRADO</x:String>
+    <x:String x:Key="Text.Store.Shop.Loading">Cargando emotes de 7TV… puede tardar hasta un minuto.</x:String>
+    <x:String x:Key="Text.Store.Shop.Empty">No se encontraron emotes con ese nombre.</x:String>
+    <x:String x:Key="Text.Store.Shop.Retry">REINTENTAR</x:String>
+    <x:String x:Key="Text.Store.Shop.Blocked">Ya compraste tus {0} emotes. Podrás comprar más en {1} horas</x:String>
+    <x:String x:Key="Text.Store.Shop.Bought">Compraste {0}. Tu ticket quedó guardado en TICKETS.</x:String>
+    <x:String x:Key="Text.Store.Outcome.AlreadyOwned">Ya tienes ese emote.</x:String>
+    <x:String x:Key="Text.Store.Outcome.NoUser">Vuelve a ENTRAR para comprar.</x:String>
+    <x:String x:Key="Text.Store.PdfDialog.Message">¿Quieres descargar tu ticket en PDF?</x:String>
+    <x:String x:Key="Text.Store.PdfDialog.Confirm">SÍ</x:String>
+    <x:String x:Key="Text.Store.PdfDialog.Cancel">NO</x:String>
+    <x:String x:Key="Text.Store.PdfSaved">Ticket guardado en {0}</x:String>
+    <x:String x:Key="Text.Store.PdfFailed">No se pudo guardar el PDF en {0}. Revisa que tengas permiso de escribir en el Escritorio.</x:String>
+    <x:String x:Key="Text.Store.Tickets.Title">TUS TICKETS</x:String>
+    <x:String x:Key="Text.Store.Tickets.Empty">Aún no has comprado nada.</x:String>
+    <x:String x:Key="Text.Store.Tickets.GoShop">IR A LA TIENDA</x:String>
+    <x:String x:Key="Text.Store.Tickets.Number">TICKET #{0}</x:String>
+    <x:String x:Key="Text.Store.Tickets.Detail">{0} emote(s) · te quedaban {1} de {2}</x:String>
+    <x:String x:Key="Text.Store.Tickets.Download">DESCARGAR PDF</x:String>
+    <x:String x:Key="Text.Ticket.Title">COT_0</x:String>
+    <x:String x:Key="Text.Ticket.Subtitle">TICKET DE EMOTES</x:String>
+    <x:String x:Key="Text.Ticket.Number">Ticket: #{0}</x:String>
+    <x:String x:Key="Text.Ticket.Date">Fecha: {0}</x:String>
+    <x:String x:Key="Text.Ticket.Emotes">EMOTES</x:String>
+    <x:String x:Key="Text.Ticket.EmoteLine">1 x {0}</x:String>
+    <x:String x:Key="Text.Ticket.Total">Total: {0} emote(s)</x:String>
+    <x:String x:Key="Text.Ticket.Remaining">Cupo restante: {0} de {1}</x:String>
+    <x:String x:Key="Text.Ticket.Resets">Se reinicia: {0}</x:String>
+    <x:String x:Key="Text.Ticket.Footer">Gratis: solo gasta cupo. Gracias.</x:String>
+
     <!-- Música -->
     <x:String x:Key="Text.Music.ScreenTitle">MÚSICA</x:String>
     <x:String x:Key="Text.Music.ErrorTitle">Música</x:String>
@@ -272,8 +322,8 @@
     <x:String x:Key="Text.Manual.Step4.Notice2">En la lista ves quién entró y hace cuánto. La ✕ saca a alguien de la sala.</x:String>
     <x:String x:Key="Text.Manual.Step4.Notice3">Al terminar, CERRAR SALA saca a todos y apaga el túnel.</x:String>
 
-    <x:String x:Key="Text.Manual.Step5.Title">Emotes de 7TV</x:String>
-    <x:String x:Key="Text.Manual.Step5.Notice1">Pega el ID o la URL de un set de 7TV y toca APLICAR.</x:String>
+    <x:String x:Key="Text.Manual.Step5.Title">Emotes de 7TV y su tienda</x:String>
+    <x:String x:Key="Text.Manual.Step5.Notice1">En TIENDA compras hasta 10 emotes cada 24 horas; entran solos a tu sala. En SET Y REPORTES pegas el ID de un set de 7TV y tocas APLICAR.</x:String>
     <x:String x:Key="Text.Manual.Step5.Notice2">Si un invitado reporta un emote, aparece en REPORTES. Tú decides: QUITAR o IGNORAR.</x:String>
     <x:String x:Key="Text.Manual.Step5.Notice3">Un emote quitado se ve como texto. RESTAURAR lo regresa.</x:String>
 

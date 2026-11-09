@@ -413,3 +413,16 @@ El panel de vidrio con "Gracias por estar aquí. Vuelve pronto." y CERRAR no cam
 | Límite de 15 en todos los campos | 20 (`Inputs:MaxCaracteres`); el set de 7TV sigue en 26 |
 | Cuenta de antes entraba igual | "Esta cuenta ya no cumple las reglas nuevas. Regístrala de nuevo." |
 | Usuario de la muestra del Manual `hostdemo` | `Hostdemo` |
+
+## Emotes como mini tienda (09/11)
+
+| Antes | Ahora |
+|---|---|
+| EMOTES: fondo sólido (`WindowBackgroundBrush`), video de fondo pausado | Página transparente: el video de fondo sigue corriendo detrás de **un panel** centrado (`ShopPanel`): degradado negro azulado al 90 → 84 % (`ShopPanelBrush`), esquinas de 10 px y borde fino de acento que se apaga en diagonal (`ShopPanelBorderBrush`), máx. 1180 px, márgenes 64/48/40 |
+| Un solo panel: set de 7TV, reportes, quitados | Pestañas **USUARIOS \| TIENDA \| TICKETS** (`ShopTab`: texto condensado, línea de acento abajo al elegir, 0.15 s). El panel de siempre queda en el recuadro **SET Y REPORTES** |
+| — | USUARIOS: tarjetas con la inicial en un tono de avatar y el nombre; clic → recuadro con su stock sobre el velo negro (`DialogVeilBrush`) |
+| — | TIENDA: buscador + BUSCAR, "Te quedan X de 10" en rojo claro, cuadrícula de tarjetas (miniatura quieta, nombre, COMPRAR con contorno de acento que se llena al pasar el mouse; COMPRADO apagado) |
+| — | TICKETS: tarjetas con número, fecha, hora, miniaturas y DESCARGAR PDF; vacío: "Aún no has comprado nada." + IR A LA TIENDA |
+| — | Diálogo "¿Quieres descargar tu ticket en PDF?" SÍ / NO (mismo `ConfirmacionDialogo`) |
+| Picker de emotes del chat: solo los primeros 120; el resto solo buscando | Sin buscar se ven todos (scroll dentro del picker); el tope solo aplica a búsquedas |
+| Manual paso 5: "Pega el ID o la URL de un set…" | "En TIENDA compras hasta 10 emotes cada 24 horas; entran solos a tu sala. En SET Y REPORTES pegas el ID…" (la vista de ejemplo del paso 5 sigue mostrando el panel viejo) |

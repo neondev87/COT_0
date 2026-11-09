@@ -32,7 +32,7 @@
                     </label>
                 }
 
-                @if (Emotes.Status == EmoteSetStatus.Ready)
+                @if (Emotes.Status == EmoteSetStatus.Ready || Emotes.Active.Count > 0)
                 {
                     @if (results.Count == 0)
                     {
