@@ -136,7 +136,7 @@ Antes: `dotnet build COT_0.sln` en 0 errores y 0 warnings.
 1. **03 MANUAL** → el fondo de la app (cuadro fijo) detrás de un solo velo negro parejo, ← INICIO | MANUAL arriba a la izquierda y atajos ENTER / → / ← / ESC arriba a la derecha.
    A la derecha, "Paso 01 / 06", el título del paso y, justo debajo, la **vista de ejemplo** del paso (una réplica quieta de la pantalla). Ya no hay texto explicativo bajo el título: lo dicen las notificaciones de Lain.
    La vista de ejemplo ocupa todo el ancho a la derecha de Lain, en 16:9, sin recortes y centrada con márgenes parejos.
-   Cambia el tamaño de la ventana (1280×720, maximizada y más chica): la réplica crece o se reduce entera, sin encimarse con Lain ni con sus avisos, y cada resaltado sigue sobre su elemento.
+   En pantalla completa (si puedes, en monitores de distinta resolución): la réplica crece o se reduce entera, sin encimarse con Lain ni con sus avisos, y cada resaltado sigue sobre su elemento.
 2. Abajo a la izquierda, Lain en bucle **sin cuadro negro**: flota sobre el fondo (GIF `gifs\lain-transparente.gif`). Sin ese archivo se usa el video fundido con su penumbra negra (ver sección 10b).
 3. Arriba a la izquierda salen las notificaciones de Lain una por una con fundido y el sonido de aviso; la última se queda (textos, orden y tiempos sin cambios).
    **Cada aviso enciende su resaltado** en la vista de ejemplo: borde rojo del proyecto con un halo que late. El anterior se apaga al entrar el siguiente.
@@ -144,7 +144,7 @@ Antes: `dotnet build COT_0.sln` en 0 errores y 0 warnings.
 
    | Paso | Vista de ejemplo | Resaltado 1 | Resaltado 2 | Resaltado 3 |
    |---|---|---|---|---|
-   | 01 Abre la app y entra | Login con `host_demo`, contraseña de puntos y los enlaces ¿Olvidaste tu contraseña? \| Registrar usuario | COT_0 + ACCESO DEL HOST | Enlace Registrar usuario | ENTRAR |
+   | 01 Abre la app y entra | Login con `hostdemo`, contraseña de puntos y los enlaces ¿Olvidaste tu contraseña? \| Registrar usuario | COT_0 + ACCESO DEL HOST | Enlace Registrar usuario | ENTRAR |
    | 02 El inicio: genera el QR | Dashboard con la hora actual y SALA INACTIVA | ESTADO (arriba a la derecha) | 01 GENERAR QR | Tarjetas 02 a 06 |
    | 03 Comparte el QR o el enlace | Sala con QR de adorno, `#7F3K` y el enlace de ejemplo | QR | URL DE LA SALA + COPIAR | EN VIVO + tiempo |
    | 04 Ve quién está conectado | La misma sala: "04" y 4 invitados ficticios en la lista | Contador | Lista de conectados | CERRAR SALA |
@@ -220,13 +220,13 @@ Antes: `dotnet build COT_0.sln` en 0 errores y 0 warnings.
 
 ### Barra de volumen de la firma
 
-1. Abre la app: la música está en silencio (barra en 0) con `Audio_01` cargada.
+1. Abre la app: la barra está en 25 con `Audio_01` cargada en pausa (no suena hasta ▶ o mover la barra).
 2. Bajo "Neondev" (login, dashboard y sala) solo hay una bocina y una línea fina; sin número, sin canción, sin botones.
 3. Pasa el mouse por la línea: aparece un punto pequeño. Arrastra o haz clic: el volumen sube y baja; el tramo rojo sigue al valor; la bocina cambia (0, bajo, alto).
 4. Mouse sobre la bocina: cursor de mano, se pone blanca y el tooltip dice "Silenciar". Clic: la bocina sale tachada, la barra baja a 0 y el tooltip dice "Activar sonido". Clic otra vez: regresa al volumen que tenía.
 5. Silencia y sube la barra: el silencio se quita solo.
 6. Abre **05 MÚSICA**: su barra, su número y su nota marcan lo mismo que la firma (también el silencio). Cambia el volumen ahí y regresa: la firma lo refleja.
-7. En la **sala** a 1280 × 720: la firma no se encima con el contador ni se corta.
+7. En la **sala** en pantalla completa: la firma no se encima con el contador ni se corta.
 
 ### Límite de caracteres (`Inputs:MaxCaracteres` = 15)
 
@@ -246,3 +246,39 @@ Antes: `dotnet build COT_0.sln` en 0 errores y 0 warnings.
 5. **Sin letreros de atajos**: pasa el mouse despacio por toda la pantalla del Manual (fondo, Lain, avisos, atajos, vista de ejemplo, botón de abajo, despedida) y por ← INICIO de Sala, Emotes, Música, Fondos y Manual: no debe salir ningún letrero "Enter", "Esc", "→" ni "←". Igual en Login (formularios de registro y recuperación), Dashboard, APLICAR de Emotes y el diálogo de confirmación (SALIR / ✕).
 6. Los únicos letreros que sí salen: el logo Neondev ("Abrir el repositorio del proyecto") y las bocinas (firma, música y manual).
 7. Los atajos siguen igual: ENTER avanza (y cierra en la despedida), → / ← cambian de paso, ESC abre la despedida y luego cierra; Esc en ← INICIO de las demás pantallas regresa; Enter en el set de Emotes aplica.
+
+## 13. Validación estricta, portadas 4 y 5, volumen y pantalla completa (09/11)
+
+### Solo letras y números en cada campo
+
+Copia `hola mundo@2` y `ñandú  é!` al portapapeles y prueba en cada campo:
+
+1. **ENTRAR** (usuario y contraseña): escribe un espacio, `@`, `.`, `_` o `-`: no aparece. Pega `hola mundo@2`: queda `holamundo2`; pega `ñandú  é!`: queda `ñandúé`. El cursor queda donde ibas.
+2. **Registrar usuario**: usuario, contraseña y repetir contraseña, igual que el punto 1. Registra un usuario con ñ o acento: entra normal.
+3. **Pregunta secreta** (primer ENTRAR de una cuenta sin pregunta): la respuesta no acepta espacios ni símbolos, tampoco pegando.
+4. **¿Olvidaste tu contraseña?**: usuario, respuesta, contraseña nueva y repetir contraseña, igual. Con una respuesta guardada antes como "Mango Verde", contestar `MangoVerde` funciona.
+5. **04 EMOTES**: el set de 7TV quita espacios, `/`, `:` y `.` (una URL pegada queda en un solo bloque y 7TV la rechaza). Un ID de 24 o 26 carga normal; se sigue deteniendo en 26.
+6. Los límites siguen: 15 en los campos del login (26 en el set de 7TV), también pegando.
+7. La muestra del Manual (paso 1) dice `hostdemo` y la contraseña de puntos se ve igual que antes.
+
+### Portadas 4 y 5
+
+1. **05 MÚSICA**: las canciones que usan `Audio_04` y `Audio_05` muestran al personaje sobre el mismo fondo oscuro que la 1, 2 y 3, sin cuadro blanco ni filo blanco alrededor del pelo o los hombros.
+2. Portada grande: nítida (sin pixelar) y del mismo tamaño que las otras (las cinco miden 1024×1024 y salen a 300×300).
+3. La 1, 2 y 3 se ven igual que antes.
+
+### Volumen 25 % al abrir
+
+1. Cierra y abre la app: la barra de la firma marca 25 % y `Audio_01` está cargada sin sonar.
+2. Abre **05 MÚSICA**: su barra y su número dicen 25. ▶ empieza a sonar a 25.
+3. Silencia en la firma: barra en 0 y bocina tachada; reactiva: vuelve a 25. Lo mismo desde MÚSICA.
+4. Mueve la barra de la firma sin haber dado ▶: empieza a sonar.
+
+### Pantalla completa
+
+1. La app abre en pantalla completa, sin barra de título ni botones de Windows, en el login y en todas las pantallas.
+2. La ✕ de arriba a la derecha: sin sala pregunta "¿Salir de COT_0?"; con sala, "¿Cerrar la sala y salir?". CANCELAR no cierra. No tapa la firma ni otros botones en ninguna pantalla.
+3. Alt+F4 hace lo mismo que la ✕.
+4. SALIR del dashboard sigue pidiendo confirmación y regresa al login.
+5. Atajos: ENTER en el login y en los formularios, Esc en ← INICIO, ENTER / → / ← / ESC en el Manual y Enter en el set de Emotes funcionan igual. Al pasar el mouse por la ✕ y por los botones no sale ningún letrero de atajo.
+6. Se ve bien a la resolución del monitor (el diseño es de 1280×720: revisa que nada quede encimado ni perdido en una pantalla más grande).

@@ -192,3 +192,16 @@ Se comparó `COT_0.Host` (WPF) contra el Host WinUI (entonces en otra carpeta) e
 
 - Verificación: `dotnet build COT_0.sln` en 0 errores y 0 warnings; `COT_0.Host.exe` lanzado 8 s: ventana "COT_0" abierta y respondiendo. Sin capturas de pantalla: el GIF se revisó extrayendo cuadros con ffmpeg (alfa en los 93 cuadros, sin halo sobre fondo rojo) y la composición del Manual (velo + Lain, velo + despedida fundida) se simuló con ffmpeg sobre un cuadro de `Batman.mp4`. El aspecto en la app real queda para `PRUEBAS_MANUALES.md`, sección 10b.
 - Pendiente de confirmar a ojo: que `BitmapImage.SetSourceAsync` anime el GIF (WinUI lo anima con `AutoPlay`, que viene activo) y que la penumbra de la despedida no se note sobre fondos muy claros.
+
+## Validación estricta, portadas, volumen y pantalla completa (09/11)
+
+| Tarea | Commit | Archivos |
+|---|---|---|
+| 1. Solo letras y números | `d9c0056` | Nuevos: `Services/Validaciones/InputRules.cs` (regla única), `Views/Componentes/FiltroCampo.cs` (al escribir y pegar; encendido en `LoginFieldStyle` de `App.xaml`). Cambiados: `CredentialValidator.cs`, `SecurityAnswerValidator.cs` (`AnswerInvalid`), `Models/CredentialError.cs`, `UserService.cs` y `PasswordRecoveryService.cs` (validan otra vez antes de guardar o comparar), `LoginViewModel.cs`, `EmotesViewModel.cs` (sin `Trim`, rechaza símbolos), `Textos.xaml`, `VistaEjemploLogin.xaml` (muestra de puntos sin filtro), `appsettings.json` (`hostdemo`). Pedido a Web anotado en `CONTRATO.md` |
+| 2. Portadas 4 y 5 | sin commit (fuera del repo) | `COT_0_P/portadas/Audio_04.png`, `Audio_05.png`; respaldo en `portadas/respaldo_4y5_2026-11-09/` |
+| 3. Volumen 25 % | `96cfb5c` | `appsettings.json` (`Audio:DefaultVolume` = 25, escala 0–100 como ya estaba), `MusicService.cs` (al arrancar solo carga, no reproduce), `AudioSettings.cs` |
+| 4. Pantalla completa | `51c8ae4` | `WindowSetup.cs`, `MainWindow.xaml(.cs)` (✕ propia), `CloseGuard.cs` (`RequestCloseAsync`), `WindowSettings.cs` (ahora solo tamaño del diseño para el Manual), `Textos.xaml` |
+
+- El Host no tiene cuadro de mensajes de chat (el chat vive en la web), así que no hubo campo que dejar libre.
+- `MusicService.cs` tenía un cambio sin commit (`_failures =25` en `MediaOpened`); se regresó a `0` en el commit del volumen porque rompía el salto de canciones ilegibles.
+- Verificación: `dotnet build COT_0.sln` en 0 errores y 0 warnings. La app no se abrió (sin capturas): filtro, ✕, pantalla completa y volumen quedan para `PRUEBAS_MANUALES.md`, sección 13. Las portadas sí se revisaron a ojo como imagen (completas y con acercamiento a los bordes).

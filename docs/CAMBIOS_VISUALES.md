@@ -272,7 +272,7 @@ No hubo que reconstruir nada pesado: el original no usaba shader ni blur, solo u
 | Firma del login: nota, barra de 130 px, número y nombre de la canción | Solo la barra de volumen, roja (`VolumeSlider` + acento del proyecto), del ancho del logo. Reproducir, siguiente y lista quedan en MÚSICA |
 | Dashboard y sala: solo `LogoNeondev` | `Firma` completa (logo + barra) en login, dashboard y sala. En la sala va centrada a media altura de la fila del contador (antes arriba) |
 
-Un solo volumen: las tres firmas y MÚSICA leen el mismo `MusicService`. Arranca siempre en 0 (`Audio:DefaultVolume`, no se guarda entre sesiones) con `Audio_01.mp3` (`Audio:DefaultFile`) cargada en pausa; empieza a sonar al subir el volumen, así no avanza a otra canción mientras está en silencio.
+Un solo volumen: las tres firmas y MÚSICA leen el mismo `MusicService`. Arranca siempre en 25 (`Audio:DefaultVolume`, no se guarda entre sesiones; antes 0) con `Audio_01.mp3` (`Audio:DefaultFile`) cargada en pausa; empieza a sonar con ▶ en MÚSICA o al mover la barra de volumen.
 
 ### Manual: sin texto duplicado y vista de ejemplo más grande
 
@@ -358,3 +358,14 @@ El panel de vidrio con "Gracias por estar aquí. Vuelve pronto." y CERRAR no cam
 |---|---|
 | Al pasar el mouse por el Manual salía un letrero "Enter" (tooltip automático de WinUI para los `KeyboardAccelerators` de la página); igual "Esc" en ← INICIO de las pantallas internas | `KeyboardAcceleratorPlacementMode="Hidden"` en `ManualPage` y en el botón ← INICIO de `EncabezadoPantalla` (APLICAR de Emotes ya lo tenía). Por defecto: `ShortcutHints` en cada página al navegar y `Hidden` en los estilos de botón. Los atajos funcionan igual |
 | Tooltips en ✕ de conectados ("Sacar de la sala"), en cada fondo (nombre del archivo) y en anterior / reproducir / siguiente de Música | Quitados (se conserva su `AutomationProperties.Name`). Solo quedan el del logo Neondev y los de las bocinas |
+
+## Validación, portadas 4 y 5, volumen y pantalla completa (09/11)
+
+| Antes | Ahora |
+|---|---|
+| Los campos aceptaban espacios, @ y símbolos al escribir; se rechazaban hasta ENTRAR | Los campos de estilo `LoginTextBox` / `LoginPasswordBox` (usuario, contraseña, repetir contraseña, respuesta secreta y set de 7TV) quitan al momento lo que no sea letra o número (ñ y acentos sí), también al pegar (`FiltroCampo` + `InputRules`). Los errores siguen en el InfoBar; nuevos: "Tu respuesta solo puede tener letras y números, sin espacios ni símbolos." y "ERROR · SOLO LETRAS Y NÚMEROS, SIN ESPACIOS NI SÍMBOLOS" en Emotes |
+| El set de 7TV aceptaba una URL ("ERROR · ESE ID O URL…") | Solo el ID (letras y números); el texto dice "ERROR · ESE ID NO ES DE UN SET DE 7TV" |
+| Usuario de la muestra del Manual `host_demo` | `hostdemo` (el guion bajo ya no es válido) |
+| Portadas 4 y 5 con fondo blanco (720×720 y 736×736) | Mismo proceso que la 1, 2 y 3 (`portadas/procesar.py`: rembg `isnet-anime`, sujeto al 80 % en lienzo de 1024 color `#0B0B0F`) y la máscara encogida 2 px para quitar el filo blanco. Ojo: la 1–3 no son PNG con alfa sino ese lienzo oscuro; la 4 y 5 quedaron igual |
+| Volumen al abrir: 0 | 25 (`Audio:DefaultVolume`) |
+| Ventana de 1280×720 centrada con los botones de Windows | Pantalla completa siempre (`AppWindowPresenterKind.FullScreen`). Como pantalla completa no tiene botones de Windows, una ✕ propia (46×32, arriba a la derecha, donde estaba la de Windows) hace lo mismo que la de antes: pregunta con su confirmación (`CloseGuard.RequestCloseAsync`). Alt+F4 también pasa por la confirmación. Ya no hay botón de minimizar |

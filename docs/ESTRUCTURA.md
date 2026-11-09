@@ -90,7 +90,7 @@ COT_0.Host/
 ├── COT_0.Host.csproj             WinUI 3 sin MSIX (WindowsAppSDKSelfContained); copia Assets, appsettings.json y wwwroot de la web
 ├── App.xaml                      Paleta, fuentes, medidas y estilos comunes (login, TextButton, SolidButton, VolumeSlider, filas de lista)
 ├── App.xaml.cs                   Arranque: arma los servicios, crea la ventana, arranca la música y levanta la web
-├── MainWindow.xaml               Única ventana: CapaFondo (fondo elegido) y encima el Frame (RootFrame)
+├── MainWindow.xaml               Única ventana (pantalla completa): CapaFondo (fondo elegido), encima el Frame (RootFrame) y la ✕ arriba a la derecha
 ├── appsettings.json              Toda la configuración (ventana, archivos JSON, seguridad, validación, preguntas secretas, Ui, Paths,
 │                                 Audio, Background, Manual + Manual:Demo, Branding, Tunnel, Qr, Web, Chat, GuestManual)
 ├── app.manifest                  Nitidez en pantallas con escala (DPI)
@@ -137,8 +137,8 @@ COT_0.Host/
 │   ├── Tunel/                    CloudflareTunnelService (ITunnelService) y KillOnCloseJob (cloudflared muere con la app)
 │   ├── Usuarios/                 UserService (registrar hasta Usuarios:Maximo, ENTRAR, pregunta al entrar), PasswordRecoveryService
 │   │                             (recuperación por usuario), HostAccounts (usuarios.json como lista; también lee la cuenta suelta) y SecretHasher (PBKDF2 + SHA-256 con salt)
-│   ├── Validaciones/             InputLimits (Inputs:MaxCaracteres), CredentialValidator (solo letras y números) y SecurityAnswerValidator (normaliza la respuesta)
-│   ├── Ventana/                  WindowSetup (tamaño y barra de título), Navigator (cambia de página), CloseGuard (cerrar con sala activa)
+│   ├── Validaciones/             InputRules (regla única: solo letras y números), InputLimits (Inputs:MaxCaracteres), CredentialValidator y SecurityAnswerValidator (normaliza la respuesta)
+│   ├── Ventana/                  WindowSetup (pantalla completa), Navigator (cambia de página), CloseGuard (✕ y Alt+F4: pregunta antes de cerrar)
 │   │                             y ShortcutHints (atajos de teclado sin letrero flotante)
 │   └── Visitas/                  VisitService (visitas.json) y VisitWatcher (anota a cada invitado que entra)
 └── Views/
@@ -150,6 +150,7 @@ COT_0.Host/
     │   ├── CapaFondo             Fondo detrás del Frame: degradado, imagen/cuadro fijo o video, velo y viñeta (Dashboard, Sala, Fondos y Manual)
     │   ├── ConfirmacionDialogo   ContentDialog sí/no
     │   ├── BotonBocina.cs        Bocina de la firma: Button con cursor de mano
+    │   ├── FiltroCampo.cs        Propiedad adjunta de LoginTextBox/LoginPasswordBox: quita espacios y símbolos al escribir o pegar
     │   ├── ControlVolumen        Nota (silencio), barra de volumen y número (MÚSICA)
     │   ├── EncabezadoPantalla    ← INICIO | TÍTULO de cada pantalla (clic o Esc regresa; ← SALA si viniste de la sala)
     │   ├── Firma                 LogoNeondev y debajo bocina + línea de volumen (login, dashboard y sala)

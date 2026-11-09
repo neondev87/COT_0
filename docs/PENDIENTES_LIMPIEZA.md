@@ -12,6 +12,7 @@ Solo lo que sigue pendiente después del cierre (08/11, rama `host-winui`; ya co
 - **Usuarios de prueba**: si registraste usuarios para probar el máximo de 5, quedan en `%LocalAppData%\COT_0\usuarios.json`. No hay pantalla para borrar usuarios: quítalos del archivo a mano (es una lista JSON) o bórralo para empezar de cero.
 - **`%LocalAppData%\COT_0\cache\fondos\*.jpg`**: un cuadro por video (≈ 12–90 KB cada uno). Si cambias o borras un video, su JPEG viejo **se queda** (no hay limpieza automática). Se puede borrar la carpeta completa: se regenera al abrir FONDOS. Puede quedar algún `*.part.jpg` si la app se cerró a medio generar.
 - **`%LocalAppData%\COT_0\registro-medios.jsonl`**: crece sin tope (una línea por falla). Si estorba, borrarlo o rotarlo.
+- **`COT_0_P/portadas/respaldo_4y5_2026-11-09/`** (09/11): originales de `Audio_04.png` y `Audio_05.png` con su fondo blanco (≈ 42 y 65 KB) y `portadas45.py`, el script que les quitó el fondo (mismo proceso que `procesar.py` + máscara encogida 2 px). Si las portadas nuevas se ven bien, se puede borrar la carpeta.
 - **`COT_0_P/diseno/`** (maquetas e `inventario-winui.md`): vive fuera del repo; no subirlo.
 - **`COT_0_P/gifs/lain-transparente.gif`** (≈ 2.1 MB): Lain con transparencia, generado con ffmpeg a partir de `lain_tele_web.mp4` (`docs/PREPARAR_LAIN.md`). Fuera del repo e ignorado (`/gifs/`, `lain-transparente*.gif`). Si se borra, el Manual usa el video con su penumbra; se regenera con el mismo comando.
 
