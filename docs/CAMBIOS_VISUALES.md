@@ -384,3 +384,11 @@ El panel de vidrio con "Gracias por estar aquí. Vuelve pronto." y CERRAR no cam
 | Antes | Ahora |
 |---|---|
 | La música de fondo seguía sonando encima de Lain, los avisos y la estática | En el Manual (pasos y despedida) la música queda **muteada pero sin pausa**: la canción sigue avanzando en silencio (`MusicService.IsHushed`). Al salir (← INICIO, ESC o Cerrar en la despedida) se oye desde donde iba, sin reiniciarse ni cambiar de pista. Es un silencio aparte del de la bocina: si el usuario ya la había silenciado, sigue silenciada al salir, y la bocina de la firma y de MÚSICA no cambia de icono. Volumen sin cambios (25 por defecto). Avisos, estática y SILENCIAR del Manual, igual. Sin claves nuevas en `appsettings.json` |
+
+## Fondo de color en el Manual (09/11)
+
+| Antes | Ahora |
+|---|---|
+| Fondo elegido visible detrás de un velo negro al 60 % (`ManualVeilBrush`) | Fondo de color **opaco** `ManualBackdropBrush` (`Views/Estilos/Manual.xaml`): radial con brillo vino oscuro del acento (`#1C0C14`) arriba a la derecha, negro azulado (`#0B0A12`) y negro exacto del cuadro de Lain (`ManualBlackColor`, `#000000`) desde el 70 % del radio: toda la zona de Lain (abajo a la izquierda) es negro puro y el centro (despedida) casi negro. El video de fondo **sigue corriendo debajo**, en bucle y mudo, pero no se ve; al salir vuelve por donde iba |
+| GIF de Lain (opción A) sin tratamiento de orillas | Orillas de arriba y de los lados fundidas hacia adentro (36 px, `LainCutoutFade`) con las mismas brochas `Edge*`: lo que le quede de cuadro al GIF se pierde en el negro |
+| Video de respaldo (opción B) y despedida con franjas sobre el fondo visto a través del velo | Mismas franjas y tamaños, ahora sobre el fondo de color; como empiezan en el mismo negro, no queda recuadro |

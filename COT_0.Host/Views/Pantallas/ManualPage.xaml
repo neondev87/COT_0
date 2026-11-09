@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Manual de Lain: a la izquierda sus notificaciones y su video en la tele, parado en el borde de abajo; a la derecha los atajos,
      el número y título del paso y su vista de ejemplo con resaltados (o la captura opcional del paso). Al final, la despedida
-     con el video y su texto debajo, centrados en toda la pantalla. Capas: fondo elegido (CapaFondo; si es video sigue en bucle y mudo), un solo velo (ManualVeilBrush) y el contenido. ← INICIO regresa al dashboard -->
+     con el video y su texto debajo, centrados en toda la pantalla. Capas: fondo elegido (CapaFondo; si es video sigue en bucle y mudo, tapado), el fondo de color opaco (ManualBackdropBrush) y el contenido. ← INICIO regresa al dashboard -->
 <Page x:Class="COT_0.Host.Views.Pantallas.ManualPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -27,7 +27,7 @@
         <KeyboardAccelerator Key="Escape" Invoked="OnExitKey"/>
     </Page.KeyboardAccelerators>
 
-    <Grid Background="{StaticResource ManualVeilBrush}">
+    <Grid Background="{StaticResource ManualBackdropBrush}">
         <!-- Despedida: sin DataTrigger, un StateTrigger centra el grupo del video y su texto y cambia los paneles -->
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -37,7 +37,7 @@
                         <StateTrigger IsActive="{x:Bind ViewModel.IsFarewell, Mode=OneWay}"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="LainCutout.Visibility" Value="Collapsed"/>
+                        <Setter Target="LainCutoutHost.Visibility" Value="Collapsed"/>
                         <Setter Target="VideoLayer.HorizontalAlignment" Value="Center"/>
                         <Setter Target="VideoLayer.VerticalAlignment" Value="Center"/>
                         <Setter Target="VideoHost.Visibility" Value="Visible"/>
@@ -58,10 +58,15 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <!-- Opción A: Lain con transparencia real (GIF preparado una vez con ffmpeg, docs/PREPARAR_LAIN.md), pegada al borde de abajo -->
-        <Image x:Name="LainCutout" Source="{x:Bind ViewModel.LainCutout, Mode=OneWay}" Height="{StaticResource LainVideoHeight}"
-               Margin="{StaticResource LainMargin}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Stretch="Uniform"
-               IsHitTestVisible="False" Visibility="{x:Bind ViewModel.HasLainCutout, Mode=OneWay}"/>
+        <!-- Opción A: Lain con transparencia real (GIF preparado una vez con ffmpeg, docs/PREPARAR_LAIN.md), pegada al borde de abajo.
+             Sus orillas de arriba y de los lados se llevan al negro del fondo, así el cuadro que le quede al GIF no se nota -->
+        <Grid x:Name="LainCutoutHost" Margin="{StaticResource LainMargin}" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+              IsHitTestVisible="False" Visibility="{x:Bind ViewModel.HasLainCutout, Mode=OneWay}">
+            <Image Source="{x:Bind ViewModel.LainCutout, Mode=OneWay}" Height="{StaticResource LainVideoHeight}" Stretch="Uniform"/>
+            <Rectangle Height="{StaticResource LainCutoutFade}" VerticalAlignment="Top" Fill="{StaticResource EdgeTopBrush}"/>
+            <Rectangle Width="{StaticResource LainCutoutFade}" HorizontalAlignment="Left" Fill="{StaticResource EdgeLeftBrush}"/>
+            <Rectangle Width="{StaticResource LainCutoutFade}" HorizontalAlignment="Right" Fill="{StaticResource EdgeRightBrush}"/>
+        </Grid>
 
         <!-- Video sin canal alfa: Lain cuando no hay GIF (opción B), abajo a la izquierda, y la despedida con su texto debajo.
              El Viewbox solo reduce (DownOnly): en pantallas chicas el grupo se encoge completo en lugar de cortarse -->

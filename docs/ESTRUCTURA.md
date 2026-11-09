@@ -176,7 +176,7 @@ COT_0.Host/
         ├── Textos.xaml           Todos los textos visibles, en español de México
         ├── Dashboard.xaml        Reloj, fecha, estado de la sala (lo mezcla DashboardPage)
         ├── Sala.xaml             Medidas del QR, fuente mono, contador, EN VIVO (lo mezcla SalaPage)
-        ├── Manual.xaml           Velo, paneles de vidrio, orillas del video, barrido y estilos de BotonManual (lo mezcla ManualPage)
+        ├── Manual.xaml           Fondo de color (ManualBackdropBrush), paneles de vidrio, orillas del video, barrido y estilos de BotonManual (lo mezcla ManualPage)
         ├── Volumen.xaml          Volumen minimalista: plantilla del Slider, punto y bocina (lo mezcla Firma)
         └── TarjetaMenu.xaml      Plantilla de TarjetaMenu y trazos de sus iconos
 ```
@@ -245,6 +245,7 @@ En `%LocalAppData%\COT_0\`:
 ## Manual de Lain
 
 - Archivos fuera del repo (`Manual:*`, relativos a `Paths:MediaRoot`): `gifs\lain_tele_web.mp4`, `gifs\lain_despedida.mp4`, `manual\notificacion.mp3`, `manual\estatica.wav` y, opcional, una captura por paso en `manual\pasos\paso1.png`…`paso6.png`.
+- Fondo: `ManualPage` tiene de fondo `ManualBackdropBrush`, opaco: el fondo elegido (`CapaFondo`) sigue corriendo debajo, mudo y sin verse. Termina en el negro exacto del cuadro de Lain, así sus franjas (video) y sus orillas (GIF, `LainCutoutHost`) no dejan recuadro.
 - Música: `ManualViewModel` pone `MusicService.IsHushed` en `true` al entrar y en `false` en `Leave`: la canción sigue avanzando muda y al salir se oye donde iba. No toca `IsMuted` (el silencio del usuario con la bocina), así que ese se conserva.
 - Al abrir: `ManualAssets.RefreshAsync()` revisa qué existe; lo que falte sale en un InfoBar y el manual sigue sin eso.
 - Pasos: textos en `Textos.xaml` (`Text.Manual.StepN.Title/Text/NoticeM`); cuántos avisos tiene cada uno, en `Manual:NoticeCounts` (3 por paso). El aviso N explica el resaltado N.

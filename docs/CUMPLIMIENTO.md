@@ -35,7 +35,7 @@ Efectos que siguen vivos (todos con `Storyboard` en el compositor, sin redibujar
 - Login: la imagen flota, la niebla va y viene y una franja de luz baja (`LoginPage.xaml`).
 - Logo Neondev: brillo de vidrio que va y viene (`LogoNeondev.xaml`).
 - Punto rojo con pulso de sala activa (`PuntoPulso.xaml`).
-- Manual: barrido tenue (14 s) y halo de los resaltados (`ManualPage.xaml`, `ResaltadoManual.xaml`). El velo, los paneles de vidrio y las orillas fundidas del video son degradados quietos (sin desenfoque); el fondo de la app se ve detrás tal cual (imagen, cuadro fijo o su video en bucle y mudo); sigue habiendo un solo reproductor de fondo.
+- Manual: barrido tenue (14 s) y halo de los resaltados (`ManualPage.xaml`, `ResaltadoManual.xaml`). El fondo de color (`ManualBackdropBrush`), los paneles de vidrio y las orillas fundidas de Lain son degradados quietos (sin desenfoque); el fondo de la app sigue debajo (su video en bucle y mudo) pero tapado; sigue habiendo un solo reproductor de fondo.
 - Volumen de la firma: solo opacidad y escala del punto (0.15 s) al pasar el mouse (`Views/Estilos/Volumen.xaml`).
 - Fondo en video (un solo `MediaPlayer` en bucle y en silencio). Lo más pesado que queda; los videos de más de `Background:HeavyVideoMegabytes` arrancan como cuadro fijo.
 - Web: ceniza del fondo con CSS (`AshLayer.razor`, `Chat:AshCount`) y animaciones CSS del manual del invitado.

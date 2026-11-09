@@ -133,7 +133,7 @@ Antes: `dotnet build COT_0.sln` en 0 errores y 0 warnings.
 
 ## 10. Manual de Lain
 
-1. **03 MANUAL** → el fondo de la app (si es video, en movimiento y mudo) detrás de un solo velo negro parejo, ← INICIO | MANUAL arriba a la izquierda y atajos ENTER / → / ← / ESC arriba a la derecha.
+1. **03 MANUAL** → fondo de color del Manual (ver sección 16; el fondo de la app ya no se ve), ← INICIO | MANUAL arriba a la izquierda y atajos ENTER / → / ← / ESC arriba a la derecha.
    A la derecha, "Paso 01 / 06", el título del paso y, justo debajo, la **vista de ejemplo** del paso (una réplica quieta de la pantalla). Ya no hay texto explicativo bajo el título: lo dicen las notificaciones de Lain.
    La vista de ejemplo ocupa todo el ancho a la derecha de Lain, en 16:9, sin recortes y centrada con márgenes parejos.
    En pantalla completa (si puedes, en monitores de distinta resolución): la réplica crece o se reduce entera, sin encimarse con Lain ni con sus avisos, y cada resaltado sigue sobre su elemento.
@@ -211,7 +211,7 @@ Antes: `dotnet build COT_0.sln` en 0 errores y 0 warnings.
 
 ### Manual de Lain
 
-1. Elige un fondo en **02 CAMBIAR FONDO** (imagen o video) y abre **03 MANUAL**: el fondo se ve detrás, oscurecido (velo de ~60 %), y el texto se lee bien. Con un fondo de video, el video sigue en bucle y sin sonido.
+1. Elige un fondo en **02 CAMBIAR FONDO** (imagen o video) y abre **03 MANUAL**: ~~el fondo se ve detrás (velo de ~60 %)~~ reemplazado el 09/11: ahora va el fondo de color del Manual (sección 16) y el texto se lee bien.
 2. Lain (el video de la tele) está completa y parada en el borde de abajo: sin hueco debajo, sin cabeza ni pies cortados y sin caja con orillas duras.
 3. Sus notificaciones, la fila de atajos (ENTER, →, ←, ESC) y "Gracias, pero no necesito ayuda" no se enciman con ella.
 4. La fila de atajos y el botón de abajo se ven como vidrio (degradado claro y borde fino); el marco de la vista de ejemplo tiene un borde rojo tenue; "Paso 0N / 06" lleva una línea roja a cada lado.
@@ -239,7 +239,7 @@ Antes: `dotnet build COT_0.sln` en 0 errores y 0 warnings.
 
 ### 10b. Manual: capas, Lain transparente, despedida y letreros (08/11, noche)
 
-1. **Fondo limpio**: con un fondo elegido (imagen o video), el Manual lo muestra (un video sigue moviéndose, mudo) detrás de **un solo velo** negro parejo: sin degradados, sin viñeta, sin barrido, sin piso oscuro y sin texto ASCII sobre la página (el ASCII solo aparece dentro de la réplica del login en el paso 1). En FONDOS elige "sin fondo" (o borra la selección): el Manual queda sobre negro limpio.
+1. **Fondo limpio** (09/11: el velo pasó a ser el fondo de color opaco de la sección 16): un solo fondo, sin degradados, sin viñeta, sin barrido, sin piso oscuro y sin texto ASCII sobre la página (el ASCII solo aparece dentro de la réplica del login en el paso 1). En FONDOS elige "sin fondo": el Manual se ve igual (mismo fondo de color).
 2. **Lain sin cuadro negro**: en todos los pasos Lain flota sobre el fondo, pegada abajo, sin rectángulo ni orillas visibles, debajo de sus avisos y a la izquierda de la vista de ejemplo, sin tocar la fila de atajos ni "Gracias, pero no necesito ayuda". Pon un fondo claro para notarlo mejor.
 3. **Respaldo**: renombra `gifs\lain-transparente.gif` y abre el Manual: aparece el video de Lain con una penumbra negra que se desvanece hacia arriba y a los lados (sin borde recto). Regrésale el nombre.
 4. **Despedida**: "Gracias, pero no necesito ayuda" o ESC → el video de despedida al centro y abajo, tenue, con las cuatro orillas fundidas: sin rectángulo azul, sin bordes rectos y sin franja clara a la izquierda ni parches de otro tono a los lados. El panel con "Gracias por estar aquí. Vuelve pronto." y CERRAR se lee encima.
@@ -287,9 +287,9 @@ Copia `hola mundo@2` y `ñandú  é!` al portapapeles y prueba en cada campo:
 
 ### Video de fondo en el Manual
 
-1. Elige un fondo de **video** en 02 CAMBIAR FONDO y abre **03 MANUAL**: el video sigue moviéndose detrás del velo (60 %), sin sonido.
+1. Elige un fondo de **video** en 02 CAMBIAR FONDO y abre **03 MANUAL**: el video sigue corriendo, mudo y tapado por el fondo de color (sección 16).
 2. Regresa con **← INICIO** y con **ESC**: el video sigue donde iba (no vuelve al inicio ni parpadea) y con su sonido normal (hoy en silencio, `Background:VideoMuted` = true; ponlo en `false` para oírlo fuera del Manual y comprobar que en el Manual se calla).
-3. Con un fondo de **imagen** o "Usar cuadro fijo", el Manual se ve igual que antes.
+3. Con un fondo de **imagen** o "Usar cuadro fijo", el Manual se ve igual (mismo fondo de color).
 
 ### Audio inicial
 
@@ -307,7 +307,7 @@ Copia `hola mundo@2` y `ñandú  é!` al portapapeles y prueba en cada campo:
 ### Despedida centrada
 
 1. En el Manual elige "Gracias, pero no necesito ayuda" (o ESC): el video de Lain y el texto "Gracias por estar aquí. Vuelve pronto." quedan juntos y al centro exacto de la pantalla, el texto debajo del video, sin encimarse.
-2. El video se ve más grande que antes, nítido, sin rectángulo negro ni orillas duras (las cuatro se pierden en el velo).
+2. El video se ve más grande que antes, nítido, sin rectángulo negro ni orillas duras (las cuatro se pierden en el fondo de color).
 3. En pantalla completa a 1920 × 1080 y en un monitor de 1280 × 720: nada se corta (en 720 el grupo se encoge completo) y el botón Cerrar funciona.
 
 ## 15. Música muteada en el Manual (09/11)
@@ -319,3 +319,13 @@ Copia `hola mundo@2` y `ñandú  é!` al portapapeles y prueba en cada campo:
 5. Si una canción termina estando en el Manual, pasa sola a la siguiente (en silencio) y al salir se oye la nueva.
 6. **Varias veces seguidas**: entra y sal del Manual 5 veces rápido (← INICIO / 03 MANUAL): al final la música se oye normal (o sigue silenciada si lo estaba) y la bocina no cambió de icono en ningún momento.
 7. **Cerrar dentro del Manual**: en un paso y en la despedida, cierra con la ✕ → SALIR y con Alt+F4: la app se cierra sin error y el Visor de eventos no registra "Error de aplicación" de `COT_0.Host.exe`.
+
+## 16. Fondo de color en el Manual y Lain sin recuadro (09/11)
+
+1. Con un fondo de **video** elegido, abre **03 MANUAL**: no se ve el video ni la imagen; el Manual tiene su propio fondo oscuro (brillo vino muy tenue arriba a la derecha que baja a negro). El texto y los paneles se leen bien.
+2. **Video corriendo debajo**: anota por dónde va el video de fondo (en el Dashboard), entra al Manual ~15 s y sal con **← INICIO**: el video se ve otra vez, **más adelante** de donde estaba (no se reinició ni se pausó) y sin parpadeo. Repite saliendo con **ESC** y con Cerrar de la despedida.
+3. **Lain (GIF)**: en los pasos, alrededor de Lain no se ve ningún recuadro ni línea; arriba y a los lados se funde con el negro del fondo.
+4. **Lain (video de respaldo)**: renombra `gifs\lain-transparente.gif` y abre el Manual: aparece el video con sus franjas; no se nota el recuadro negro contra el fondo. Regrésale el nombre.
+5. **Despedida**: ESC o "Gracias, pero no necesito ayuda": el video y el texto siguen centrados y del mismo tamaño; sus orillas se pierden en el fondo sin recuadro (arriba a la derecha el fondo es un poco más claro: revisa que no se vea un borde ahí).
+6. Con fondo de **imagen**, "Usar cuadro fijo" o sin fondo: el Manual se ve igual que en el punto 1.
+7. Cierra la app con la ✕ → SALIR estando en un paso y en la despedida: sin errores.

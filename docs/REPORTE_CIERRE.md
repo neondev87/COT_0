@@ -230,3 +230,12 @@ Se comparó `COT_0.Host` (WPF) contra el Host WinUI (entonces en otra carpeta) e
 - Cierre: si la app se cierra dentro del Manual, `AppShutdown` hace `music.Stop()` y después llega `ManualPage.Unloaded` → `Leave` → `IsHushed = false`: solo pone `IsMuted` en un `MediaPlayer` detenido y **no liberado** (no hay `Dispose`), sin `StateChanged`. No hay error.
 - Sin claves nuevas en `appsettings.json`. Video de fondo sin cambios.
 - Verificación: `dotnet build COT_0.sln` en 0 errores y 0 warnings, en una carpeta aparte (`-p:BaseOutputPath` en el scratchpad de la sesión): la app abierta bloqueaba `COT_0.Host\bin\` y no se cerró. No se abrió la app: lo de oído queda para `PRUEBAS_MANUALES.md`, sección 15.
+
+## Fondo de color en el Manual (09/11)
+
+| Tarea | Commit | Archivos |
+|---|---|---|
+| Fondo de color y Lain sin recuadro | commit "Manual: fondo de color opaco…" | `Views/Estilos/Manual.xaml` (`ManualBackdropBrush` en lugar de `ManualVeilBrush`, `LainCutoutFade`), `Views/Pantallas/ManualPage.xaml` (fondo nuevo, `LainCutoutHost` con orillas), comentarios de `CapaFondo.xaml` y `CapaFondoViewModel.cs` |
+
+- Sin cambios de lógica: `CapaFondoViewModel` ya dejaba el video corriendo y mudo en el Manual; ahora solo queda tapado por un fondo opaco. Sin claves nuevas en `appsettings.json` (son colores y tamaños: van en `Views\Estilos`).
+- Verificación: `dotnet build COT_0.sln` en 0 errores y 0 warnings, en la carpeta aparte del scratchpad (la app abierta bloqueaba `bin\`). No se abrió la app: el aspecto queda para `PRUEBAS_MANUALES.md`, sección 16.
