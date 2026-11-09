@@ -1,4 +1,4 @@
-// Música de fondo con Windows.Media.Playback.MediaPlayer: arranca con Audio:DefaultFile (o la primera) y sigue en orden, en loop
+// Música de fondo con Windows.Media.Playback.MediaPlayer: arranca sonando Audio:InitialTrack (o la primera) y sigue en orden, en loop
 using COT_0.Host.Models;
 using COT_0.Host.Services.Configuracion;
 using COT_0.Host.Services.Tiempo;
@@ -11,7 +11,7 @@ namespace COT_0.Host.Services.Musica;
 /// Una sola instancia para toda la app: la firma del login y MusicaPage ven lo mismo.
 /// Los eventos del reproductor llegan de otro hilo; StateChanged y Failed siempre se avisan en el hilo de la UI.
 /// El volumen inicia siempre en Audio:DefaultVolume (25) y no se guarda entre sesiones.
-/// Al abrir la app la canción queda cargada en pausa; empieza con ▶ o al mover la barra de volumen.
+/// Al abrir la app suena sola la pista Audio:InitialTrack (Audio_02); si no se puede leer, MediaFailed salta a la siguiente.
 /// </summary>
 public sealed class MusicService : IDisposable
 {
@@ -74,8 +74,9 @@ public sealed class MusicService : IDisposable
     {
         if (!await ReloadAsync() || Current is not null) return;
 
-        var defaultFile = AppConfig.Settings.Audio.DefaultFile;
-        Open(_tracks.FirstOrDefault(t => Path.GetFileName(t).Equals(defaultFile, StringComparison.OrdinalIgnoreCase)) ?? _tracks[0], autoplay: false);
+        var audio = AppConfig.Settings.Audio;
+        var initial = string.Format(audio.TrackNameFormat, audio.InitialTrack);
+        Open(_tracks.FirstOrDefault(t => Path.GetFileNameWithoutExtension(t).Equals(initial, StringComparison.OrdinalIgnoreCase)) ?? _tracks[0]);
     }
 
     public async Task PlayAsync(string track)
@@ -124,12 +125,12 @@ public sealed class MusicService : IDisposable
         else SetCurrent(null);
     }
 
-    // autoplay false: solo la deja cargada (arranque de la app)
-    private void Open(string track, bool autoplay = true)
+    // Con volumen en 0 solo la deja cargada: empieza al subir la barra
+    private void Open(string track)
     {
         SetCurrent(track);
         _player.Source = MediaSource.CreateFromUri(new Uri(Path.GetFullPath(track)));
-        if (autoplay && _player.Volume > 0) Play();
+        if (_player.Volume > 0) Play();
         else _playWhenAudible = true;
     }
 

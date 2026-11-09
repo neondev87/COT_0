@@ -269,10 +269,10 @@ Copia `hola mundo@2` y `ñandú  é!` al portapapeles y prueba en cada campo:
 
 ### Volumen 25 % al abrir
 
-1. Cierra y abre la app: la barra de la firma marca 25 % y `Audio_01` está cargada sin sonar.
-2. Abre **05 MÚSICA**: su barra y su número dicen 25. ▶ empieza a sonar a 25.
+1. Cierra y abre la app: suena sola `Audio_02` (`Audio:InitialTrack` = 2) y la barra de la firma marca 25 %.
+2. Abre **05 MÚSICA**: su barra y su número dicen 25 y la canción marcada es `Audio_02`, sonando.
 3. Silencia en la firma: barra en 0 y bocina tachada; reactiva: vuelve a 25. Lo mismo desde MÚSICA.
-4. Mueve la barra de la firma sin haber dado ▶: empieza a sonar.
+4. Renombra `Audio_02` (o pon uno ilegible con ese nombre) y abre la app: arranca con la primera o salta a la siguiente, sin crashear.
 
 ### Pantalla completa
 
