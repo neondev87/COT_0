@@ -13,7 +13,7 @@ namespace COT_0.Host.Views.ModelosDeVista;
 
 /// <summary>
 /// Solo se ve en Dashboard, Sala, Fondos y el manual; en las demás páginas el video se pausa.
-/// En el manual ya suena el video de Lain: ahí un fondo de video se muestra como su cuadro fijo (un solo video a la vez). Sin desenfoque: con el selector abierto el velo oscuro sube (PickerVeilOpacity).
+/// En el manual un fondo de video se muestra como su cuadro fijo y sin velo, degradado ni viñeta propios (el velo lo pone ManualPage). Sin desenfoque: con el selector abierto el velo oscuro sube (PickerVeilOpacity).
 /// Si el video falla, cae a su cuadro fijo (el JPEG de la caché) y FondoService guarda la causa para FondosPage.
 /// </summary>
 public partial class CapaFondoViewModel : ObservableObject
@@ -42,6 +42,10 @@ public partial class CapaFondoViewModel : ObservableObject
 
     [ObservableProperty]
     private double _veilOpacity;
+
+    // Degradado del login y viñeta: fuera en el manual, que pone su único velo
+    [ObservableProperty]
+    private bool _isDecorVisible = true;
 
     public CapaFondoViewModel(FondoService fondos, FondoPlayer player, FondoImages images)
     {
@@ -75,7 +79,8 @@ public partial class CapaFondoViewModel : ObservableObject
     {
         var version = ++_version;
         var fondo = _fondos.Selected;
-        VeilOpacity = _isPicker ? Settings.PickerVeilOpacity : fondo is null ? 0 : Settings.VeilOpacity;
+        VeilOpacity = _isPicker ? Settings.PickerVeilOpacity : fondo is null || _isStillOnly ? 0 : Settings.VeilOpacity;
+        IsDecorVisible = !_isStillOnly;
 
         if (!IsActive)
         {

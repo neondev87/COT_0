@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Estilos del manual de Lain. Se mezcla en ManualPage.
-     Paleta del proyecto: negro, línea roja y Barlow Condensed. El fondo elegido (CapaFondo) se ve a través de un velo al ~60 %;
+     Paleta del proyecto: negro, línea roja y Barlow Condensed. Capas: fondo elegido como cuadro fijo (CapaFondo), un solo velo negro al 60 % y el contenido;
      los paneles son "vidrio" barato: degradado translúcido + borde claro de 1 px, sin desenfoque. Solo opacidad y traslación animadas -->
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -15,11 +15,8 @@
     <SolidColorBrush x:Key="KeycapEdgeBrush" Color="#8CB3122E"/>
     <!-- Destello de la señal al cambiar de paso (reemplaza SignalLossLayer) -->
     <SolidColorBrush x:Key="SignalFlashBrush" Color="#24FFFFFF"/>
-    <!-- Velo sobre el fondo de la app: ~55 % al centro, ~65 % en las orillas (se lee el texto y se ve el fondo) -->
-    <RadialGradientBrush x:Key="ManualVeilBrush" Center="0.5,0.42" GradientOrigin="0.5,0.42" RadiusX="0.75" RadiusY="0.75">
-        <GradientStop Color="#8C050507" Offset="0"/>
-        <GradientStop Color="#A6050507" Offset="1"/>
-    </RadialGradientBrush>
+    <!-- Único velo del manual sobre el fondo elegido: negro uniforme al 60 % (se lee el texto y se ve el fondo) -->
+    <SolidColorBrush x:Key="ManualVeilBrush" Color="#99000000"/>
     <!-- Vidrio: de arriba (más claro) a abajo, casi transparente -->
     <LinearGradientBrush x:Key="ManualGlassBrush" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Color="#1AFFFFFF" Offset="0"/>
@@ -29,11 +26,6 @@
     <LinearGradientBrush x:Key="ManualStageBrush" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Color="#B30A0A0C" Offset="0"/>
         <GradientStop Color="#CC070708" Offset="1"/>
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="ManualSweepBrush" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#00FFFFFF" Offset="0"/>
-        <GradientStop Color="#08FFFFFF" Offset="0.5"/>
-        <GradientStop Color="#00FFFFFF" Offset="1"/>
     </LinearGradientBrush>
     <!-- Orillas del video que se funden con el velo (en vez de OpacityMask): arriba, izquierda y derecha -->
     <LinearGradientBrush x:Key="LainFadeBrush" StartPoint="0,0" EndPoint="0,1">
@@ -47,11 +39,6 @@
     <LinearGradientBrush x:Key="LainFadeRightBrush" StartPoint="1,0" EndPoint="0,0">
         <GradientStop Color="#B3050507" Offset="0"/>
         <GradientStop Color="#00050507" Offset="1"/>
-    </LinearGradientBrush>
-    <!-- Piso: oscurece el borde de abajo para asentar a Lain -->
-    <LinearGradientBrush x:Key="ManualFloorBrush" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#00000000" Offset="0"/>
-        <GradientStop Color="#B3000000" Offset="1"/>
     </LinearGradientBrush>
 
     <x:Double x:Key="ManualColumnWidth">330</x:Double>

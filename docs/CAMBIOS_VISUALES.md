@@ -320,3 +320,17 @@ Evitado por ligereza: sombras del thumb, brillo del tramo rojo, animación del a
 - Aviso 2 del paso 1 (`Text.Manual.Step1.Notice2`): "Escribe tu usuario y tu contraseña. Si es tu primera vez, crea tu cuenta." → "Si es tu primera vez, toca Registrar usuario." Mismo sonido, orden y tiempos.
 - Réplica del login (`VistaEjemploLogin`): bajo la contraseña, alineados a la derecha como en el login real, **¿Olvidaste tu contraseña?** | **Registrar usuario** con `LoginLinkButton` y `LoginLinkSeparator` (sin estilos nuevos). Botón ENTRAR igual.
 - Resaltado 2 del paso 1: pasa de USUARIO y CONTRASEÑA al enlace **Registrar usuario**. Los resaltados 1 (título) y 3 (ENTRAR) no cambian.
+
+## Manual: fondo ordenado, Lain sin cuadro negro y sin letreros de atajos (08/11, noche)
+
+Diagnóstico completo de las capas de antes en `docs/qa/CAPAS_MANUAL.md`.
+
+### Fondo del Manual: tres capas
+
+| Antes | Ahora |
+|---|---|
+| CapaFondo con degradado del login, velo propio al 45 % y viñeta, más el velo radial del Manual (55–65 %), un barrido animado (`ManualSweepBrush`) y un piso oscuro de 240 px (`ManualFloorBrush`): cuatro oscurecimientos encimados | (1) **Fondo elegido como cuadro fijo** (CapaFondo, nunca video en el Manual; sin degradado, sin velo propio y sin viñeta: `CapaFondoViewModel.IsDecorVisible = false` y `VeilOpacity = 0` en el Manual). (2) **Un solo velo** `ManualVeilBrush` negro uniforme al **60 %** (`#99000000`, en `Views/Estilos/Manual.xaml`). (3) El contenido |
+| Sin fondo elegido: degradado gris del login con halo claro | Negro limpio (`LoginBaseBrush` #080808) con el mismo velo |
+| `ascii-bg.png` | Solo dentro de la réplica del login (paso 1), porque es la pantalla real que se muestra |
+
+Los paneles de vidrio (atajos, "Gracias, pero no necesito ayuda", despedida y el marco de la vista de ejemplo) no cambian: sobre el velo plano se ven parejos. El destello de 0.15 s al cambiar de paso se queda (es transición, no capa fija).

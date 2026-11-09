@@ -21,7 +21,6 @@ public sealed partial class ManualPage : Page
 
     private async void OnLoaded(object sender, RoutedEventArgs e)
     {
-        SweepStoryboard.Begin();
         // El foco inicial queda en la página y no en ← INICIO: así ENTER llega a su atajo y avanza
         Focus(FocusState.Programmatic);
         await ViewModel.EnterAsync();
@@ -29,7 +28,6 @@ public sealed partial class ManualPage : Page
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
-        SweepStoryboard.Stop();
         ViewModel.Leave();
     }
 

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Fondo compartido de Dashboard, Sala y Fondos (va detrás del Frame): degradado del login, imagen o cuadro fijo,
-     video en bucle y en silencio, velo oscuro en lugar del desenfoque, y viñeta -->
+<!-- Fondo compartido de Dashboard, Sala, Fondos y Manual (va detrás del Frame): degradado del login, imagen o cuadro fijo,
+     video en bucle y en silencio, velo oscuro en lugar del desenfoque, y viñeta. En el Manual solo queda el cuadro fijo sobre negro -->
 <UserControl x:Class="COT_0.Host.Views.Componentes.CapaFondo"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              IsHitTestVisible="False" IsTabStop="False"
              Visibility="{x:Bind ViewModel.IsActive, Mode=OneWay}">
     <Grid Background="{StaticResource LoginBaseBrush}">
-        <Rectangle Fill="{StaticResource LoginBackgroundBrush}"/>
+        <Rectangle Fill="{StaticResource LoginBackgroundBrush}" Visibility="{x:Bind ViewModel.IsDecorVisible, Mode=OneWay}"/>
         <MediaPlayerElement x:Name="Video" Stretch="UniformToFill" AreTransportControlsEnabled="False"
                             Visibility="{x:Bind ViewModel.IsVideoVisible, Mode=OneWay}"/>
         <Image Source="{x:Bind ViewModel.Still, Mode=OneWay}" Stretch="UniformToFill"
@@ -18,6 +18,6 @@
                 <ScalarTransition Duration="0:0:0.3"/>
             </Rectangle.OpacityTransition>
         </Rectangle>
-        <Rectangle Fill="{StaticResource VignetteBrush}"/>
+        <Rectangle Fill="{StaticResource VignetteBrush}" Visibility="{x:Bind ViewModel.IsDecorVisible, Mode=OneWay}"/>
     </Grid>
 </UserControl>
