@@ -213,6 +213,7 @@
     <x:String x:Key="Text.LogoutDialog.Message">¿Cerrar sesión y volver al inicio de sesión?</x:String>
     <x:String x:Key="Text.LogoutDialog.Confirm">SALIR</x:String>
     <x:String x:Key="Text.LogoutDialog.Cancel">CANCELAR</x:String>
+    <x:String x:Key="Text.Window.Close">Cerrar COT_0</x:String>
     <x:String x:Key="Text.CloseAppDialog.Message">¿Salir de COT_0?</x:String>
     <x:String x:Key="Text.CloseAppDialog.Confirm">SALIR</x:String>
     <x:String x:Key="Text.CloseAppDialog.Cancel">CANCELAR</x:String>

@@ -8,5 +8,10 @@
     <Grid>
         <componentes:CapaFondo/>
         <Frame x:Name="RootFrame"/>
+        <!-- Pantalla completa no tiene botones de Windows: esta ✕ ocupa el lugar de la de antes y pasa por CloseGuard -->
+        <Button Style="{StaticResource TextButton}" Width="46" Height="32" Padding="0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                AutomationProperties.Name="{StaticResource Text.Window.Close}" Click="OnCloseClick">
+            <FontIcon Glyph="&#xE8BB;" FontFamily="{StaticResource FontIcons}" FontSize="10"/>
+        </Button>
     </Grid>
 </Window>

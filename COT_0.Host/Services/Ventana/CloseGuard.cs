@@ -1,4 +1,4 @@
-// Al cerrar la ventana: siempre pregunta primero; luego cierra sala, túnel y servidor, y sí cierra
+// Al cerrar la ventana (✕ propia de MainWindow o Alt+F4): siempre pregunta primero; luego cierra sala, túnel y servidor, y sí cierra
 using COT_0.Host.Services.Sala;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -18,12 +18,18 @@ public class CloseGuard(RoomSession session)
         window.AppWindow.Closing += OnClosing;
     }
 
-    // async void: manejador de evento. Cancel se pone antes del primer await
-    private async void OnClosing(AppWindow sender, AppWindowClosingEventArgs args)
+    // Cancel se pone antes de preguntar; si confirma, la ventana se cierra desde RequestCloseAsync
+    private void OnClosing(AppWindow sender, AppWindowClosingEventArgs args)
     {
         if (_canClose) return;
 
         args.Cancel = true;
+        _ = RequestCloseAsync();
+    }
+
+    /// <summary>Lo que hace la ✕: pregunta, apaga sala, túnel y servidor, y cierra.</summary>
+    public async Task RequestCloseAsync()
+    {
         // Un ✕ más mientras pregunta o apaga no vuelve a abrir el diálogo ni a cerrar la ventana
         if (_isClosing) return;
         _isClosing = true;

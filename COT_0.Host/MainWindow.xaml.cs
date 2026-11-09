@@ -1,4 +1,5 @@
 using COT_0.Host.Services.Ventana;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 
 namespace COT_0.Host;
@@ -13,4 +14,6 @@ public sealed partial class MainWindow : Window
         Navigator.Attach(RootFrame);
         Navigator.ShowLogin();
     }
+
+    private void OnCloseClick(object sender, RoutedEventArgs e) => _ = App.Services.GetRequiredService<CloseGuard>().RequestCloseAsync();
 }
