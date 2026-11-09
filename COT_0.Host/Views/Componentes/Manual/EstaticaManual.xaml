@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Estática de tele del manual, encima de Lain (así su cuadro no corta el grano) y debajo de los paneles; luego la viñeta.
+     Sin redibujar píxeles: una textura fija que salta de lugar cada 60 ms (traslación en el compositor) -->
+<UserControl x:Class="COT_0.Host.Views.Componentes.Manual.EstaticaManual"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             IsHitTestVisible="False" IsTabStop="False">
+    <UserControl.Resources>
+        <ResourceDictionary Source="ms-appx:///Views/Estilos/ManualFondo.xaml"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.Triggers>
+            <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                <BeginStoryboard>
+                    <Storyboard RepeatBehavior="Forever">
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Grain" Storyboard.TargetProperty="X">
+                            <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
+                            <DiscreteDoubleKeyFrame KeyTime="0:0:0.06" Value="-37"/>
+                            <DiscreteDoubleKeyFrame KeyTime="0:0:0.12" Value="23"/>
+                            <DiscreteDoubleKeyFrame KeyTime="0:0:0.18" Value="-11"/>
+                            <DiscreteDoubleKeyFrame KeyTime="0:0:0.24" Value="31"/>
+                            <DiscreteDoubleKeyFrame KeyTime="0:0:0.30" Value="-26"/>
+                            <DiscreteDoubleKeyFrame KeyTime="0:0:0.36" Value="7"/>
+                            <DiscreteDoubleKeyFrame KeyTime="0:0:0.42" Value="39"/>
+                            <DiscreteDoubleKeyFrame KeyTime="0:0:0.48" Value="0"/>
+                        </DoubleAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Grain" Storyboard.TargetProperty="Y">
+                            <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
+                            <DiscreteDoubleKeyFrame KeyTime="0:0:0.06" Value="19"/>
+                            <DiscreteDoubleKeyFrame KeyTime="0:0:0.12" Value="-33"/>
+                            <DiscreteDoubleKeyFrame KeyTime="0:0:0.18" Value="29"/>
+                            <DiscreteDoubleKeyFrame KeyTime="0:0:0.24" Value="-15"/>
+                            <DiscreteDoubleKeyFrame KeyTime="0:0:0.30" Value="35"/>
+                            <DiscreteDoubleKeyFrame KeyTime="0:0:0.36" Value="-23"/>
+                            <DiscreteDoubleKeyFrame KeyTime="0:0:0.42" Value="9"/>
+                            <DiscreteDoubleKeyFrame KeyTime="0:0:0.48" Value="0"/>
+                        </DoubleAnimationUsingKeyFrames>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Grid.Triggers>
+        <Image Source="ms-appx:///Assets/Imagenes/Manual/estatica.png" Stretch="Fill" Margin="{StaticResource ManualStaticBleed}"
+               Opacity="{StaticResource ManualStaticOpacity}">
+            <Image.RenderTransform>
+                <TranslateTransform x:Name="Grain"/>
+            </Image.RenderTransform>
+        </Image>
+        <Rectangle Fill="{StaticResource VignetteBrush}"/>
+    </Grid>
+</UserControl>

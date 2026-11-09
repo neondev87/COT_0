@@ -133,7 +133,7 @@ Antes: `dotnet build COT_0.sln` en 0 errores y 0 warnings.
 
 ## 10. Manual de Lain
 
-1. **03 MANUAL** → fondo de color del Manual (ver sección 16; el fondo de la app ya no se ve), ← INICIO | MANUAL arriba a la izquierda y atajos ENTER / → / ← / ESC arriba a la derecha.
+1. **03 MANUAL** → fondo azul con estática del Manual (ver sección 17; el fondo de la app ya no se ve), ← INICIO | MANUAL arriba a la izquierda y atajos ENTER / → / ← / ESC arriba a la derecha.
    A la derecha, "Paso 01 / 06", el título del paso y, justo debajo, la **vista de ejemplo** del paso (una réplica quieta de la pantalla). Ya no hay texto explicativo bajo el título: lo dicen las notificaciones de Lain.
    La vista de ejemplo ocupa todo el ancho a la derecha de Lain, en 16:9, sin recortes y centrada con márgenes parejos.
    En pantalla completa (si puedes, en monitores de distinta resolución): la réplica crece o se reduce entera, sin encimarse con Lain ni con sus avisos, y cada resaltado sigue sobre su elemento.
@@ -320,7 +320,7 @@ Copia `hola mundo@2` y `ñandú  é!` al portapapeles y prueba en cada campo:
 6. **Varias veces seguidas**: entra y sal del Manual 5 veces rápido (← INICIO / 03 MANUAL): al final la música se oye normal (o sigue silenciada si lo estaba) y la bocina no cambió de icono en ningún momento.
 7. **Cerrar dentro del Manual**: en un paso y en la despedida, cierra con la ✕ → SALIR y con Alt+F4: la app se cierra sin error y el Visor de eventos no registra "Error de aplicación" de `COT_0.Host.exe`.
 
-## 16. Fondo de color en el Manual y Lain sin recuadro (09/11)
+## 16. Fondo de color en el Manual y Lain sin recuadro (09/11; el fondo cambió en la sección 17)
 
 1. Con un fondo de **video** elegido, abre **03 MANUAL**: no se ve el video ni la imagen; el Manual tiene su propio fondo oscuro (brillo vino muy tenue arriba a la derecha que baja a negro). El texto y los paneles se leen bien.
 2. **Video corriendo debajo**: anota por dónde va el video de fondo (en el Dashboard), entra al Manual ~15 s y sal con **← INICIO**: el video se ve otra vez, **más adelante** de donde estaba (no se reinició ni se pausó) y sin parpadeo. Repite saliendo con **ESC** y con Cerrar de la despedida.
@@ -329,3 +329,13 @@ Copia `hola mundo@2` y `ñandú  é!` al portapapeles y prueba en cada campo:
 5. **Despedida**: ESC o "Gracias, pero no necesito ayuda": el video y el texto siguen centrados y del mismo tamaño; sus orillas se pierden en el fondo sin recuadro (arriba a la derecha el fondo es un poco más claro: revisa que no se vea un borde ahí).
 6. Con fondo de **imagen**, "Usar cuadro fijo" o sin fondo: el Manual se ve igual que en el punto 1.
 7. Cierra la app con la ✕ → SALIR estando en un paso y en la despedida: sin errores.
+
+## 17. Fondo azul con estática en el Manual (09/11)
+
+1. Con un fondo de **video** elegido, abre **03 MANUAL**: no se ve el video de la app; se ve el **azul noche** del Manual, con un barrido tenue que baja cada ~14 s, viñeta en las orillas y **estática fina** que tiembla encima (no debe verse como una imagen fija que se mueve en bloque ni dejar orillas sin grano). El texto, los avisos y la vista de ejemplo se leen bien.
+2. **Lain (GIF)**: abajo a la izquierda Lain queda en una sombra negra que se desvanece hacia el azul; no se ve ningún recuadro, línea ni corte del grano alrededor de ella.
+3. **Lain (video de respaldo)**: renombra `gifs\lain-transparente.gif` y abre el Manual: el video y sus franjas quedan dentro de la sombra, sin recuadro. Regrésale el nombre.
+4. **Despedida** (ESC o "Gracias, pero no necesito ayuda"): video y texto centrados y del mismo tamaño que antes; sus orillas se pierden en el azul, sin cuadro negro ni borde; la sombra de la esquina ya no está.
+5. **Al salir** (← INICIO, ESC y Cerrar de la despedida) después de ~15 s: el video de fondo se ve otra vez **más adelante** de donde iba (sin reinicio ni parpadeo) y la música se oye desde donde iba (o sigue silenciada si ya lo estaba).
+6. **Ligereza**: con el Administrador de tareas abierto, quédate 1 min en el Manual: el uso de CPU no debe subir de forma notable comparado con el Dashboard.
+7. Con fondo de **imagen**, "Usar cuadro fijo" o sin fondo: el Manual se ve igual que en el punto 1.
