@@ -121,7 +121,7 @@
     <x:String x:Key="Text.Room.Error.TunnelTimeout">cloudflared no entregó el enlace en {2} segundos. Revisa tu internet e inténtalo de nuevo.</x:String>
     <x:String x:Key="Text.Room.Error.TunnelFailed">El túnel de cloudflared se cerró antes de dar el enlace. Revisa tu internet e inténtalo de nuevo.</x:String>
     <x:String x:Key="Text.Room.Error.PortInUse">El puerto {4} ya está ocupado por otra app. Ciérrala (¿otra copia del Host o «dotnet run» de la web?) y presiona REINTENTAR, o cambia Web:Url en appsettings.json.</x:String>
-    <x:String x:Key="Text.Room.Error.ServerFailed">No se pudo levantar el servidor web: {3}</x:String>
+    <x:String x:Key="Text.Room.Error.ServerFailed">No se pudo levantar el servidor web en {1}. Cierra la app y vuelve a abrirla.</x:String>
 
     <!-- Emotes (7TV) -->
     <x:String x:Key="Text.Emotes.ScreenTitle">EMOTES</x:String>
