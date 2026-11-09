@@ -191,7 +191,7 @@ En `%LocalAppData%\COT_0\`:
 
 | Archivo | Qué guarda |
 |---|---|
-| `usuarios.json` | Lista de usuarios del login (hasta `Usuarios:Maximo` = 5). Por cada uno: usuario, hash + salt de la contraseña, clave de la pregunta secreta y hash + salt de la respuesta, fecha. Nunca la contraseña ni la respuesta. |
+| `usuarios.json` | Lista de usuarios del login (hasta `Usuarios:Maximo` = 20). Por cada uno: usuario, hash + salt de la contraseña, clave de la pregunta secreta y hash + salt de la respuesta, fecha. Nunca la contraseña ni la respuesta. |
 | `visitas.json` | Una línea por cada invitado que entra a la sala, con `EnteredAt`. Queda aunque se cierre el túnel. |
 | `fondos.json` | Catálogo de la última lectura de la carpeta de fondos (`FileName`, `Kind`, `SizeBytes`, `UseStill`) y `SelectedFile`: `null` = nunca elegiste (usa `Background:DefaultFile`), `""` = sin fondo. |
 | `sesiones.json` | Una entrada por cada vez que se abre la sala: `Number` (1, 2, 3…), `StartedAt`, `EndedAt` y `Guests` (nombre + hora de entrada). El host no cuenta. |
@@ -201,7 +201,7 @@ En `%LocalAppData%\COT_0\`:
 ## Login y recuperación
 
 - `LoginStep` decide qué se ve: `SignIn` (ENTRAR, siempre el paso inicial), `Register` (Registrar usuario: nombre y contraseña dos veces), `Recover` (¿Olvidaste tu contraseña?: usuario → su pregunta → contraseña nueva) y `SetupQuestion` (usuario sin pregunta: se pide después de ENTRAR por primera vez).
-- Hasta `Usuarios:Maximo` (5) usuarios, con nombre único sin distinguir mayúsculas y minúsculas. Todos entran a lo mismo: Dashboard, Sala, Emotes, Música, Fondos, Manual, sesiones y visitas no saben qué usuario entró.
+- Hasta `Usuarios:Maximo` (20) usuarios, con nombre único sin distinguir mayúsculas y minúsculas. Todos entran a lo mismo: Dashboard, Sala, Emotes, Música, Fondos, Manual, sesiones y visitas no saben qué usuario entró.
 - Migración: `HostAccounts.LoadAsync` lee `usuarios.json` como `JsonElement`; si es una lista la usa tal cual y si es una cuenta suelta la convierte en el primer usuario. No valida ni recorta nada al leer, así que ninguna cuenta guardada se pierde (aunque su nombre pase del límite).
 - Recuperación: si el usuario no existe o no tiene pregunta, el mensaje es el mismo ("No se pudo recuperar la contraseña con esos datos.") para no revelar qué usuarios hay.
 - La respuesta se normaliza antes de hashear y al comparar: se recorta, se quitan todos los espacios y pasa a minúsculas (`SecurityAnswerValidator.Normalize`).

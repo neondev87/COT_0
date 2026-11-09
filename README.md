@@ -18,7 +18,7 @@ Los invitados escanean el QR con el celular, eligen nombre, foto y escudo de fac
 |---|---|
 | `COT_0.Core` | Modelos (`User`, `ChatMessage`, `RoomEmote`, `Fondo`…) e interfaces compartidas (`IChatService`, `IRoomService`, `IRoomEmotes`, `IFlagService`, `ITunnelService`, `IBackgroundCatalog`). No depende de nadie. |
 | `COT_0.Web` | Blazor Server + SignalR: páginas `/join`, `/chat` y `/manual`, el hub `/chathub`, el chat en memoria, voz, imágenes y emotes de 7TV. También corre sola para pruebas. |
-| `COT_0.Host` | App de escritorio **WinUI 3**: login (hasta 5 usuarios), dashboard, sala (QR, conectados), emotes, música, fondos y manual de Lain. Levanta la web dentro de su propio proceso y maneja `cloudflared`. |
+| `COT_0.Host` | App de escritorio **WinUI 3**: login (hasta 20 usuarios), dashboard, sala (QR, conectados), emotes, música, fondos y manual de Lain. Levanta la web dentro de su propio proceso y maneja `cloudflared`. |
 
 Referencias: `Host → Web, Core` y `Web → Core`. El árbol completo está en `docs/ESTRUCTURA.md`.
 
@@ -43,7 +43,7 @@ dotnet build COT_0.sln
 dotnet run --project COT_0.Host
 ```
 
-La app siempre abre en **ACCESO DEL HOST** (ENTRAR). La primera vez no hay usuarios: usa el enlace **Registrar usuario** (junto a "¿Olvidaste tu contraseña?") y escribe usuario y contraseña dos veces (solo letras y números, hasta `Inputs:MaxCaracteres` = 15). Caben hasta `Usuarios:Maximo` = 5 usuarios en `%LocalAppData%\COT_0\usuarios.json`, con la contraseña y la respuesta secreta hasheadas (PBKDF2 + SHA-256 con salt). La primera vez que cada usuario entra configura su pregunta secreta; si olvida la contraseña, la recupera escribiendo su usuario y contestando esa pregunta. Todos los usuarios entran a lo mismo.
+La app siempre abre en **ACCESO DEL HOST** (ENTRAR). La primera vez no hay usuarios: usa el enlace **Registrar usuario** (junto a "¿Olvidaste tu contraseña?") y escribe usuario y contraseña dos veces (usuario solo letras con la primera en mayúscula; contraseña de 8 a 20 con al menos un número y un carácter especial; todo hasta `Inputs:MaxCaracteres` = 20). Caben hasta `Usuarios:Maximo` = 20 usuarios en `%LocalAppData%\COT_0\usuarios.json`, con la contraseña y la respuesta secreta hasheadas (PBKDF2 + SHA-256 con salt). La primera vez que cada usuario entra configura su pregunta secreta; si olvida la contraseña, la recupera escribiendo su usuario y contestando esa pregunta. Todos los usuarios entran a lo mismo.
 
 Si ya tenías la cuenta única de antes, se lee sola como el primer usuario: no hay que hacer nada.
 
