@@ -343,3 +343,11 @@ Los paneles de vidrio (atajos, "Gracias, pero no necesito ayuda", despedida y el
 | — | **Opción B** (si el GIF no está o no se puede leer): el mismo video dentro de `VideoHost`, rodeado de franjas del negro exacto del video que se desvanecen hacia afuera (40 px a la izquierda, 100 a la derecha, 140 arriba) y esquinas radiales (`EdgeTop/Bottom/Left/RightBrush`, `EdgeCornerTopLeft/RightBrush`). Como el borde del video y la franja son del mismo negro, no hay salto |
 
 Lain queda debajo de sus avisos (la figura empieza ~120 px más abajo del borde de su caja) y a la izquierda de la columna de pasos (386 px), así que no se encima con la fila de atajos ni con "Gracias, pero no necesito ayuda". Verificado con ffmpeg: fondo transparente en los 93 cuadros (≈ 12 % de píxeles opacos por cuadro) y sin halo negro sobre un fondo rojo de prueba.
+
+### Despedida sin rectángulo duro
+
+| Antes | Ahora |
+|---|---|
+| Video de 900 × 634 al 45 % con degradados de 120/40/40 px pensados para Lain y nada abajo: rectángulo azul (#06122C) con bordes marcados y una franja clara a la izquierda (la orilla izquierda del video original es más clara) | Mismo video, tamaño y opacidad, con **degradados hacia adentro en los cuatro lados** (180 px a los lados y 127 arriba y abajo, 20 % de cada lado) que llevan su azul al negro, y **franjas negras hacia afuera** (120 px a los lados, 80 arriba, esquinas radiales). Todo dentro de `VideoHost` con una sola opacidad (0.45): no queda borde ni parche de otro tono, solo una penumbra negra que se pierde en el velo |
+
+El panel de vidrio con "Gracias por estar aquí. Vuelve pronto." y CERRAR no cambia y queda encima. Sin blur, sin shader ni `OpacityMask` (WinUI no lo tiene en `UIElement`; una máscara por Composition sobre el video no se puede revisar sin ver la app).

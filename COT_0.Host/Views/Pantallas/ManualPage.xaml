@@ -42,6 +42,10 @@
                         <Setter Target="VideoHost.Opacity" Value="{StaticResource FarewellVideoOpacity}"/>
                         <Setter Target="VideoCell.Width" Value="{StaticResource FarewellVideoWidth}"/>
                         <Setter Target="VideoCell.Height" Value="{StaticResource FarewellVideoHeight}"/>
+                        <Setter Target="EdgeTop.Height" Value="{StaticResource FarewellBlendTop}"/>
+                        <Setter Target="EdgeLeft.Width" Value="{StaticResource FarewellBlendSide}"/>
+                        <Setter Target="EdgeRight.Width" Value="{StaticResource FarewellBlendSide}"/>
+                        <Setter Target="FarewellFades.Visibility" Value="Visible"/>
                         <Setter Target="NoticesHost.Visibility" Value="Collapsed"/>
                         <Setter Target="StepsRoot.Opacity" Value="0"/>
                         <Setter Target="StepsRoot.IsHitTestVisible" Value="False"/>
@@ -79,6 +83,13 @@
             <Rectangle x:Name="EdgeRight" Grid.Row="1" Grid.Column="2" Width="{StaticResource LainBlendRight}" Fill="{StaticResource EdgeLeftBrush}"/>
             <Grid x:Name="VideoCell" Grid.Row="1" Grid.Column="1" Width="{StaticResource LainVideoWidth}" Height="{StaticResource LainVideoHeight}">
                 <MediaPlayerElement x:Name="LainVideo" Stretch="Uniform" AreTransportControlsEnabled="False"/>
+                <!-- Solo en la despedida: su fondo es azul (#06122C), así que sus cuatro orillas se llevan al negro de las franjas -->
+                <Grid x:Name="FarewellFades" Visibility="Collapsed">
+                    <Rectangle Height="{StaticResource FarewellFadeEnds}" VerticalAlignment="Top" Fill="{StaticResource EdgeTopBrush}"/>
+                    <Rectangle Height="{StaticResource FarewellFadeEnds}" VerticalAlignment="Bottom" Fill="{StaticResource EdgeBottomBrush}"/>
+                    <Rectangle Width="{StaticResource FarewellFadeSide}" HorizontalAlignment="Left" Fill="{StaticResource EdgeLeftBrush}"/>
+                    <Rectangle Width="{StaticResource FarewellFadeSide}" HorizontalAlignment="Right" Fill="{StaticResource EdgeRightBrush}"/>
+                </Grid>
             </Grid>
         </Grid>
 

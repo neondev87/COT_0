@@ -66,9 +66,14 @@
     <x:Double x:Key="LainBlendRight">100</x:Double>
     <x:Double x:Key="LainBlendTop">140</x:Double>
     <x:Double x:Key="FarewellVideoOpacity">0.45</x:Double>
-    <!-- Despedida (1022 × 720): 900 × 634 al centro y abajo, como fondo detrás del texto -->
+    <!-- Despedida (1022 × 720): 900 × 634 al centro y abajo, como fondo detrás del texto. Cuatro orillas hacia adentro al 20 %
+         del lado (180 y 127) que llevan su azul al negro, y franjas negras hacia afuera (120 a los lados, 80 arriba) -->
     <x:Double x:Key="FarewellVideoWidth">900</x:Double>
     <x:Double x:Key="FarewellVideoHeight">634</x:Double>
+    <x:Double x:Key="FarewellFadeSide">180</x:Double>
+    <x:Double x:Key="FarewellFadeEnds">127</x:Double>
+    <x:Double x:Key="FarewellBlendSide">120</x:Double>
+    <x:Double x:Key="FarewellBlendTop">80</x:Double>
     <CornerRadius x:Key="ManualGlassRadius">12</CornerRadius>
 
     <!-- Panel de vidrio (atajos, vista de ejemplo, despedida) -->
