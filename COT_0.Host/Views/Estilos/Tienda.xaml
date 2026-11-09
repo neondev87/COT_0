@@ -25,7 +25,11 @@
     <SolidColorBrush x:Key="ShopCardBorderBrush" Color="#1CFFFFFF"/>
     <SolidColorBrush x:Key="ShopOwnedBrush" Color="#26B3122E"/>
 
+    <!-- Márgenes de las pantallas con panel (USUARIOS y TIENDA), iguales a 1280x720 y en pantalla completa -->
+    <Thickness x:Key="ScreenMargin">64,48,64,40</Thickness>
     <x:Double x:Key="ShopPanelMaxWidth">1180</x:Double>
+    <x:Double x:Key="UserCardWidth">260</x:Double>
+    <x:Double x:Key="UserPhotoSize">56</x:Double>
     <x:Double x:Key="ShopDialogMaxWidth">760</x:Double>
     <x:Double x:Key="ShopDialogMaxHeight">600</x:Double>
     <x:Double x:Key="ShopThumbSize">48</x:Double>

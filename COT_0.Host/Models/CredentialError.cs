@@ -20,4 +20,7 @@ public enum CredentialError
     UsersFull,
     AccountOutdated,
     WrongCredentials,
+    CurrentPasswordEmpty,
+    WrongCurrentPassword,
+    NotAllowed,
 }

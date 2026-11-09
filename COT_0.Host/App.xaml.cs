@@ -10,6 +10,7 @@ using COT_0.Host.Services.Sala;
 using COT_0.Host.Services.Tienda;
 using COT_0.Host.Services.Tiempo;
 using COT_0.Host.Services.Tunel;
+using COT_0.Host.Services.Usuarios;
 using COT_0.Host.Services.Ventana;
 using COT_0.Host.Views.ModelosDeVista;
 using Microsoft.Extensions.Configuration;
@@ -82,7 +83,8 @@ public partial class App : Application
             .AddSingleton<ConnectedUsersViewModel>()
             .AddSingleton<DashboardViewModel>()
             .AddSingleton<EmotesViewModel>()
-            .AddTransient<StoreUsersViewModel>()
+            .AddTransient<UsersScreenViewModel>()
+            .AddSingleton<AccountService>()
             .AddTransient<StoreShopViewModel>()
             .AddTransient<StoreTicketsViewModel>()
             .AddTransient<EmotesScreenViewModel>()

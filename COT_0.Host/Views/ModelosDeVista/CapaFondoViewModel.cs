@@ -12,7 +12,7 @@ using Windows.Media.Playback;
 namespace COT_0.Host.Views.ModelosDeVista;
 
 /// <summary>
-/// Solo se ve en Dashboard, Sala, Fondos, Emotes (detrás de su panel semitransparente) y el manual; en las demás páginas el video se pausa.
+/// Solo se ve en Dashboard, Sala, Fondos, Usuarios y Tienda (detrás de su panel semitransparente) y el manual; en las demás páginas el video se pausa.
 /// En el manual el video sigue en bucle pero sin sonido, y sin velo, degradado ni viñeta propios (ManualPage lo tapa con su fondo azul opaco, FondoManual).
 /// Al salir recupera su sonido normal (Background:VideoMuted) sin reiniciarse. Sin desenfoque: con el selector abierto el velo oscuro sube (PickerVeilOpacity).
 /// Si el video falla, cae a su cuadro fijo (el JPEG de la caché) y FondoService guarda la causa para FondosPage.
@@ -20,7 +20,7 @@ namespace COT_0.Host.Views.ModelosDeVista;
 public partial class CapaFondoViewModel : ObservableObject
 {
     private static readonly HashSet<Type> PagesWithBackground =
-        [typeof(DashboardPage), typeof(SalaPage), typeof(FondosPage), typeof(ManualPage), typeof(EmotesPage)];
+        [typeof(DashboardPage), typeof(SalaPage), typeof(FondosPage), typeof(ManualPage), typeof(EmotesPage), typeof(UsuariosPage)];
 
     private readonly FondoService _fondos;
     private readonly FondoPlayer _player;

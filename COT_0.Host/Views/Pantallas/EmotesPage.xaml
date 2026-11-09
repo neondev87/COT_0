@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Emotes como mini tienda: encabezado con regreso y UN panel oscuro semitransparente (el video de fondo se intuye detrás)
-     con las pestañas USUARIOS | TIENDA | TICKETS. Encima, con velo, el stock de un usuario o el set de 7TV con reportes.
+<!-- TIENDA DE EMOTES (05): encabezado con regreso y UN panel oscuro semitransparente (el video de fondo se intuye detrás)
+     con las pestañas TIENDA | TICKETS (modo ADMIN: PUNTO DE VENTA | ADMINISTRADORES). Encima, con velo, el set de 7TV con reportes.
      Transparente: el fondo lo pinta CapaFondo detrás del Frame. ESC cierra el recuadro o regresa -->
 <Page x:Class="COT_0.Host.Views.Pantallas.EmotesPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -24,12 +24,12 @@
     </Page.KeyboardAccelerators>
 
     <Grid>
-        <Grid Margin="64,48,64,40">
+        <Grid Margin="{StaticResource ScreenMargin}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <componentes:EncabezadoPantalla Title="{StaticResource Text.Emotes.ScreenTitle}" HandlesEscape="False"/>
+            <componentes:EncabezadoPantalla Title="{StaticResource Text.Store.ScreenTitle}" HandlesEscape="False"/>
 
             <Border Grid.Row="1" Style="{StaticResource ShopPanel}" Margin="0,24,0,0" MaxWidth="{StaticResource ShopPanelMaxWidth}">
                 <Grid RowSpacing="14">
@@ -41,8 +41,6 @@
                     <!-- Pestañas a la izquierda; a la derecha el set de 7TV y los reportes de siempre (en recuadro) -->
                     <Grid BorderBrush="{StaticResource RowBorderBrush}" BorderThickness="0,0,0,1">
                         <StackPanel Orientation="Horizontal" Spacing="28">
-                            <RadioButton Style="{StaticResource ShopTab}" GroupName="StoreTabs" Content="{StaticResource Text.Store.Tab.Users}"
-                                         IsChecked="{x:Bind ViewModel.IsUsersSection, Mode=TwoWay}"/>
                             <RadioButton Style="{StaticResource ShopTab}" GroupName="StoreTabs" Content="{StaticResource Text.Store.Tab.Shop}"
                                          IsChecked="{x:Bind ViewModel.IsShopSection, Mode=TwoWay}" Visibility="{x:Bind ViewModel.IsHostMode}"/>
                             <RadioButton Style="{StaticResource ShopTab}" GroupName="StoreTabs" Content="{StaticResource Text.Store.Tab.Tickets}"
@@ -56,8 +54,6 @@
                                 Command="{x:Bind ViewModel.OpenSetPanelCommand}"/>
                     </Grid>
 
-                    <tienda:SeccionUsuarios Grid.Row="1" ViewModel="{x:Bind ViewModel.Users}"
-                                            Visibility="{x:Bind ViewModel.IsUsersSection, Mode=OneWay}"/>
                     <tienda:SeccionTienda Grid.Row="1" ViewModel="{x:Bind ViewModel.Shop}"
                                           Visibility="{x:Bind ViewModel.IsShopSection, Mode=OneWay}"/>
                     <tienda:SeccionTickets Grid.Row="1" ViewModel="{x:Bind ViewModel.Tickets}"
@@ -81,8 +77,6 @@
                     </TransitionCollection>
                 </Border.Transitions>
                 <Grid>
-                    <tienda:RecuadroStock Stock="{x:Bind ViewModel.Users.Stock, Mode=OneWay}" CloseCommand="{x:Bind ViewModel.CloseOverlayCommand}"
-                                          Visibility="{x:Bind ViewModel.Users.IsStockOpen, Mode=OneWay}"/>
                     <Grid RowSpacing="16" Visibility="{x:Bind ViewModel.IsSetPanelOpen, Mode=OneWay}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>

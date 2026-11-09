@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Inicio del host: reloj, estado de la sala, menú en diagonal (QR, fondo, manual, emotes, música, salir) y pie.
+<!-- Inicio del host: reloj, estado de la sala, menú en diagonal (QR, fondo, manual, usuarios, tienda de emotes, música, salir) y pie.
      Transparente: el fondo elegido (o el degradado del login) lo pinta CapaFondo detrás del Frame -->
 <Page x:Class="COT_0.Host.Views.Pantallas.DashboardPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -88,14 +88,18 @@
                                      Icon="{StaticResource MenuIcon.Manual}"
                                      Command="{x:Bind ViewModel.ShowManualCommand}"/>
             <componentes:TarjetaMenu Style="{StaticResource TarjetaMenuStyle}" Number="04" Margin="78,0,0,0"
-                                     Content="{StaticResource Text.Dashboard.EmotesTitle}" Subtitle="{StaticResource Text.Dashboard.EmotesSubtitle}"
+                                     Content="{StaticResource Text.Dashboard.UsersTitle}" Subtitle="{StaticResource Text.Dashboard.UsersSubtitle}"
+                                     Icon="{StaticResource MenuIcon.Users}"
+                                     Command="{x:Bind ViewModel.ShowUsersCommand}"/>
+            <componentes:TarjetaMenu Style="{StaticResource TarjetaMenuStyle}" Number="05" Margin="104,0,0,0"
+                                     Content="{StaticResource Text.Dashboard.StoreTitle}" Subtitle="{x:Bind ViewModel.StoreSubtitle, Mode=OneWay}"
                                      Icon="{StaticResource MenuIcon.Emotes}"
                                      Command="{x:Bind ViewModel.ShowEmotesCommand}"/>
-            <componentes:TarjetaMenu Style="{StaticResource TarjetaMenuStyle}" Number="05" Margin="104,0,0,0"
+            <componentes:TarjetaMenu Style="{StaticResource TarjetaMenuStyle}" Number="06" Margin="130,0,0,0"
                                      Content="{StaticResource Text.Dashboard.MusicTitle}" Subtitle="{StaticResource Text.Dashboard.MusicSubtitle}"
                                      Icon="{StaticResource MenuIcon.Music}"
                                      Command="{x:Bind ViewModel.ShowMusicCommand}"/>
-            <componentes:TarjetaMenu Style="{StaticResource TarjetaMenuStyle}" Number="06" Margin="130,0,0,0"
+            <componentes:TarjetaMenu Style="{StaticResource TarjetaMenuStyle}" Number="07" Margin="156,0,0,0"
                                      Content="{StaticResource Text.Dashboard.ExitTitle}" Subtitle="{StaticResource Text.Dashboard.ExitSubtitle}"
                                      Icon="{StaticResource MenuIcon.Exit}"
                                      Command="{x:Bind ViewModel.LogoutCommand}"/>

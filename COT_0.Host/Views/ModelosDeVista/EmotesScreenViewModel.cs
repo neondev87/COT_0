@@ -1,4 +1,4 @@
-// Pantalla Emotes: pestañas USUARIOS | TIENDA | TICKETS (modo ADMIN: USUARIOS | PUNTO DE VENTA | ADMINISTRADORES), recuadros encima y ESC
+// TIENDA DE EMOTES (05): pestañas TIENDA | TICKETS (modo ADMIN: PUNTO DE VENTA | ADMINISTRADORES), el set de 7TV encima y ESC
 using COT_0.Host.Services.Usuarios;
 using COT_0.Host.Services.Ventana;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -13,29 +13,21 @@ namespace COT_0.Host.Views.ModelosDeVista;
 public partial class EmotesScreenViewModel : ObservableObject
 {
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsUsersSection), nameof(IsShopSection), nameof(IsTicketsSection), nameof(IsSalesSection), nameof(IsAdminsSection))]
+    [NotifyPropertyChangedFor(nameof(IsShopSection), nameof(IsTicketsSection), nameof(IsSalesSection), nameof(IsAdminsSection))]
     private StoreSection _section = ActiveUser.IsAdmin ? StoreSection.Sales : StoreSection.Shop;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsOverlayOpen))]
     private bool _isSetPanelOpen;
 
-    public EmotesScreenViewModel(StoreUsersViewModel users, StoreShopViewModel shop, StoreTicketsViewModel tickets,
-        SalesViewModel sales, AdminsViewModel admins)
+    public EmotesScreenViewModel(StoreShopViewModel shop, StoreTicketsViewModel tickets, SalesViewModel sales, AdminsViewModel admins)
     {
-        Users = users;
         Shop = shop;
         Tickets = tickets;
         Sales = sales;
         Admins = admins;
         tickets.ShopRequested += () => _ = ShowAsync(StoreSection.Shop);
-        users.PropertyChanged += (_, e) =>
-        {
-            if (e.PropertyName == nameof(StoreUsersViewModel.IsStockOpen)) OnPropertyChanged(nameof(IsOverlayOpen));
-        };
     }
-
-    public StoreUsersViewModel Users { get; }
 
     public StoreShopViewModel Shop { get; }
 
@@ -51,12 +43,6 @@ public partial class EmotesScreenViewModel : ObservableObject
     public bool IsHostMode => !IsAdminMode;
 
     // Las pestañas son RadioButton enlazados en dos sentidos: marcar una cambia de sección
-    public bool IsUsersSection
-    {
-        get => Section == StoreSection.Users;
-        set { if (value && Section != StoreSection.Users) _ = ShowAsync(StoreSection.Users); }
-    }
-
     public bool IsShopSection
     {
         get => Section == StoreSection.Shop;
@@ -81,7 +67,7 @@ public partial class EmotesScreenViewModel : ObservableObject
         set { if (value && Section != StoreSection.Admins) _ = ShowAsync(StoreSection.Admins); }
     }
 
-    public bool IsOverlayOpen => Users.IsStockOpen || IsSetPanelOpen;
+    public bool IsOverlayOpen => IsSetPanelOpen;
 
     public Task LoadAsync() => ShowAsync(Section);
 
@@ -92,7 +78,6 @@ public partial class EmotesScreenViewModel : ObservableObject
     private void CloseOverlay()
     {
         IsSetPanelOpen = false;
-        Users.CloseCommand.Execute(null);
     }
 
     [RelayCommand]
@@ -107,7 +92,6 @@ public partial class EmotesScreenViewModel : ObservableObject
         Section = section;
         return section switch
         {
-            StoreSection.Users => Users.LoadAsync(),
             StoreSection.Tickets => Tickets.LoadAsync(),
             StoreSection.Sales => Sales.LoadAsync(),
             StoreSection.Admins => Admins.LoadAsync(),

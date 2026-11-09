@@ -1,10 +1,11 @@
-// Dashboard: reloj, estado de la sala y menú (QR / sala, fondo, manual, emotes, música, salir)
+// Dashboard: reloj, estado de la sala y menú (QR / sala, fondo, manual, usuarios, tienda de emotes, música, salir)
 using System.Globalization;
 using COT_0.Core.Services;
 using COT_0.Host.Services.Configuracion;
 using COT_0.Host.Services.Sala;
 using COT_0.Host.Services.Textos;
 using COT_0.Host.Services.Tiempo;
+using COT_0.Host.Services.Usuarios;
 using COT_0.Host.Services.Ventana;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -52,6 +53,7 @@ public partial class DashboardViewModel : ObservableObject
         chat.UsersChanged += OnRoomStateChanged;
         UpdateClock();
         OnRoomStateChanged();
+        ActiveUser.Changed += () => OnPropertyChanged(nameof(StoreSubtitle));
     }
 
     public bool IsRoomInactive => !IsRoomActive;
@@ -60,6 +62,9 @@ public partial class DashboardViewModel : ObservableObject
     public string QrTitle => UiText.Get(IsRoomActive ? "Text.Dashboard.RoomTitle" : "Text.Dashboard.QrTitle");
 
     public string QrSubtitle => UiText.Get(IsRoomActive ? "Text.Dashboard.RoomSubtitle" : "Text.Dashboard.QrSubtitle");
+
+    /// <summary>Tarjeta 05: tienda en modo HOST, punto de venta en modo ADMIN.</summary>
+    public string StoreSubtitle => UiText.Get(ActiveUser.IsAdmin ? "Text.Dashboard.StoreSubtitle.Admin" : "Text.Dashboard.StoreSubtitle.Host");
 
     private static UiSettings Ui => AppConfig.Settings.Ui;
 
@@ -72,6 +77,9 @@ public partial class DashboardViewModel : ObservableObject
 
     [RelayCommand]
     private void ShowManual() => Navigator.ShowManual();
+
+    [RelayCommand]
+    private void ShowUsers() => Navigator.ShowUsers();
 
     [RelayCommand]
     private void ShowEmotes() => Navigator.ShowEmotes();

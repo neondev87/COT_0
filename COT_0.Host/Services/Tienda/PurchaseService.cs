@@ -87,6 +87,32 @@ public class PurchaseService(PurchaseStore store)
         return new PurchaseResult(PurchaseOutcome.Bought, quota, ticket);
     }
 
+    /// <summary>ELIMINAR cuenta: se van sus compras y sus tickets (los PDF que ya bajó al Escritorio se quedan).</summary>
+    public Task RemoveUserAsync(string userName) => ChangeAsync(data => data.Users.RemoveAll(u => Same(u.UserName, userName)));
+
+    /// <summary>CAMBIAR NOMBRE: sus compras siguen siendo suyas con el nombre nuevo.</summary>
+    public Task RenameUserAsync(string oldName, string newName) => ChangeAsync(data =>
+    {
+        if (Find(data, oldName) is { } user) user.UserName = newName;
+    });
+
+    private async Task ChangeAsync(Action<PurchasesData> change)
+    {
+        await _gate.WaitAsync();
+        try
+        {
+            var data = await store.LoadAsync();
+            change(data);
+            await store.SaveAsync(data);
+        }
+        finally
+        {
+            _gate.Release();
+        }
+    }
+
+    private static bool Same(string a, string b) => string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
+
     private static UserPurchases? Find(PurchasesData data, string userName) =>
         data.Users.FirstOrDefault(u => string.Equals(u.UserName, userName, StringComparison.OrdinalIgnoreCase));
 }

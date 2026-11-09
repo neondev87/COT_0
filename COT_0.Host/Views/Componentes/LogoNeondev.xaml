@@ -2,10 +2,12 @@
 <!-- Logo Neondev: avatar de 80 px (64 + 25%) con esquinas de 17.5, "Neondev" en Redaction 50.4 (36 + 40%)
      y el brillo "aero" de vidrio que cruza el avatar (ida y vuelta, 3 s por lado). Clic: abre el repositorio (Branding:RepoUrl).
      Avatar y nombre en una fila de columnas automáticas, los dos centrados en vertical.
-     Todo vive en la plantilla: el barrido corre en los estados Normal y PointerOver, así arranca solo sin código -->
+     Todo vive en la plantilla: el barrido corre en los estados Normal y PointerOver, así arranca solo sin código.
+     Con un usuario dentro (modo HOST), su foto o su inicial con color tapan el avatar de Neondev (Content del botón) -->
 <UserControl x:Class="COT_0.Host.Views.Componentes.LogoNeondev"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:convertidores="using:COT_0.Host.Views.Convertidores">
 
     <UserControl.Resources>
         <!-- Medidas de la firma en un solo lugar: avatar 64 × 1.25 = 80, esquinas 14 × 1.25 = 17.5, nombre 36 × 1.4 = 50.4.
@@ -46,11 +48,15 @@
                                     <Border.Background>
                                         <ImageBrush ImageSource="ms-appx:///Assets/Imagenes/neondev-avatar.png" Stretch="UniformToFill"/>
                                     </Border.Background>
+                                    <Grid>
+                                    <!-- Foto de perfil o inicial del usuario que entró (Content de la firma); vacío = avatar de Neondev -->
+                                    <ContentPresenter Content="{TemplateBinding Content}"/>
                                     <Rectangle x:Name="Shine" Width="{StaticResource LogoAvatarSize}" Height="{StaticResource LogoAvatarSize}" Fill="{StaticResource LogoShineBrush}" IsHitTestVisible="False">
                                         <Rectangle.RenderTransform>
                                             <TranslateTransform x:Name="ShineShift" X="{StaticResource LogoShineStart}"/>
                                         </Rectangle.RenderTransform>
                                     </Rectangle>
+                                    </Grid>
                                 </Border>
                                 <Border x:Name="Frame" CornerRadius="{StaticResource LogoAvatarRadius}" BorderThickness="1" BorderBrush="{StaticResource LogoBorderBrush}"/>
                             </Grid>
@@ -107,5 +113,12 @@
     </UserControl.Resources>
 
     <Button Style="{StaticResource LogoLink}" Command="{x:Bind ViewModel.OpenRepoCommand}"
-            ToolTipService.ToolTip="{StaticResource Text.Signature.Link}" AutomationProperties.Name="{StaticResource Text.Signature.Link}"/>
+            ToolTipService.ToolTip="{StaticResource Text.Signature.Link}" AutomationProperties.Name="{StaticResource Text.Signature.Link}">
+        <Grid Width="{StaticResource LogoAvatarSize}" Height="{StaticResource LogoAvatarSize}">
+            <Border Background="{x:Bind convertidores:AvatarTones.For(ViewModel.Tone), Mode=OneWay}" Visibility="{x:Bind ViewModel.HasInitial, Mode=OneWay}">
+                <TextBlock Text="{x:Bind ViewModel.Initial, Mode=OneWay}" Style="{StaticResource InitialsText}" FontSize="34"/>
+            </Border>
+            <Image Source="{x:Bind ViewModel.Photo, Mode=OneWay}" Stretch="UniformToFill" Visibility="{x:Bind ViewModel.HasPhoto, Mode=OneWay}"/>
+        </Grid>
+    </Button>
 </UserControl>

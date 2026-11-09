@@ -1,10 +1,9 @@
-// Sección visible de la pantalla Emotes
+// Sección visible de la TIENDA DE EMOTES
 namespace COT_0.Host.Views.ModelosDeVista;
 
-/// <summary>HOST: TIENDA | TICKETS. ADMIN: PUNTO DE VENTA | ADMINISTRADORES. USUARIOS en los dos.</summary>
+/// <summary>HOST: TIENDA | TICKETS. ADMIN: PUNTO DE VENTA | ADMINISTRADORES.</summary>
 public enum StoreSection
 {
-    Users,
     Shop,
     Tickets,
     Sales,

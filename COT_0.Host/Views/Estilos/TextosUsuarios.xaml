@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Textos de USUARIOS (04) y de la TIENDA DE EMOTES (05) en el dashboard (español de México, con "tú").
+     Se usan con {StaticResource} o UiText.Get -->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Dashboard -->
+    <x:String x:Key="Text.Dashboard.UsersTitle">USUARIOS</x:String>
+    <x:String x:Key="Text.Dashboard.UsersSubtitle">Cuenta, foto y stock</x:String>
+    <x:String x:Key="Text.Dashboard.StoreTitle">TIENDA DE EMOTES</x:String>
+    <x:String x:Key="Text.Dashboard.StoreSubtitle.Host">Emotes de 7TV y tus tickets</x:String>
+    <x:String x:Key="Text.Dashboard.StoreSubtitle.Admin">Punto de venta y administradores</x:String>
+    <x:String x:Key="Text.Store.ScreenTitle">TIENDA DE EMOTES</x:String>
+
+    <!-- Pantalla USUARIOS -->
+    <x:String x:Key="Text.Users.ScreenTitle">USUARIOS</x:String>
+    <x:String x:Key="Text.Users.NoticeTitle">Usuarios</x:String>
+    <x:String x:Key="Text.Users.Hint.Host">Tu cuenta: foto, nombre y contraseña. Toca tu tarjeta para ver tus emotes.</x:String>
+    <x:String x:Key="Text.Users.Hint.Admin">Todos los usuarios. Toca uno para ver sus emotes; solo su dueño cambia su nombre, contraseña y foto.</x:String>
+    <x:String x:Key="Text.Users.Photo">FOTO</x:String>
+    <x:String x:Key="Text.Users.Rename">NOMBRE</x:String>
+    <x:String x:Key="Text.Users.Password">CONTRASEÑA</x:String>
+    <x:String x:Key="Text.Users.Delete">ELIMINAR</x:String>
+    <x:String x:Key="Text.Users.Save">GUARDAR</x:String>
+    <x:String x:Key="Text.Users.ConfirmDelete">¿Eliminar la cuenta {0}? También se borran sus compras, sus tickets y su foto.</x:String>
+    <x:String x:Key="Text.Users.Deleted">Cuenta {0} eliminada.</x:String>
+    <x:String x:Key="Text.Users.Rename.Title">CAMBIAR NOMBRE DE {0}</x:String>
+    <x:String x:Key="Text.Users.Password.Title">CAMBIAR CONTRASEÑA DE {0}</x:String>
+    <x:String x:Key="Text.Users.NewName">NOMBRE NUEVO</x:String>
+    <x:String x:Key="Text.Users.CurrentPassword">CONTRASEÑA ACTUAL</x:String>
+    <x:String x:Key="Text.Users.NewPassword">CONTRASEÑA NUEVA</x:String>
+    <x:String x:Key="Text.Users.Renamed">Ahora te llamas {0}.</x:String>
+    <x:String x:Key="Text.Users.PasswordChanged">Contraseña cambiada.</x:String>
+    <x:String x:Key="Text.Users.PhotoSaved">Foto de perfil guardada.</x:String>
+    <x:String x:Key="Text.Users.PhotoFailed">No se pudo usar esa imagen. Elige otro PNG o JPG.</x:String>
+
+    <!-- Errores de cuenta -->
+    <x:String x:Key="Text.Error.CurrentPasswordEmpty">Escribe tu contraseña actual.</x:String>
+    <x:String x:Key="Text.Error.WrongCurrentPassword">La contraseña actual no coincide.</x:String>
+    <x:String x:Key="Text.Error.NotAllowed">Solo puedes cambiar tu propia cuenta.</x:String>
+</ResourceDictionary>

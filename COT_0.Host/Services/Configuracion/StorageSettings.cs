@@ -2,7 +2,7 @@
 namespace COT_0.Host.Services.Configuracion;
 
 /// <summary>
-/// Carpeta dentro de %LocalAppData%, nombre de cada archivo JSON (también compras.json de la tienda y admin.json de los administradores), el registro de medios (JSON por línea)
+/// Carpeta dentro de %LocalAppData%, nombre de cada archivo JSON (también compras.json de la tienda y admin.json de los administradores), la carpeta de fotos de perfil, el registro de medios (JSON por línea)
 /// y la carpeta de caché (cuadros de video generados; fuera del repo).
 /// </summary>
 public record StorageSettings(
@@ -14,4 +14,5 @@ public record StorageSettings(
     string MediaLogFile,
     string PurchasesFile,
     string AdminsFile,
+    string ProfilesFolder,
     string CacheFolder);

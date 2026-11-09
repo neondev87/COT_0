@@ -37,6 +37,8 @@ public static class Navigator
 
     public static void ShowBackgrounds() => Go<FondosPage>();
 
+    public static void ShowUsers() => Go<UsuariosPage>();
+
     public static void ShowEmotes() => Go<EmotesPage>();
 
     public static void ShowMusic() => Go<MusicaPage>();
