@@ -207,6 +207,14 @@
     <x:String x:Key="Text.ExitDialog.Confirm">CERRAR SALA Y SALIR</x:String>
     <x:String x:Key="Text.ExitDialog.Cancel">CANCELAR</x:String>
 
+    <!-- Confirmación de SALIR y de la ✕ sin sala activa -->
+    <x:String x:Key="Text.LogoutDialog.Message">¿Cerrar sesión y volver al inicio de sesión?</x:String>
+    <x:String x:Key="Text.LogoutDialog.Confirm">SALIR</x:String>
+    <x:String x:Key="Text.LogoutDialog.Cancel">CANCELAR</x:String>
+    <x:String x:Key="Text.CloseAppDialog.Message">¿Salir de COT_0?</x:String>
+    <x:String x:Key="Text.CloseAppDialog.Confirm">SALIR</x:String>
+    <x:String x:Key="Text.CloseAppDialog.Cancel">CANCELAR</x:String>
+
     <!-- Confirmación de CERRAR SALA -->
     <x:String x:Key="Text.CloseRoomDialog.Message">¿Cerrar la sala? Todos los invitados van a salir y el enlace dejará de funcionar.</x:String>
     <x:String x:Key="Text.CloseRoomDialog.Confirm">CERRAR SALA</x:String>

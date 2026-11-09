@@ -1,11 +1,11 @@
-// Al cerrar la ventana: con sala activa pregunta primero; luego cierra sala, túnel y servidor, y sí cierra
+// Al cerrar la ventana: siempre pregunta primero; luego cierra sala, túnel y servidor, y sí cierra
 using COT_0.Host.Services.Sala;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 
 namespace COT_0.Host.Services.Ventana;
 
-/// <summary>Mismo "¿Cerrar la sala y salir?" que SALIR del dashboard (RoomSession.ConfirmLeaveAsync).</summary>
+/// <summary>Con sala activa, mismo "¿Cerrar la sala y salir?" que SALIR; sin sala, "¿Salir de COT_0?".</summary>
 public class CloseGuard(RoomSession session)
 {
     private Window? _window;
@@ -24,10 +24,15 @@ public class CloseGuard(RoomSession session)
         if (_canClose) return;
 
         args.Cancel = true;
+        // Un ✕ más mientras pregunta o apaga no vuelve a abrir el diálogo ni a cerrar la ventana
         if (_isClosing) return;
-        if (session.IsActive && !await session.ConfirmLeaveAsync()) return;
-
         _isClosing = true;
+        if (!await session.ConfirmCloseAppAsync())
+        {
+            _isClosing = false;
+            return;
+        }
+
         try
         {
             await session.ShutdownAsync();

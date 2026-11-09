@@ -1,4 +1,4 @@
-// Ciclo de vida de la sala: servidor + túnel + sala, y la pregunta al salir con sala activa
+// Ciclo de vida de la sala: servidor + túnel + sala, y las preguntas al salir o cerrar
 using COT_0.Core.Services;
 using COT_0.Host.Models;
 using COT_0.Host.Services.Almacenamiento;
@@ -61,8 +61,11 @@ public class RoomSession(WebServerHost webServer, ITunnelService tunnel, Confirm
         await webServer.StopAsync();
     }
 
-    /// <summary>"Hay una sala activa. ¿Cerrar la sala y salir?"; true si confirmaste.</summary>
-    public Task<bool> ConfirmLeaveAsync() => ConfirmAsync("ExitDialog");
+    /// <summary>SALIR: con sala activa "¿Cerrar la sala y salir?", sin sala "¿Cerrar sesión?"; true si confirmaste.</summary>
+    public Task<bool> ConfirmLogoutAsync() => ConfirmAsync(IsActive ? "ExitDialog" : "LogoutDialog");
+
+    /// <summary>✕ de la ventana: con sala activa "¿Cerrar la sala y salir?", sin sala "¿Salir de COT_0?".</summary>
+    public Task<bool> ConfirmCloseAppAsync() => ConfirmAsync(IsActive ? "ExitDialog" : "CloseAppDialog");
 
     /// <summary>CERRAR SALA: "¿Cerrar la sala?"; true si confirmaste.</summary>
     public Task<bool> ConfirmCloseRoomAsync() => ConfirmAsync("CloseRoomDialog");

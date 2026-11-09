@@ -83,11 +83,8 @@ public partial class DashboardViewModel : ObservableObject
     [RelayCommand]
     private async Task LogoutAsync()
     {
-        if (_session.IsActive)
-        {
-            if (!await _session.ConfirmLeaveAsync()) return;
-            await _session.CloseAsync();
-        }
+        if (!await _session.ConfirmLogoutAsync()) return;
+        if (_session.IsActive) await _session.CloseAsync();
         Navigator.ShowLogin();
     }
 
