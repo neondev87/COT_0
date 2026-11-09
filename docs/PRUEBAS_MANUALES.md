@@ -339,3 +339,43 @@ Copia `hola mundo@2` y `ñandú  é!` al portapapeles y prueba en cada campo:
 5. **Al salir** (← INICIO, ESC y Cerrar de la despedida) después de ~15 s: el video de fondo se ve otra vez **más adelante** de donde iba (sin reinicio ni parpadeo) y la música se oye desde donde iba (o sigue silenciada si ya lo estaba).
 6. **Ligereza**: con el Administrador de tareas abierto, quédate 1 min en el Manual: el uso de CPU no debe subir de forma notable comparado con el Dashboard.
 7. Con fondo de **imagen**, "Usar cuadro fijo" o sin fondo: el Manual se ve igual que en el punto 1.
+
+## 17. Reglas nuevas de usuario y contraseña (09/11)
+
+### Usuario solo letras con mayúscula inicial
+
+1. **Registrar usuario**: escribe `erick`: el campo muestra `Erick` al momento. Escribe `ERICK`: queda `Erick`. Escribe o pega `erick 12_@x`: queda `Erickx` (sin números, espacios ni símbolos). El cursor queda donde ibas.
+2. Lo mismo en el usuario de ENTRAR y de ¿Olvidaste tu contraseña?
+3. Registra `Erick` con una contraseña válida: entra normal; en `usuarios.json` queda `"UserName": "Erick"` y `"RulesVersion": 2`.
+
+### 20 caracteres máximo (menos el set de 7TV)
+
+1. Usuario, contraseña, repetir contraseña, respuesta secreta, contraseña nueva de la recuperación: se detienen en 20, también pegando un texto de 40.
+2. **04 EMOTES**: el campo del set de 7TV se sigue deteniendo en 26.
+
+### Contraseña con mensajes exactos
+
+En Registrar usuario (y igual en la contraseña nueva de ¿Olvidaste tu contraseña?), con usuario `Erick`:
+
+| Contraseña | InfoBar |
+|---|---|
+| `abc` | Mínimo 8 caracteres. Falta un número. Falta un carácter especial (! @ # $ % & * ? . - _). |
+| `abcdefgh` | Falta un número. Falta un carácter especial (…). |
+| `abcdefg1` | Falta un carácter especial (…). |
+| `abcdefg!` | Falta un número. |
+| `abcdef1!` | Entra (pasa todas). |
+
+1. Escribe un espacio o pega `abc 12!`: el espacio no aparece (el filtro solo deja letras, números y `! @ # $ % & * ? . - _`). Un símbolo fuera de la lista (`^`, `/`, `+`) tampoco aparece.
+2. El mensaje "No uses espacios." solo sale si el texto llega con espacios por código (el filtro los quita antes).
+
+### Cuenta vieja que ya no cumple
+
+1. Con un `usuarios.json` de antes (ej. `hostdemo` con contraseña `abc12345`): en ENTRAR escribe `hostdemo` (el campo lo deja `Hostdemo`) y su contraseña de siempre → InfoBar "Esta cuenta ya no cumple las reglas nuevas. Regístrala de nuevo." y no entra. Con contraseña equivocada → "Usuario o contraseña incorrectos." (no revela nada).
+2. Registrar usuario con `Hostdemo` y una contraseña nueva válida → se registra (reemplaza la cuenta vieja con ese nombre, sin contar como usuario nuevo) y ya entra.
+3. Una cuenta vieja con nombre válido (`Erick`) pero contraseña sin símbolo: también sale el aviso; se recrea igual o con ¿Olvidaste tu contraseña? (al cambiar la contraseña queda con las reglas nuevas).
+4. Una cuenta vieja con números en el nombre (`user1`) no se puede escribir en ENTRAR (el campo quita los números): se registra otra con solo letras. Su entrada sigue en `usuarios.json` tal cual (no se borra).
+5. Abrir la app con esas cuentas no cambia `usuarios.json`: solo se reescribe al registrar, cambiar contraseña o configurar la pregunta.
+
+### Manual
+
+1. La muestra del paso 1 dice `Hostdemo`.

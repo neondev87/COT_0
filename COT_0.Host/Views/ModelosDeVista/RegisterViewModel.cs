@@ -42,10 +42,10 @@ public partial class RegisterViewModel : FormViewModel
     private async Task SubmitAsync()
     {
         IsErrorOpen = false;
-        if (!Check(CredentialValidator.ValidateRegistration(UserName, Password, ConfirmPassword))) return;
+        if (!Check(CredentialValidator.ValidateRegistration(UserName, Password, ConfirmPassword), Password)) return;
         try
         {
-            if (Check(await UserService.RegisterAsync(UserName, Password))) Closed?.Invoke(UserName);
+            if (Check(await UserService.RegisterAsync(UserName, Password), Password)) Closed?.Invoke(UserName);
         }
         catch (Exception ex) when (JsonStore.IsStorageError(ex))
         {

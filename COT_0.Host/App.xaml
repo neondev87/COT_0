@@ -179,10 +179,14 @@
                 <Setter Property="FontSize" Value="15"/>
                 <Setter Property="CornerRadius" Value="0"/>
                 <Setter Property="Padding" Value="14,12,14,0"/>
-                <!-- Solo letras y números al escribir o pegar (Views/Componentes/FiltroCampo) -->
+                <!-- Filtro al escribir o pegar (Views/Componentes/FiltroCampo): letras y números; contraseña con símbolos -->
                 <Setter Property="componentes:FiltroCampo.IsEnabled" Value="True"/>
             </Style>
             <Style x:Key="LoginTextBox" TargetType="TextBox" BasedOn="{StaticResource LoginFieldStyle}"/>
+            <!-- Usuario: solo letras, primera mayúscula y resto minúscula al escribir -->
+            <Style x:Key="UserNameTextBox" TargetType="TextBox" BasedOn="{StaticResource LoginTextBox}">
+                <Setter Property="componentes:FiltroCampo.IsUserName" Value="True"/>
+            </Style>
             <Style x:Key="LoginPasswordBox" TargetType="PasswordBox" BasedOn="{StaticResource LoginFieldStyle}">
                 <Setter Property="PasswordRevealMode" Value="Hidden"/>
             </Style>

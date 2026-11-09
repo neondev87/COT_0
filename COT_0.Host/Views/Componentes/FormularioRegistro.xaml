@@ -7,7 +7,7 @@
     <StackPanel>
         <StackPanel Margin="0,0,0,22">
             <TextBlock Text="{StaticResource Text.Login.User}" Style="{StaticResource FieldLabelText}"/>
-            <TextBox Style="{StaticResource LoginTextBox}" PlaceholderText="{StaticResource Text.Login.UserPlaceholder}" MaxLength="{x:Bind validaciones:InputLimits.MaxCharacters}"
+            <TextBox Style="{StaticResource UserNameTextBox}" PlaceholderText="{StaticResource Text.Login.UserPlaceholder}" MaxLength="{x:Bind validaciones:InputLimits.MaxCharacters}"
                      Text="{x:Bind ViewModel.UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
         <StackPanel Margin="0,0,0,22">

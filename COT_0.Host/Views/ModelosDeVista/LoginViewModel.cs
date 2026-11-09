@@ -124,11 +124,11 @@ public partial class LoginViewModel : FormViewModel
 
     private async Task<bool> SignInAsync()
     {
-        if (!Check(CredentialValidator.Validate(UserName, Password))) return false;
+        if (!Check(CredentialValidator.ValidateSignIn(UserName, Password))) return false;
 
-        if (!await UserService.LoginAsync(UserName, Password))
+        // Contraseña equivocada o cuenta de antes de las reglas nuevas (no entra; se recrea en "Registrar usuario")
+        if (!Check(await UserService.LoginAsync(UserName, Password)))
         {
-            ShowError("Text.Error.WrongCredentials");
             Password = string.Empty;
             return false;
         }

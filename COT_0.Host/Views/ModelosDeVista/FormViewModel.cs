@@ -17,10 +17,16 @@ public abstract partial class FormViewModel : ObservableObject
     [ObservableProperty]
     private bool _isErrorOpen;
 
-    /// <summary>true si no hay error; si lo hay, lo muestra.</summary>
-    protected bool Check(CredentialError error)
+    /// <summary>true si no hay error; si lo hay, lo muestra. Con la contraseña, PasswordRules dice exactamente qué regla falla.</summary>
+    protected bool Check(CredentialError error, string? password = null)
     {
         if (error == CredentialError.None) return true;
+        if (error == CredentialError.PasswordRules)
+        {
+            ErrorMessage = PasswordMessages.Describe(PasswordValidator.Check(password));
+            IsErrorOpen = true;
+            return false;
+        }
         ShowError($"Text.Error.{error}");
         // Los "demasiado largo" dicen el límite de Inputs:MaxCaracteres y "ya no caben" el de Usuarios:Maximo
         int? limit = error switch

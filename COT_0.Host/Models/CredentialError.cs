@@ -9,7 +9,7 @@ public enum CredentialError
     UserInvalid,
     UserTooLong,
     PasswordEmpty,
-    PasswordInvalid,
+    PasswordRules,
     PasswordTooLong,
     PasswordMismatch,
     QuestionEmpty,
@@ -18,4 +18,6 @@ public enum CredentialError
     AnswerTooLong,
     UserTaken,
     UsersFull,
+    AccountOutdated,
+    WrongCredentials,
 }

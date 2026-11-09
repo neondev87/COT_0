@@ -54,10 +54,10 @@
 
     <!-- Mensajes del login -->
     <x:String x:Key="Text.Error.UserEmpty">Escribe tu usuario.</x:String>
-    <x:String x:Key="Text.Error.UserInvalid">Tu usuario solo puede tener letras y números, sin espacios ni símbolos.</x:String>
+    <x:String x:Key="Text.Error.UserInvalid">Tu usuario solo puede tener letras, con la primera en mayúscula (ejemplo: Erick).</x:String>
     <x:String x:Key="Text.Error.UserTooLong">Usuario: máximo {0} caracteres.</x:String>
     <x:String x:Key="Text.Error.PasswordEmpty">Escribe tu contraseña.</x:String>
-    <x:String x:Key="Text.Error.PasswordInvalid">Tu contraseña solo puede tener letras y números, sin espacios ni símbolos.</x:String>
+    <x:String x:Key="Text.Error.PasswordRules">Tu contraseña no cumple las reglas.</x:String>
     <x:String x:Key="Text.Error.PasswordTooLong">Contraseña: máximo {0} caracteres.</x:String>
     <x:String x:Key="Text.Error.PasswordMismatch">Las dos contraseñas no coinciden.</x:String>
     <x:String x:Key="Text.Error.QuestionEmpty">Elige una pregunta secreta.</x:String>
@@ -67,6 +67,13 @@
     <x:String x:Key="Text.Error.WrongAnswer">La respuesta no coincide.</x:String>
     <x:String x:Key="Text.Error.RecoveryFailed">No se pudo recuperar la contraseña con esos datos.</x:String>
     <x:String x:Key="Text.Error.WrongCredentials">Usuario o contraseña incorrectos.</x:String>
+    <x:String x:Key="Text.Error.AccountOutdated">Esta cuenta ya no cumple las reglas nuevas. Regístrala de nuevo.</x:String>
+    <x:String x:Key="Text.Password.TooShort">Mínimo {0} caracteres.</x:String>
+    <x:String x:Key="Text.Password.TooLong">Máximo {0} caracteres.</x:String>
+    <x:String x:Key="Text.Password.NoDigit">Falta un número.</x:String>
+    <x:String x:Key="Text.Password.NoSymbol">Falta un carácter especial ({0}).</x:String>
+    <x:String x:Key="Text.Password.HasSpaces">No uses espacios.</x:String>
+    <x:String x:Key="Text.Password.InvalidChars">Solo se aceptan estos símbolos: {0}.</x:String>
     <x:String x:Key="Text.Error.UserTaken">Ya existe un usuario con ese nombre.</x:String>
     <x:String x:Key="Text.Error.UsersFull">Ya hay {0} usuarios registrados, que es el máximo.</x:String>
     <x:String x:Key="Text.Error.Storage">No se pudo leer o guardar tu cuenta. Inténtalo de nuevo.</x:String>

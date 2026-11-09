@@ -109,7 +109,7 @@
                            FontFamily="{StaticResource FontBarlow}" FontSize="13" Foreground="{StaticResource Light62Brush}"/>
                 <StackPanel Margin="0,0,0,22">
                     <TextBlock Text="{StaticResource Text.Login.User}" Style="{StaticResource FieldLabelText}"/>
-                    <TextBox x:Name="UserBox" Style="{StaticResource LoginTextBox}" PlaceholderText="{StaticResource Text.Login.UserPlaceholder}" MaxLength="{x:Bind validaciones:InputLimits.MaxCharacters}"
+                    <TextBox x:Name="UserBox" Style="{StaticResource UserNameTextBox}" PlaceholderText="{StaticResource Text.Login.UserPlaceholder}" MaxLength="{x:Bind validaciones:InputLimits.MaxCharacters}"
                              Text="{x:Bind ViewModel.UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
                 <TextBlock Text="{StaticResource Text.Login.Password}" Style="{StaticResource FieldLabelText}"/>

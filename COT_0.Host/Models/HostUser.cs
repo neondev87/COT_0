@@ -16,4 +16,7 @@ public class HostUser
     public string SecurityQuestion { get; set; } = string.Empty;
     public string AnswerHash { get; set; } = string.Empty;
     public string AnswerSalt { get; set; } = string.Empty;
+
+    /// <summary>Versión de las reglas con las que se creó (0 en cuentas viejas, que ya no pueden entrar).</summary>
+    public int RulesVersion { get; set; }
 }

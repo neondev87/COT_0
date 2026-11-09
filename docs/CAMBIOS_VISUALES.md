@@ -402,3 +402,14 @@ El panel de vidrio con "Gracias por estar aquí. Vuelve pronto." y CERRAR no cam
 | Lain sobre negro puro (el fondo terminaba en `#000000` en su esquina) | **Sombra** radial negra abajo a la izquierda (`LainShadeBrush`, 820 × 1000) que recibe el negro del cuadro de Lain y sus franjas/orillas (`Edge*`, sin cambios) y se pierde en el azul: no queda recuadro negro. Se oculta en la despedida |
 | Despedida con orillas y franjas negras | Orillas hacia adentro y franjas hacia afuera en el **azul de su propio video** (`#06122C`, brochas `Farewell*`): se funde con el azul del fondo. Tamaño (1125 × 793), texto y centrado sin cambios |
 | — | Video de fondo de la app: igual que antes, sigue corriendo debajo (mudo) y tapado; al salir se ve y se oye desde donde iba. Música muteada sin pausa en el Manual, igual |
+
+## Reglas nuevas de usuario y contraseña (09/11)
+
+| Antes | Ahora |
+|---|---|
+| Usuario: letras y números | Solo letras; al escribir se normaliza a primera mayúscula y resto minúscula (`erick` → `Erick`), estilo `UserNameTextBox` (`App.xaml`) |
+| Contraseña: letras y números, sin símbolos | 8 a 20 caracteres, al menos un número y un carácter especial (`! @ # $ % & * ? . - _`), sin espacios; el filtro deja escribir esos símbolos |
+| Mensaje "Tu contraseña solo puede tener letras y números…" | El InfoBar dice cada regla que falta: "Mínimo 8 caracteres." "Falta un número." "Falta un carácter especial (…)." "No uses espacios." |
+| Límite de 15 en todos los campos | 20 (`Inputs:MaxCaracteres`); el set de 7TV sigue en 26 |
+| Cuenta de antes entraba igual | "Esta cuenta ya no cumple las reglas nuevas. Regístrala de nuevo." |
+| Usuario de la muestra del Manual `hostdemo` | `Hostdemo` |

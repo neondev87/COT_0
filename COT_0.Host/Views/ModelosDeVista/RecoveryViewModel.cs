@@ -94,7 +94,7 @@ public partial class RecoveryViewModel : FormViewModel
 
     private async Task SavePasswordAsync()
     {
-        if (!Check(CredentialValidator.ValidateNewPassword(NewPassword, ConfirmPassword))) return;
+        if (!Check(CredentialValidator.ValidateNewPassword(NewPassword, ConfirmPassword), NewPassword)) return;
 
         if (await PasswordRecoveryService.ResetPasswordAsync(UserName, Answer, NewPassword)) Closed?.Invoke(true);
         else ShowError("Text.Error.WrongAnswer");
