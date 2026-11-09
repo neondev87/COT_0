@@ -508,3 +508,5 @@ $RECYCLE.BIN/
 # Caché de cuadros de video y registro de medios (viven en %LocalAppData%\COT_0)
 /COT_0.Host/cache/
 *.jsonl
+# Versión generada de Lain con transparencia (docs/PREPARAR_LAIN.md)
+lain-transparente*.gif

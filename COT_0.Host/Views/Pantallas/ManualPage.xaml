@@ -36,11 +36,12 @@
                         <StateTrigger IsActive="{x:Bind ViewModel.IsFarewell, Mode=OneWay}"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="LainCutout.Visibility" Value="Collapsed"/>
+                        <Setter Target="VideoHost.Visibility" Value="Visible"/>
                         <Setter Target="VideoHost.HorizontalAlignment" Value="Center"/>
-                        <Setter Target="VideoHost.Margin" Value="0"/>
-                        <Setter Target="VideoHost.Width" Value="{StaticResource FarewellVideoWidth}"/>
-                        <Setter Target="VideoHost.Height" Value="{StaticResource FarewellVideoHeight}"/>
                         <Setter Target="VideoHost.Opacity" Value="{StaticResource FarewellVideoOpacity}"/>
+                        <Setter Target="VideoCell.Width" Value="{StaticResource FarewellVideoWidth}"/>
+                        <Setter Target="VideoCell.Height" Value="{StaticResource FarewellVideoHeight}"/>
                         <Setter Target="NoticesHost.Visibility" Value="Collapsed"/>
                         <Setter Target="StepsRoot.Opacity" Value="0"/>
                         <Setter Target="StepsRoot.IsHitTestVisible" Value="False"/>
@@ -50,16 +51,35 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <!-- Video de Lain sin LumaKey: completo (Uniform), pegado al borde de abajo sin margen y con las orillas fundidas con el velo -->
-        <Grid x:Name="VideoHost" Width="{StaticResource LainVideoWidth}" Height="{StaticResource LainVideoHeight}" Margin="40,0,0,0"
-              HorizontalAlignment="Left" VerticalAlignment="Bottom" Opacity="{StaticResource LainVideoOpacity}" IsHitTestVisible="False">
+        <!-- Opción A: Lain con transparencia real (GIF preparado una vez con ffmpeg, docs/PREPARAR_LAIN.md), pegada al borde de abajo -->
+        <Image x:Name="LainCutout" Source="{x:Bind ViewModel.LainCutout, Mode=OneWay}" Height="{StaticResource LainVideoHeight}"
+               Margin="{StaticResource LainMargin}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Stretch="Uniform"
+               IsHitTestVisible="False" Visibility="{x:Bind ViewModel.HasLainCutout, Mode=OneWay}"/>
+
+        <!-- Video sin canal alfa: Lain cuando no hay GIF (opción B) y la despedida. Alrededor, franjas del negro del video que se
+             desvanecen hacia afuera (esquinas radiales); toda la caja comparte una sola opacidad, así que no queda borde -->
+        <Grid x:Name="VideoHost" HorizontalAlignment="Left" VerticalAlignment="Bottom" IsHitTestVisible="False"
+              Visibility="{x:Bind ViewModel.HasNoLainCutout, Mode=OneWay}">
             <Grid.OpacityTransition>
                 <ScalarTransition Duration="0:0:0.3"/>
             </Grid.OpacityTransition>
-            <MediaPlayerElement x:Name="LainVideo" Stretch="Uniform" AreTransportControlsEnabled="False" VerticalAlignment="Bottom"/>
-            <Rectangle Height="120" VerticalAlignment="Top" Fill="{StaticResource LainFadeBrush}"/>
-            <Rectangle Width="40" HorizontalAlignment="Left" Fill="{StaticResource LainFadeLeftBrush}"/>
-            <Rectangle Width="40" HorizontalAlignment="Right" Fill="{StaticResource LainFadeRightBrush}"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Rectangle Fill="{StaticResource EdgeCornerTopLeftBrush}"/>
+            <Rectangle x:Name="EdgeTop" Grid.Column="1" Height="{StaticResource LainBlendTop}" Fill="{StaticResource EdgeBottomBrush}"/>
+            <Rectangle Grid.Column="2" Fill="{StaticResource EdgeCornerTopRightBrush}"/>
+            <Rectangle x:Name="EdgeLeft" Grid.Row="1" Width="{StaticResource LainBlendLeft}" Fill="{StaticResource EdgeRightBrush}"/>
+            <Rectangle x:Name="EdgeRight" Grid.Row="1" Grid.Column="2" Width="{StaticResource LainBlendRight}" Fill="{StaticResource EdgeLeftBrush}"/>
+            <Grid x:Name="VideoCell" Grid.Row="1" Grid.Column="1" Width="{StaticResource LainVideoWidth}" Height="{StaticResource LainVideoHeight}">
+                <MediaPlayerElement x:Name="LainVideo" Stretch="Uniform" AreTransportControlsEnabled="False"/>
+            </Grid>
         </Grid>
 
         <componentes:EncabezadoPantalla Margin="32,24,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"

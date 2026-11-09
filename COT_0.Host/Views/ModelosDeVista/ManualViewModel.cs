@@ -8,6 +8,7 @@ using COT_0.Host.Services.Textos;
 using COT_0.Host.Services.Ventana;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.UI.Xaml.Media;
 using Windows.Media.Playback;
 
 namespace COT_0.Host.Views.ModelosDeVista;
@@ -53,6 +54,11 @@ public partial class ManualViewModel : ObservableObject
     [ObservableProperty]
     private string _errorMessage = string.Empty;
 
+    // Lain con transparencia (opción A); null = se usa el video fundido con el fondo (opción B)
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasLainCutout), nameof(HasNoLainCutout))]
+    private ImageSource? _lainCutout;
+
     public ManualViewModel(ManualAssets assets, ManualSound sound, ManualVideo video, ManualTimeline timeline, FondoImages images)
     {
         _assets = assets;
@@ -72,6 +78,10 @@ public partial class ManualViewModel : ObservableObject
 
     public MediaPlayer VideoPlayer => _video.Player;
 
+    public bool HasLainCutout => LainCutout is not null;
+
+    public bool HasNoLainCutout => LainCutout is null;
+
     /// <summary>Al cargar la página: revisa los archivos, arranca a Lain y el primer paso.</summary>
     public async Task EnterAsync()
     {
@@ -79,8 +89,8 @@ public partial class ManualViewModel : ObservableObject
         await _assets.RefreshAsync();
         if (_assets.Missing.Count > 0) ShowError("Text.Manual.Error.Missing", string.Join(", ", _assets.Missing.Select(Path.GetFileName)));
         _sound.Open();
-        _video.Play(_assets.LainVideo);
         _timeline.Start(Current.LastPhase);
+        await ShowLainAsync();
         await LoadStagesAsync();
     }
 
@@ -91,6 +101,7 @@ public partial class ManualViewModel : ObservableObject
         _timeline.Cancel();
         _sound.Stop();
         _video.Stop();
+        LainCutout = null;
     }
 
     // ENTER: siguiente paso; después del último, la despedida. En la despedida cierra
@@ -158,6 +169,17 @@ public partial class ManualViewModel : ObservableObject
         IsLeaving = false;
         FlashOpacity = 0;
         _timeline.Start(Current.LastPhase);
+    }
+
+    // El GIF transparente si existe y se puede leer; si no, el video de Lain (el reproductor queda libre para la despedida)
+    private async Task ShowLainAsync()
+    {
+        if (_assets.LainCutout is { } cutout)
+        {
+            LainCutout = await FondoImages.LoadImageAsync(cutout);
+            if (LainCutout is null) ShowError("Text.Manual.Error.Unreadable", Path.GetFileName(cutout));
+        }
+        if (LainCutout is null && !IsFarewell) _video.Play(_assets.LainVideo);
     }
 
     // Capturas opcionales: un paso sin la suya muestra su vista de ejemplo

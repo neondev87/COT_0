@@ -12,6 +12,9 @@ public sealed class ManualAssets
 {
     public string? LainVideo { get; private set; }
 
+    /// <summary>Lain con transparencia (GIF opcional); si existe, el video de Lain ya no es obligatorio.</summary>
+    public string? LainCutout { get; private set; }
+
     public string? FarewellVideo { get; private set; }
 
     public string? NotificationSound { get; private set; }
@@ -26,7 +29,8 @@ public sealed class ManualAssets
     public Task RefreshAsync() => Task.Run(() =>
     {
         var missing = new List<string>();
-        LainVideo = Find(Settings.LainVideo, missing);
+        LainCutout = Find(Settings.LainCutout, []);
+        LainVideo = Find(Settings.LainVideo, LainCutout is null ? missing : []);
         FarewellVideo = Find(Settings.FarewellVideo, missing);
         NotificationSound = Find(Settings.NotificationSound, missing);
         StaticSound = Find(Settings.StaticSound, missing);

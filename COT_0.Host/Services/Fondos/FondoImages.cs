@@ -19,14 +19,18 @@ public class FondoImages(FondoFrameCache frames)
         return source is null ? null : await LoadImageAsync(source, width);
     }
 
-    /// <summary>Decodifica a lo ancho pedido (nunca más que el original) con la escala de alta calidad del sistema.</summary>
-    public static async Task<BitmapImage?> LoadImageAsync(string path, uint width)
+    /// <summary>
+    /// Decodifica a lo ancho pedido (nunca más que el original) con la escala de alta calidad del sistema.
+    /// width = 0 deja el tamaño original (el GIF de Lain, que además se anima solo).
+    /// </summary>
+    public static async Task<BitmapImage?> LoadImageAsync(string path, uint width = 0)
     {
         try
         {
             var file = await StorageFile.GetFileFromPathAsync(path);
             using var stream = await file.OpenReadAsync();
-            var image = new BitmapImage { DecodePixelWidth = (int)width, DecodePixelType = DecodePixelType.Physical };
+            var image = new BitmapImage { DecodePixelType = DecodePixelType.Physical };
+            if (width > 0) image.DecodePixelWidth = (int)width;
             await image.SetSourceAsync(stream);
             return image;
         }

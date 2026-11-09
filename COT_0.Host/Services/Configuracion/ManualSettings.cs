@@ -2,12 +2,13 @@
 namespace COT_0.Host.Services.Configuracion;
 
 /// <summary>
-/// Videos y sonidos de Lain, carpeta opcional con una captura por paso (paso1.png…) y a qué ancho se decodifica, volúmenes,
+/// Videos y sonidos de Lain, su copia opcional con transparencia (LainCutout, GIF hecho con ffmpeg: docs/PREPARAR_LAIN.md), carpeta opcional con una captura por paso (paso1.png…) y a qué ancho se decodifica, volúmenes,
 /// segundos en que entra cada aviso, duración del cambio de paso, cuántos avisos tiene cada paso
 /// y los datos ficticios de las vistas de ejemplo (Demo).
 /// </summary>
 public record ManualSettings(
     string LainVideo,
+    string LainCutout,
     string FarewellVideo,
     string NotificationSound,
     string StaticSound,

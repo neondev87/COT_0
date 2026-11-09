@@ -334,3 +334,12 @@ Diagnóstico completo de las capas de antes en `docs/qa/CAPAS_MANUAL.md`.
 | `ascii-bg.png` | Solo dentro de la réplica del login (paso 1), porque es la pantalla real que se muestra |
 
 Los paneles de vidrio (atajos, "Gracias, pero no necesito ayuda", despedida y el marco de la vista de ejemplo) no cambian: sobre el velo plano se ven parejos. El destello de 0.15 s al cambiar de paso se queda (es transición, no capa fija).
+
+### Lain transparente (opción A, con respaldo B)
+
+| Antes | Ahora |
+|---|---|
+| Video de Lain (sin alfa, fondo #000000) en una caja de 315 × 560 al 90 % con degradados #050507 arriba y a los lados: se veía un rectángulo negro con caracteres ASCII | **Opción A**: `gifs\lain-transparente.gif` (ffmpeg, `colorkey` del negro, ver `docs/PREPARAR_LAIN.md`) en un `Image` (BitmapImage, se anima solo) de 560 de alto, pegado abajo con 40 px a la izquierda. Sin caja ni degradados |
+| — | **Opción B** (si el GIF no está o no se puede leer): el mismo video dentro de `VideoHost`, rodeado de franjas del negro exacto del video que se desvanecen hacia afuera (40 px a la izquierda, 100 a la derecha, 140 arriba) y esquinas radiales (`EdgeTop/Bottom/Left/RightBrush`, `EdgeCornerTopLeft/RightBrush`). Como el borde del video y la franja son del mismo negro, no hay salto |
+
+Lain queda debajo de sus avisos (la figura empieza ~120 px más abajo del borde de su caja) y a la izquierda de la columna de pasos (386 px), así que no se encima con la fila de atajos ni con "Gracias, pero no necesito ayuda". Verificado con ffmpeg: fondo transparente en los 93 cuadros (≈ 12 % de píxeles opacos por cuadro) y sin halo negro sobre un fondo rojo de prueba.

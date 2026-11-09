@@ -27,25 +27,44 @@
         <GradientStop Color="#B30A0A0C" Offset="0"/>
         <GradientStop Color="#CC070708" Offset="1"/>
     </LinearGradientBrush>
-    <!-- Orillas del video que se funden con el velo (en vez de OpacityMask): arriba, izquierda y derecha -->
-    <LinearGradientBrush x:Key="LainFadeBrush" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#E6050507" Offset="0"/>
-        <GradientStop Color="#00050507" Offset="1"/>
+    <!-- Orillas del video sin canal alfa: el negro exacto del video de Lain (#000000, muestreado con ffmpeg), que también es
+         el color del velo. Cada brocha se llama por el lado que queda opaco; las esquinas son radiales y empatan con las franjas -->
+    <Color x:Key="ManualBlackColor">#FF000000</Color>
+    <Color x:Key="ManualClearColor">#00000000</Color>
+    <LinearGradientBrush x:Key="EdgeTopBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="{StaticResource ManualBlackColor}" Offset="0"/>
+        <GradientStop Color="{StaticResource ManualClearColor}" Offset="1"/>
     </LinearGradientBrush>
-    <LinearGradientBrush x:Key="LainFadeLeftBrush" StartPoint="0,0" EndPoint="1,0">
-        <GradientStop Color="#B3050507" Offset="0"/>
-        <GradientStop Color="#00050507" Offset="1"/>
+    <LinearGradientBrush x:Key="EdgeBottomBrush" StartPoint="0,1" EndPoint="0,0">
+        <GradientStop Color="{StaticResource ManualBlackColor}" Offset="0"/>
+        <GradientStop Color="{StaticResource ManualClearColor}" Offset="1"/>
     </LinearGradientBrush>
-    <LinearGradientBrush x:Key="LainFadeRightBrush" StartPoint="1,0" EndPoint="0,0">
-        <GradientStop Color="#B3050507" Offset="0"/>
-        <GradientStop Color="#00050507" Offset="1"/>
+    <LinearGradientBrush x:Key="EdgeLeftBrush" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="{StaticResource ManualBlackColor}" Offset="0"/>
+        <GradientStop Color="{StaticResource ManualClearColor}" Offset="1"/>
     </LinearGradientBrush>
+    <LinearGradientBrush x:Key="EdgeRightBrush" StartPoint="1,0" EndPoint="0,0">
+        <GradientStop Color="{StaticResource ManualBlackColor}" Offset="0"/>
+        <GradientStop Color="{StaticResource ManualClearColor}" Offset="1"/>
+    </LinearGradientBrush>
+    <RadialGradientBrush x:Key="EdgeCornerTopLeftBrush" Center="1,1" GradientOrigin="1,1" RadiusX="1" RadiusY="1">
+        <GradientStop Color="{StaticResource ManualBlackColor}" Offset="0"/>
+        <GradientStop Color="{StaticResource ManualClearColor}" Offset="1"/>
+    </RadialGradientBrush>
+    <RadialGradientBrush x:Key="EdgeCornerTopRightBrush" Center="0,1" GradientOrigin="0,1" RadiusX="1" RadiusY="1">
+        <GradientStop Color="{StaticResource ManualBlackColor}" Offset="0"/>
+        <GradientStop Color="{StaticResource ManualClearColor}" Offset="1"/>
+    </RadialGradientBrush>
 
     <x:Double x:Key="ManualColumnWidth">330</x:Double>
-    <!-- Video vertical (480 × 854): 315 × 560 lo deja completo, del mismo tamaño que su caja (las orillas fundidas caen en el video) -->
+    <!-- Lain (480 × 854 o el GIF de 314 × 560): 560 de alto, pegada abajo; sus avisos terminan antes de donde empieza la figura -->
     <x:Double x:Key="LainVideoHeight">560</x:Double>
     <x:Double x:Key="LainVideoWidth">315</x:Double>
-    <x:Double x:Key="LainVideoOpacity">0.9</x:Double>
+    <Thickness x:Key="LainMargin">40,0,0,0</Thickness>
+    <!-- Opción B (sin GIF): franjas negras alrededor del video que se desvanecen hacia afuera -->
+    <x:Double x:Key="LainBlendLeft">40</x:Double>
+    <x:Double x:Key="LainBlendRight">100</x:Double>
+    <x:Double x:Key="LainBlendTop">140</x:Double>
     <x:Double x:Key="FarewellVideoOpacity">0.45</x:Double>
     <!-- Despedida (1022 × 720): 900 × 634 al centro y abajo, como fondo detrás del texto -->
     <x:Double x:Key="FarewellVideoWidth">900</x:Double>
