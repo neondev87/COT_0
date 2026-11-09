@@ -31,6 +31,7 @@ public static class MediaLog
         await _gate.WaitAsync();
         try
         {
+            await JsonStore.EnsureFolderAsync();
             await File.AppendAllTextAsync(FilePath, line + Environment.NewLine);
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)

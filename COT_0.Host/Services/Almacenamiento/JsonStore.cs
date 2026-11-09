@@ -9,16 +9,16 @@ public static class JsonStore
 {
     private static readonly JsonSerializerOptions _options = new() { WriteIndented = true };
 
-    /// <summary>Carpeta donde viven los .json (se crea si no existe).</summary>
-    public static string Folder
+    /// <summary>Carpeta donde viven los .json (solo la ruta; EnsureFolderAsync la crea).</summary>
+    public static string Folder => Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppConfig.Settings.Storage.Folder);
+
+    /// <summary>Crea la carpeta si no existe, fuera del hilo de la UI (.NET no trae versión async).</summary>
+    public static async Task<string> EnsureFolderAsync()
     {
-        get
-        {
-            var root = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var folder = Path.Combine(root, AppConfig.Settings.Storage.Folder);
-            Directory.CreateDirectory(folder);
-            return folder;
-        }
+        var folder = Folder;
+        await Task.Run(() => Directory.CreateDirectory(folder));
+        return folder;
     }
 
     /// <summary>Lee el archivo; si no existe o está vacío, te regresa un objeto nuevo.</summary>
@@ -39,7 +39,7 @@ public static class JsonStore
     /// <summary>Escribe el objeto completo, con sangría para que se pueda leer a mano.</summary>
     public static async Task SaveAsync<T>(string fileName, T data)
     {
-        var path = Path.Combine(Folder, fileName);
+        var path = Path.Combine(await EnsureFolderAsync(), fileName);
         await using var stream = AsyncFiles.Create(path);
         await JsonSerializer.SerializeAsync(stream, data, _options);
     }

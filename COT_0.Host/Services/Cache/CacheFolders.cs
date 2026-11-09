@@ -12,6 +12,7 @@ namespace COT_0.Host.Services.Cache;
 /// </summary>
 public static class CacheFolders
 {
+    /// <summary>Crea la carpeta si falta: es síncrono, llámalo dentro de Task.Run (como FondoFrameCache).</summary>
     public static string Get(string name)
     {
         var folder = Path.Combine(JsonStore.Folder, AppConfig.Settings.Storage.CacheFolder, name);

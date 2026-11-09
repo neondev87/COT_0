@@ -31,7 +31,7 @@ public class SongCatalog(MusicLibrary library, CoverLibrary covers)
 
     private async Task<string> GetDurationAsync(string track)
     {
-        var key = (track, File.GetLastWriteTimeUtc(track));
+        var key = (track, await Task.Run(() => File.GetLastWriteTimeUtc(track)));
         if (_durations.TryGetValue(key, out var cached)) return cached;
 
         var duration = await ReadDurationAsync(track);
