@@ -309,3 +309,13 @@ Copia `hola mundo@2` y `ñandú  é!` al portapapeles y prueba en cada campo:
 1. En el Manual elige "Gracias, pero no necesito ayuda" (o ESC): el video de Lain y el texto "Gracias por estar aquí. Vuelve pronto." quedan juntos y al centro exacto de la pantalla, el texto debajo del video, sin encimarse.
 2. El video se ve más grande que antes, nítido, sin rectángulo negro ni orillas duras (las cuatro se pierden en el velo).
 3. En pantalla completa a 1920 × 1080 y en un monitor de 1280 × 720: nada se corta (en 720 el grupo se encoge completo) y el botón Cerrar funciona.
+
+## 15. Música muteada en el Manual (09/11)
+
+1. Con la música sonando, anota en qué segundo va (05 MÚSICA) y abre **03 MANUAL**: la música deja de oírse de inmediato; los avisos de Lain suenan normal y SILENCIAR los sigue callando.
+2. Quédate ~20 s en el Manual y regresa con **← INICIO**: la música se oye otra vez **desde donde iba** (unos 20 s más adelante que al entrar), la misma pista, sin pausa ni reinicio, al mismo volumen (25 o el que tenías).
+3. Repite saliendo con **ESC** (despedida → ESC/Cerrar) y con ENTER hasta el final: en la despedida suena la estática y la música sigue callada; al salir vuelve igual que en el punto 2.
+4. **Silencio previo**: silencia con la bocina de la firma o de MÚSICA, entra al Manual y sal: la música **sigue silenciada** y la bocina sigue marcando silencio. Quita el silencio: se oye donde iba.
+5. Si una canción termina estando en el Manual, pasa sola a la siguiente (en silencio) y al salir se oye la nueva.
+6. **Varias veces seguidas**: entra y sal del Manual 5 veces rápido (← INICIO / 03 MANUAL): al final la música se oye normal (o sigue silenciada si lo estaba) y la bocina no cambió de icono en ningún momento.
+7. **Cerrar dentro del Manual**: en un paso y en la despedida, cierra con la ✕ → SALIR y con Alt+F4: la app se cierra sin error y el Visor de eventos no registra "Error de aplicación" de `COT_0.Host.exe`.

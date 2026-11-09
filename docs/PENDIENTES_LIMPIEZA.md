@@ -18,6 +18,8 @@ Solo lo que sigue pendiente después del cierre (08/11, rama `host-winui`; ya co
 
 - **Archivos temporales de la corrección del 09/11** (video en el Manual, audio, cierre y despedida): ninguno en el repo ni en `COT_0_P`. Los scripts de prueba (`close-test.ps1`, `farewell-test.ps1`), el build de prueba y un cuadro de `lain_despedida.mp4` quedaron en la carpeta temporal de la sesión (`%LocalAppData%\Temp\claude\…\scratchpad`); se pueden borrar.
 
+- **Build de prueba de la música en el Manual (09/11)**: la salida de `dotnet build` quedó en `%LocalAppData%\Temp\claude\…\scratchpaduild\` (la app abierta bloqueaba `bin\`). Fuera del repo; se puede borrar.
+
 ## En el código (no se tocó en el cierre: cambia lógica)
 
 - **`README.md`** (fuera de `COT_0.Host` y `docs`) todavía dice que la música "empieza por `Audio:DefaultFile`": ahora es `Audio:InitialTrack` (Audio_02).

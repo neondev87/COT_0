@@ -4,6 +4,7 @@ using COT_0.Host.Models;
 using COT_0.Host.Services.Configuracion;
 using COT_0.Host.Services.Fondos;
 using COT_0.Host.Services.Manual;
+using COT_0.Host.Services.Musica;
 using COT_0.Host.Services.Textos;
 using COT_0.Host.Services.Ventana;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -26,6 +27,7 @@ public partial class ManualViewModel : ObservableObject
     private readonly ManualVideo _video;
     private readonly ManualTimeline _timeline;
     private readonly FondoImages _images;
+    private readonly MusicService _music;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Current))]
@@ -59,8 +61,9 @@ public partial class ManualViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(HasLainCutout), nameof(HasNoLainCutout))]
     private ImageSource? _lainCutout;
 
-    public ManualViewModel(ManualAssets assets, ManualSound sound, ManualVideo video, ManualTimeline timeline, FondoImages images)
+    public ManualViewModel(ManualAssets assets, ManualSound sound, ManualVideo video, ManualTimeline timeline, FondoImages images, MusicService music)
     {
+        _music = music;
         _assets = assets;
         _sound = sound;
         _video = video;
@@ -82,9 +85,10 @@ public partial class ManualViewModel : ObservableObject
 
     public bool HasNoLainCutout => LainCutout is null;
 
-    /// <summary>Al cargar la página: revisa los archivos, arranca a Lain y el primer paso.</summary>
+    /// <summary>Al cargar la página: calla la música (sin pausarla), revisa los archivos, arranca a Lain y el primer paso.</summary>
     public async Task EnterAsync()
     {
+        _music.IsHushed = true;
         _video.Failed += OnVideoFailed;
         await _assets.RefreshAsync();
         if (_assets.Missing.Count > 0) ShowError("Text.Manual.Error.Missing", string.Join(", ", _assets.Missing.Select(Path.GetFileName)));
@@ -94,9 +98,10 @@ public partial class ManualViewModel : ObservableObject
         await LoadStagesAsync();
     }
 
-    /// <summary>Al salir de la página: corta el reloj, el video y los sonidos.</summary>
+    /// <summary>Al salir de la página: corta el reloj, el video y los sonidos, y la música vuelve a oírse donde iba.</summary>
     public void Leave()
     {
+        _music.IsHushed = false;
         _video.Failed -= OnVideoFailed;
         _timeline.Cancel();
         _sound.Stop();

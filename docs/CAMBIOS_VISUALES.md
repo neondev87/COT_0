@@ -378,3 +378,9 @@ El panel de vidrio con "Gracias por estar aquí. Vuelve pronto." y CERRAR no cam
 | La app abría con `Audio_01` cargada en pausa | Abre **sonando `Audio_02`** a 25 (`Audio:InitialTrack` = 2 con `Audio:TrackNameFormat` = `Audio_{0:00}`; `Audio:DefaultVolume` = 25). Si no existe, arranca con la primera; si no se puede leer, salta a la siguiente (como ya hacía) |
 | Al cerrar la app salía un error (0xC000027B en `Microsoft.UI.Xaml.dll`) o se quedaba colgada | Cierra limpio desde la ✕, Alt+F4 y SALIR del diálogo (ver causa en `REPORTE_CIERRE.md`) |
 | Despedida: video de 900 × 634 abajo y al centro, con el texto encima de la parte de abajo del video | Video de **1125 × 793** (+25 %, casi su tamaño real de 1022 × 720: no se pixela) con el texto **debajo** (34 px, +30 %, estilo `ManualFarewellText`) y los dos **centrados en toda la pantalla**. Se conservan las orillas fundidas hacia adentro (225 / 159) y las franjas negras hacia afuera, ahora también abajo (esquinas `EdgeCornerBottomLeft/RightBrush`). Un `Viewbox` que solo reduce (`DownOnly`) encoge el grupo completo en pantallas de menos de ~1050 px de alto en lugar de cortarlo |
+
+## Música muteada en el Manual (09/11)
+
+| Antes | Ahora |
+|---|---|
+| La música de fondo seguía sonando encima de Lain, los avisos y la estática | En el Manual (pasos y despedida) la música queda **muteada pero sin pausa**: la canción sigue avanzando en silencio (`MusicService.IsHushed`). Al salir (← INICIO, ESC o Cerrar en la despedida) se oye desde donde iba, sin reiniciarse ni cambiar de pista. Es un silencio aparte del de la bocina: si el usuario ya la había silenciado, sigue silenciada al salir, y la bocina de la firma y de MÚSICA no cambia de icono. Volumen sin cambios (25 por defecto). Avisos, estática y SILENCIAR del Manual, igual. Sin claves nuevas en `appsettings.json` |

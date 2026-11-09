@@ -219,3 +219,14 @@ Se comparó `COT_0.Host` (WPF) contra el Host WinUI (entonces en otra carpeta) e
 - **Arreglo**: `AppShutdown.StopAsync` (detiene reloj y reproductores, apaga sala, vigilantes, túnel y Kestrel con async, y suelta `UiThread`), luego `Window.Close()` y al final `Release` (job de cloudflared). Los `MediaPlayer` ya no se liberan con `Dispose`: quedan detenidos y sin archivo, y Windows los suelta al terminar el proceso.
 - Verificación: build de `COT_0.Host` en 0 errores y 0 warnings (en una carpeta aparte: la app abierta desde Visual Studio bloqueaba `bin\`). Cierre probado con UI Automation (sin capturas) en una segunda instancia: Login, Dashboard y Manual × (✕ + SALIR dos veces, Alt+F4) = 9 de 9 con código de salida 0 y sin eventos de error; antes, el Manual daba 0xC000027B y el Dashboard se quedaba colgado. Despedida medida con UI Automation a 1920 × 1080: Cerrar en x 927–996 (centro 961) y 16 px libres arriba y abajo del grupo.
 - No verificado: cierre con la sala abierta (túnel y Kestrel reales; la segunda instancia no podía usar el puerto 5050), la despedida a 1280 × 720 (se calculó: el `Viewbox` la reduce a ~68 %), y a ojo el video del Manual, el sonido de Audio_02 y las orillas de la despedida.
+
+## Música muteada en el Manual (09/11)
+
+| Tarea | Commit | Archivos |
+|---|---|---|
+| Música muda (sin pausa) dentro del Manual | commit "Manual: la música de fondo queda muteada sin pausa…" | `Services/Musica/MusicService.cs` (`IsHushed`, `ApplyMute`; `IsMuted` ahora guarda el silencio del usuario en su propio campo), `Views/ModelosDeVista/ManualViewModel.cs` (recibe `MusicService`; `IsHushed` en `EnterAsync` y `Leave`) |
+
+- Diseño: el reproductor queda mudo si `IsMuted` (bocina del usuario) **o** `IsHushed` (Manual). Así no hace falta guardar y restaurar el estado previo: el del usuario nunca se toca y la bocina no cambia de icono. `IsHushed` no avisa a la interfaz.
+- Cierre: si la app se cierra dentro del Manual, `AppShutdown` hace `music.Stop()` y después llega `ManualPage.Unloaded` → `Leave` → `IsHushed = false`: solo pone `IsMuted` en un `MediaPlayer` detenido y **no liberado** (no hay `Dispose`), sin `StateChanged`. No hay error.
+- Sin claves nuevas en `appsettings.json`. Video de fondo sin cambios.
+- Verificación: `dotnet build COT_0.sln` en 0 errores y 0 warnings, en una carpeta aparte (`-p:BaseOutputPath` en el scratchpad de la sesión): la app abierta bloqueaba `COT_0.Hostin\` y no se cerró. No se abrió la app: lo de oído queda para `PRUEBAS_MANUALES.md`, sección 15.

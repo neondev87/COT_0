@@ -22,6 +22,8 @@ public sealed class MusicService
     private IReadOnlyList<string> _tracks = [];
     private int _failures;
     private bool _playWhenAudible;
+    private bool _muted;
+    private bool _hushed;
 
     public MusicService(MusicLibrary library)
     {
@@ -59,13 +61,29 @@ public sealed class MusicService
         }
     }
 
+    /// <summary>Silencio que eligió el usuario con la bocina.</summary>
     public bool IsMuted
     {
-        get => _player.IsMuted;
+        get => _muted;
         set
         {
-            _player.IsMuted = value;
+            _muted = value;
+            ApplyMute();
             Notify();
+        }
+    }
+
+    /// <summary>
+    /// Silencio temporal del Manual de Lain: la canción sigue avanzando sin sonar.
+    /// No toca IsMuted ni avisa a la interfaz; al quitarlo vuelve el silencio que tuviera el usuario.
+    /// </summary>
+    public bool IsHushed
+    {
+        get => _hushed;
+        set
+        {
+            _hushed = value;
+            ApplyMute();
         }
     }
 
@@ -167,6 +185,8 @@ public sealed class MusicService
         }
         Notify();
     }
+
+    private void ApplyMute() => _player.IsMuted = _muted || _hushed;
 
     private void Notify() => StateChanged?.Invoke();
 }

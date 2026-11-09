@@ -128,7 +128,8 @@ COT_0.Host/
 │   ├── Manual/                   ManualAssets (qué archivos de Lain existen, async), ManualSound (aviso + estática),
 │   │                             ManualVideo (un MediaPlayer para Lain y la despedida) y ManualTimeline (fases con Manual:CueSeconds)
 │   ├── Musica/                   MusicLibrary (canciones de la carpeta), CoverLibrary (portadas), SongCatalog (duración y portada, async),
-│   │                             MusicService (Windows.Media.Playback: play/pausa, anterior/siguiente, volumen, silencio) y CoverImages
+│   │                             MusicService (Windows.Media.Playback: play/pausa, anterior/siguiente, volumen, silencio
+│   │                             del usuario y silencio temporal del Manual, IsHushed) y CoverImages
 │   ├── Sala/                     WebServerHost (Kestrel con COT_0.Web), RoomSession (abrir/cerrar sala, vigilantes y apagado),
 │   │                             QrService (PNG de QRCoder → BitmapImage), RoomOpenErrors (error → RoomError + texto) y GuestWatcher (base)
 │   ├── Sesiones/                 SesionService (sesiones.json) y SesionWatcher (abre/cierra la sesión con la sala y anota invitados)
@@ -244,6 +245,7 @@ En `%LocalAppData%\COT_0\`:
 ## Manual de Lain
 
 - Archivos fuera del repo (`Manual:*`, relativos a `Paths:MediaRoot`): `gifs\lain_tele_web.mp4`, `gifs\lain_despedida.mp4`, `manual\notificacion.mp3`, `manual\estatica.wav` y, opcional, una captura por paso en `manual\pasos\paso1.png`…`paso6.png`.
+- Música: `ManualViewModel` pone `MusicService.IsHushed` en `true` al entrar y en `false` en `Leave`: la canción sigue avanzando muda y al salir se oye donde iba. No toca `IsMuted` (el silencio del usuario con la bocina), así que ese se conserva.
 - Al abrir: `ManualAssets.RefreshAsync()` revisa qué existe; lo que falte sale en un InfoBar y el manual sigue sin eso.
 - Pasos: textos en `Textos.xaml` (`Text.Manual.StepN.Title/Text/NoticeM`); cuántos avisos tiene cada uno, en `Manual:NoticeCounts` (3 por paso). El aviso N explica el resaltado N.
 - Vistas de ejemplo: `VistaEjemploManual` elige la del paso (1 login, 2 inicio, 3 y 4 sala, 5 emotes, 6 música). Los datos ficticios salen de `Manual:Demo`
