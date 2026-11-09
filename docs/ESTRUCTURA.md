@@ -228,7 +228,7 @@ En `%LocalAppData%\COT_0\`:
 ## Fondos
 
 - Carpeta fuera del repo: `Paths:MediaRoot` + `Background:Folder` (imágenes `Background:ImageExtensions`, videos `Background:VideoExtensions`). La app no la crea.
-- `CapaFondo` vive en `MainWindow`, detrás del `Frame`, y es la única: Dashboard, Sala, Fondos y Manual son páginas transparentes (en el Manual un fondo de video se muestra como cuadro fijo, porque ya suena el video de Lain). En las demás páginas se oculta y el video se pausa. La carpeta se lee la primera vez que entras al dashboard (el login no la toca).
+- `CapaFondo` vive en `MainWindow`, detrás del `Frame`, y es la única: Dashboard, Sala, Fondos y Manual son páginas transparentes (en el Manual un fondo de video sigue en bucle pero mudo, `FondoPlayer.SetSilenced`; al salir recupera su sonido normal, `Background:VideoMuted`, sin reiniciarse). En las demás páginas se oculta y el video se pausa. La carpeta se lee la primera vez que entras al dashboard (el login no la toca).
 - Un solo `MediaPlayer` (`FondoPlayer`) en bucle y en silencio; cambiar de fondo solo cambia su `Source`.
 - Videos de más de `Background:HeavyVideoMegabytes` (120 MB) arrancan como **cuadro fijo**. En FONDOS, "Usar cuadro fijo" lo cambia por video y se guarda en `fondos.json`.
 - **Cuadro fijo** (`FondoFrameCache`): una sola vez por video, async, en `%LocalAppData%\COT_0\cache\fondos\<hash>.jpg`. Intentos en orden:

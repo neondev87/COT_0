@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Fondo compartido de Dashboard, Sala, Fondos y Manual (va detrás del Frame): degradado del login, imagen o cuadro fijo,
-     video en bucle y en silencio, velo oscuro en lugar del desenfoque, y viñeta. En el Manual solo queda el cuadro fijo sobre negro -->
+     video en bucle, velo oscuro en lugar del desenfoque, y viñeta. En el Manual el video sigue (mudo) sin degradado ni viñeta -->
 <UserControl x:Class="COT_0.Host.Views.Componentes.CapaFondo"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

@@ -120,7 +120,7 @@ Antes: `dotnet build COT_0.sln` en 0 errores y 0 warnings.
 1. Elige un video ligero (menos de 120 MB): se reproduce detrás en bucle y **sin sonido**; la música sigue sonando igual.
 2. Elige un video de más de 120 MB: su miniatura dice **PESADO** y arranca como **cuadro fijo**. "Usar cuadro fijo (más ligero)" está marcado.
 3. Desmarca "Usar cuadro fijo" → el video se reproduce. Márcalo → vuelve el cuadro fijo. Se guarda por video en `fondos.json` (`UseStill`).
-4. Con un video de fondo, abre 05 MÚSICA: el fondo no se ve ahí (y se pausa); en 03 MANUAL se ve como cuadro fijo, quieto. Regresa al dashboard: sigue donde iba.
+4. Con un video de fondo, abre 05 MÚSICA: el fondo no se ve ahí (y se pausa); en 03 MANUAL se sigue moviendo, sin sonido. Regresa al dashboard: sigue donde iba, sin reiniciarse.
 5. En el Administrador de tareas, con el video corriendo en el dashboard, el uso de CPU no debería trabar la ventana (el reloj avanza cada segundo).
 
 ### Errores (InfoBar amarillo en FONDOS)
@@ -133,7 +133,7 @@ Antes: `dotnet build COT_0.sln` en 0 errores y 0 warnings.
 
 ## 10. Manual de Lain
 
-1. **03 MANUAL** → el fondo de la app (cuadro fijo) detrás de un solo velo negro parejo, ← INICIO | MANUAL arriba a la izquierda y atajos ENTER / → / ← / ESC arriba a la derecha.
+1. **03 MANUAL** → el fondo de la app (si es video, en movimiento y mudo) detrás de un solo velo negro parejo, ← INICIO | MANUAL arriba a la izquierda y atajos ENTER / → / ← / ESC arriba a la derecha.
    A la derecha, "Paso 01 / 06", el título del paso y, justo debajo, la **vista de ejemplo** del paso (una réplica quieta de la pantalla). Ya no hay texto explicativo bajo el título: lo dicen las notificaciones de Lain.
    La vista de ejemplo ocupa todo el ancho a la derecha de Lain, en 16:9, sin recortes y centrada con márgenes parejos.
    En pantalla completa (si puedes, en monitores de distinta resolución): la réplica crece o se reduce entera, sin encimarse con Lain ni con sus avisos, y cada resaltado sigue sobre su elemento.
@@ -211,7 +211,7 @@ Antes: `dotnet build COT_0.sln` en 0 errores y 0 warnings.
 
 ### Manual de Lain
 
-1. Elige un fondo en **02 CAMBIAR FONDO** (imagen o video) y abre **03 MANUAL**: el fondo se ve detrás, oscurecido (velo de ~60 %), y el texto se lee bien. Con un fondo de video se ve su cuadro fijo, quieto.
+1. Elige un fondo en **02 CAMBIAR FONDO** (imagen o video) y abre **03 MANUAL**: el fondo se ve detrás, oscurecido (velo de ~60 %), y el texto se lee bien. Con un fondo de video, el video sigue en bucle y sin sonido.
 2. Lain (el video de la tele) está completa y parada en el borde de abajo: sin hueco debajo, sin cabeza ni pies cortados y sin caja con orillas duras.
 3. Sus notificaciones, la fila de atajos (ENTER, →, ←, ESC) y "Gracias, pero no necesito ayuda" no se enciman con ella.
 4. La fila de atajos y el botón de abajo se ven como vidrio (degradado claro y borde fino); el marco de la vista de ejemplo tiene un borde rojo tenue; "Paso 0N / 06" lleva una línea roja a cada lado.
@@ -239,7 +239,7 @@ Antes: `dotnet build COT_0.sln` en 0 errores y 0 warnings.
 
 ### 10b. Manual: capas, Lain transparente, despedida y letreros (08/11, noche)
 
-1. **Fondo limpio**: con un fondo elegido (imagen o video), el Manual muestra su cuadro fijo (no se mueve) detrás de **un solo velo** negro parejo: sin degradados, sin viñeta, sin barrido, sin piso oscuro y sin texto ASCII sobre la página (el ASCII solo aparece dentro de la réplica del login en el paso 1). En FONDOS elige "sin fondo" (o borra la selección): el Manual queda sobre negro limpio.
+1. **Fondo limpio**: con un fondo elegido (imagen o video), el Manual lo muestra (un video sigue moviéndose, mudo) detrás de **un solo velo** negro parejo: sin degradados, sin viñeta, sin barrido, sin piso oscuro y sin texto ASCII sobre la página (el ASCII solo aparece dentro de la réplica del login en el paso 1). En FONDOS elige "sin fondo" (o borra la selección): el Manual queda sobre negro limpio.
 2. **Lain sin cuadro negro**: en todos los pasos Lain flota sobre el fondo, pegada abajo, sin rectángulo ni orillas visibles, debajo de sus avisos y a la izquierda de la vista de ejemplo, sin tocar la fila de atajos ni "Gracias, pero no necesito ayuda". Pon un fondo claro para notarlo mejor.
 3. **Respaldo**: renombra `gifs\lain-transparente.gif` y abre el Manual: aparece el video de Lain con una penumbra negra que se desvanece hacia arriba y a los lados (sin borde recto). Regrésale el nombre.
 4. **Despedida**: "Gracias, pero no necesito ayuda" o ESC → el video de despedida al centro y abajo, tenue, con las cuatro orillas fundidas: sin rectángulo azul, sin bordes rectos y sin franja clara a la izquierda ni parches de otro tono a los lados. El panel con "Gracias por estar aquí. Vuelve pronto." y CERRAR se lee encima.

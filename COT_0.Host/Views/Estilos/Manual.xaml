@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Estilos del manual de Lain. Se mezcla en ManualPage.
-     Paleta del proyecto: negro, línea roja y Barlow Condensed. Capas: fondo elegido como cuadro fijo (CapaFondo), un solo velo negro al 60 % y el contenido;
+     Paleta del proyecto: negro, línea roja y Barlow Condensed. Capas: fondo elegido (CapaFondo; si es video sigue en bucle y mudo), un solo velo negro al 60 % y el contenido;
      los paneles son "vidrio" barato: degradado translúcido + borde claro de 1 px, sin desenfoque. Solo opacidad y traslación animadas -->
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

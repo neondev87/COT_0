@@ -6,6 +6,7 @@ namespace COT_0.Host.Services.Configuracion;
 /// arranca como cuadro fijo, tamaños de decodificación y opacidad del velo (normal y con el selector abierto).
 /// FrameSeconds/FrameMaxWidth: el cuadro que se saca de cada video (miniatura y cuadro fijo) y CacheFolder,
 /// su carpeta dentro de Storage:CacheFolder. FfmpegPath: "ffmpeg" lo busca junto a la app y en el PATH.
+/// VideoMuted: sonido normal del video de fondo fuera del manual (true = en silencio); en el manual siempre va mudo.
 /// </summary>
 public record BackgroundSettings(
     string Folder,
@@ -17,6 +18,7 @@ public record BackgroundSettings(
     uint StillSize,
     double VeilOpacity,
     double PickerVeilOpacity,
+    bool VideoMuted,
     string CacheFolder,
     double FrameSeconds,
     uint FrameMaxWidth,

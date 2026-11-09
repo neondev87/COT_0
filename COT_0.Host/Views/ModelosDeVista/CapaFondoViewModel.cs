@@ -13,7 +13,8 @@ namespace COT_0.Host.Views.ModelosDeVista;
 
 /// <summary>
 /// Solo se ve en Dashboard, Sala, Fondos y el manual; en las demás páginas el video se pausa.
-/// En el manual un fondo de video se muestra como su cuadro fijo y sin velo, degradado ni viñeta propios (el velo lo pone ManualPage). Sin desenfoque: con el selector abierto el velo oscuro sube (PickerVeilOpacity).
+/// En el manual el video sigue en bucle pero sin sonido, y sin velo, degradado ni viñeta propios (el velo lo pone ManualPage).
+/// Al salir recupera su sonido normal (Background:VideoMuted) sin reiniciarse. Sin desenfoque: con el selector abierto el velo oscuro sube (PickerVeilOpacity).
 /// Si el video falla, cae a su cuadro fijo (el JPEG de la caché) y FondoService guarda la causa para FondosPage.
 /// </summary>
 public partial class CapaFondoViewModel : ObservableObject
@@ -27,7 +28,7 @@ public partial class CapaFondoViewModel : ObservableObject
     private readonly HashSet<string> _failedStills = new(StringComparer.OrdinalIgnoreCase);
     private string? _stillPath;
     private bool _isPicker;
-    private bool _isStillOnly;
+    private bool _isManual;
     private int _version;
 
     [ObservableProperty]
@@ -68,7 +69,8 @@ public partial class CapaFondoViewModel : ObservableObject
     {
         IsActive = PagesWithBackground.Contains(page);
         _isPicker = page == typeof(FondosPage);
-        _isStillOnly = page == typeof(ManualPage);
+        _isManual = page == typeof(ManualPage);
+        _player.SetSilenced(_isManual);
         // Abrir el selector vuelve a intentar los archivos que fallaron (pudiste reemplazarlos)
         if (_isPicker) ForgetFailures();
         if (IsActive && !_fondos.IsLoaded) await _fondos.LoadAsync();
@@ -79,15 +81,15 @@ public partial class CapaFondoViewModel : ObservableObject
     {
         var version = ++_version;
         var fondo = _fondos.Selected;
-        VeilOpacity = _isPicker ? Settings.PickerVeilOpacity : fondo is null || _isStillOnly ? 0 : Settings.VeilOpacity;
-        IsDecorVisible = !_isStillOnly;
+        VeilOpacity = _isPicker ? Settings.PickerVeilOpacity : fondo is null || _isManual ? 0 : Settings.VeilOpacity;
+        IsDecorVisible = !_isManual;
 
         if (!IsActive)
         {
             _player.Pause();
             return;
         }
-        if (fondo is { Kind: FondoKind.Video, UseStill: false } && !_isStillOnly && !_failedVideos.Contains(_fondos.PathOf(fondo)))
+        if (fondo is { Kind: FondoKind.Video, UseStill: false } && !_failedVideos.Contains(_fondos.PathOf(fondo)))
         {
             await ShowVideoAsync(_fondos.PathOf(fondo));
             return;

@@ -1,5 +1,6 @@
-// Único reproductor de los fondos de video: en bucle, en silencio y sin controles de Windows
+// Único reproductor de los fondos de video: en bucle, sin controles de Windows y mudo en el manual
 using COT_0.Host.Models;
+using COT_0.Host.Services.Configuracion;
 using COT_0.Host.Services.Registro;
 using COT_0.Host.Services.Tiempo;
 using Windows.Media.Core;
@@ -22,11 +23,12 @@ public sealed class FondoPlayer : IDisposable
     {
         Player.CommandManager.IsEnabled = false;
         Player.MediaFailed += OnMediaFailed;
+        SetSilenced(false);
     }
 
     public event Action<FondoError, string>? Failed;
 
-    public MediaPlayer Player { get; } = new() { IsLoopingEnabled = true, IsMuted = true, AutoPlay = false };
+    public MediaPlayer Player { get; } = new() { IsLoopingEnabled = true, AutoPlay = false };
 
     /// <summary>Ruta del video cargado; null si no hay.</summary>
     public string? Current { get; private set; }
@@ -51,6 +53,9 @@ public sealed class FondoPlayer : IDisposable
         }
         Player.Play();
     }
+
+    /// <summary>En el manual el video sigue corriendo pero callado; fuera vuelve a Background:VideoMuted. No toca la posición.</summary>
+    public void SetSilenced(bool silenced) => Player.IsMuted = silenced || AppConfig.Settings.Background.VideoMuted;
 
     /// <summary>Fuera del dashboard, la sala y el selector el video se pausa (no se descarga).</summary>
     public void Pause()
