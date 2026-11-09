@@ -1,3 +1,4 @@
+using System.Runtime.ExceptionServices;
 using COT_0.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +10,7 @@ public class WebServerHost(IConfiguration configuration)
 {
     private Lazy<WebApplication> _app = CreateLazy();
     private Task? _starting;
+    private Exception? _serverError;
 
     // Web:Url de appsettings.json (la misma que usa la app web)
     public string Url => configuration[WebApp.UrlKey] ?? string.Empty;
@@ -23,8 +25,25 @@ public class WebServerHost(IConfiguration configuration)
     public Task StartAsync()
     {
         if (_starting is null || _starting.IsFaulted || _starting.IsCanceled)
-            _starting = Task.Run(() => _app.Value.StartAsync());
+            _starting = Task.Run(StartServerAsync);
         return _starting;
+    }
+
+    // Cada intento revisa el puerto de nuevo; si el servidor ya falló al enlazar, repite ese error
+    // (no "ya arrancado") porque ese mismo servidor no puede volver a iniciar
+    private async Task StartServerAsync()
+    {
+        PortProbe.ThrowIfInUse(Url);
+        if (_serverError is not null) ExceptionDispatchInfo.Throw(_serverError);
+        try
+        {
+            await _app.Value.StartAsync();
+        }
+        catch (Exception ex)
+        {
+            _serverError = ex;
+            throw;
+        }
     }
 
     public async Task StopAsync()
@@ -38,6 +57,7 @@ public class WebServerHost(IConfiguration configuration)
         await app.DisposeAsync();
         _app = CreateLazy();
         _starting = null;
+        _serverError = null;
     }
 
     // ContentRoot = carpeta del exe (ahí están appsettings.json y wwwroot)

@@ -95,7 +95,7 @@ public partial class App : Application
             .BuildServiceProvider();
     }
 
-    // Si falla aquí, abrir la sala lo reintenta (RoomSession.OpenAsync)
+    // Si falla aquí no se pierde: abrir la sala revisa el puerto otra vez y muestra ese mismo error (RoomSession.OpenAsync)
     private static async Task TryStartWebServerAsync()
     {
         try

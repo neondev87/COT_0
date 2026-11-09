@@ -120,7 +120,7 @@
     <x:String x:Key="Text.Room.Error.CloudflaredMissing">No se encontró cloudflared («{0}»). Instálalo con «winget install Cloudflare.cloudflared» o pon su ruta en Tunnel:CloudflaredPath de appsettings.json.</x:String>
     <x:String x:Key="Text.Room.Error.TunnelTimeout">cloudflared no entregó el enlace en {2} segundos. Revisa tu internet e inténtalo de nuevo.</x:String>
     <x:String x:Key="Text.Room.Error.TunnelFailed">El túnel de cloudflared se cerró antes de dar el enlace. Revisa tu internet e inténtalo de nuevo.</x:String>
-    <x:String x:Key="Text.Room.Error.PortInUse">El puerto de {1} ya está ocupado. Cierra la otra app que lo usa (¿otra copia del Host o «dotnet run» de la web?) o cambia Web:Url en appsettings.json.</x:String>
+    <x:String x:Key="Text.Room.Error.PortInUse">El puerto {4} ya está ocupado por otra app. Ciérrala (¿otra copia del Host o «dotnet run» de la web?) y presiona REINTENTAR, o cambia Web:Url en appsettings.json.</x:String>
     <x:String x:Key="Text.Room.Error.ServerFailed">No se pudo levantar el servidor web: {3}</x:String>
 
     <!-- Emotes (7TV) -->

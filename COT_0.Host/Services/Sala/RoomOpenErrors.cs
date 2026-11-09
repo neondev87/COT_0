@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Connections;
 
 namespace COT_0.Host.Services.Sala;
 
-/// <summary>Los textos usan {0} ruta de cloudflared, {1} URL local, {2} segundos de espera y {3} detalle.</summary>
+/// <summary>Los textos usan {0} ruta de cloudflared, {1} URL local, {2} segundos de espera, {3} detalle y {4} puerto.</summary>
 public static class RoomOpenErrors
 {
     /// <summary>Errores que puede soltar RoomSession.OpenAsync (Kestrel o cloudflared).</summary>
@@ -30,7 +30,8 @@ public static class RoomOpenErrors
         AppConfig.Settings.Tunnel.CloudflaredPath,
         AppConfig.Settings.Web.Url,
         AppConfig.Settings.Tunnel.StartTimeoutSeconds,
-        ex.Message);
+        ex.Message,
+        PortProbe.PortOf(AppConfig.Settings.Web.Url));
 
     // Kestrel envuelve el AddressInUseException (o el SocketException) en un IOException
     private static bool IsPortInUse(Exception ex)
