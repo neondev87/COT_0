@@ -93,6 +93,19 @@ public partial class LoginViewModel : FormViewModel
         }
     }
 
+    /// <summary>ENTER: hace lo mismo que el botón principal del paso visible.</summary>
+    [RelayCommand]
+    private void Enter()
+    {
+        var command = Step switch
+        {
+            LoginStep.Register => Register.SubmitCommand,
+            LoginStep.Recover => Recovery.SubmitCommand,
+            _ => (System.Windows.Input.ICommand)SubmitCommand,
+        };
+        if (command.CanExecute(null)) command.Execute(null);
+    }
+
     [RelayCommand]
     private void Forgot()
     {

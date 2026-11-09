@@ -45,11 +45,7 @@
                  IsOpen="{x:Bind ViewModel.IsErrorOpen, Mode=TwoWay}"/>
 
         <Button Style="{StaticResource LoginButton}" Margin="0,24,0,0" Content="{x:Bind ViewModel.ButtonText, Mode=OneWay}"
-                Command="{x:Bind ViewModel.SubmitCommand}" KeyboardAcceleratorPlacementMode="Hidden">
-            <Button.KeyboardAccelerators>
-                <KeyboardAccelerator Key="Enter"/>
-            </Button.KeyboardAccelerators>
-        </Button>
+                Command="{x:Bind ViewModel.SubmitCommand}"/>
 
         <Button Style="{StaticResource LoginLinkButton}" HorizontalAlignment="Center" Margin="0,10,0,0"
                 Content="{StaticResource Text.Recovery.Back}" Command="{x:Bind ViewModel.BackCommand}"/>

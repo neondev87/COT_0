@@ -154,11 +154,7 @@
 
             <Button Style="{StaticResource LoginButton}" Margin="0,24,0,0" Content="{x:Bind ViewModel.ButtonText, Mode=OneWay}"
                     Visibility="{x:Bind ViewModel.IsSubmitVisible, Mode=OneWay}"
-                    Command="{x:Bind ViewModel.SubmitCommand}" KeyboardAcceleratorPlacementMode="Hidden">
-                <Button.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="Enter"/>
-                </Button.KeyboardAccelerators>
-            </Button>
+                    Command="{x:Bind ViewModel.SubmitCommand}"/>
         </StackPanel>
 
         <!-- Pie -->
