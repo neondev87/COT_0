@@ -2,6 +2,27 @@
 
 Fecha: 08/11/2026 · Commit probado: `cd4d4f4` · Build: `dotnet build COT_0.sln --no-incremental` → **0 errores, 0 warnings**.
 
+## Correcciones (08/11/2026)
+
+Commits en `host-winui`, uno por fallo. Cada uno compila con 0 errores y 0 warnings. Se volvieron a correr los pasos de prueba en la app con UI Automation y teclado real, y al final se restauraron los JSON de `%LocalAppData%\COT_0` (mismos hashes).
+
+| Fallo | Estado | Commit | Verificación |
+|---|---|---|---|
+| F1 · ENTER en login, registro, recuperación y pregunta | **CORREGIDO** | `6366535` | ENTER envía en las cuatro (incluye los errores "no coinciden" y "Elige una pregunta secreta."); el clic en ENTRAR sigue funcionando |
+| F2 · Puerto 5050 ocupado y REINTENTAR | **CORREGIDO** | `23be42a` | Ocupado: "El puerto 5050 ya está ocupado por otra app…" (también al reintentar); al liberarlo, REINTENTAR abre la sala, el túnel funciona y `/join` responde 200 |
+| F3 · CERRAR SALA sin confirmación | **CORREGIDO** | `08904b5` | Diálogo "¿Cerrar la sala?…"; ESC cancela y la sala sigue; confirmar cierra la sala y el túnel |
+| F4 · SALIR sin confirmación sin sala | **CORREGIDO** | `4717485` | Sin sala: "¿Cerrar sesión y volver al inicio de sesión?"; con sala: "Hay una sala activa…" (CANCELAR no cierra nada) |
+| F5 · ✕ sin confirmación sin sala | **CORREGIDO** | `4717485` | Sin sala: "¿Salir de COT_0?"; con sala: "¿Cerrar la sala y salir?". Una segunda ✕ con el diálogo abierto no abre otro diálogo ni cierra la ventana; al confirmar, la app cierra y libera el 5050 y cloudflared |
+| F6 · ENTER en el Manual regresa al inicio | **CORREGIDO** | `9c4c5aa` | Foco inicial en la página (ya no en ← INICIO); ENTER avanza 01 → 02 → 03; ESC, Cerrar y el clic en ← INICIO siguen igual |
+| F13 · Accesos a disco síncronos | **CORREGIDO** | `7a635f6` | `JsonStore` y `MediaLog` crean la carpeta con `Task.Run`, y la fecha en `SongCatalog` también va con `Task.Run`. Los demás (`CacheFolders`, `FondoCatalog`, `FondoFrameCache`, `MusicLibrary`, `CoverLibrary`) ya corrían dentro de `Task.Run`. .NET no trae versión async de esas API. Mismo formato y misma ubicación de los JSON |
+| F14 · Textos en inglés | **CORREGIDO** | `23be42a`, `b5227b1` | Mensaje del puerto en español; aviso de Blazor "Ocurrió un error inesperado. Recargar"; `/Error` en español; el error genérico del servidor ya no pega el mensaje en inglés de la excepción |
+| F7–F12 | Sin cambios | — | Fuera de esta ronda |
+
+Notas:
+- F2: no se crea un servidor web nuevo en cada intento, porque el dashboard y la sala usan las mismas instancias del contenedor de la web (`IChatService`, `IRoomService`) y uno nuevo las dejaría desconectadas. En lugar de eso, `PortProbe` revisa el puerto antes de cada intento y el servidor solo arranca cuando el puerto está libre. Si el servidor falla al enlazar por otra causa, se repite el error original y no "Server has already started".
+- **Hallazgo nuevo (no corregido, ya existía en `04fea46`)**: al cerrar la app desde el dashboard (con o sin sala, con o sin diálogo) Windows registra un crash `0xc000027b` en `Microsoft.UI.Xaml.dll` (Visor de eventos → Aplicación, Id 1000). Al cerrar desde el login no pasa. La app se cierra igual y libera el puerto y cloudflared, por eso no se nota.
+- Observación: si la segunda ✕ le quita el foco al diálogo, ESC ya no lo cierra; CANCELAR con clic sí.
+
 ## Cómo se probó
 
 - La app se corrió desde `COT_0.Host\bin\x64\Debug\...\COT_0.Host.exe` y se manejó **como persona** con UI Automation (clics, teclado real con SendKeys, escribir y pegar en campos, abrir y cerrar pantallas), con capturas solo de la ventana de COT_0.
@@ -65,9 +86,9 @@ Fallos por gravedad: **2 críticos** (por regla del profe, impacto bajo), **6 ma
 | Contraseña nueva distinta / con espacio | Error | "no coinciden" / "solo letras y números" | PASA |
 | Entrar después del cambio | Nueva sí, vieja no | Vieja → incorrecta; nueva → dashboard | PASA |
 | usuarios.json | Solo hash + salt, válido, 5 cuentas | 5 cuentas; hash 44 y salt 24 caracteres en Base64 (PBKDF2-SHA256, 100 000 iteraciones); 0 coincidencias de contraseñas o respuestas en texto plano | PASA |
-| SALIR | Pide confirmación | **Sin sala activa vuelve al login sin preguntar** | **FALLA (F4)** |
-| Cerrar con ✕ | Pide confirmación | **Sin sala activa cierra sin preguntar** (con sala activa sí pregunta) | **FALLA (F5)** |
-| ENTER en login, registro, recuperación y pregunta | Envía el formulario | **No hace nada en ninguna de las cuatro** | **FALLA (F1)** |
+| SALIR | Pide confirmación | **Sin sala activa vuelve al login sin preguntar** | **FALLA (F4)** → corregido `4717485` |
+| Cerrar con ✕ | Pide confirmación | **Sin sala activa cierra sin preguntar** (con sala activa sí pregunta) | **FALLA (F5)** → corregido `4717485` |
+| ENTER en login, registro, recuperación y pregunta | Envía el formulario | **No hace nada en ninguna de las cuatro** | **FALLA (F1)** → corregido `6366535` |
 | Formulario con InfoBar a 1280×720 | Sin cortes | Título pegado al borde superior y "Volver al inicio de sesión" casi toca el pie | **FALLA (F12)** |
 
 ### 2. Dashboard y navegación
@@ -107,10 +128,10 @@ Fallos por gravedad: **2 críticos** (por regla del profe, impacto bajo), **6 ma
 | Al entrar: servidor, túnel (≈14 s la primera vez, ≈4 s después), QR, enlace, COPIAR ("COPIADO" y portapapeles correcto), código y contador EN VIVO | PASA |
 | Sin cloudflared (PATH sin cloudflared): InfoBar en español con la causa y REINTENTAR, sin crash | PASA |
 | Sin internet | NO PROBADO |
-| Puerto 5050 ocupado | **FALLA (F2)** |
+| Puerto 5050 ocupado | **FALLA (F2)** → corregido `23be42a` |
 | Invitado por el túnel: aparece en la lista, avatar con iniciales, "hace 0 min" → "hace 1 min" | PASA |
 | ✕ expulsa al invitado (le aparece "El anfitrión te expulsó de la sala.") | PASA |
-| CERRAR SALA pide confirmación | **FALLA (F3)** |
+| CERRAR SALA pide confirmación | **FALLA (F3)** → corregido `08904b5` |
 | CERRAR SALA cierra la sesión, detiene el túnel (530 en la URL pública) y `/join` local dice "La sala está cerrada" | PASA |
 | sesiones.json: 4, 5, 6, 7, 8 y 9 consecutivas, con inicio, fin e invitados | PASA |
 | Solo invitados, no el host | PASA |
@@ -167,7 +188,7 @@ Fallos por gravedad: **2 críticos** (por regla del profe, impacto bajo), **6 ma
 | Sin texto duplicado bajo el título | PASA |
 | Las notificaciones avanzan solas (3 por paso) | PASA |
 | → y ← (← deshabilitada en el paso 1, → en el 6) | PASA |
-| ENTER avanza | **FALLA (F6)** |
+| ENTER avanza | **FALLA (F6)** → corregido `9c4c5aa` |
 | ESC → despedida; "Cerrar" → dashboard | PASA |
 | Sonido de notificaciones y "Silenciar el manual" | NO PROBADO (no se puede oír) |
 | "Gracias, pero no necesito ayuda" → despedida | PASA |
@@ -191,7 +212,7 @@ Fallos por gravedad: **2 críticos** (por regla del profe, impacto bajo), **6 ma
 | usuarios, visitas, sesiones y fondos son JSON válido (nunca XML) | PASA |
 | Persisten al reiniciar (5 usuarios, fondo elegido) | PASA |
 | `XmlSerializer` o datos `.xml`: 0 | PASA |
-| E/S síncrona fuera de `File.Exists`/`Directory.Exists` | **FALLA (F13)** |
+| E/S síncrona fuera de `File.Exists`/`Directory.Exists` | **FALLA (F13)** → corregido `7a635f6` |
 | `.Result`, `.Wait()`, `GetAwaiter().GetResult()`: 0 | PASA |
 | Contraseñas en texto plano en código, logs o JSON: 0 | PASA |
 | Una clase por archivo | PASA (solo `KillOnCloseJob.cs` y `ChatBrowser.cs` tienen un tipo privado anidado) |
@@ -199,7 +220,7 @@ Fallos por gravedad: **2 críticos** (por regla del profe, impacto bajo), **6 ma
 | "WinUI", "Wpf" o nombres de migración solo en `<UseWinUI>` | PASA |
 | Carpetas de primer nivel del Host: Assets, Models, Services, Views | PASA |
 | Subcarpetas en español | PASA |
-| Sin voseo y sin textos de interfaz en otro idioma | **FALLA (F14)** |
+| Sin voseo y sin textos de interfaz en otro idioma | **FALLA (F14)** → corregido `23be42a`, `b5227b1` |
 | Música, fondos, portadas, gifs y manual fuera de `git ls-files` y en `.gitignore` | PASA |
 | Build 0 errores y 0 warnings | PASA |
 
@@ -229,7 +250,7 @@ Mediciones (`Get-Process`, CPU como % del total de 12 núcleos):
 
 ### Críticos (rompen una regla del profe; impacto bajo en uso)
 
-**F13 · Quedan accesos a disco síncronos**
+**F13 · Quedan accesos a disco síncronos** — CORREGIDO (`7a635f6`)
 - Pasos: buscar en el código `Directory.CreateDirectory`, `EnumerateFiles`, `File.Move`, `File.GetLastWriteTimeUtc`, `FileInfo`.
 - Esperado: solo `File.Exists`/`Directory.Exists`.
 - Obtenido:
@@ -241,7 +262,7 @@ Mediciones (`Get-Process`, CPU como % del total de 12 núcleos):
   - `Services/Musica/MusicLibrary.cs:19` y `CoverLibrary.cs:20`.
   - Varios están dentro de `Task.Run` y no bloquean la UI, pero siguen siendo API síncronas.
 
-**F14 · Textos de interfaz en inglés**
+**F14 · Textos de interfaz en inglés** — CORREGIDO (`23be42a`, `b5227b1`)
 - Pasos: (a) ocupar 127.0.0.1:5050 y abrir la sala; (b) cualquier error de circuito en la web.
 - Esperado: todo en español de México.
 - Obtenido: (a) "No se pudo levantar el servidor web: **Server has already started.**" (b) `COT_0.Web/Views/Plantillas/MainLayout.razor:7-8` "An unhandled error has occurred. Reload".
@@ -249,37 +270,37 @@ Mediciones (`Get-Process`, CPU como % del total de 12 núcleos):
 
 ### Mayores
 
-**F1 · ENTER no envía ningún formulario del login**
+**F1 · ENTER no envía ningún formulario del login** — CORREGIDO (`6366535`)
 - Pasos: escribir `pruebacuatro`/`abc123` con el teclado, foco en la contraseña, presionar ENTER (igual en Registrar, Recuperar y pregunta secreta).
 - Esperado: ENTRAR / REGISTRAR / CONTINUAR / GUARDAR Y ENTRAR.
 - Obtenido: no pasa nada (sin error y sin navegar). Con clic sí funciona.
 - Causa probable: hay tres `KeyboardAccelerator Key="Enter"` en el mismo árbol de la página (`Views/Pantallas/LoginPage.xaml:159`, `Views/Componentes/FormularioRegistro.xaml:31`, `FormularioRecuperacion.xaml:50`), dos de ellos dentro de paneles colapsados; el acelerador no llega al botón visible.
 
-**F2 · Puerto 5050 ocupado: mensaje equivocado y REINTENTAR nunca se recupera**
+**F2 · Puerto 5050 ocupado: mensaje equivocado y REINTENTAR nunca se recupera** — CORREGIDO (`23be42a`)
 - Pasos: ocupar 127.0.0.1:5050 y ::1:5050, abrir la app, entrar, GENERAR QR; liberar el puerto y presionar REINTENTAR.
 - Esperado: InfoBar "puerto ocupado" y que REINTENTAR funcione al liberarlo.
 - Obtenido: "No se pudo levantar el servidor web: Server has already started." (antes y después de liberar el puerto); hay que reiniciar la app. El log sí trae `AddressInUseException`.
 - Causa probable: `App.xaml.cs:99` (`TryStartWebServerAsync`) arranca Kestrel al abrir la app y se traga el error; `Services/Sala/WebServerHost.cs` `StartAsync` reutiliza la misma `WebApplication` (el `Lazy` no se recrea tras fallar), así que el segundo intento lanza `InvalidOperationException` y `RoomOpenErrors.Classify` ya no lo reconoce como `PortInUse`.
 
-**F3 · CERRAR SALA no pide confirmación**
+**F3 · CERRAR SALA no pide confirmación** — CORREGIDO (`08904b5`)
 - Pasos: abrir la sala con un invitado y presionar CERRAR SALA.
 - Esperado: diálogo de confirmación.
 - Obtenido: cierra al instante, saca a todos y regresa al dashboard.
 - Causa probable: `Views/ModelosDeVista/SalaViewModel.cs` `CloseRoomAsync` no llama a `RoomSession.ConfirmLeaveAsync`.
 
-**F4 · SALIR no pide confirmación sin sala activa**
+**F4 · SALIR no pide confirmación sin sala activa** — CORREGIDO (`4717485`)
 - Pasos: dashboard sin sala → SALIR.
 - Esperado: confirmación.
 - Obtenido: vuelve al login directo.
 - Causa probable: `Views/ModelosDeVista/DashboardViewModel.cs` `LogoutAsync` solo confirma si `_session.IsActive`.
 
-**F5 · Cerrar con ✕ no pide confirmación sin sala activa**
+**F5 · Cerrar con ✕ no pide confirmación sin sala activa** — CORREGIDO (`4717485`)
 - Pasos: cualquier pantalla sin sala → ✕ de la ventana.
 - Esperado: confirmación.
 - Obtenido: la app se cierra.
 - Causa probable: `Services/Ventana/CloseGuard.cs` `OnClosing` solo confirma con `session.IsActive`. Con sala activa sí aparece "Hay una sala activa. ¿Cerrar la sala y salir?" y ESC lo cancela bien.
 
-**F6 · ENTER en el Manual regresa al inicio en vez de avanzar**
+**F6 · ENTER en el Manual regresa al inicio en vez de avanzar** — CORREGIDO (`9c4c5aa`)
 - Pasos: abrir MANUAL y presionar ENTER.
 - Esperado: siguiente paso (la guía dice "ENTER empezar").
 - Obtenido: vuelve al dashboard.
