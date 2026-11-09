@@ -144,7 +144,7 @@ Antes: `dotnet build COT_0.sln` en 0 errores y 0 warnings.
 
    | Paso | Vista de ejemplo | Resaltado 1 | Resaltado 2 | Resaltado 3 |
    |---|---|---|---|---|
-   | 01 Abre la app y entra | Login con `hostdemo`, contraseña de puntos y los enlaces ¿Olvidaste tu contraseña? \| Registrar usuario | COT_0 + ACCESO DEL HOST | Enlace Registrar usuario | ENTRAR |
+   | 01 Abre la app y entra | Login con `Hostdemo`, contraseña de puntos y los enlaces ¿Olvidaste tu contraseña? \| Registrar usuario | COT_0 + ACCESO DEL HOST | Enlace Registrar usuario | ENTRAR |
    | 02 El inicio: genera el QR | Dashboard con la hora actual y SALA INACTIVA | ESTADO (arriba a la derecha) | 01 GENERAR QR | Tarjetas 02 a 06 |
    | 03 Comparte el QR o el enlace | Sala con QR de adorno, `#7F3K` y el enlace de ejemplo | QR | URL DE LA SALA + COPIAR | EN VIVO + tiempo |
    | 04 Ve quién está conectado | La misma sala: "04" y 4 invitados ficticios en la lista | Contador | Lista de conectados | CERRAR SALA |
@@ -259,7 +259,7 @@ Copia `hola mundo@2` y `ñandú  é!` al portapapeles y prueba en cada campo:
 4. **¿Olvidaste tu contraseña?**: usuario, respuesta, contraseña nueva y repetir contraseña, igual. Con una respuesta guardada antes como "Mango Verde", contestar `MangoVerde` funciona.
 5. **04 EMOTES**: el set de 7TV quita espacios, `/`, `:` y `.` (una URL pegada queda en un solo bloque y 7TV la rechaza). Un ID de 24 o 26 carga normal; se sigue deteniendo en 26.
 6. Los límites siguen: 15 en los campos del login (26 en el set de 7TV), también pegando.
-7. La muestra del Manual (paso 1) dice `hostdemo` y la contraseña de puntos se ve igual que antes.
+7. La muestra del Manual (paso 1) dice `Hostdemo` y la contraseña de puntos se ve igual que antes.
 
 ### Portadas 4 y 5
 
