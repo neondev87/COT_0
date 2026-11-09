@@ -1,6 +1,7 @@
 // Compras de la tienda por usuario: cupo, emotes comprados y tickets, todo guardado en compras.json
 using COT_0.Core.Models;
 using COT_0.Host.Models;
+using COT_0.Host.Services.Usuarios;
 
 namespace COT_0.Host.Services.Tienda;
 
@@ -25,6 +26,9 @@ public class PurchaseService(PurchaseStore store)
         QuotaCalculator.Refresh(user, DateTime.UtcNow);
         return user;
     }
+
+    /// <summary>Compras de todos los usuarios para el punto de venta: solo en modo ADMIN (vacío si no).</summary>
+    public async Task<PurchasesData> GetAllAsync() => ActiveUser.IsAdmin ? await store.LoadAsync() : new PurchasesData();
 
     public async Task<QuotaInfo> GetQuotaAsync(string userName) => QuotaCalculator.For(await GetAsync(userName), DateTime.UtcNow);
 

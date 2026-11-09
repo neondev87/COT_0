@@ -8,6 +8,7 @@ public record AppSettings(
     SecuritySettings Security,
     InputsSettings Inputs,
     UsuariosSettings Usuarios,
+    AdminSettings Admin,
     StoreSettings Store,
     RecoverySettings Recovery,
     UiSettings Ui,

@@ -1,4 +1,5 @@
-// Pantalla Emotes: pestañas USUARIOS | TIENDA | TICKETS, recuadros encima (stock de un usuario, set y reportes) y ESC
+// Pantalla Emotes: pestañas USUARIOS | TIENDA | TICKETS (modo ADMIN: USUARIOS | PUNTO DE VENTA | ADMINISTRADORES), recuadros encima y ESC
+using COT_0.Host.Services.Usuarios;
 using COT_0.Host.Services.Ventana;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -12,18 +13,21 @@ namespace COT_0.Host.Views.ModelosDeVista;
 public partial class EmotesScreenViewModel : ObservableObject
 {
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsUsersSection), nameof(IsShopSection), nameof(IsTicketsSection))]
-    private StoreSection _section = StoreSection.Shop;
+    [NotifyPropertyChangedFor(nameof(IsUsersSection), nameof(IsShopSection), nameof(IsTicketsSection), nameof(IsSalesSection), nameof(IsAdminsSection))]
+    private StoreSection _section = ActiveUser.IsAdmin ? StoreSection.Sales : StoreSection.Shop;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsOverlayOpen))]
     private bool _isSetPanelOpen;
 
-    public EmotesScreenViewModel(StoreUsersViewModel users, StoreShopViewModel shop, StoreTicketsViewModel tickets)
+    public EmotesScreenViewModel(StoreUsersViewModel users, StoreShopViewModel shop, StoreTicketsViewModel tickets,
+        SalesViewModel sales, AdminsViewModel admins)
     {
         Users = users;
         Shop = shop;
         Tickets = tickets;
+        Sales = sales;
+        Admins = admins;
         tickets.ShopRequested += () => _ = ShowAsync(StoreSection.Shop);
         users.PropertyChanged += (_, e) =>
         {
@@ -36,6 +40,15 @@ public partial class EmotesScreenViewModel : ObservableObject
     public StoreShopViewModel Shop { get; }
 
     public StoreTicketsViewModel Tickets { get; }
+
+    public SalesViewModel Sales { get; }
+
+    public AdminsViewModel Admins { get; }
+
+    /// <summary>Se lee al abrir la pantalla (se crea de nuevo en cada visita).</summary>
+    public bool IsAdminMode { get; } = ActiveUser.IsAdmin;
+
+    public bool IsHostMode => !IsAdminMode;
 
     // Las pestañas son RadioButton enlazados en dos sentidos: marcar una cambia de sección
     public bool IsUsersSection
@@ -54,6 +67,18 @@ public partial class EmotesScreenViewModel : ObservableObject
     {
         get => Section == StoreSection.Tickets;
         set { if (value && Section != StoreSection.Tickets) _ = ShowAsync(StoreSection.Tickets); }
+    }
+
+    public bool IsSalesSection
+    {
+        get => Section == StoreSection.Sales;
+        set { if (value && Section != StoreSection.Sales) _ = ShowAsync(StoreSection.Sales); }
+    }
+
+    public bool IsAdminsSection
+    {
+        get => Section == StoreSection.Admins;
+        set { if (value && Section != StoreSection.Admins) _ = ShowAsync(StoreSection.Admins); }
     }
 
     public bool IsOverlayOpen => Users.IsStockOpen || IsSetPanelOpen;
@@ -84,6 +109,8 @@ public partial class EmotesScreenViewModel : ObservableObject
         {
             StoreSection.Users => Users.LoadAsync(),
             StoreSection.Tickets => Tickets.LoadAsync(),
+            StoreSection.Sales => Sales.LoadAsync(),
+            StoreSection.Admins => Admins.LoadAsync(),
             _ => Shop.LoadAsync(),
         };
     }

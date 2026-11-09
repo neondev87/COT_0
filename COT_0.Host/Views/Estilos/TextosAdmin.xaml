@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Textos del modo ADMIN (español de México, con "tú"): switch del login, primer admin, contraseña generada,
+     punto de venta y ADMINISTRADORES. Se usan con {StaticResource} o UiText.Get -->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Login -->
+    <x:String x:Key="Text.Login.Mode.Host">HOST</x:String>
+    <x:String x:Key="Text.Login.Mode.Admin">ADMIN</x:String>
+    <x:String x:Key="Text.Login.Subtitle.Admin">ACCESO DE ADMINISTRADOR</x:String>
+    <x:String x:Key="Text.Admin.User">ADMINISTRADOR</x:String>
+    <x:String x:Key="Text.Admin.UserPlaceholder">nombre del admin</x:String>
+    <x:String x:Key="Text.Admin.CreateFirst.Hint">Todavía no hay administradores. Escribe el nombre del primero: la contraseña la genera la app y se muestra una sola vez.</x:String>
+    <x:String x:Key="Text.Admin.CreateFirst.Button">CREAR ADMIN</x:String>
+    <x:String x:Key="Text.Admin.CreateFirst.Done">Admin creado. Entra con su nombre y la contraseña que guardaste.</x:String>
+    <x:String x:Key="Text.Admin.Recreated">admin.json estaba dañado y se recreó vacío. Crea el primer admin de nuevo.</x:String>
+    <x:String x:Key="Text.Admin.Badge">MODO ADMIN</x:String>
+
+    <!-- Errores; {0} es el largo máximo o el máximo de admins -->
+    <x:String x:Key="Text.Admin.Error.UserEmpty">Escribe el nombre del admin.</x:String>
+    <x:String x:Key="Text.Admin.Error.UserInvalid">El nombre solo puede tener letras, la primera en mayúscula (ej. Erick).</x:String>
+    <x:String x:Key="Text.Admin.Error.UserTooLong">Nombre: máximo {0} caracteres.</x:String>
+    <x:String x:Key="Text.Admin.Error.Taken">Ya existe un admin con ese nombre.</x:String>
+    <x:String x:Key="Text.Admin.Error.Full">Ya hay {0} administradores</x:String>
+    <x:String x:Key="Text.Admin.Error.AlreadyCreated">Ya existe un admin. Entra con su usuario y contraseña.</x:String>
+    <x:String x:Key="Text.Admin.Error.NotFound">Ese admin ya no existe.</x:String>
+    <x:String x:Key="Text.Admin.Error.LastAdmin">No se puede borrar al último admin.</x:String>
+    <x:String x:Key="Text.Admin.Error.NotAllowed">Solo un admin que ya entró puede hacer esto.</x:String>
+    <x:String x:Key="Text.Admin.Error.WrongCredentials">Usuario o contraseña incorrectos.</x:String>
+    <x:String x:Key="Text.Admin.Error.Storage">No se pudo leer o guardar admin.json. Inténtalo de nuevo.</x:String>
+
+    <!-- Contraseña generada (se muestra una vez) -->
+    <x:String x:Key="Text.Admin.Password.Title">CONTRASEÑA DE {0}</x:String>
+    <x:String x:Key="Text.Admin.Password.Warning">Guarda esta contraseña en un lugar seguro. No se volverá a mostrar.</x:String>
+    <x:String x:Key="Text.Admin.Password.Show">VER</x:String>
+    <x:String x:Key="Text.Admin.Password.Hide">OCULTAR</x:String>
+    <x:String x:Key="Text.Admin.Password.Copy">COPIAR</x:String>
+    <x:String x:Key="Text.Admin.Password.Copied">COPIADA</x:String>
+    <x:String x:Key="Text.Admin.Password.Close">ENTENDIDO</x:String>
+    <x:String x:Key="Text.Admin.Password.ConfirmClose">SÍ, YA LA GUARDÉ</x:String>
+    <x:String x:Key="Text.Admin.Password.ClipboardHint">Copiada. El portapapeles se limpia solo en {0} segundos.</x:String>
+    <x:String x:Key="Text.Admin.Password.CopyFailed">No se pudo copiar. Anótala a mano antes de cerrar.</x:String>
+    <x:String x:Key="Text.Admin.Password.NotCopied">No la copiaste. Si ya la guardaste, presiona SÍ, YA LA GUARDÉ; si no, cópiala o anótala antes de cerrar.</x:String>
+
+    <!-- Punto de venta (solo lectura) -->
+    <x:String x:Key="Text.Store.Tab.Sales">PUNTO DE VENTA</x:String>
+    <x:String x:Key="Text.Store.Tab.Admins">ADMINISTRADORES</x:String>
+    <x:String x:Key="Text.Sales.Title">PUNTO DE VENTA</x:String>
+    <x:String x:Key="Text.Sales.SearchPlaceholder">Buscar por usuario o número de ticket</x:String>
+    <x:String x:Key="Text.Sales.Totals">{0} ticket(s) · {1} emote(s) comprados</x:String>
+    <x:String x:Key="Text.Sales.AllUsers">TODOS</x:String>
+    <x:String x:Key="Text.Sales.UserLine">{0} ticket(s) · {1} emote(s)</x:String>
+    <x:String x:Key="Text.Sales.Owner">USUARIO: {0}</x:String>
+    <x:String x:Key="Text.Sales.Empty">No hay tickets que coincidan.</x:String>
+
+    <!-- Administradores -->
+    <x:String x:Key="Text.Admins.Title">ADMINISTRADORES</x:String>
+    <x:String x:Key="Text.Admins.Hint">Solo se ve el nombre. Cada contraseña la genera la app y se muestra una sola vez; si alguien la pierde, regenérala.</x:String>
+    <x:String x:Key="Text.Admins.NoticeTitle">Administradores</x:String>
+    <x:String x:Key="Text.Admins.NewPlaceholder">nombre del nuevo admin</x:String>
+    <x:String x:Key="Text.Admins.Create">CREAR ADMIN</x:String>
+    <x:String x:Key="Text.Admins.Regenerate">REGENERAR CONTRASEÑA</x:String>
+    <x:String x:Key="Text.Admins.Delete">ELIMINAR</x:String>
+    <x:String x:Key="Text.Admins.Cancel">CANCELAR</x:String>
+    <x:String x:Key="Text.Admins.You">(tú)</x:String>
+    <x:String x:Key="Text.Admins.Created">Admin {0} creado.</x:String>
+    <x:String x:Key="Text.Admins.Regenerated">Contraseña de {0} regenerada; la anterior ya no sirve.</x:String>
+    <x:String x:Key="Text.Admins.Deleted">Admin {0} eliminado.</x:String>
+    <x:String x:Key="Text.Admins.ConfirmRegenerate">¿Generar una contraseña nueva para {0}? La anterior deja de servir.</x:String>
+    <x:String x:Key="Text.Admins.ConfirmDelete">¿Eliminar al admin {0}?</x:String>
+</ResourceDictionary>

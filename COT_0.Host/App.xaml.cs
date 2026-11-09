@@ -1,5 +1,6 @@
 // Punto de entrada: arma los servicios, muestra la ventana y levanta la web en segundo plano
 using COT_0.Core.Services;
+using COT_0.Host.Services.Administradores;
 using COT_0.Host.Services.Configuracion;
 using COT_0.Host.Services.Dialogos;
 using COT_0.Host.Services.Fondos;
@@ -66,6 +67,14 @@ public partial class App : Application
             .AddSingleton<RoomSession>()
             .AddSingleton<ClockService>()
             .AddSingleton<ConfirmDialogService>()
+            .AddSingleton<AdminPasswordDialogService>()
+            .AddSingleton<AdminStore>()
+            .AddSingleton<AdminService>()
+            .AddTransient<AdminLoginViewModel>()
+            .AddTransient<LoginModeViewModel>()
+            .AddTransient<LoginViewModel>()
+            .AddTransient<SalesViewModel>()
+            .AddTransient<AdminsViewModel>()
             .AddSingleton<QrService>()
             .AddSingleton<SalaViewModel>()
             .AddSingleton<AppShutdown>()

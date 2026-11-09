@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Encabezado de las pantallas internas (Sala, Emotes, Música, Fondos, Manual): ← INICIO (o ← SALA) | TÍTULO. Esc sin letrero (Hidden) -->
+<!-- Encabezado de las pantallas internas (Sala, Emotes, Música, Fondos, Manual): ← INICIO (o ← SALA) | TÍTULO y "MODO ADMIN"
+     si entró un admin. Esc sin letrero (Hidden) -->
 <UserControl x:Class="COT_0.Host.Views.Componentes.EncabezadoPantalla"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:usuarios="using:COT_0.Host.Services.Usuarios">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Views/Estilos/Modos.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <StackPanel Orientation="Horizontal">
         <Button x:Name="BackButton" Style="{StaticResource TextButton}" Padding="0,0,8,0" Click="OnBackClick" KeyboardAcceleratorPlacementMode="Hidden"
                 AutomationProperties.Name="{StaticResource Text.Header.Back}">
@@ -18,5 +27,8 @@
         <Rectangle Width="1" Height="22" Margin="28,0" Fill="{StaticResource Light28Brush}"/>
         <TextBlock Text="{x:Bind Title, Mode=OneWay}" VerticalAlignment="Center" FontFamily="{StaticResource FontCondensedBold}"
                    FontWeight="Bold" FontSize="28" CharacterSpacing="160" Foreground="{StaticResource TextBrush}"/>
+        <Border Style="{StaticResource AdminBadge}" Margin="24,0,0,0" Visibility="{x:Bind usuarios:ActiveUser.IsAdmin}">
+            <TextBlock Text="{StaticResource Text.Admin.Badge}" Style="{StaticResource AdminBadgeText}"/>
+        </Border>
     </StackPanel>
 </UserControl>

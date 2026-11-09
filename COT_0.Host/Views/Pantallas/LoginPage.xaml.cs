@@ -1,4 +1,5 @@
 using COT_0.Host.Views.ModelosDeVista;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -9,7 +10,7 @@ namespace COT_0.Host.Views.Pantallas;
 /// <summary>Pantalla de login: solo arranca las animaciones y le pasa el trabajo a LoginViewModel</summary>
 public sealed partial class LoginPage : Page
 {
-    public LoginViewModel ViewModel { get; } = new();
+    public LoginViewModel ViewModel { get; } = App.Services.GetRequiredService<LoginViewModel>();
 
     public LoginPage()
     {

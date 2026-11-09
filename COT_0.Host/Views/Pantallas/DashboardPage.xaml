@@ -5,6 +5,7 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:componentes="using:COT_0.Host.Views.Componentes"
+      xmlns:usuarios="using:COT_0.Host.Services.Usuarios"
       Background="Transparent">
 
     <Page.Resources>
@@ -12,6 +13,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///Views/Estilos/Dashboard.xaml"/>
                 <ResourceDictionary Source="ms-appx:///Views/Estilos/TarjetaMenu.xaml"/>
+                <ResourceDictionary Source="ms-appx:///Views/Estilos/Modos.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
@@ -42,7 +44,12 @@
                     <EntranceThemeTransition FromVerticalOffset="0"/>
                 </TransitionCollection>
             </StackPanel.Transitions>
-            <TextBlock Text="{StaticResource Text.Dashboard.Status}" Style="{StaticResource StatusLabelText}"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="16">
+                <Border Style="{StaticResource AdminBadge}" Visibility="{x:Bind usuarios:ActiveUser.IsAdmin}">
+                    <TextBlock Text="{StaticResource Text.Admin.Badge}" Style="{StaticResource AdminBadgeText}"/>
+                </Border>
+                <TextBlock Text="{StaticResource Text.Dashboard.Status}" Style="{StaticResource StatusLabelText}"/>
+            </StackPanel>
             <Button Style="{StaticResource PlainButton}" HorizontalAlignment="Right" Margin="0,10,0,0"
                     Visibility="{x:Bind ViewModel.IsRoomActive, Mode=OneWay}" Command="{x:Bind ViewModel.ShowRoomCommand}">
                 <StackPanel Orientation="Horizontal">

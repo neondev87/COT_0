@@ -10,6 +10,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>
                 <ResourceDictionary Source="ms-appx:///Views/Estilos/Textos.xaml"/>
+                <ResourceDictionary Source="ms-appx:///Views/Estilos/TextosAdmin.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <!-- Botones sin estilo propio: sin el letrero automático de sus atajos (ver Services/Ventana/ShortcutHints) -->

@@ -1,4 +1,4 @@
-// Estado y acciones del login: ENTRAR, registrar usuario, recuperar contraseña, pregunta secreta y paso al dashboard
+// Estado y acciones del login: switch HOST | ADMIN, ENTRAR, registrar usuario, recuperar contraseña, pregunta secreta y paso al dashboard
 using COT_0.Host.Services.Almacenamiento;
 using COT_0.Host.Services.Textos;
 using COT_0.Host.Services.Usuarios;
@@ -9,7 +9,10 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace COT_0.Host.Views.ModelosDeVista;
 
-/// <summary>Hasta Usuarios:Maximo usuarios; todos entran a lo mismo y el dashboard no sabe cuál fue (ActiveUser solo lo usa la tienda).</summary>
+/// <summary>
+/// Arranca en HOST (hasta Usuarios:Maximo usuarios). ADMIN tiene su propio formulario (LoginModeViewModel);
+/// el switch solo se ve en el paso ENTRAR. ActiveUser guarda quién entró y en qué modo.
+/// </summary>
 public partial class LoginViewModel : FormViewModel
 {
     [ObservableProperty]
@@ -30,14 +33,28 @@ public partial class LoginViewModel : FormViewModel
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(SubtitleText), nameof(ButtonText), nameof(IsCredentialsVisible), nameof(IsQuestionVisible),
-        nameof(IsRegisterVisible), nameof(IsRecoverVisible), nameof(IsSubmitVisible), nameof(IsNoUsersVisible))]
+        nameof(IsRegisterVisible), nameof(IsRecoverVisible), nameof(IsSubmitVisible), nameof(IsNoUsersVisible), nameof(IsModeSwitchVisible))]
     private LoginStep _step;
 
-    public LoginViewModel()
+    public LoginViewModel(LoginModeViewModel mode)
     {
+        Mode = mode;
         Recovery.Closed += OnRecoveryClosed;
         Register.Closed += OnRegisterClosed;
+        mode.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName != nameof(LoginModeViewModel.IsAdminMode)) return;
+            IsErrorOpen = IsSuccessOpen = false;
+            Password = string.Empty;
+            OnPropertyChanged(nameof(SubtitleText));
+        };
     }
+
+    /// <summary>Switch HOST | ADMIN y el formulario del modo ADMIN.</summary>
+    public LoginModeViewModel Mode { get; }
+
+    /// <summary>HOST | ADMIN solo en el paso ENTRAR (no en registro, recuperación ni pregunta).</summary>
+    public bool IsModeSwitchVisible => Step == LoginStep.SignIn;
 
     public SecurityQuestionViewModel Question { get; } = new();
 
@@ -60,15 +77,16 @@ public partial class LoginViewModel : FormViewModel
     /// <summary>Aviso de que todavía no hay nadie registrado.</summary>
     public bool IsNoUsersVisible => Step == LoginStep.SignIn && !HasUsers;
 
-    public string SubtitleText => UiText.Get($"Text.Login.Subtitle.{Step}");
+    public string SubtitleText => UiText.Get(Mode.IsAdminMode ? "Text.Login.Subtitle.Admin" : $"Text.Login.Subtitle.{Step}");
 
     public string ButtonText => UiText.Get(Step == LoginStep.SetupQuestion ? "Text.Login.Button.SetupQuestion" : "Text.Login.Button.SignIn");
 
-    /// <summary>Siempre arranca en ENTRAR; solo revisa si ya hay usuarios para el aviso.</summary>
+    /// <summary>Siempre arranca en ENTRAR y en modo HOST; solo revisa si ya hay usuarios para el aviso.</summary>
     public async Task LoadAsync()
     {
         ActiveUser.SignOut();
         Step = LoginStep.SignIn;
+        Mode.IsAdminMode = false;
         try
         {
             HasUsers = await UserService.HasUsersAsync();
@@ -101,7 +119,7 @@ public partial class LoginViewModel : FormViewModel
     [RelayCommand]
     private void Enter()
     {
-        var command = Step switch
+        var command = Mode.IsAdminMode ? Mode.Admin.SubmitCommand : Step switch
         {
             LoginStep.Register => Register.SubmitCommand,
             LoginStep.Recover => Recovery.SubmitCommand,
