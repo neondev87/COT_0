@@ -9,7 +9,7 @@
     xmlns:manual="using:COT_0.Host.Views.Componentes.Manual"
     xmlns:convertidores="using:COT_0.Host.Views.Convertidores"
       xmlns:vm="using:COT_0.Host.Views.ModelosDeVista"
-      Background="Transparent">
+      Background="Transparent" IsTabStop="True" UseSystemFocusVisuals="False">
 
     <Page.Resources>
         <ResourceDictionary>
