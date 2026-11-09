@@ -2,7 +2,7 @@
 namespace COT_0.Host.Services.Configuracion;
 
 /// <summary>
-/// Carpetas de música y portadas (relativas a Paths:MediaRoot), extensiones, volumen inicial y formatos.
+/// Carpetas de música y portadas (relativas a Paths:MediaRoot), extensiones, volumen inicial (DefaultVolume, 0 a 100) y formatos.
 /// CoverLargeSize: lado máximo de la portada grande; CoverMaxUpscale: cuánto se puede ampliar una portada chica.
 /// </summary>
 public record AudioSettings(

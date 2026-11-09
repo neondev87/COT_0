@@ -10,8 +10,8 @@ namespace COT_0.Host.Services.Musica;
 /// <summary>
 /// Una sola instancia para toda la app: la firma del login y MusicaPage ven lo mismo.
 /// Los eventos del reproductor llegan de otro hilo; StateChanged y Failed siempre se avisan en el hilo de la UI.
-/// El volumen inicia siempre en Audio:DefaultVolume (0, silencio) y no se guarda entre sesiones.
-/// Con volumen 0 la canción queda cargada pero en pausa (no avanza a la siguiente); empieza al subir el volumen.
+/// El volumen inicia siempre en Audio:DefaultVolume (25) y no se guarda entre sesiones.
+/// Al abrir la app la canción queda cargada en pausa; empieza con ▶ o al mover la barra de volumen.
 /// </summary>
 public sealed class MusicService : IDisposable
 {
@@ -75,7 +75,7 @@ public sealed class MusicService : IDisposable
         if (!await ReloadAsync() || Current is not null) return;
 
         var defaultFile = AppConfig.Settings.Audio.DefaultFile;
-        Open(_tracks.FirstOrDefault(t => Path.GetFileName(t).Equals(defaultFile, StringComparison.OrdinalIgnoreCase)) ?? _tracks[0]);
+        Open(_tracks.FirstOrDefault(t => Path.GetFileName(t).Equals(defaultFile, StringComparison.OrdinalIgnoreCase)) ?? _tracks[0], autoplay: false);
     }
 
     public async Task PlayAsync(string track)
@@ -124,11 +124,12 @@ public sealed class MusicService : IDisposable
         else SetCurrent(null);
     }
 
-    private void Open(string track)
+    // autoplay false: solo la deja cargada (arranque de la app)
+    private void Open(string track, bool autoplay = true)
     {
         SetCurrent(track);
         _player.Source = MediaSource.CreateFromUri(new Uri(Path.GetFullPath(track)));
-        if (_player.Volume > 0) Play();
+        if (autoplay && _player.Volume > 0) Play();
         else _playWhenAudible = true;
     }
 
