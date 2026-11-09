@@ -3,6 +3,7 @@
 <Application x:Class="COT_0.Host.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:componentes="using:COT_0.Host.Views.Componentes"
              RequestedTheme="Dark">
     <Application.Resources>
         <ResourceDictionary>
@@ -178,6 +179,8 @@
                 <Setter Property="FontSize" Value="15"/>
                 <Setter Property="CornerRadius" Value="0"/>
                 <Setter Property="Padding" Value="14,12,14,0"/>
+                <!-- Solo letras y números al escribir o pegar (Views/Componentes/FiltroCampo) -->
+                <Setter Property="componentes:FiltroCampo.IsEnabled" Value="True"/>
             </Style>
             <Style x:Key="LoginTextBox" TargetType="TextBox" BasedOn="{StaticResource LoginFieldStyle}"/>
             <Style x:Key="LoginPasswordBox" TargetType="PasswordBox" BasedOn="{StaticResource LoginFieldStyle}">

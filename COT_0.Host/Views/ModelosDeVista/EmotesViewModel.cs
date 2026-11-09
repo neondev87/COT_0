@@ -63,15 +63,21 @@ public partial class EmotesViewModel : ObservableObject
     public bool NoRemoved => !HasRemoved;
 
     // Campo vacío: apaga los emotes. Mientras 7TV responde, el estado dice CARGANDO.
-    // Más largo que Inputs:MaxEmoteSetCaracteres (también si llegó por código) no se manda a 7TV
+    // Más largo que Inputs:MaxEmoteSetCaracteres o con espacios/símbolos (también si llegó por código) no se manda a 7TV
     [RelayCommand]
     private async Task ApplyAsync()
     {
-        var input = SetInput.Trim();
+        var input = SetInput;
         if (input.Length > InputLimits.MaxEmoteSetCharacters)
         {
             Status = EmoteSetStatus.Failed;
             StatusText = string.Format(UiText.Get("Text.Emotes.Error.TooLong"), InputLimits.MaxEmoteSetCharacters);
+            return;
+        }
+        if (!InputRules.IsAllowed(input))
+        {
+            Status = EmoteSetStatus.Failed;
+            StatusText = UiText.Get("Text.Emotes.Error.InvalidChars");
             return;
         }
         await _emotes.UseSetAsync(input.Length == 0 ? null : input);

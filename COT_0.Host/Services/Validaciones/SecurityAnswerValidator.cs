@@ -3,7 +3,10 @@ using COT_0.Host.Models;
 
 namespace COT_0.Host.Services.Validaciones;
 
-/// <summary>"  Mango Verde " y "mangoverde" cuentan como la misma respuesta.</summary>
+/// <summary>
+/// Al escribir solo se aceptan letras y números (InputRules); Normalize sigue quitando espacios y mayúsculas
+/// para que "MangoVerde" coincida con respuestas guardadas antes como "Mango Verde".
+/// </summary>
 public static class SecurityAnswerValidator
 {
     /// <summary>Recorta, quita todos los espacios y pasa a minúsculas (invariant).</summary>
@@ -14,10 +17,11 @@ public static class SecurityAnswerValidator
     public static CredentialError Validate(string? questionKey, string answer) =>
         string.IsNullOrEmpty(questionKey) ? CredentialError.QuestionEmpty : ValidateAnswer(answer);
 
-    /// <summary>La respuesta normalizada no puede quedar vacía, y lo escrito no puede pasar de Inputs:MaxCaracteres.</summary>
+    /// <summary>No vacía, solo letras y números y hasta Inputs:MaxCaracteres.</summary>
     public static CredentialError ValidateAnswer(string answer)
     {
-        if (Normalize(answer).Length == 0) return CredentialError.AnswerEmpty;
+        if (string.IsNullOrEmpty(answer)) return CredentialError.AnswerEmpty;
+        if (!InputRules.IsAllowed(answer)) return CredentialError.AnswerInvalid;
         if (InputLimits.IsTooLong(answer)) return CredentialError.AnswerTooLong;
         return CredentialError.None;
     }

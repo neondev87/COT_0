@@ -144,8 +144,7 @@ public partial class LoginViewModel : FormViewModel
     {
         if (!Check(Question.Validate())) return false;
 
-        await UserService.SetSecurityQuestionAsync(UserName, Question.QuestionKey, Question.Answer);
-        return true;
+        return Check(await UserService.SetSecurityQuestionAsync(UserName, Question.QuestionKey, Question.Answer));
     }
 
     private void OnRecoveryClosed(bool changed)

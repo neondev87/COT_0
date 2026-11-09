@@ -36,7 +36,9 @@
                 <TextBox Style="{StaticResource LoginTextBox}" Text="{x:Bind Demo.User}" IsReadOnly="True" IsTabStop="False"/>
             </StackPanel>
             <TextBlock Text="{StaticResource Text.Login.Password}" Style="{StaticResource FieldLabelText}"/>
-            <PasswordBox Style="{StaticResource LoginPasswordBox}" Password="{StaticResource Text.Login.PasswordPlaceholder}" IsTabStop="False"/>
+            <!-- Muestra de puntos: sin el filtro de letras y números (los puntos no lo pasarían) -->
+            <PasswordBox Style="{StaticResource LoginPasswordBox}" componentes:FiltroCampo.IsEnabled="False"
+                         Password="{StaticResource Text.Login.PasswordPlaceholder}" IsTabStop="False"/>
 
             <!-- Enlaces como en el login real: lado a lado, separados por la barra vertical sutil -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">

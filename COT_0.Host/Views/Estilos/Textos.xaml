@@ -62,6 +62,7 @@
     <x:String x:Key="Text.Error.PasswordMismatch">Las dos contraseñas no coinciden.</x:String>
     <x:String x:Key="Text.Error.QuestionEmpty">Elige una pregunta secreta.</x:String>
     <x:String x:Key="Text.Error.AnswerEmpty">Escribe tu respuesta.</x:String>
+    <x:String x:Key="Text.Error.AnswerInvalid">Tu respuesta solo puede tener letras y números, sin espacios ni símbolos.</x:String>
     <x:String x:Key="Text.Error.AnswerTooLong">Respuesta: máximo {0} caracteres.</x:String>
     <x:String x:Key="Text.Error.WrongAnswer">La respuesta no coincide.</x:String>
     <x:String x:Key="Text.Error.RecoveryFailed">No se pudo recuperar la contraseña con esos datos.</x:String>
@@ -135,7 +136,8 @@
     <x:String x:Key="Text.Emotes.Status.NotFound">ERROR · NO SE ENCONTRÓ EL SET</x:String>
     <x:String x:Key="Text.Emotes.Status.Failed">ERROR · NO SE PUDO CARGAR EL SET</x:String>
     <x:String x:Key="Text.Emotes.Error.TooLong">ERROR · MÁXIMO {0} CARACTERES</x:String>
-    <x:String x:Key="Text.Emotes.Error.InvalidId">ERROR · ESE ID O URL NO ES DE UN SET DE 7TV</x:String>
+    <x:String x:Key="Text.Emotes.Error.InvalidChars">ERROR · SOLO LETRAS Y NÚMEROS, SIN ESPACIOS NI SÍMBOLOS</x:String>
+    <x:String x:Key="Text.Emotes.Error.InvalidId">ERROR · ESE ID NO ES DE UN SET DE 7TV</x:String>
     <x:String x:Key="Text.Emotes.Error.NotFound">ERROR · 7TV NO TIENE UN SET CON ESE ID (404)</x:String>
     <x:String x:Key="Text.Emotes.Error.Timeout">ERROR · 7TV TARDÓ DEMASIADO EN RESPONDER, INTÉNTALO DE NUEVO</x:String>
     <x:String x:Key="Text.Emotes.Error.Network">ERROR · SIN CONEXIÓN CON 7TV (REVISA TU INTERNET)</x:String>

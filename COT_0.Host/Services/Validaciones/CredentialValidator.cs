@@ -3,7 +3,7 @@ using COT_0.Host.Models;
 
 namespace COT_0.Host.Services.Validaciones;
 
-/// <summary>Solo letras y números, sin espacios ni símbolos, y hasta Inputs:MaxCaracteres.</summary>
+/// <summary>Solo letras y números (InputRules), sin espacios ni símbolos, y hasta Inputs:MaxCaracteres.</summary>
 public static class CredentialValidator
 {
     /// <summary>Te regresa el primer error que encuentre, o None si todo está bien.</summary>
@@ -23,7 +23,7 @@ public static class CredentialValidator
     public static CredentialError ValidateUserName(string userName)
     {
         if (string.IsNullOrEmpty(userName)) return CredentialError.UserEmpty;
-        if (!IsAlphanumeric(userName)) return CredentialError.UserInvalid;
+        if (!InputRules.IsAllowed(userName)) return CredentialError.UserInvalid;
         if (InputLimits.IsTooLong(userName)) return CredentialError.UserTooLong;
         return CredentialError.None;
     }
@@ -31,7 +31,7 @@ public static class CredentialValidator
     public static CredentialError ValidatePassword(string password)
     {
         if (string.IsNullOrEmpty(password)) return CredentialError.PasswordEmpty;
-        if (!IsAlphanumeric(password)) return CredentialError.PasswordInvalid;
+        if (!InputRules.IsAllowed(password)) return CredentialError.PasswordInvalid;
         if (InputLimits.IsTooLong(password)) return CredentialError.PasswordTooLong;
         return CredentialError.None;
     }
@@ -43,6 +43,4 @@ public static class CredentialValidator
         if (error != CredentialError.None) return error;
         return password == confirmation ? CredentialError.None : CredentialError.PasswordMismatch;
     }
-
-    private static bool IsAlphanumeric(string text) => text.All(char.IsLetterOrDigit);
 }

@@ -14,6 +14,7 @@ public enum CredentialError
     PasswordMismatch,
     QuestionEmpty,
     AnswerEmpty,
+    AnswerInvalid,
     AnswerTooLong,
     UserTaken,
     UsersFull,
