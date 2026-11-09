@@ -133,11 +133,11 @@ Antes: `dotnet build COT_0.sln` en 0 errores y 0 warnings.
 
 ## 10. Manual de Lain
 
-1. **03 MANUAL** → el fondo de la app detrás de un velo oscuro, ← INICIO | MANUAL arriba a la izquierda y atajos ENTER / → / ← / ESC arriba a la derecha.
+1. **03 MANUAL** → el fondo de la app (cuadro fijo) detrás de un solo velo negro parejo, ← INICIO | MANUAL arriba a la izquierda y atajos ENTER / → / ← / ESC arriba a la derecha.
    A la derecha, "Paso 01 / 06", el título del paso y, justo debajo, la **vista de ejemplo** del paso (una réplica quieta de la pantalla). Ya no hay texto explicativo bajo el título: lo dicen las notificaciones de Lain.
    La vista de ejemplo ocupa todo el ancho a la derecha de Lain, en 16:9, sin recortes y centrada con márgenes parejos.
    Cambia el tamaño de la ventana (1280×720, maximizada y más chica): la réplica crece o se reduce entera, sin encimarse con Lain ni con sus avisos, y cada resaltado sigue sobre su elemento.
-2. Abajo a la izquierda, el video de Lain en bucle (sin quitar el negro: se ve sobre el azul con el borde de arriba fundido).
+2. Abajo a la izquierda, Lain en bucle **sin cuadro negro**: flota sobre el fondo (GIF `gifs\lain-transparente.gif`). Sin ese archivo se usa el video fundido con su penumbra negra (ver sección 10b).
 3. Arriba a la izquierda salen las notificaciones de Lain una por una con fundido y el sonido de aviso; la última se queda (textos, orden y tiempos sin cambios).
    **Cada aviso enciende su resaltado** en la vista de ejemplo: borde rojo del proyecto con un halo que late. El anterior se apaga al entrar el siguiente.
 4. Revisa cada paso (ENTER o → avanza con destello y fundido corto; ← regresa):
@@ -163,7 +163,7 @@ Antes: `dotnet build COT_0.sln` en 0 errores y 0 warnings.
 
 ### Errores (InfoBar amarillo abajo a la derecha)
 
-- **Archivos que faltan**: renombra `gifs\lain_tele_web.mp4` → "Faltan archivos del manual: lain_tele_web.mp4…"; el manual sigue sin video.
+- **Archivos que faltan**: renombra `gifs\lain-transparente.gif` **y** `gifs\lain_tele_web.mp4` → "Faltan archivos del manual: lain_tele_web.mp4…"; el manual sigue sin Lain. Si solo falta el video y el GIF está, no hay aviso.
 - **Archivo ilegible**: reemplaza `lain_despedida.mp4` por un `.txt` renombrado y llega a la despedida → "No se pudo abrir «lain_despedida.mp4»…".
 
 ## 11. Correcciones visuales (08/11)
@@ -236,3 +236,13 @@ Antes: `dotnet build COT_0.sln` en 0 errores y 0 warnings.
 4. Recuperación: respuesta, contraseña nueva y repetir contraseña se detienen en 15, también pegando.
 5. Cambia `Inputs:MaxCaracteres` a 5 en el `appsettings.json` junto al `.exe`, abre la app: los campos se detienen en 5. Con una cuenta guardada antes con más letras, ENTRAR dice "Usuario: máximo 5 caracteres." y la cuenta no se borra (`usuarios.json` intacto). Regrésalo a 15.
 6. **04 EMOTES**: el campo del set de 7TV se detiene en 26 (`Inputs:MaxEmoteSetCaracteres`); un ID de 24 o 26 carga normal.
+
+### 10b. Manual: capas, Lain transparente, despedida y letreros (08/11, noche)
+
+1. **Fondo limpio**: con un fondo elegido (imagen o video), el Manual muestra su cuadro fijo (no se mueve) detrás de **un solo velo** negro parejo: sin degradados, sin viñeta, sin barrido, sin piso oscuro y sin texto ASCII sobre la página (el ASCII solo aparece dentro de la réplica del login en el paso 1). En FONDOS elige "sin fondo" (o borra la selección): el Manual queda sobre negro limpio.
+2. **Lain sin cuadro negro**: en todos los pasos Lain flota sobre el fondo, pegada abajo, sin rectángulo ni orillas visibles, debajo de sus avisos y a la izquierda de la vista de ejemplo, sin tocar la fila de atajos ni "Gracias, pero no necesito ayuda". Pon un fondo claro para notarlo mejor.
+3. **Respaldo**: renombra `gifs\lain-transparente.gif` y abre el Manual: aparece el video de Lain con una penumbra negra que se desvanece hacia arriba y a los lados (sin borde recto). Regrésale el nombre.
+4. **Despedida**: "Gracias, pero no necesito ayuda" o ESC → el video de despedida al centro y abajo, tenue, con las cuatro orillas fundidas: sin rectángulo azul, sin bordes rectos y sin franja clara a la izquierda ni parches de otro tono a los lados. El panel con "Gracias por estar aquí. Vuelve pronto." y CERRAR se lee encima.
+5. **Sin letreros de atajos**: pasa el mouse despacio por toda la pantalla del Manual (fondo, Lain, avisos, atajos, vista de ejemplo, botón de abajo, despedida) y por ← INICIO de Sala, Emotes, Música, Fondos y Manual: no debe salir ningún letrero "Enter", "Esc", "→" ni "←". Igual en Login (formularios de registro y recuperación), Dashboard, APLICAR de Emotes y el diálogo de confirmación (SALIR / ✕).
+6. Los únicos letreros que sí salen: el logo Neondev ("Abrir el repositorio del proyecto") y las bocinas (firma, música y manual).
+7. Los atajos siguen igual: ENTER avanza (y cierra en la despedida), → / ← cambian de paso, ESC abre la despedida y luego cierra; Esc en ← INICIO de las demás pantallas regresa; Enter en el set de Emotes aplica.

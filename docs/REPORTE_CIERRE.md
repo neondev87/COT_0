@@ -178,3 +178,17 @@ Se comparó `COT_0.Host` (WPF) contra el Host WinUI (entonces en otra carpeta) e
 - Volver atrás: `git checkout pre-nombres-naturales` (antes de la Tarea C) o `git checkout 648df7a` (antes de las tres tareas).
 - Verificación: `dotnet build COT_0.sln` en 0 errores y 0 warnings; `COT_0.Host.exe` lanzado 8 s: ventana "COT_0" abierta, respondiendo y Kestrel en el puerto 5050. Sin capturas: el aspecto de los enlaces y del formulario de registro no se revisó a ojo (`PRUEBAS_MANUALES.md`, secciones 1, 2 y 2b).
 
+
+## Manual limpio y sin letreros (08/11, noche)
+
+| Tarea | Commit | Archivos |
+|---|---|---|
+| 1. Diagnóstico de capas | `c53a3bd` | Nuevo: `docs/qa/CAPAS_MANUAL.md` |
+| 2. Fondo con tres capas | `86a72ef` | `Views/ModelosDeVista/CapaFondoViewModel.cs` (`IsDecorVisible`, sin velo propio en el Manual), `Views/Componentes/CapaFondo.xaml`, `Views/Estilos/Manual.xaml` (`ManualVeilBrush` plano al 60 %; fuera `ManualSweepBrush` y `ManualFloorBrush`), `Views/Pantallas/ManualPage.xaml(.cs)` (fuera barrido y piso) |
+| 3. Lain transparente (opción A + respaldo B) | `50da859` | Nuevo: `docs/PREPARAR_LAIN.md`. Cambiados: `appsettings.json` (`Manual:LainCutout`), `Services/Configuracion/ManualSettings.cs`, `Services/Manual/ManualAssets.cs`, `Services/Fondos/FondoImages.cs` (ancho opcional), `Views/ModelosDeVista/ManualViewModel.cs`, `ManualPage.xaml`, `Manual.xaml` (brochas `Edge*`), `.gitignore` |
+| 4. Despedida sin rectángulo duro | `824db43` | `ManualPage.xaml` (`FarewellFades` y franjas), `Manual.xaml` |
+| 5. Sin letreros de atajos | `e3210d2` | Nuevo: `Services/Ventana/ShortcutHints.cs`. Cambiados: `Services/Ventana/Navigator.cs`, `App.xaml` (estilo implícito de `Button`, `TextButton`, `SolidButton`), `Manual.xaml` (`BotonManualStyle`), `ManualPage.xaml`, `Views/Componentes/EncabezadoPantalla.xaml`, `ListaConectados.xaml`, `Views/Pantallas/FondosPage.xaml`, `MusicaPage.xaml` |
+| 6. Verificación y documentación | último commit | `PRUEBAS_MANUALES.md` (10b), este archivo, `PENDIENTES_LIMPIEZA.md` |
+
+- Verificación: `dotnet build COT_0.sln` en 0 errores y 0 warnings; `COT_0.Host.exe` lanzado 8 s: ventana "COT_0" abierta y respondiendo. Sin capturas de pantalla: el GIF se revisó extrayendo cuadros con ffmpeg (alfa en los 93 cuadros, sin halo sobre fondo rojo) y la composición del Manual (velo + Lain, velo + despedida fundida) se simuló con ffmpeg sobre un cuadro de `Batman.mp4`. El aspecto en la app real queda para `PRUEBAS_MANUALES.md`, sección 10b.
+- Pendiente de confirmar a ojo: que `BitmapImage.SetSourceAsync` anime el GIF (WinUI lo anima con `AutoPlay`, que viene activo) y que la penumbra de la despedida no se note sobre fondos muy claros.

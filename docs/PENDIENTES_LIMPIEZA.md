@@ -13,6 +13,7 @@ Solo lo que sigue pendiente después del cierre (08/11, rama `host-winui`; ya co
 - **`%LocalAppData%\COT_0\cache\fondos\*.jpg`**: un cuadro por video (≈ 12–90 KB cada uno). Si cambias o borras un video, su JPEG viejo **se queda** (no hay limpieza automática). Se puede borrar la carpeta completa: se regenera al abrir FONDOS. Puede quedar algún `*.part.jpg` si la app se cerró a medio generar.
 - **`%LocalAppData%\COT_0\registro-medios.jsonl`**: crece sin tope (una línea por falla). Si estorba, borrarlo o rotarlo.
 - **`COT_0_P/diseno/`** (maquetas e `inventario-winui.md`): vive fuera del repo; no subirlo.
+- **`COT_0_P/gifs/lain-transparente.gif`** (≈ 2.1 MB): Lain con transparencia, generado con ffmpeg a partir de `lain_tele_web.mp4` (`docs/PREPARAR_LAIN.md`). Fuera del repo e ignorado (`/gifs/`, `lain-transparente*.gif`). Si se borra, el Manual usa el video con su penumbra; se regenera con el mismo comando.
 
 ## En el código (no se tocó en el cierre: cambia lógica)
 
