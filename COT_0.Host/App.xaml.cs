@@ -35,8 +35,8 @@ public partial class App : Application
 
         _window = new MainWindow();
         // Cerrar la ventana con sala activa pregunta primero (como SALIR)
+        // Apaga en orden con AppShutdown; el contenedor no se libera en Window.Closed (la vista aún usa los reproductores)
         Services.GetRequiredService<CloseGuard>().Attach(_window);
-        _window.Closed += (_, _) => Services.Dispose();
         _window.Activate();
 
         // La música suena desde el login (si falta la carpeta, MusicaPage lo avisa)
@@ -63,6 +63,7 @@ public partial class App : Application
             .AddSingleton<ConfirmDialogService>()
             .AddSingleton<QrService>()
             .AddSingleton<SalaViewModel>()
+            .AddSingleton<AppShutdown>()
             .AddSingleton<CloseGuard>()
             .AddSingleton<ConnectedUsersViewModel>()
             .AddSingleton<DashboardViewModel>()

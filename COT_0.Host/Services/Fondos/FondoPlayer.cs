@@ -14,8 +14,9 @@ namespace COT_0.Host.Services.Fondos;
 /// de CapaFondo); cambiar de fondo solo cambia su Source. El video se abre como StorageFile (no como Uri),
 /// así los nombres con "：", "＂", corchetes o espacios no pasan por el escape de una URL.
 /// Failed llega en el hilo de la UI con la causa y el código (también quedan en el registro de medios).
+/// Sin Dispose: al cerrar la app solo se detiene (AppShutdown); su MediaPlayerElement lo sigue usando hasta desmontarse.
 /// </summary>
-public sealed class FondoPlayer : IDisposable
+public sealed class FondoPlayer
 {
     private const string LogSource = "video-fondo";
 
@@ -70,8 +71,6 @@ public sealed class FondoPlayer : IDisposable
         Current = null;
         Player.Source = null;
     }
-
-    public void Dispose() => Player.Dispose();
 
     // Error y ExtendedErrorCode tal cual al registro; la vista recibe la causa ya traducida
     private void OnMediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs e)

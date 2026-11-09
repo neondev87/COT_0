@@ -8,8 +8,9 @@ namespace COT_0.Host.Services.Manual;
 /// <summary>
 /// Un solo MediaPlayer en bucle y en silencio; la despedida
 /// solo cambia su Source. Failed (con la ruta) llega en el hilo de la UI.
+/// Sin Dispose: ManualPage lo detiene en Unloaded, que llega aun después de cerrar la ventana.
 /// </summary>
-public sealed class ManualVideo : IDisposable
+public sealed class ManualVideo
 {
     private string? _current;
 
@@ -32,6 +33,4 @@ public sealed class ManualVideo : IDisposable
     }
 
     public void Stop() => Play(null);
-
-    public void Dispose() => Player.Dispose();
 }

@@ -8,8 +8,9 @@ namespace COT_0.Host.Services.Manual;
 /// <summary>
 /// Usa Windows.Media.Playback.MediaPlayer. Sin los "golpes" de estática
 /// de cada pérdida de señal (dependían de SignalLossLayer, que no se migró).
+/// Sin Dispose: ManualPage llama Stop en Unloaded, que llega aun después de cerrar la ventana.
 /// </summary>
-public sealed class ManualSound : IDisposable
+public sealed class ManualSound
 {
     private readonly MediaPlayer _notice = new() { AutoPlay = false };
     private readonly MediaPlayer _static = new() { AutoPlay = false, IsLoopingEnabled = true };
@@ -57,12 +58,6 @@ public sealed class ManualSound : IDisposable
         _notice.Source = null;
         _static.Source = null;
         IsMuted = false;
-    }
-
-    public void Dispose()
-    {
-        _notice.Dispose();
-        _static.Dispose();
     }
 
     private static MediaSource? Source(string? path) => path is null ? null : MediaSource.CreateFromUri(new Uri(path));

@@ -33,6 +33,9 @@ public class ClockService
         return elapsed < TimeSpan.Zero ? TimeSpan.Zero : elapsed;
     }
 
+    /// <summary>Al cerrar la app: ya no hay pantallas que actualizar.</summary>
+    public void Stop() => _timer.Stop();
+
     private void OnTick()
     {
         ScheduleNext();

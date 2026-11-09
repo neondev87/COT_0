@@ -11,6 +11,9 @@ public static class UiThread
     /// <summary>Lo llama App al arrancar, desde el hilo de la UI.</summary>
     public static void Attach(DispatcherQueue queue) => _queue = queue;
 
+    /// <summary>Al cerrar la app: lo que llegue después ya no se manda a la UI.</summary>
+    public static void Detach() => _queue = null;
+
     public static void Run(Action action)
     {
         if (_queue is null) return;

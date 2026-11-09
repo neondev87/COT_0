@@ -10,10 +10,10 @@ namespace COT_0.Host.Services.Musica;
 /// <summary>
 /// Una sola instancia para toda la app: la firma del login y MusicaPage ven lo mismo.
 /// Los eventos del reproductor llegan de otro hilo; StateChanged y Failed siempre se avisan en el hilo de la UI.
-/// El volumen inicia siempre en Audio:DefaultVolume (25) y no se guarda entre sesiones.
+/// El volumen inicia siempre en Audio:DefaultVolume (25) y no se guarda entre sesiones. Al cerrar la app, Stop (sin Dispose).
 /// Al abrir la app suena sola la pista Audio:InitialTrack (Audio_02); si no se puede leer, MediaFailed salta a la siguiente.
 /// </summary>
-public sealed class MusicService : IDisposable
+public sealed class MusicService
 {
     private const double MaxVolume = 100;
 
@@ -28,10 +28,10 @@ public sealed class MusicService : IDisposable
         _library = library;
         _player.CommandManager.IsEnabled = false;
         Volume = AppConfig.Settings.Audio.DefaultVolume;
-        _player.MediaOpened += (_, _) => _failures = 0;
-        _player.MediaEnded += (_, _) => UiThread.Run(() => _ = MoveAsync(1));
-        _player.MediaFailed += (_, _) => UiThread.Run(() => _ = OnMediaFailedAsync());
-        _player.PlaybackSession.PlaybackStateChanged += (_, _) => UiThread.Run(Notify);
+        _player.MediaOpened += OnMediaOpened;
+        _player.MediaEnded += OnMediaEnded;
+        _player.MediaFailed += OnMediaFailed;
+        _player.PlaybackSession.PlaybackStateChanged += OnPlaybackStateChanged;
     }
 
     /// <summary>Cambió la canción, la pausa, el silencio o el volumen.</summary>
@@ -95,7 +95,24 @@ public sealed class MusicService : IDisposable
 
     public Task PreviousAsync() => MoveAsync(-1);
 
-    public void Dispose() => _player.Dispose();
+    /// <summary>Al cerrar la app: deja de escuchar al reproductor y suelta la canción.</summary>
+    public void Stop()
+    {
+        _player.MediaOpened -= OnMediaOpened;
+        _player.MediaEnded -= OnMediaEnded;
+        _player.MediaFailed -= OnMediaFailed;
+        _player.PlaybackSession.PlaybackStateChanged -= OnPlaybackStateChanged;
+        _player.Pause();
+        _player.Source = null;
+    }
+
+    private void OnMediaOpened(MediaPlayer sender, object args) => _failures = 0;
+
+    private void OnMediaEnded(MediaPlayer sender, object args) => UiThread.Run(() => _ = MoveAsync(1));
+
+    private void OnMediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args) => UiThread.Run(() => _ = OnMediaFailedAsync());
+
+    private void OnPlaybackStateChanged(MediaPlaybackSession sender, object args) => UiThread.Run(Notify);
 
     // Lee la carpeta de nuevo; false (y aviso) si no hay de dónde tocar
     private async Task<bool> ReloadAsync()
