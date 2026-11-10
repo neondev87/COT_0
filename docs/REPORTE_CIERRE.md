@@ -274,3 +274,10 @@ Se comparó `COT_0.Host` (WPF) contra el Host WinUI (entonces en otra carpeta) e
 - `ManualPage.xaml`: en el estado `Farewell` aparece `FarewellBase` (opaco, `#06122C`, el azul del cuadro de `lain_despedida.mp4`), `VideoLayer` sube a `Canvas.ZIndex` 1 (encima de la estática), el video queda a opacidad 1 sin orillas encima y se ocultan encabezado, pasos, aviso y botón de silencio. Quitados `FarewellVideoOpacity`, `FarewellFadeSide/Ends` y `FarewellFades`.
 - `CapaFondoViewModel` no cambia: el fondo de la app sigue en bucle y mudo debajo y al salir recupera su sonido sin reiniciarse.
 - Verificación: `dotnet build COT_0.sln` en 0 errores y 0 warnings. No se abrió la app: el aspecto queda en `PRUEBAS_MANUALES.md`, sección 22.
+
+## Tarea F: revisión de la despedida de Lain (09/11)
+
+- Después de las tareas A–E, `ManualPage.xaml`, `Manual.xaml`, `ManualFondo.xaml` y `CapaFondoViewModel.cs` siguen como quedaron en PRIORIDAD CERO (`git diff` sin cambios desde ese commit).
+- Las pantallas nuevas (USUARIOS, TIENDA, TICKETS, PUNTO DE VENTA, ADMINISTRADORES) usan sus propias brochas (`ShopPanelBrush`, `ShopDialogBrush` en `Views\Estilos\Tienda.xaml`) y no comparten ninguna con el Manual; `CapaFondoViewModel` solo silencia el video en `ManualPage` y lo deja visible detrás de `EmotesPage` y `UsuariosPage`.
+- Se conserva: `FarewellBase` opaco, Lain a opacidad 1 sobre la estática, interfaz oculta hasta CERRAR, video de fondo corriendo debajo y retomado al salir, franjas sin `lain_despedida.mp4`. Sin duplicar código.
+- Pendiente de ver con la app abierta: `PRUEBAS_MANUALES.md`, sección 22.
