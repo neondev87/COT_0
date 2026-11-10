@@ -71,6 +71,43 @@
         <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
         <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
     </Style>
+    <!-- Aviso fijo "Puedes comprar 10 emotes cada 24 horas": franja con el acento suave -->
+    <SolidColorBrush x:Key="ShopSuccessBrush" Color="#3DDC84"/>
+    <SolidColorBrush x:Key="ShopFlashBrush" Color="#553DDC84"/>
+    <x:Double x:Key="ShopCartWidth">240</x:Double>
+    <Style x:Key="ShopRulesBanner" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource AccentSoftBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+        <Setter Property="BorderThickness" Value="2,0,0,0"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+    </Style>
+    <Style x:Key="ShopRulesText" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource FontCondensedBold}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="CharacterSpacing" Value="160"/>
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+        <Setter Property="TextWrapping" Value="WrapWholeWords"/>
+    </Style>
+    <!-- Destello verde detrás del contador y "¡Comprado!" (solo opacidad) -->
+    <Style x:Key="ShopFlash" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource ShopFlashBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource ShopSuccessBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="6"/>
+    </Style>
+    <Style x:Key="ShopDoneText" TargetType="TextBlock" BasedOn="{StaticResource ShopTitleText}">
+        <Setter Property="Foreground" Value="{StaticResource ShopSuccessBrush}"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+    <!-- Carrito a la derecha de la cuadrícula -->
+    <Style x:Key="ShopCartPanel" TargetType="Border" BasedOn="{StaticResource ShopCard}">
+        <Setter Property="Width" Value="{StaticResource ShopCartWidth}"/>
+        <Setter Property="Padding" Value="14"/>
+    </Style>
     <!-- Cuadrículas sin selección ni fondo del sistema al pasar el mouse -->
     <Style x:Key="ShopGridItem" TargetType="GridViewItem">
         <Setter Property="Margin" Value="0,0,10,10"/>

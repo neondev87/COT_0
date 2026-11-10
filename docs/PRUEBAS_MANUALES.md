@@ -439,3 +439,31 @@ Antes: entra con un usuario que cumpla las reglas nuevas (ej. `Erick`). Para emp
 1. Usuario sin compras → "Aún no has comprado nada." + IR A LA TIENDA (cambia a la pestaña TIENDA).
 2. Con compras: el más nuevo primero, con número, fecha, hora, miniaturas y DESCARGAR PDF.
 3. DESCARGAR PDF de un ticket al que dijiste NO → se crea `Escritorio\COT_0_tickets\ticket-000N.pdf` y el InfoBar dice la ruta. Otra vez el mismo → misma ruta (no lo duplica).
+
+## 20. Tienda: CARRITO | UNO POR UNO, efecto de compra y temporizador (09/11)
+
+### Aviso y switch
+
+1. Arriba de la TIENDA, fijo: "Puedes comprar 10 emotes cada 24 horas" y a la derecha "Te quedan X de 10".
+2. El switch abre en **CARRITO**. Las tarjetas dicen AGREGAR; en UNO POR UNO dicen COMPRAR. Cambiar de modo vacía el carrito.
+
+### CARRITO
+
+1. AGREGAR tres emotes: salen a la derecha con miniatura y QUITAR; la tarjeta dice EN CARRITO y se apaga. El carrito dice "3 de N" (N = lo que te queda).
+2. QUITAR uno: vuelve a poder agregarse. Llena el carrito hasta N: AGREGAR se apaga en todas.
+3. COMPRAR: **una sola compra y un solo ticket** con todos los emotes (TICKETS muestra un ticket con sus miniaturas). Los comprados dicen COMPRADO.
+
+### UNO POR UNO
+
+1. COMPRAR en una tarjeta: compra al instante y genera **un ticket por emote**.
+
+### Efecto de compra
+
+1. Al comprar, el emote (o el carrito) se encoge y vuela al contador, el contador late, destello verde breve y "¡Comprado!"; después pregunta por el PDF. Sin desenfoque ni sombras.
+
+### Temporizador de 24 horas
+
+1. Llega a 10: AGREGAR y COMPRAR se apagan y sale el InfoBar "Ya compraste tus 10 emotes. Podrás comprar más en HH:MM:SS" contando cada segundo.
+2. `compras.json` guarda en ese usuario `LimitReachedAt` (hora UTC de la compra que llegó al límite). Cierra la app (o apaga la compu) y vuelve: el tiempo siguió corriendo.
+3. **Reinicio**: con la app cerrada cambia `LimitReachedAt` y `WindowStart` a hace 24 h menos un minuto (ej. `2026-11-08T16:00:00Z`), abre la TIENDA: el temporizador llega a 00:00:00, el cupo vuelve a "Te quedan 10 de 10" solo y se puede comprar otra vez.
+4. Sal de la TIENDA (TICKETS o ESC): el temporizador se detiene; al volver se recalcula desde el JSON.

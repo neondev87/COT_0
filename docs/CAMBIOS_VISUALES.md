@@ -426,3 +426,12 @@ El panel de vidrio con "Gracias por estar aquí. Vuelve pronto." y CERRAR no cam
 | — | Diálogo "¿Quieres descargar tu ticket en PDF?" SÍ / NO (mismo `ConfirmacionDialogo`) |
 | Picker de emotes del chat: solo los primeros 120; el resto solo buscando | Sin buscar se ven todos (scroll dentro del picker); el tope solo aplica a búsquedas |
 | Manual paso 5: "Pega el ID o la URL de un set…" | "En TIENDA compras hasta 10 emotes cada 24 horas; entran solos a tu sala. En SET Y REPORTES pegas el ID…" (la vista de ejemplo del paso 5 sigue mostrando el panel viejo) |
+
+## Tienda: carrito, uno por uno y temporizador (09/11)
+
+| Antes | Ahora |
+|---|---|
+| Solo COMPRAR por tarjeta | Switch **CARRITO \| UNO POR UNO** (mismo estilo `ShopTab`), CARRITO por defecto; panel lateral `ShopCartPanel` con miniaturas, QUITAR y un COMPRAR |
+| Sin aviso del cupo | Franja fija `ShopRulesBanner` "Puedes comprar 10 emotes cada 24 horas" |
+| "Podrás comprar más en HH:MM horas" | InfoBar fijo con **HH:MM:SS** que baja cada segundo (`DispatcherTimer`, solo mientras estás en TIENDA) |
+| Sin efecto al comprar | Copia del emote que se encoge y vuela al contador (0.45 s), pulso del contador, destello verde (`ShopFlash`) y "¡Comprado!" (`ShopDoneText`); solo traslación, escala y opacidad |

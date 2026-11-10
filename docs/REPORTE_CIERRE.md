@@ -254,3 +254,10 @@ Se comparó `COT_0.Host` (WPF) contra el Host WinUI (entonces en otra carpeta) e
 - **PDF**: PDFsharp 6.2.4 (MIT, sin binarios nativos). Su resolvedor de fuentes de Windows no encuentra Consolas; con Courier New sí (probado generando un ticket en el scratchpad).
 - **Decisiones**: la pantalla abre en TIENDA; el set de 7TV, los reportes y los quitados pasaron al recuadro SET Y REPORTES (para dejar solo 3 pestañas); el ticket no lleva el nombre del usuario; el número de ticket es global (para que los PDF de varios usuarios no se pisen).
 - Verificación: `dotnet build COT_0.sln` en 0 errores y 0 warnings. La app no se abrió (sin capturas ni computer use).
+
+## Tienda en modo HOST: carrito, uno por uno y temporizador (09/11)
+
+- CARRITO (por defecto) junta hasta lo que te queda y hace **una compra con un ticket** (`PurchaseService.BuyAsync` recibe la lista; si no cabe en el cupo no compra ninguno). UNO POR UNO compra al instante con un ticket por emote.
+- El cupo se calcula siempre desde `compras.json`: `LimitReachedAt` (UTC) se guarda al llegar a `Store:DailyLimit` y el reinicio es `LimitReachedAt + Store:CooldownHours`. `QuotaTimerViewModel` solo resta la hora actual a esa fecha cada segundo; al llegar a cero vuelve a leer el JSON. Archivos viejos sin `LimitReachedAt` lo deducen de la décima compra.
+- Efecto de compra en `SeccionTienda` (Storyboard en XAML) y `Store:PurchaseEffectMs` (900 ms) antes del diálogo del PDF. `TicketPdfActions` junta la descarga del PDF que repetían TIENDA, TICKETS y PUNTO DE VENTA.
+- Verificación: `dotnet build COT_0.sln` en 0 errores y 0 warnings. Sin abrir la app: el aspecto queda en `PRUEBAS_MANUALES.md`, sección 20.

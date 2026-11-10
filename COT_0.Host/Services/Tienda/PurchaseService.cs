@@ -7,7 +7,7 @@ namespace COT_0.Host.Services.Tienda;
 
 /// <summary>
 /// COMPRAR es gratis: solo gasta cupo (QuotaCalculator). Una compra a la vez (lee, cambia y guarda el archivo),
-/// cada una con su ticket de número consecutivo. Avisa con Purchased para que el chat lo agregue en vivo.
+/// cada una (carrito o un emote) con un ticket de número consecutivo. Avisa con Purchased para que el chat lo agregue en vivo.
 /// </summary>
 public class PurchaseService(PurchaseStore store)
 {
@@ -32,16 +32,21 @@ public class PurchaseService(PurchaseStore store)
 
     public async Task<QuotaInfo> GetQuotaAsync(string userName) => QuotaCalculator.For(await GetAsync(userName), DateTime.UtcNow);
 
-    public async Task<PurchaseResult> BuyAsync(string? userName, RoomEmote emote)
+    /// <summary>
+    /// Una sola compra con un solo ticket para todos los emotes (CARRITO) o para uno (UNO POR UNO).
+    /// Los que ya tenías se saltan; si no caben en el cupo que queda, no se compra ninguno.
+    /// </summary>
+    public async Task<PurchaseResult> BuyAsync(string? userName, IReadOnlyList<RoomEmote> emotes)
     {
         var limit = new QuotaInfo(0, 0, 0, null);
         if (string.IsNullOrEmpty(userName)) return new PurchaseResult(PurchaseOutcome.NoUser, limit, null);
+        if (emotes.Count == 0) return new PurchaseResult(PurchaseOutcome.Empty, limit, null);
 
         PurchaseResult result;
         await _gate.WaitAsync();
         try
         {
-            result = await BuyLockedAsync(userName, emote);
+            result = await BuyLockedAsync(userName, emotes);
         }
         finally
         {
@@ -52,7 +57,7 @@ public class PurchaseService(PurchaseStore store)
         return result;
     }
 
-    private async Task<PurchaseResult> BuyLockedAsync(string userName, RoomEmote emote)
+    private async Task<PurchaseResult> BuyLockedAsync(string userName, IReadOnlyList<RoomEmote> emotes)
     {
         var now = DateTime.UtcNow;
         var data = await store.LoadAsync();
@@ -66,18 +71,21 @@ public class PurchaseService(PurchaseStore store)
 
         var quota = QuotaCalculator.For(user, now);
         if (quota.IsBlocked) return new PurchaseResult(PurchaseOutcome.LimitReached, quota, null);
-        if (user.Emotes.Any(e => e.Id == emote.Id)) return new PurchaseResult(PurchaseOutcome.AlreadyOwned, quota, null);
+        var fresh = emotes.DistinctBy(e => e.Id).Where(e => user.Emotes.All(owned => owned.Id != e.Id)).ToList();
+        if (fresh.Count == 0) return new PurchaseResult(PurchaseOutcome.AlreadyOwned, quota, null);
+        if (fresh.Count > quota.Remaining) return new PurchaseResult(PurchaseOutcome.NotEnoughQuota, quota, null);
 
         user.WindowStart ??= now;
-        var purchased = EmoteMapping.ToPurchased(emote, now);
-        user.Emotes.Add(purchased);
+        var purchased = fresh.Select(e => EmoteMapping.ToPurchased(e, now)).ToList();
+        user.Emotes.AddRange(purchased);
+        QuotaCalculator.MarkLimit(user, now);
 
         quota = QuotaCalculator.For(user, now);
         var ticket = new PurchaseTicket
         {
             Number = ++data.LastTicketNumber,
             CreatedAt = now,
-            Emotes = [purchased],
+            Emotes = purchased,
             Remaining = quota.Remaining,
             ResetsAt = quota.ResetsAt ?? now + QuotaCalculator.Cooldown,
         };
@@ -113,6 +121,5 @@ public class PurchaseService(PurchaseStore store)
 
     private static bool Same(string a, string b) => string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
 
-    private static UserPurchases? Find(PurchasesData data, string userName) =>
-        data.Users.FirstOrDefault(u => string.Equals(u.UserName, userName, StringComparison.OrdinalIgnoreCase));
+    private static UserPurchases? Find(PurchasesData data, string userName) => data.Users.FirstOrDefault(u => Same(u.UserName, userName));
 }

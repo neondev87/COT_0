@@ -31,6 +31,7 @@ public static class PurchasesValidator
             ticket.ResetsAt = AsUtc(ticket.ResetsAt);
         }
         if (user.WindowStart is { } start) user.WindowStart = AsUtc(start);
+        if (user.LimitReachedAt is { } reached) user.LimitReachedAt = AsUtc(reached);
     }
 
     private static List<PurchasedEmote> CleanEmotes(List<PurchasedEmote>? emotes)

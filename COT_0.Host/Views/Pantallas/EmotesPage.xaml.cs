@@ -15,6 +15,7 @@ public sealed partial class EmotesPage : Page
     {
         InitializeComponent();
         Loaded += OnLoaded;
+        Unloaded += (_, _) => ViewModel.Unload();
     }
 
     private async void OnLoaded(object sender, RoutedEventArgs e) => await ViewModel.LoadAsync();

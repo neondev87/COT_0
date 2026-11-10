@@ -1,6 +1,7 @@
-// Sección TIENDA: cuadrícula de todo 7TV por páginas, buscador, contador de cupo y COMPRAR con su ticket
+// Sección TIENDA: todo 7TV por páginas, buscador, cupo con su temporizador, switch CARRITO | UNO POR UNO y COMPRAR con ticket
 using COT_0.Host.Models;
 using COT_0.Host.Services.Almacenamiento;
+using COT_0.Host.Services.Configuracion;
 using COT_0.Host.Services.Dialogos;
 using COT_0.Host.Services.Tienda;
 using COT_0.Host.Services.Usuarios;
@@ -10,10 +11,7 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace COT_0.Host.Views.ModelosDeVista;
 
-/// <summary>
-/// Compra para el usuario que hizo ENTRAR (ActiveUser). Si 7TV falla, aviso con REINTENTAR y la app sigue.
-/// Al comprar pregunta si quieres el PDF; con o sin él, el ticket queda en TICKETS.
-/// </summary>
+/// <summary>Compra para ActiveUser. CARRITO: una compra y un ticket; UNO POR UNO: al instante. Cupo agotado: todo apagado y corre el temporizador. Bought dispara el efecto de la vista.</summary>
 public partial class StoreShopViewModel(PurchaseService purchases, EmoteShopCatalog catalog, ConfirmDialogService dialogs) : ObservableObject
 {
     private readonly HashSet<string> _owned = [];
@@ -22,57 +20,80 @@ public partial class StoreShopViewModel(PurchaseService purchases, EmoteShopCata
     private int _total;
     private bool _isBuying;
 
-    [ObservableProperty]
-    private string _searchText = string.Empty;
+    [ObservableProperty] private string _searchText = string.Empty;
+    [ObservableProperty] private ShopItemsCollection? _items;
+    [ObservableProperty] private string _quotaText = string.Empty;
+    [ObservableProperty] private bool _isLoading;
+    [ObservableProperty] private bool _isEmpty;
+    [ObservableProperty] private bool _isErrorVisible;
+    [ObservableProperty] private string _errorText = string.Empty;
+    [ObservableProperty] private bool _isBlocked;
+    [ObservableProperty] private bool _canBuyCart;
 
     [ObservableProperty]
-    private ShopItemsCollection? _items;
-
-    [ObservableProperty]
-    private string _quotaText = string.Empty;
-
-    [ObservableProperty]
-    private bool _isLoading;
-
-    [ObservableProperty]
-    private bool _isEmpty;
-
-    [ObservableProperty]
-    private bool _isErrorVisible;
-
-    [ObservableProperty]
-    private string _errorText = string.Empty;
+    [NotifyPropertyChangedFor(nameof(IsCartMode), nameof(IsOneByOneMode))]
+    private PurchaseMode _mode = PurchaseMode.Cart;
 
     public NoticeViewModel Notice { get; } = new();
+    public ShopCartViewModel Cart { get; } = new();
+    public QuotaTimerViewModel Timer { get; } = new();
+    public string RulesText { get; } = StoreTexts.Rules();
 
-    /// <summary>Al abrir la tienda: relee el cupo (se reinicia solo si ya pasaron las horas) y carga la primera página una vez.</summary>
+    // Switch CARRITO | UNO POR UNO: dos RadioButton enlazados en dos sentidos
+    public bool IsCartMode { get => Mode == PurchaseMode.Cart; set { if (value) Mode = PurchaseMode.Cart; } }
+    public bool IsOneByOneMode { get => Mode == PurchaseMode.OneByOne; set { if (value) Mode = PurchaseMode.OneByOne; } }
+
+    /// <summary>Compra lista: los emotes y si salieron del carrito (para el efecto de la vista).</summary>
+    public event Action<IReadOnlyList<ShopEmoteViewModel>, bool>? Bought;
+
+    /// <summary>Al abrir la tienda: relee el cupo de compras.json y carga la primera página una vez.</summary>
     public async Task LoadAsync()
     {
+        Timer.Expired -= OnTimerExpired;
+        Timer.Expired += OnTimerExpired;
         await RefreshQuotaAsync();
         if (Items is null) StartSearch(string.Empty);
     }
 
-    [RelayCommand]
-    private void Search() => StartSearch(SearchText);
+    /// <summary>Al salir de la pantalla: el temporizador deja de correr.</summary>
+    public void Unload() => Timer.Stop();
+
+    partial void OnModeChanged(PurchaseMode value)
+    {
+        Cart.Clear();
+        foreach (var item in AllItems) item.IsCartMode = value == PurchaseMode.Cart;
+        Refresh();
+    }
+
+    [RelayCommand] private void Search() => StartSearch(SearchText);
 
     [RelayCommand]
-    private async Task RetryAsync()
+    private async Task RetryAsync() { IsErrorVisible = false; if (Items is not null) await Items.ResumeAsync(); }
+
+    /// <summary>AGREGAR (carrito) o COMPRAR (uno por uno) en una tarjeta.</summary>
+    [RelayCommand]
+    private async Task PickAsync(ShopEmoteViewModel item)
     {
-        IsErrorVisible = false;
-        if (Items is not null) await Items.ResumeAsync();
+        if (!item.IsBuyEnabled) return;
+        if (!IsCartMode) await BuyAsync([item], fromCart: false);
+        else if (Cart.Add(item)) Refresh();
     }
 
     [RelayCommand]
-    private async Task BuyAsync(ShopEmoteViewModel item)
-    {
-        if (_isBuying || !item.IsBuyEnabled) return;
+    private void RemoveFromCart(ShopEmoteViewModel item) { Cart.Remove(item); Refresh(); }
 
-        SetBuying(true);
+    [RelayCommand] private Task BuyCartAsync() => BuyAsync(Cart.Items.ToList(), fromCart: true);
+
+    private async Task BuyAsync(IReadOnlyList<ShopEmoteViewModel> items, bool fromCart)
+    {
+        if (_isBuying || items.Count == 0 || _quota.IsBlocked) return;
+        _isBuying = true;
+        Refresh();
         try
         {
-            var result = await purchases.BuyAsync(ActiveUser.Name, item.Emote);
+            var result = await purchases.BuyAsync(ActiveUser.Name, items.Select(i => i.Emote).ToList());
             if (result.Outcome != PurchaseOutcome.NoUser) ApplyQuota(result.Quota);
-            await ShowOutcomeAsync(result, item);
+            await ShowOutcomeAsync(result, items, fromCart);
         }
         catch (Exception ex) when (JsonStore.IsStorageError(ex))
         {
@@ -80,46 +101,29 @@ public partial class StoreShopViewModel(PurchaseService purchases, EmoteShopCata
         }
         finally
         {
-            SetBuying(false);
+            _isBuying = false;
+            Refresh();
         }
     }
 
-    private async Task ShowOutcomeAsync(PurchaseResult result, ShopEmoteViewModel item)
+    private async Task ShowOutcomeAsync(PurchaseResult result, IReadOnlyList<ShopEmoteViewModel> items, bool fromCart)
     {
-        switch (result.Outcome)
+        if (result.Outcome != PurchaseOutcome.Bought || result.Ticket is not { } ticket)
         {
-            case PurchaseOutcome.Bought when result.Ticket is { } ticket:
-                _owned.Add(item.Emote.Id);
-                item.IsOwned = true;
-                var (message, severity) = await OfferPdfAsync(ticket, item.Name);
-                // La décima compra también avisa que el cupo se acabó y cuándo vuelve
-                if (_quota.IsBlocked) (message, severity) = ($"{message} {StoreTexts.Blocked(_quota)}", InfoBarSeverity.Warning);
-                Notice.Show(message, severity);
-                break;
-            case PurchaseOutcome.LimitReached:
-                Notice.Show(StoreTexts.Blocked(result.Quota), InfoBarSeverity.Warning);
-                break;
-            default:
-                Notice.Show(StoreTexts.Format($"Text.Store.Outcome.{result.Outcome}"), InfoBarSeverity.Informational);
-                break;
+            Notice.Show(StoreTexts.Format($"Text.Store.Outcome.{result.Outcome}", result.Quota.Remaining), InfoBarSeverity.Warning);
+            return;
         }
-    }
-
-    // "¿Quieres descargar tu ticket en PDF?" Sí: lo guarda en el Escritorio. No: queda solo en TICKETS
-    private async Task<(string Message, InfoBarSeverity Severity)> OfferPdfAsync(PurchaseTicket ticket, string emoteName)
-    {
-        var texts = new ConfirmTexts(StoreTexts.Format("Text.Store.PdfDialog.Message"),
-            StoreTexts.Format("Text.Store.PdfDialog.Confirm"), StoreTexts.Format("Text.Store.PdfDialog.Cancel"));
-        if (!await dialogs.ConfirmAsync(texts)) return (StoreTexts.Format("Text.Store.Shop.Bought", emoteName), InfoBarSeverity.Success);
-
-        try
+        foreach (var item in items)
         {
-            return (StoreTexts.Format("Text.Store.PdfSaved", await TicketDownloads.SaveAsync(ticket)), InfoBarSeverity.Success);
+            _owned.Add(item.Emote.Id);
+            item.IsOwned = true;
         }
-        catch (Exception ex) when (TicketDownloads.IsSaveError(ex))
-        {
-            return (StoreTexts.Format("Text.Store.PdfFailed", TicketDownloads.Folder), InfoBarSeverity.Error);
-        }
+        if (fromCart) Cart.Clear();
+        Bought?.Invoke(items, fromCart);
+        // Deja ver el efecto de compra antes del diálogo del PDF
+        await Task.Delay(AppConfig.Settings.Store.PurchaseEffectMs);
+        var (message, severity) = await TicketPdfActions.OfferAsync(dialogs, ticket);
+        Notice.Show(message, severity);
     }
 
     private void StartSearch(string query)
@@ -127,6 +131,7 @@ public partial class StoreShopViewModel(PurchaseService purchases, EmoteShopCata
         _query = query;
         _total = 0;
         IsEmpty = IsErrorVisible = false;
+        Cart.Clear();
         // La cuadrícula pide la primera página sola al recibir la lista nueva
         Items = new ShopItemsCollection(LoadPageAsync);
     }
@@ -147,9 +152,10 @@ public partial class StoreShopViewModel(PurchaseService purchases, EmoteShopCata
 
         _total = result.Total;
         IsEmpty = page == 1 && result.Emotes.Count == 0;
-        return result.Emotes.Select(e => new ShopEmoteViewModel(e, _owned.Contains(e.Id), !_quota.IsBlocked && !_isBuying)).ToList();
+        return result.Emotes.Select(e => new ShopEmoteViewModel(e, _owned.Contains(e.Id), CanAdd, IsCartMode)).ToList();
     }
 
+    // Siempre desde compras.json: si ya pasó la hora de reinicio, el cupo vuelve completo aquí
     private async Task RefreshQuotaAsync()
     {
         if (purchases.TakeRecreatedNotice()) Notice.Show(StoreTexts.Format("Text.Store.Recreated"), InfoBarSeverity.Warning);
@@ -159,9 +165,8 @@ public partial class StoreShopViewModel(PurchaseService purchases, EmoteShopCata
             var user = await purchases.GetAsync(name);
             _owned.Clear();
             _owned.UnionWith(user.Emotes.Select(e => e.Id));
+            foreach (var item in AllItems) item.IsOwned = _owned.Contains(item.Emote.Id);
             ApplyQuota(QuotaCalculator.For(user, DateTime.UtcNow));
-            foreach (var item in Items ?? Enumerable.Empty<ShopEmoteViewModel>()) item.IsOwned = _owned.Contains(item.Emote.Id);
-            if (_quota.IsBlocked) Notice.Show(StoreTexts.Blocked(_quota), InfoBarSeverity.Warning);
         }
         catch (Exception ex) when (JsonStore.IsStorageError(ex))
         {
@@ -173,13 +178,22 @@ public partial class StoreShopViewModel(PurchaseService purchases, EmoteShopCata
     {
         _quota = quota;
         QuotaText = StoreTexts.Quota(quota);
-        SetBuying(_isBuying);
+        IsBlocked = quota.IsBlocked;
+        Cart.Capacity = quota.Remaining;
+        Timer.Stop();
+        if (quota is { IsBlocked: true, ResetsAt: { } resetsAt }) Timer.Start(resetsAt, quota.Limit);
+        Refresh();
     }
 
-    // Con el cupo agotado o mientras se guarda una compra, COMPRAR queda apagado en todas las tarjetas
-    private void SetBuying(bool isBuying)
+    private async void OnTimerExpired() => await RefreshQuotaAsync();
+    private bool CanAdd => !_quota.IsBlocked && !_isBuying && !(IsCartMode && Cart.IsFull);
+    private IEnumerable<ShopEmoteViewModel> AllItems => Items ?? Enumerable.Empty<ShopEmoteViewModel>();
+
+    // AGREGAR / COMPRAR se apagan con el cupo agotado, el carrito lleno o una compra guardándose
+    private void Refresh()
     {
-        _isBuying = isBuying;
-        foreach (var item in Items ?? Enumerable.Empty<ShopEmoteViewModel>()) item.CanBuy = !_quota.IsBlocked && !isBuying;
+        var canAdd = CanAdd;
+        foreach (var item in AllItems) item.CanBuy = canAdd;
+        CanBuyCart = Cart.HasItems && !_quota.IsBlocked && !_isBuying;
     }
 }

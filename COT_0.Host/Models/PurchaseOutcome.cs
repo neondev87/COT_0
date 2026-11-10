@@ -7,5 +7,7 @@ public enum PurchaseOutcome
     Bought,
     LimitReached,
     AlreadyOwned,
+    NotEnoughQuota,
+    Empty,
     NoUser,
 }

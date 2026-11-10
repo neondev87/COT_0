@@ -71,6 +71,9 @@ public partial class EmotesScreenViewModel : ObservableObject
 
     public Task LoadAsync() => ShowAsync(Section);
 
+    /// <summary>Al salir de la pantalla: el temporizador de la tienda deja de correr.</summary>
+    public void Unload() => Shop.Unload();
+
     [RelayCommand]
     private void OpenSetPanel() => IsSetPanelOpen = true;
 
@@ -90,6 +93,7 @@ public partial class EmotesScreenViewModel : ObservableObject
     private Task ShowAsync(StoreSection section)
     {
         Section = section;
+        if (section != StoreSection.Shop) Shop.Unload();
         return section switch
         {
             StoreSection.Tickets => Tickets.LoadAsync(),

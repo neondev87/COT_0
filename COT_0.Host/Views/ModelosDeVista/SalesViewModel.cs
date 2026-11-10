@@ -59,14 +59,8 @@ public partial class SalesViewModel(PurchaseService purchases) : ObservableObjec
     [RelayCommand]
     private async Task DownloadAsync(TicketViewModel item)
     {
-        try
-        {
-            Notice.Show(StoreTexts.Format("Text.Store.PdfSaved", await TicketDownloads.SaveAsync(item.Ticket)), InfoBarSeverity.Success);
-        }
-        catch (Exception ex) when (TicketDownloads.IsSaveError(ex))
-        {
-            Notice.Show(StoreTexts.Format("Text.Store.PdfFailed", TicketDownloads.Folder), InfoBarSeverity.Error);
-        }
+        var (message, severity) = await TicketPdfActions.DownloadAsync(item.Ticket);
+        Notice.Show(message, severity);
     }
 
     // Usuarios registrados más los que tengan compras (por si el archivo trae alguno que ya no está en usuarios.json)
