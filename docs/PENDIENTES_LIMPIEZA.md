@@ -9,7 +9,10 @@ Solo lo que sigue pendiente después del cierre (08/11, rama `host-winui`; ya co
 ## En esta PC (fuera del repo)
 
 - **user-secrets del WPF viejo** (`Host:User` / `Host:Password`, `UserSecretsId cot0-host-7fc7bba9-727e-4d80-9300-10219506c924`): la app final no los lee. Se dejaron porque el respaldo (`main`, `winui-migration`, tag `pre-cierre-winui`) todavía los necesita para entrar. Si ya no vas a usar el respaldo: `dotnet user-secrets clear --id cot0-host-7fc7bba9-727e-4d80-9300-10219506c924`.
-- **Usuarios de prueba**: si registraste usuarios para probar el máximo de 20, quedan en `%LocalAppData%\COT_0\usuarios.json`. No hay pantalla para borrar usuarios: quítalos del archivo a mano (es una lista JSON) o bórralo para empezar de cero.
+- **Usuarios de prueba**: si registraste usuarios para probar el máximo de 20, quedan en `%LocalAppData%\COT_0\usuarios.json`. Un ADMIN los puede ELIMINAR desde 04 USUARIOS (también borra sus compras, tickets y foto).
+- **Admins de prueba**: `%LocalAppData%\COT_0\admin.json`. Si el único admin pierde su contraseña, cierra la app y borra `admin.json`: al elegir ADMIN se crea el primero otra vez (no hay puerta trasera).
+- **`*.json.tmp`**: si la app se cerrara a la mitad de un guardado podría quedar un `.tmp` junto al JSON; el original sigue intacto y el `.tmp` se puede borrar.
+- **Temporales de la sesión del 09/11 (noche)**: solo `docs_final.py` (script que actualizó estos docs) en el scratchpad de la sesión, fuera del repo; se puede borrar.
 - **`%LocalAppData%\COT_0\cache\fondos\*.jpg`**: un cuadro por video (≈ 12–90 KB cada uno). Si cambias o borras un video, su JPEG viejo **se queda** (no hay limpieza automática). Se puede borrar la carpeta completa: se regenera al abrir FONDOS. Puede quedar algún `*.part.jpg` si la app se cerró a medio generar.
 - **`%LocalAppData%\COT_0\registro-medios.jsonl`**: crece sin tope (una línea por falla). Si estorba, borrarlo o rotarlo.
 - **`COT_0_P/portadas/respaldo_4y5_2026-11-09/`** (09/11): originales de `Audio_04.png` y `Audio_05.png` con su fondo blanco (≈ 42 y 65 KB) y `portadas45.py`, el script que les quitó el fondo (mismo proceso que `procesar.py` + máscara encogida 2 px). Si las portadas nuevas se ven bien, se puede borrar la carpeta.

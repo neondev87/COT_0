@@ -484,3 +484,42 @@ Antes: entra con un usuario que cumpla las reglas nuevas (ej. `Erick`). Para emp
 3. Alrededor del video no hay cuadro negro ni borde: el azul del video y el del fondo son el mismo.
 4. CERRAR: vuelve el dashboard y el video de fondo sigue desde donde iba (no se reinicia).
 5. Renombra temporalmente `lain_despedida.mp4`: la despedida muestra las franjas sobre el mismo fondo opaco y no se ve el fondo de la app. Regresa el nombre.
+
+## Índice de las 32 pruebas del cierre (09/11)
+
+Ninguna se ejecutó con la app abierta (sin capturas ni computer use): todas quedan por hacer a mano.
+
+| # | Prueba | Dónde |
+|---|---|---|
+| 1 | Reglas de usuario y contraseña con mensajes exactos | Sección 17 |
+| 2 | Límite de 20 caracteres (7TV en 26) | Sección 17 |
+| 3 | Cuenta antigua que no cumple las reglas | Sección 17 |
+| 4 | Máximo de 20 usuarios | Sección 18 |
+| 5 | Switch HOST / ADMIN (HOST por defecto) | Login |
+| 6 | Primer administrador con contraseña generada (16 caracteres) | Login → ADMIN sin `admin.json` |
+| 7 | Contraseña mostrada una sola vez; ENTENDIDO pide confirmación si no la copiaste | Diálogo de contraseña |
+| 8 | VER y COPIAR | Diálogo de contraseña |
+| 9 | Portapapeles limpio a los 60 s (si sigue la misma contraseña) | Pega en el Bloc de notas después de 60 s |
+| 10 | Máximo de 5 administradores ("Ya hay 5 administradores") | ADMINISTRADORES |
+| 11 | Crear y regenerar administradores; no se borra el último | ADMINISTRADORES |
+| 12 | Punto de venta con tickets, búsqueda, totales y DESCARGAR PDF | PUNTO DE VENTA |
+| 13 | ADMIN consulta todo pero no compra (no ve TIENDA) | 05 en modo ADMIN |
+| 14 | HOST ve solo su información | 04 y 05 en modo HOST |
+| 15 | Eliminación (ADMIN), renombrado y cambio de contraseña (respuesta secreta) | Sección 21 |
+| 16 | Foto de perfil junto al nombre en la firma y respaldo con inicial | 04 USUARIOS → FOTO |
+| 17 | JSON actualizados tras modificaciones | Sección 21 |
+| 18 | Compras y tickets conservados al renombrar | Sección 21 |
+| 19 | CARRITO por defecto y un solo ticket | Sección 20 |
+| 20 | UNO POR UNO | Sección 20 |
+| 21 | Efecto visual de compra | Sección 20 |
+| 22 | Aviso "Puedes comprar 10 emotes cada 24 horas" | Sección 20 |
+| 23 | Temporizador que sigue después de cerrar y abrir | Sección 20 |
+| 24 | Reinicio del cupo editando la fecha del JSON | Sección 20 |
+| 25 | Paginación de emotes sin buscar | Sección 19 (TIENDA) |
+| 26 | Emotes comprados entran solos al chat | Sección 19 (Al chat) |
+| 27 | PDF con confirmación Sí y No | Sección 19 |
+| 28 | PDF en `Escritorio\COT_0_tickets` | Sección 19 (TICKETS) |
+| 29 | Video de fondo visible en pantallas nuevas | Sección 19 (Fondo y panel) |
+| 30 | Panel integrado | Sección 19 (Fondo y panel) |
+| 31 | Despedida de Lain sin video de fondo ni transparencia | Sección 22 |
+| 32 | Respaldo con franjas sin `lain_despedida.mp4` | Sección 22 |

@@ -118,7 +118,7 @@ COT_0.Host/
 │   ├── QuotaInfo.cs, PurchaseOutcome.cs, PurchaseResult.cs  Cupo calculado y resultado de COMPRAR
 │   └── TicketLine.cs, TicketLineKind.cs  Renglones del ticket en PDF
 ├── Services/
-│   ├── Almacenamiento/           JsonStore: lee y guarda cualquier clase en %LocalAppData%\COT_0\*.json (async); AsyncFiles: FileStream con useAsync
+│   ├── Almacenamiento/           JsonStore: lee y guarda cualquier clase en %LocalAppData%\COT_0\*.json (async; guarda en .tmp y reemplaza); AsyncFiles: FileStream con useAsync
 │   ├── Cache/                    CacheFolders: %LocalAppData%\COT_0\cache\<nombre> y la llave (hash de ruta + tamaño + fecha)
 │   ├── Registro/                 MediaLog: fallas de video, miniaturas y portadas en registro-medios.jsonl
 │   ├── Configuracion/            AppConfig (LoadAsync de appsettings.json al arrancar) + AppSettings y un record por sección (Window, Storage, Security,
@@ -137,12 +137,12 @@ COT_0.Host/
 │   │                             QrService (PNG de QRCoder → BitmapImage), RoomOpenErrors (error → RoomError + texto) y GuestWatcher (base)
 │   ├── Sesiones/                 SesionService (sesiones.json) y SesionWatcher (abre/cierra la sesión con la sala y anota invitados)
 │   ├── Textos/                   UiText: busca un texto de Textos.xaml desde C#
-│   ├── Tienda/                   PurchaseStore (compras.json, se recrea si está dañado) + PurchasesValidator, QuotaCalculator (Store:DailyLimit cada
-│   │                             Store:CooldownHours, UTC), PurchaseService (COMPRAR y tickets), EmoteShopCatalog (páginas de 7TV con caché),
+│   ├── Tienda/                   PurchaseStore (compras.json, se recrea si está dañado) + PurchasesValidator, QuotaCalculator (Store:DailyLimit y, al llegar,
+│   │                             Store:CooldownHours desde LimitReachedAt, UTC), PurchaseService (CARRITO o UNO POR UNO, un ticket por compra), EmoteShopCatalog (páginas de 7TV con caché),
 │   │                             EmoteMapping, ChatEmoteImport (comprados → chat), TicketLines + TicketDocument (PDFsharp) + TicketDownloads (Escritorio)
 │   ├── Tiempo/                   ClockService (tick de cada segundo) y UiThread (pasa eventos al hilo de la UI)
 │   ├── Tunel/                    CloudflareTunnelService (ITunnelService) y KillOnCloseJob (cloudflared muere con la app)
-│   ├── Usuarios/                 UserService (registrar hasta Usuarios:Maximo, ENTRAR, cuentas viejas, pregunta al entrar), ActiveUser (quién hizo ENTRAR, solo para la tienda), PasswordRecoveryService
+│   ├── Usuarios/                 UserService (registrar hasta Usuarios:Maximo, ENTRAR, cuentas viejas, pregunta al entrar), ActiveUser (quién hizo ENTRAR, HOST o ADMIN), AccountService (eliminar solo ADMIN; nombre y contraseña con respuesta secreta), PasswordRecoveryService
 │   │                             (recuperación por usuario), HostAccounts (usuarios.json como lista; también lee la cuenta suelta) y SecretHasher (PBKDF2 + SHA-256 con salt)
 │   ├── Validaciones/             InputRules (texto, usuario solo letras tipo "Erick" y contraseña con Inputs:PasswordSymbols; FieldKind), PasswordValidator
 │   │                             + PasswordProblems + PasswordMessages (cada regla que falla), InputLimits (Inputs:MaxCaracteres), CredentialValidator y SecurityAnswerValidator (normaliza la respuesta)
@@ -156,7 +156,9 @@ COT_0.Host/
     │                             ConnectedUsers + UserRow, Emotes + EmoteRow, MusicControls (base) → Musica y Firma, SongRow,
     │                             CapaFondo, Fondos + FondoRow, LogoNeondev, Manual + ManualStep + ManualNotice + ManualDemo,
     │                             EmotesScreen (pestañas y recuadros) + StoreUsers/StoreShop/StoreTickets, UserCard, UserStock, ShopEmote,
-    │                             ShopItemsCollection (carga por partes), Ticket, EmoteThumb, Notice, StoreTexts, StoreSection
+    │                             ShopItemsCollection (carga por partes), ShopCart (carrito), PurchaseMode, QuotaTimer (HH:MM:SS),
+    │                             TicketPdfActions (PDF de TIENDA, TICKETS y PUNTO DE VENTA), Sales + SalesUser, Admins + AdminRow, AdminLogin,
+    │                             GeneratedPassword, AccountForm, UsersScreen, Ticket, EmoteThumb, Notice, StoreTexts, StoreSection
     ├── Componentes/              Piezas reutilizables
     │   ├── CapaFondo             Fondo detrás del Frame: degradado, imagen/cuadro fijo o video, velo y viñeta (Dashboard, Sala, Fondos, Emotes y Manual)
     │   ├── ConfirmacionDialogo   ContentDialog sí/no
@@ -170,7 +172,9 @@ COT_0.Host/
     │   ├── FormularioRegistro    Registrar usuario: nombre, contraseña y repetirla, dentro del login
     │   ├── ListaConectados       Invitados conectados (ListView)
     │   ├── PanelEmotes           Set de 7TV, reportes y emotes quitados (en EMOTES, botón SET Y REPORTES)
-│   ├── Tienda/               SeccionUsuarios, SeccionTienda, SeccionTickets y RecuadroStock (pantalla EMOTES)
+    │   ├── Tienda/               SeccionTienda (carrito, switch, temporizador y efecto de compra), SeccionTickets, SeccionVentas (PUNTO DE VENTA),
+    │   │                         SeccionAdministradores y RecuadroStock (pantalla TIENDA DE EMOTES)
+    │   ├── Usuarios/             RecuadroCuenta: CAMBIAR NOMBRE / CONTRASEÑA con respuesta secreta (pantalla USUARIOS)
     │   ├── PuntoPulso            Punto rojo con pulso (sala activa)
     │   ├── TarjetaMenu.cs        Tarjeta inclinada del menú del dashboard
     │   └── Manual/               Piezas del manual de Lain
@@ -204,7 +208,9 @@ En `%LocalAppData%\COT_0\`:
 | Archivo | Qué guarda |
 |---|---|
 | `usuarios.json` | Lista de usuarios del login (hasta `Usuarios:Maximo` = 20). Por cada uno: usuario, hash + salt de la contraseña, clave de la pregunta secreta y hash + salt de la respuesta, fecha. Nunca la contraseña ni la respuesta. |
-| `compras.json` | Tienda de emotes: `LastTicketNumber` y por usuario `UserName`, `WindowStart` (UTC, desde cuándo corre su ventana de 24 h), `Emotes` (id, nombre, URLs del CDN, `PurchasedAt` UTC) y `Tickets` (número, fecha, emotes, cupo que quedó y `ResetsAt`). Se valida al leer y al guardar; si está dañado se recrea vacío y la tienda lo avisa. |
+| `admin.json` | Administradores (máx. `Admin:Maximo` = 5): nombre y hash + salt PBKDF2 de la contraseña generada. Nunca la contraseña. |
+| `perfiles\<usuario>.png` | Foto de perfil recortada a cuadrado, máx. `Profiles:PhotoMaxPixels` = 256 px. |
+| `compras.json` | Tienda de emotes: `LastTicketNumber` y por usuario `UserName`, `WindowStart` (UTC, desde cuándo corre su ventana), `LimitReachedAt` (UTC, la compra que llegó al límite: desde ahí corren las 24 h), `Emotes` (id, nombre, URLs del CDN, `PurchasedAt` UTC) y `Tickets` (número, fecha, emotes, cupo que quedó y `ResetsAt`). Se valida al leer y al guardar; si está dañado se recrea vacío y la tienda lo avisa. |
 | `visitas.json` | Una línea por cada invitado que entra a la sala, con `EnteredAt`. Queda aunque se cierre el túnel. |
 | `fondos.json` | Catálogo de la última lectura de la carpeta de fondos (`FileName`, `Kind`, `SizeBytes`, `UseStill`) y `SelectedFile`: `null` = nunca elegiste (usa `Background:DefaultFile`), `""` = sin fondo. |
 | `sesiones.json` | Una entrada por cada vez que se abre la sala: `Number` (1, 2, 3…), `StartedAt`, `EndedAt` y `Guests` (nombre + hora de entrada). El host no cuenta. |
@@ -293,3 +299,10 @@ WinUI muestra un tooltip con la tecla ("Enter", "Esc", flechas) al pasar el mous
 - Chat: `RoomSession.OpenAsync` llama a `ChatEmoteImport.ImportAsync` (comprados → `IPurchasedEmotes.SetPurchased`, misma instancia que `IRoomEmotes`); con la sala abierta, cada compra los vuelve a mandar. Al cerrar la sala se vacían. Si un nombre se repite con el set, gana el del set.
 - El set de 7TV, los reportes y los quitados siguen igual (`PanelEmotes`), ahora en el recuadro SET Y REPORTES.
 - PDF: PDFsharp 6.2.4 (MIT, todo .NET), 80 mm de ancho, `Store:TicketFont` = Courier New (el resolvedor de fuentes de Windows de PDFsharp no trae Consolas). Se guarda en `Escritorio\COT_0_tickets\ticket-0001.pdf`; si ya existe no se regenera.
+
+## Modos HOST | ADMIN, USUARIOS y tienda (09/11)
+
+- Login con switch **HOST | ADMIN** (HOST por defecto). ADMIN entra con `admin.json`; si no hay ninguno, crea el primero y la contraseña se genera con `RandomNumberGenerator` y se muestra una vez (`ContrasenaAdminDialogo`).
+- 04 USUARIOS (`UsuariosPage`): HOST ve solo su tarjeta (foto o inicial, NOMBRE, CONTRASEÑA, FOTO, stock); ADMIN ve todas y es el único que ELIMINA.
+- 05 TIENDA DE EMOTES (`EmotesPage`): HOST tiene TIENDA | TICKETS; ADMIN tiene PUNTO DE VENTA (solo lectura, búsqueda, totales y PDF) | ADMINISTRADORES.
+- TIENDA: aviso fijo del cupo, switch CARRITO | UNO POR UNO, temporizador `DispatcherTimer` solo mientras estás en TIENDA (se detiene al salir).

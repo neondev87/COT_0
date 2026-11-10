@@ -1,6 +1,6 @@
 # Cumplimiento de lo que pidió el profe
 
-Revisión del 08/11 en la rama `host-winui` (actualizada el 09/11: reglas nuevas de usuario y contraseña, 20 usuarios, tienda de emotes) (después de varios usuarios, async en disco y nombres naturales), con búsquedas en todo el repo y `dotnet build COT_0.sln` (0 errores, 0 warnings).
+Revisión del 08/11 en la rama `host-winui` (actualizada el 09/11: reglas nuevas de usuario y contraseña, 20 usuarios, modos HOST/ADMIN, USUARIOS, tienda y despedida de Lain) (después de varios usuarios, async en disco y nombres naturales), con búsquedas en todo el repo y `dotnet build COT_0.sln` (0 errores, 0 warnings).
 
 | Requisito | Dónde se cumple | Estado |
 |---|---|---|
@@ -15,6 +15,10 @@ Revisión del 08/11 en la rama `host-winui` (actualizada el 09/11: reglas nuevas
 | Comentario `///` en español en cada archivo | Todos los `.cs` tienen `/// <summary>` arriba del tipo (se agregó en 122). `.xaml` y `.razor` llevan `<!-- -->` / `@* *@` | ✅ |
 | async/await en disco | `AppConfig.LoadAsync` (se espera en `App.OnLaunched` antes de armar los servicios; `IConfiguration` sale de los mismos bytes), `JsonStore`, `FondoStore`, `MediaLog`, `FrameFiles`, `MusicLibrary`, `CoverLibrary`, `FondoCatalog`, `ManualAssets`. Todo `FileStream` se abre con `useAsync: true` (`Services/Almacenamiento/AsyncFiles.cs`). Sin `File.ReadAll*`/`WriteAll*` síncronos, `.Result`, `.Wait()` ni `GetResult()`. Reverificado al cierre con búsquedas de `File.(Read|Write|Open|Create)`, `new FileStream/StreamReader/StreamWriter`, `JsonSerializer.(De)Serialize`, `.Result`, `.Wait()` y `GetResult()` en los tres proyectos: lo único síncrono que queda es lo de la lista de abajo. `AppConfig` deserializa con `JsonSerializer.Deserialize` sobre bytes ya leídos con `CopyToAsync` (en memoria, no toca disco) | ✅ (excepciones abajo) |
 | Tienda de emotes (09/11) | `Services/Tienda/*`: compras en JSON (`compras.json` vía `JsonStore`, validado al leer y guardar), todo async (`LoadAsync`/`SaveAsync`, `AsyncFiles`, PDF con `PdfDocument.SaveAsync`), valores en `appsettings.json` → `Store:*` y `Storage:PurchasesFile`. PDF con PDFsharp (MIT, NuGet). Panel con degradado y opacidad, sin desenfoque ni sombras | ✅ |
+| Modo HOST / ADMIN (09/11) | `Services/Administradores/*`: `admin.json` con PBKDF2 + SHA-256 y salt propio, máximo `Admin:Maximo` = 5, contraseña de 16 caracteres con `RandomNumberGenerator` (sin 0/O ni l/1), mostrada una vez (VER, COPIAR, ENTENDIDO) y portapapeles que se limpia a los 60 s si sigue igual (`ClipboardGuard`). Nunca se escribe en archivos ni logs | ✅ |
+| USUARIOS (09/11) | `AccountService`: solo ADMIN elimina (con compras, tickets y foto); nombre y contraseña piden la respuesta secreta (hash). Foto con `FileOpenPicker`, recorte cuadrado a 256 px en `%LocalAppData%\COT_0\perfiles\`. Guardado atómico en `JsonStore.SaveAsync` | ✅ |
+| Tienda en modo HOST (09/11) | CARRITO \| UNO POR UNO, cupo `Store:DailyLimit` = 10 cada `Store:CooldownHours` = 24 calculado siempre desde `compras.json` (`LimitReachedAt`), temporizador HH:MM:SS, tickets con PDF (PDFsharp) | ✅ |
+| Despedida de Lain opaca (09/11) | `ManualPage.xaml`, estado `Farewell`: `FarewellBase` opaco del azul del video, Lain a opacidad 1 sobre la estática, interfaz oculta | ✅ (falta verlo con la app abierta) |
 | Documentación en español | `README.md`, `docs/ESTRUCTURA.md`, `docs/CAMBIOS_VISUALES.md`, `docs/PRUEBAS_MANUALES.md`, `docs/MAPA_CARPETAS.md`, `docs/REPORTE_CIERRE.md` | ✅ |
 | App ligera | Ver abajo | ✅ |
 

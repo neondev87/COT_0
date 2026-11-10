@@ -281,3 +281,12 @@ Se comparó `COT_0.Host` (WPF) contra el Host WinUI (entonces en otra carpeta) e
 - Las pantallas nuevas (USUARIOS, TIENDA, TICKETS, PUNTO DE VENTA, ADMINISTRADORES) usan sus propias brochas (`ShopPanelBrush`, `ShopDialogBrush` en `Views\Estilos\Tienda.xaml`) y no comparten ninguna con el Manual; `CapaFondoViewModel` solo silencia el video en `ManualPage` y lo deja visible detrás de `EmotesPage` y `UsuariosPage`.
 - Se conserva: `FarewellBase` opaco, Lain a opacidad 1 sobre la estática, interfaz oculta hasta CERRAR, video de fondo corriendo debajo y retomado al salir, franjas sin `lain_despedida.mp4`. Sin duplicar código.
 - Pendiente de ver con la app abierta: `PRUEBAS_MANUALES.md`, sección 22.
+
+## Cierre del 09/11 (noche): recuperación y fases
+
+- **Recuperación**: la sesión anterior se cortó a mitad de la tarea D (ViewModels del carrito y del temporizador sin vista ni commit). Se revisaron los archivos, se terminó la vista y se hizo su commit; A, B, C y E ya tenían commit y no se repitieron. C se completó aparte (respuesta secreta, solo ADMIN elimina, guardado atómico). No había otro agente trabajando.
+- **Orden real**: A, B, C y E ya estaban hechos antes de PRIORIDAD CERO (venían de la sesión anterior); PRIORIDAD CERO se hizo en cuanto terminó la recuperación, y después F.
+- **Admin sin contraseña**: si un admin la pierde, otro admin usa REGENERAR CONTRASEÑA. Si era el único: cerrar la app, borrar `%LocalAppData%\COT_0\admin.json` y al elegir ADMIN se crea el primero otra vez. No hay puerta trasera.
+- **Cuentas viejas**: siguen en `usuarios.json` sin tocar; al ENTRAR sale "Esta cuenta ya no cumple las reglas nuevas. Regístrala de nuevo." y registrar el mismo nombre la reemplaza.
+- `docs/MAPA_DE_RUTAS.md` (guía de rutas y carpetas, de una sesión anterior) se agregó al repo.
+- Verificación: `dotnet build COT_0.sln` en 0 errores y 0 warnings. Ninguna prueba visual se ejecutó (sin abrir la app): ver el índice de 32 pruebas al final de `PRUEBAS_MANUALES.md`.
