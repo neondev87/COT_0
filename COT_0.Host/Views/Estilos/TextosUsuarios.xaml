@@ -16,7 +16,7 @@
     <x:String x:Key="Text.Users.ScreenTitle">USUARIOS</x:String>
     <x:String x:Key="Text.Users.NoticeTitle">Usuarios</x:String>
     <x:String x:Key="Text.Users.Hint.Host">Tu cuenta: foto, nombre y contraseña. Toca tu tarjeta para ver tus emotes.</x:String>
-    <x:String x:Key="Text.Users.Hint.Admin">Todos los usuarios. Toca uno para ver sus emotes; solo su dueño cambia su nombre, contraseña y foto.</x:String>
+    <x:String x:Key="Text.Users.Hint.Admin">Todos los usuarios. Toca uno para ver sus emotes; solo tú puedes eliminar cuentas y solo su dueño cambia su nombre, contraseña y foto.</x:String>
     <x:String x:Key="Text.Users.Photo">FOTO</x:String>
     <x:String x:Key="Text.Users.Rename">NOMBRE</x:String>
     <x:String x:Key="Text.Users.Password">CONTRASEÑA</x:String>
@@ -27,7 +27,7 @@
     <x:String x:Key="Text.Users.Rename.Title">CAMBIAR NOMBRE DE {0}</x:String>
     <x:String x:Key="Text.Users.Password.Title">CAMBIAR CONTRASEÑA DE {0}</x:String>
     <x:String x:Key="Text.Users.NewName">NOMBRE NUEVO</x:String>
-    <x:String x:Key="Text.Users.CurrentPassword">CONTRASEÑA ACTUAL</x:String>
+    <x:String x:Key="Text.Users.SecretAnswer">TU RESPUESTA SECRETA</x:String>
     <x:String x:Key="Text.Users.NewPassword">CONTRASEÑA NUEVA</x:String>
     <x:String x:Key="Text.Users.Renamed">Ahora te llamas {0}.</x:String>
     <x:String x:Key="Text.Users.PasswordChanged">Contraseña cambiada.</x:String>
@@ -35,7 +35,8 @@
     <x:String x:Key="Text.Users.PhotoFailed">No se pudo usar esa imagen. Elige otro PNG o JPG.</x:String>
 
     <!-- Errores de cuenta -->
-    <x:String x:Key="Text.Error.CurrentPasswordEmpty">Escribe tu contraseña actual.</x:String>
-    <x:String x:Key="Text.Error.WrongCurrentPassword">La contraseña actual no coincide.</x:String>
-    <x:String x:Key="Text.Error.NotAllowed">Solo puedes cambiar tu propia cuenta.</x:String>
+    <x:String x:Key="Text.Error.NoSecurityQuestion">Primero configura tu pregunta secreta: SALIR y vuelve a ENTRAR para configurarla.</x:String>
+    <x:String x:Key="Text.Error.WrongAnswer">No se pudo verificar tu cuenta. No se cambió nada.</x:String>
+    <x:String x:Key="Text.Error.RenameFailed">No se pudo cambiar el nombre. Tus datos quedaron como estaban.</x:String>
+    <x:String x:Key="Text.Error.NotAllowed">No tienes permiso para hacer esto.</x:String>
 </ResourceDictionary>

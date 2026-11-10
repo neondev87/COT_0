@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Recuadro sobre el velo para CAMBIAR NOMBRE (nombre nuevo) o CAMBIAR CONTRASEÑA (actual, nueva y repetirla) de tu cuenta -->
+<!-- Recuadro sobre el velo para CAMBIAR NOMBRE (nombre nuevo) o CAMBIAR CONTRASEÑA (nueva y repetirla); los dos piden antes la respuesta secreta de tu cuenta -->
 <UserControl x:Class="COT_0.Host.Views.Componentes.Usuarios.RecuadroCuenta"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -19,6 +19,13 @@
             <TextBlock Text="{x:Bind Form.Title, Mode=OneWay}" Style="{StaticResource ShopTitleText}"/>
         </StackPanel>
 
+        <!-- Primero la respuesta secreta (oculta, como contraseña); la pregunta no se muestra -->
+        <StackPanel>
+            <TextBlock Text="{StaticResource Text.Users.SecretAnswer}" Style="{StaticResource FieldLabelText}"/>
+            <PasswordBox Style="{StaticResource LoginPasswordBox}" MaxLength="{x:Bind validaciones:InputLimits.MaxCharacters}"
+                         Password="{x:Bind Form.SecretAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </StackPanel>
+
         <StackPanel Visibility="{x:Bind Form.IsRename, Mode=OneWay}">
             <TextBlock Text="{StaticResource Text.Users.NewName}" Style="{StaticResource FieldLabelText}"/>
             <TextBox Style="{StaticResource UserNameTextBox}" MaxLength="{x:Bind validaciones:InputLimits.MaxCharacters}"
@@ -26,12 +33,6 @@
         </StackPanel>
 
         <StackPanel Spacing="20" Visibility="{x:Bind Form.IsPassword, Mode=OneWay}">
-            <StackPanel>
-                <TextBlock Text="{StaticResource Text.Users.CurrentPassword}" Style="{StaticResource FieldLabelText}"/>
-                <PasswordBox Style="{StaticResource LoginPasswordBox}" PlaceholderText="{StaticResource Text.Login.PasswordPlaceholder}"
-                             MaxLength="{x:Bind validaciones:InputLimits.MaxCharacters}"
-                             Password="{x:Bind Form.CurrentPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </StackPanel>
             <StackPanel>
                 <TextBlock Text="{StaticResource Text.Users.NewPassword}" Style="{StaticResource FieldLabelText}"/>
                 <PasswordBox Style="{StaticResource LoginPasswordBox}" PlaceholderText="{StaticResource Text.Login.PasswordPlaceholder}"

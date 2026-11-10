@@ -36,11 +36,16 @@ public static class JsonStore
     public static bool IsStorageError(Exception ex) =>
         ex is IOException or JsonException or UnauthorizedAccessException or FormatException;
 
-    /// <summary>Escribe el objeto completo, con sangría para que se pueda leer a mano.</summary>
+    /// <summary>
+    /// Escribe el objeto completo (con sangría para leerlo a mano) en un .tmp y luego reemplaza el archivo:
+    /// si algo falla a la mitad, el archivo de antes queda intacto.
+    /// </summary>
     public static async Task SaveAsync<T>(string fileName, T data)
     {
         var path = Path.Combine(await EnsureFolderAsync(), fileName);
-        await using var stream = AsyncFiles.Create(path);
-        await JsonSerializer.SerializeAsync(stream, data, _options);
+        var temp = path + ".tmp";
+        await using (var stream = AsyncFiles.Create(temp))
+            await JsonSerializer.SerializeAsync(stream, data, _options);
+        await Task.Run(() => File.Move(temp, path, overwrite: true));
     }
 }

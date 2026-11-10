@@ -9,7 +9,7 @@ namespace COT_0.Host.Views.ModelosDeVista;
 
 /// <summary>
 /// Nunca trae contraseña, hash ni pregunta secreta. Tone sale del nombre (UserTones), igual que en la firma.
-/// CanManage: es tu cuenta (nombre, contraseña y foto). CanDelete: tu cuenta, o cualquiera en modo ADMIN.
+/// CanManage: es tu cuenta (nombre, contraseña y foto). CanDelete: solo en modo ADMIN (cualquier cuenta).
 /// </summary>
 public partial class UserCardViewModel(string name) : ObservableObject
 {

@@ -467,3 +467,12 @@ Antes: entra con un usuario que cumpla las reglas nuevas (ej. `Erick`). Para emp
 2. `compras.json` guarda en ese usuario `LimitReachedAt` (hora UTC de la compra que llegó al límite). Cierra la app (o apaga la compu) y vuelve: el tiempo siguió corriendo.
 3. **Reinicio**: con la app cerrada cambia `LimitReachedAt` y `WindowStart` a hace 24 h menos un minuto (ej. `2026-11-08T16:00:00Z`), abre la TIENDA: el temporizador llega a 00:00:00, el cupo vuelve a "Te quedan 10 de 10" solo y se puede comprar otra vez.
 4. Sal de la TIENDA (TICKETS o ESC): el temporizador se detiene; al volver se recalcula desde el JSON.
+
+## 21. USUARIOS: respuesta secreta, solo ADMIN elimina y guardado atómico (09/11)
+
+1. HOST: tu tarjeta no tiene ELIMINAR. NOMBRE y CONTRASEÑA piden primero **TU RESPUESTA SECRETA** (oculta; la pregunta no se muestra).
+2. Respuesta incorrecta → "No se pudo verificar tu cuenta. No se cambió nada." y `usuarios.json` queda igual.
+3. Respuesta correcta + nombre nuevo (ej. `Erika`): `usuarios.json`, `compras.json` (compras y tickets) y `perfiles\erika.png` pasan al nombre nuevo; la firma se actualiza; TICKETS y el stock siguen ahí.
+4. Una cuenta sin pregunta secreta → "Primero configura tu pregunta secreta: SALIR y vuelve a ENTRAR para configurarla."
+5. ADMIN: ELIMINAR en cada tarjeta, con `ConfirmacionDialogo` y sin respuesta secreta; se van sus compras, tickets y foto.
+6. Todos los JSON se escriben primero en `*.json.tmp` y luego reemplazan al original: con la app cerrada a la mitad de un guardado, el archivo anterior queda intacto.

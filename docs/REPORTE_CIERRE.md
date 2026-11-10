@@ -261,3 +261,10 @@ Se comparó `COT_0.Host` (WPF) contra el Host WinUI (entonces en otra carpeta) e
 - El cupo se calcula siempre desde `compras.json`: `LimitReachedAt` (UTC) se guarda al llegar a `Store:DailyLimit` y el reinicio es `LimitReachedAt + Store:CooldownHours`. `QuotaTimerViewModel` solo resta la hora actual a esa fecha cada segundo; al llegar a cero vuelve a leer el JSON. Archivos viejos sin `LimitReachedAt` lo deducen de la décima compra.
 - Efecto de compra en `SeccionTienda` (Storyboard en XAML) y `Store:PurchaseEffectMs` (900 ms) antes del diálogo del PDF. `TicketPdfActions` junta la descarga del PDF que repetían TIENDA, TICKETS y PUNTO DE VENTA.
 - Verificación: `dotnet build COT_0.sln` en 0 errores y 0 warnings. Sin abrir la app: el aspecto queda en `PRUEBAS_MANUALES.md`, sección 20.
+
+## USUARIOS: respuesta secreta y guardado atómico (09/11)
+
+- CAMBIAR NOMBRE y CAMBIAR CONTRASEÑA piden la **respuesta secreta** (antes la contraseña actual), comparada contra `AnswerHash` con PBKDF2; error genérico si no coincide y nada cambia. Sin pregunta configurada piden configurarla.
+- ELIMINAR solo en modo ADMIN (`AccountService.CanDelete`), sin respuesta secreta.
+- `JsonStore.SaveAsync` escribe a `.tmp` y reemplaza (`File.Move(..., overwrite: true)`): guardado atómico para `usuarios.json`, `compras.json` (tickets incluidos), `admin.json` y el resto. Si `compras.json` falla al renombrar, `usuarios.json` regresa al nombre anterior y avisa.
+- Visitas y sesiones solo guardan nombres de invitados (no del host), así que no cambian al renombrar.

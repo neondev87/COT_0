@@ -9,8 +9,8 @@ using CommunityToolkit.Mvvm.Input;
 namespace COT_0.Host.Views.ModelosDeVista;
 
 /// <summary>
-/// Un solo recuadro con dos modos. La contraseña pide la actual y las reglas nuevas (el mensaje dice cada regla que falta);
-/// el nombre sigue las reglas de usuario y no se puede repetir. Done avisa el mensaje de éxito.
+/// Un solo recuadro con dos modos; los dos piden primero tu respuesta secreta. La contraseña sigue las reglas nuevas
+/// (el mensaje dice cada regla que falta); el nombre sigue las reglas de usuario y no se puede repetir. Done avisa el mensaje de éxito.
 /// </summary>
 public partial class AccountFormViewModel(AccountService accounts, string userName, bool isRename) : FormViewModel
 {
@@ -18,7 +18,7 @@ public partial class AccountFormViewModel(AccountService accounts, string userNa
     private string _newName = userName;
 
     [ObservableProperty]
-    private string _currentPassword = string.Empty;
+    private string _secretAnswer = string.Empty;
 
     [ObservableProperty]
     private string _newPassword = string.Empty;
@@ -53,13 +53,15 @@ public partial class AccountFormViewModel(AccountService accounts, string userNa
 
     private async Task RenameAsync()
     {
-        if (Check(await accounts.RenameAsync(UserName, NewName))) Done?.Invoke(StoreTexts.Format("Text.Users.Renamed", NewName));
+        var error = await accounts.RenameAsync(UserName, SecretAnswer, NewName);
+        SecretAnswer = string.Empty;
+        if (Check(error)) Done?.Invoke(StoreTexts.Format("Text.Users.Renamed", NewName));
     }
 
     private async Task ChangePasswordAsync()
     {
-        var error = await accounts.ChangePasswordAsync(UserName, CurrentPassword, NewPassword, ConfirmPassword);
-        CurrentPassword = string.Empty;
+        var error = await accounts.ChangePasswordAsync(UserName, SecretAnswer, NewPassword, ConfirmPassword);
+        SecretAnswer = string.Empty;
         if (Check(error, NewPassword)) Done?.Invoke(UiText.Get("Text.Users.PasswordChanged"));
     }
 }

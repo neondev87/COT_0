@@ -4,7 +4,6 @@ using COT_0.Host.Models;
 using COT_0.Host.Services.Almacenamiento;
 using COT_0.Host.Services.Dialogos;
 using COT_0.Host.Services.Perfiles;
-using COT_0.Host.Services.Sala;
 using COT_0.Host.Services.Tienda;
 using COT_0.Host.Services.Usuarios;
 using COT_0.Host.Services.Ventana;
@@ -18,7 +17,7 @@ namespace COT_0.Host.Views.ModelosDeVista;
 /// Modo HOST: solo tu tarjeta (nunca datos de otros). Modo ADMIN: todas, con su stock y ELIMINAR.
 /// Borrar tu propia cuenta cierra la sala (si hay) y regresa al login. ESC cierra el recuadro o regresa.
 /// </summary>
-public partial class UsersScreenViewModel(PurchaseService purchases, AccountService accounts, ConfirmDialogService confirm, RoomSession session)
+public partial class UsersScreenViewModel(PurchaseService purchases, AccountService accounts, ConfirmDialogService confirm)
     : ObservableObject
 {
     [ObservableProperty]
@@ -111,12 +110,6 @@ public partial class UsersScreenViewModel(PurchaseService purchases, AccountServ
         try
         {
             if (await accounts.DeleteAsync(card.Name) != CredentialError.None) return;
-            if (ActiveUser.Name is null && !ActiveUser.IsAdmin)
-            {
-                if (session.IsActive) await session.CloseAsync();
-                Navigator.ShowLogin();
-                return;
-            }
             Notice.Show(StoreTexts.Format("Text.Users.Deleted", card.Name), InfoBarSeverity.Success);
             await LoadAsync();
         }
