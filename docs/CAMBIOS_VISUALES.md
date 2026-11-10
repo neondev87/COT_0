@@ -409,7 +409,7 @@ El panel de vidrio con "Gracias por estar aquí. Vuelve pronto." y CERRAR no cam
 |---|---|
 | Usuario: letras y números | Solo letras; al escribir se normaliza a primera mayúscula y resto minúscula (`erick` → `Erick`), estilo `UserNameTextBox` (`App.xaml`) |
 | Contraseña: letras y números, sin símbolos | 8 a 20 caracteres, al menos un número y un carácter especial (`! @ # $ % & * ? . - _`), sin espacios; el filtro deja escribir esos símbolos |
-| Mensaje "Tu contraseña solo puede tener letras y números…" | El InfoBar dice cada regla que falta: "Mínimo 8 caracteres." "Falta un número." "Falta un carácter especial (…)." "No uses espacios." |
+| Mensaje "Tu contraseña solo puede tener letras y números…" | El InfoBar dice cada regla que falta: "Mínimo 8 caracteres", "Falta un número", "Falta un carácter especial", "No uses espacios" (una por línea) |
 | Límite de 15 en todos los campos | 20 (`Inputs:MaxCaracteres`); el set de 7TV sigue en 26 |
 | Cuenta de antes entraba igual | "Esta cuenta ya no cumple las reglas nuevas. Regístrala de nuevo." |
 | Usuario de la muestra del Manual `hostdemo` | `Hostdemo` |

@@ -1,4 +1,4 @@
-// Arma el mensaje de la contraseña con todas las reglas que fallan ("Falta un número. No uses espacios.")
+// Arma el mensaje de la contraseña con todas las reglas que fallan, una por línea ("Falta un número", "No uses espacios")
 using System.Globalization;
 using COT_0.Host.Services.Textos;
 
@@ -8,7 +8,7 @@ namespace COT_0.Host.Services.Validaciones;
 public static class PasswordMessages
 {
     public static string Describe(PasswordProblems problems) =>
-        string.Join(" ", PasswordValidator.List(problems).Select(DescribeOne));
+        string.Join(Environment.NewLine, PasswordValidator.List(problems).Select(DescribeOne));
 
     private static string DescribeOne(PasswordProblems problem)
     {

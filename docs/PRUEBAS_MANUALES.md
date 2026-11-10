@@ -21,7 +21,7 @@ Antes: `dotnet build COT_0.sln` en 0 errores y 0 warnings.
 6. Escribe o pega más de 15 caracteres en cualquier campo → se detiene en 15.
 7. Llena bien y REGISTRAR → vuelve a ENTRAR con el usuario ya escrito y el InfoBar verde "Usuario registrado…". En `usuarios.json` hay una lista con hash y salt, nunca la contraseña.
 8. Registra otro con el mismo nombre en otras mayúsculas (`neondev` vs `Neondev`) → "Ya existe un usuario con ese nombre.".
-9. Registra hasta tener 20 (`Usuarios:Maximo`). Al abrir Registrar usuario otra vez → "Ya hay 20 usuarios registrados, que es el máximo." y REGISTRAR no agrega a nadie.
+9. Registra hasta tener 20 (`Usuarios:Maximo`). Al abrir Registrar usuario otra vez → "Ya hay 20 usuarios registrados" y REGISTRAR no agrega a nadie.
 10. "Volver al inicio de sesión" regresa a ENTRAR sin registrar nada.
 11. **Entrar con cada usuario**: la primera vez de cada uno pide CONFIGURA TU PREGUNTA SECRETA → GUARDAR Y ENTRAR → dashboard. SALIR y entra con el siguiente; la segunda vez ya no pide la pregunta. Contraseña de otro usuario → "Usuario o contraseña incorrectos.".
 12. Dentro de la app todo se ve igual con cualquier usuario (dashboard, sala, emotes, música, fondos, manual, firma).
@@ -359,14 +359,14 @@ En Registrar usuario (y igual en la contraseña nueva de ¿Olvidaste tu contrase
 
 | Contraseña | InfoBar |
 |---|---|
-| `abc` | Mínimo 8 caracteres. Falta un número. Falta un carácter especial (! @ # $ % & * ? . - _). |
-| `abcdefgh` | Falta un número. Falta un carácter especial (…). |
-| `abcdefg1` | Falta un carácter especial (…). |
-| `abcdefg!` | Falta un número. |
+| `abc` | Mínimo 8 caracteres / Falta un número / Falta un carácter especial (una por línea) |
+| `abcdefgh` | Falta un número / Falta un carácter especial |
+| `abcdefg1` | Falta un carácter especial |
+| `abcdefg!` | Falta un número |
 | `abcdef1!` | Entra (pasa todas). |
 
 1. Escribe un espacio o pega `abc 12!`: el espacio no aparece (el filtro solo deja letras, números y `! @ # $ % & * ? . - _`). Un símbolo fuera de la lista (`^`, `/`, `+`) tampoco aparece.
-2. El mensaje "No uses espacios." solo sale si el texto llega con espacios por código (el filtro los quita antes).
+2. El mensaje "No uses espacios" solo sale si el texto llega con espacios por código (el filtro los quita antes).
 
 ### Cuenta vieja que ya no cumple
 
@@ -383,7 +383,7 @@ En Registrar usuario (y igual en la contraseña nueva de ¿Olvidaste tu contrase
 ## 18. Máximo 20 usuarios (09/11)
 
 1. Con 5 usuarios ya registrados (límite anterior), abre la app: todos entran igual y Registrar usuario deja agregar más.
-2. Registra hasta 20: al abrir Registrar usuario otra vez → "Ya hay 20 usuarios registrados, que es el máximo." y REGISTRAR no agrega a nadie.
+2. Registra hasta 20: al abrir Registrar usuario otra vez → "Ya hay 20 usuarios registrados" y REGISTRAR no agrega a nadie.
 3. Con 20 registrados, recrear una cuenta vieja con su mismo nombre (sección 17) sí se puede: la reemplaza, no suma.
 4. `usuarios.json` conserva las cuentas de antes tal cual (solo crece al registrar).
 
