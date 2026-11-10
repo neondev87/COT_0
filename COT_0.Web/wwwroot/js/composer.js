@@ -86,9 +86,8 @@ window.cotComposer = (() => {
 
     function emoteImage(emote) {
         const img = document.createElement('img');
-        const still = emote.stillUrl && matchMedia('(prefers-reduced-motion: reduce)').matches;
         img.className = 'emote-inline';
-        img.src = still ? emote.stillUrl : emote.url;
+        img.src = emote.url; // animado siempre, como en el chat
         img.alt = emote.name;
         img.width = emote.width;
         img.height = emote.height;
