@@ -435,3 +435,14 @@ El panel de vidrio con "Gracias por estar aquí. Vuelve pronto." y CERRAR no cam
 | Sin aviso del cupo | Franja fija `ShopRulesBanner` "Puedes comprar 10 emotes cada 24 horas" |
 | "Podrás comprar más en HH:MM horas" | InfoBar fijo con **HH:MM:SS** que baja cada segundo (`DispatcherTimer`, solo mientras estás en TIENDA) |
 | Sin efecto al comprar | Copia del emote que se encoge y vuela al contador (0.45 s), pulso del contador, destello verde (`ShopFlash`) y "¡Comprado!" (`ShopDoneText`); solo traslación, escala y opacidad |
+
+## PRIORIDAD CERO: despedida de Lain opaca (09/11)
+
+| Antes | Ahora |
+|---|---|
+| Video de la despedida al 45 % de opacidad (`FarewellVideoOpacity`), mezclado con el fondo | Opacidad 1: Lain conserva sus colores originales |
+| Orillas hacia adentro (`FarewellFades`) en su azul, encima del video | Quitadas: nada encima del video |
+| Estática encima de Lain | En la despedida Lain sube (`Canvas.ZIndex` = 1) y la estática queda debajo |
+| Debajo, el azul con degradado del manual | `FarewellBase`: rectángulo opaco del azul **exacto** del cuadro del video (`#06122C`, `FarewellBaseBrush`) que tapa toda la app; las franjas de afuera parten de ese mismo azul, así no hay recuadro |
+| Encabezado, botón de silencio y aviso de error visibles; pasos solo transparentes | Ocultos (`Collapsed`) hasta CERRAR: solo estática, Lain centrada y el texto con CERRAR. Queda la ✕ de la ventana (de `MainWindow`, para poder cerrar la app) |
+| — | El video de fondo de la app sigue corriendo debajo (mudo) y al salir sigue donde iba. Sin `lain_despedida.mp4`, las franjas se ven igual sobre el mismo fondo opaco |

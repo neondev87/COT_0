@@ -476,3 +476,11 @@ Antes: entra con un usuario que cumpla las reglas nuevas (ej. `Erick`). Para emp
 4. Una cuenta sin pregunta secreta → "Primero configura tu pregunta secreta: SALIR y vuelve a ENTRAR para configurarla."
 5. ADMIN: ELIMINAR en cada tarjeta, con `ConfirmacionDialogo` y sin respuesta secreta; se van sus compras, tickets y foto.
 6. Todos los JSON se escriben primero en `*.json.tmp` y luego reemplazan al original: con la app cerrada a la mitad de un guardado, el archivo anterior queda intacto.
+
+## 22. PRIORIDAD CERO: despedida de Lain (09/11)
+
+1. Elige un video de fondo en FONDOS, abre el Manual y llega a la despedida (o "Gracias, pero no necesito ayuda"). **Durante la despedida de Lain no debe verse ningún video de fondo ni transparencia.**
+2. Solo se ven la estática, Lain centrada con sus colores originales (sin velo ni opacidad) y el texto con CERRAR. Sin encabezado, sin botón de silencio, sin pasos.
+3. Alrededor del video no hay cuadro negro ni borde: el azul del video y el del fondo son el mismo.
+4. CERRAR: vuelve el dashboard y el video de fondo sigue desde donde iba (no se reinicia).
+5. Renombra temporalmente `lain_despedida.mp4`: la despedida muestra las franjas sobre el mismo fondo opaco y no se ve el fondo de la app. Regresa el nombre.

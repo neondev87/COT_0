@@ -34,14 +34,11 @@
     <x:Double x:Key="LainBlendLeft">40</x:Double>
     <x:Double x:Key="LainBlendRight">100</x:Double>
     <x:Double x:Key="LainBlendTop">140</x:Double>
-    <x:Double x:Key="FarewellVideoOpacity">0.45</x:Double>
     <!-- Despedida (1022 × 720): 1125 × 793 (25 % más que antes, casi su tamaño real: no se pixela), con el texto debajo y los dos
-         centrados en la pantalla. Cuatro orillas hacia adentro al 20 % del lado (225 y 159) que llevan su azul al negro, y franjas
-         negras hacia afuera (120 a los lados, 48 arriba y abajo). Si la pantalla es más chica que el grupo, el Viewbox lo reduce -->
+         centrados en la pantalla, a opacidad 1 y sin nada encima. Franjas de su azul hacia afuera (120 a los lados, 48 arriba y abajo)
+         sobre la estática. Si la pantalla es más chica que el grupo, el Viewbox lo reduce -->
     <x:Double x:Key="FarewellVideoWidth">1125</x:Double>
     <x:Double x:Key="FarewellVideoHeight">793</x:Double>
-    <x:Double x:Key="FarewellFadeSide">225</x:Double>
-    <x:Double x:Key="FarewellFadeEnds">159</x:Double>
     <x:Double x:Key="FarewellBlendSide">120</x:Double>
     <x:Double x:Key="FarewellBlendEnds">48</x:Double>
     <Thickness x:Key="FarewellPanelPadding">52,28,52,32</Thickness>

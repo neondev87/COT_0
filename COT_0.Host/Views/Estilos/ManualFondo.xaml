@@ -65,6 +65,8 @@
     <!-- Despedida: su video es azul (#06122C), casi el del fondo; sus orillas y franjas van a ese azul en lugar del negro -->
     <Color x:Key="FarewellBlueColor">#FF06122C</Color>
     <Color x:Key="FarewellClearColor">#0006122C</Color>
+    <!-- Fondo opaco de la despedida: el mismo azul del cuadro del video, así su borde no se nota -->
+    <SolidColorBrush x:Key="FarewellBaseBrush" Color="{StaticResource FarewellBlueColor}"/>
     <LinearGradientBrush x:Key="FarewellEdgeTopBrush" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Color="{StaticResource FarewellBlueColor}" Offset="0"/>
         <GradientStop Color="{StaticResource FarewellClearColor}" Offset="1"/>

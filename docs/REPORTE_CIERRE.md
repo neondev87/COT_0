@@ -268,3 +268,9 @@ Se comparó `COT_0.Host` (WPF) contra el Host WinUI (entonces en otra carpeta) e
 - ELIMINAR solo en modo ADMIN (`AccountService.CanDelete`), sin respuesta secreta.
 - `JsonStore.SaveAsync` escribe a `.tmp` y reemplaza (`File.Move(..., overwrite: true)`): guardado atómico para `usuarios.json`, `compras.json` (tickets incluidos), `admin.json` y el resto. Si `compras.json` falla al renombrar, `usuarios.json` regresa al nombre anterior y avisa.
 - Visitas y sesiones solo guardan nombres de invitados (no del host), así que no cambian al renombrar.
+
+## PRIORIDAD CERO: despedida de Lain (09/11)
+
+- `ManualPage.xaml`: en el estado `Farewell` aparece `FarewellBase` (opaco, `#06122C`, el azul del cuadro de `lain_despedida.mp4`), `VideoLayer` sube a `Canvas.ZIndex` 1 (encima de la estática), el video queda a opacidad 1 sin orillas encima y se ocultan encabezado, pasos, aviso y botón de silencio. Quitados `FarewellVideoOpacity`, `FarewellFadeSide/Ends` y `FarewellFades`.
+- `CapaFondoViewModel` no cambia: el fondo de la app sigue en bucle y mudo debajo y al salir recupera su sonido sin reiniciarse.
+- Verificación: `dotnet build COT_0.sln` en 0 errores y 0 warnings. No se abrió la app: el aspecto queda en `PRUEBAS_MANUALES.md`, sección 22.

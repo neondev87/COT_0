@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Manual de Lain: a la izquierda sus notificaciones y su video en la tele, parado en el borde de abajo; a la derecha los atajos,
      el número y título del paso y su vista de ejemplo con resaltados (o la captura opcional del paso). Al final, la despedida
-     con el video y su texto debajo, centrados en toda la pantalla. Capas: fondo elegido (CapaFondo; si es video sigue en bucle y mudo, tapado), el fondo azul opaco (FondoManual), la sombra y el video de Lain,
+     con el video y su texto debajo, centrados en toda la pantalla, sobre un azul opaco y la estática (nada más a la vista). Capas: fondo elegido (CapaFondo; si es video sigue en bucle y mudo, tapado), el fondo azul opaco (FondoManual), la sombra y el video de Lain,
      la estática con la viñeta (EstaticaManual) y el contenido. ← INICIO regresa al dashboard -->
 <Page x:Class="COT_0.Host.Views.Pantallas.ManualPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -44,7 +44,13 @@
                         <Setter Target="VideoLayer.HorizontalAlignment" Value="Center"/>
                         <Setter Target="VideoLayer.VerticalAlignment" Value="Center"/>
                         <Setter Target="VideoHost.Visibility" Value="Visible"/>
-                        <Setter Target="VideoHost.Opacity" Value="{StaticResource FarewellVideoOpacity}"/>
+                        <!-- Fondo opaco del azul exacto del cuadro del video; la estática debajo de Lain y Lain encima, a opacidad 1 -->
+                        <Setter Target="FarewellBase.Visibility" Value="Visible"/>
+                        <Setter Target="VideoLayer.(Canvas.ZIndex)" Value="1"/>
+                        <Setter Target="Header.Visibility" Value="Collapsed"/>
+                        <Setter Target="ErrorBar.Visibility" Value="Collapsed"/>
+                        <Setter Target="MuteButton.Visibility" Value="Collapsed"/>
+                        <Setter Target="StepsRoot.Visibility" Value="Collapsed"/>
                         <Setter Target="VideoCell.Width" Value="{StaticResource FarewellVideoWidth}"/>
                         <Setter Target="VideoCell.Height" Value="{StaticResource FarewellVideoHeight}"/>
                         <Setter Target="EdgeTop.Height" Value="{StaticResource FarewellBlendEnds}"/>
@@ -57,10 +63,7 @@
                         <Setter Target="EdgeRight.Fill" Value="{StaticResource FarewellEdgeLeftBrush}"/>
                         <Setter Target="EdgeTopLeft.Fill" Value="{StaticResource FarewellCornerTopLeftBrush}"/>
                         <Setter Target="EdgeTopRight.Fill" Value="{StaticResource FarewellCornerTopRightBrush}"/>
-                        <Setter Target="FarewellFades.Visibility" Value="Visible"/>
                         <Setter Target="NoticesHost.Visibility" Value="Collapsed"/>
-                        <Setter Target="StepsRoot.Opacity" Value="0"/>
-                        <Setter Target="StepsRoot.IsHitTestVisible" Value="False"/>
                         <Setter Target="FarewellPanel.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
@@ -68,6 +71,8 @@
         </VisualStateManager.VisualStateGroups>
 
         <manual:FondoManual/>
+        <!-- Despedida: tapa todo (opacidad 1) con el azul de su video; el fondo de la app sigue corriendo debajo, sin verse -->
+        <Rectangle x:Name="FarewellBase" Fill="{StaticResource FarewellBaseBrush}" Visibility="Collapsed" IsHitTestVisible="False"/>
         <!-- Sombra negra donde está Lain: recibe el negro de su cuadro y se pierde en el azul -->
         <Rectangle x:Name="LainShade" Width="{StaticResource LainShadeWidth}" Height="{StaticResource LainShadeHeight}" HorizontalAlignment="Left"
                    VerticalAlignment="Bottom" Fill="{StaticResource LainShadeBrush}" IsHitTestVisible="False"/>
@@ -87,7 +92,7 @@
         <Viewbox x:Name="VideoLayer" HorizontalAlignment="Left" VerticalAlignment="Bottom" Stretch="Uniform" StretchDirection="DownOnly">
             <StackPanel>
                 <!-- Alrededor del video, franjas del color de su cuadro que se desvanecen hacia afuera (esquinas radiales): negro con Lain,
-                     azul en la despedida. Toda la caja comparte una sola opacidad, así que no queda borde -->
+                     azul en la despedida (funden su cuadro con la estática). Nada encima del video: conserva sus colores -->
                 <Grid x:Name="VideoHost" HorizontalAlignment="Center" IsHitTestVisible="False"
                       Visibility="{x:Bind ViewModel.HasNoLainCutout, Mode=OneWay}">
                     <Grid.OpacityTransition>
@@ -113,13 +118,6 @@
                     <Rectangle Grid.Row="2" Grid.Column="2" Fill="{StaticResource FarewellCornerBottomRightBrush}"/>
                     <Grid x:Name="VideoCell" Grid.Row="1" Grid.Column="1" Width="{StaticResource LainVideoWidth}" Height="{StaticResource LainVideoHeight}">
                         <MediaPlayerElement x:Name="LainVideo" Stretch="Uniform" AreTransportControlsEnabled="False"/>
-                        <!-- Solo en la despedida: sus cuatro orillas hacia adentro, en su propio azul, para que su borde no se marque -->
-                        <Grid x:Name="FarewellFades" Visibility="Collapsed">
-                            <Rectangle Height="{StaticResource FarewellFadeEnds}" VerticalAlignment="Top" Fill="{StaticResource FarewellEdgeTopBrush}"/>
-                            <Rectangle Height="{StaticResource FarewellFadeEnds}" VerticalAlignment="Bottom" Fill="{StaticResource FarewellEdgeBottomBrush}"/>
-                            <Rectangle Width="{StaticResource FarewellFadeSide}" HorizontalAlignment="Left" Fill="{StaticResource FarewellEdgeLeftBrush}"/>
-                            <Rectangle Width="{StaticResource FarewellFadeSide}" HorizontalAlignment="Right" Fill="{StaticResource FarewellEdgeRightBrush}"/>
-                        </Grid>
                     </Grid>
                 </Grid>
 
@@ -137,7 +135,7 @@
 
         <manual:EstaticaManual/>
 
-        <componentes:EncabezadoPantalla Margin="32,24,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+        <componentes:EncabezadoPantalla x:Name="Header" Margin="32,24,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                         Title="{StaticResource Text.Manual.ScreenTitle}" HandlesEscape="False"/>
 
         <!-- Notificaciones de Lain, encimadas: cada una aparece y se va con una transición de opacidad -->
@@ -217,11 +215,11 @@
                                      Content="{StaticResource Text.Manual.Skip}" Command="{x:Bind ViewModel.FarewellCommand}"/>
         </Grid>
 
-        <InfoBar MaxWidth="560" Margin="0,0,88,24" HorizontalAlignment="Right" VerticalAlignment="Bottom" Severity="Warning"
+        <InfoBar x:Name="ErrorBar" MaxWidth="560" Margin="0,0,88,24" HorizontalAlignment="Right" VerticalAlignment="Bottom" Severity="Warning"
                  Title="{StaticResource Text.Manual.ErrorTitle}" Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
                  IsOpen="{x:Bind ViewModel.IsErrorOpen, Mode=TwoWay}"/>
 
-        <Button Margin="0,0,32,28" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{StaticResource TextButton}"
+        <Button x:Name="MuteButton" Margin="0,0,32,28" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{StaticResource TextButton}"
                 Command="{x:Bind ViewModel.ToggleMuteCommand}" ToolTipService.ToolTip="{StaticResource Text.Manual.Mute}"
                 AutomationProperties.Name="{StaticResource Text.Manual.Mute}">
             <FontIcon Glyph="{x:Bind convertidores:MusicGlyphs.Speaker(ViewModel.IsMuted), Mode=OneWay}" FontFamily="{StaticResource FontIcons}" FontSize="18"/>
