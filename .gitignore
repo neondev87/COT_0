@@ -510,3 +510,12 @@ $RECYCLE.BIN/
 *.jsonl
 # Versión generada de Lain con transparencia (docs/PREPARAR_LAIN.md)
 lain-transparente*.gif
+# Capturas, logs y archivos de prueba (no se suben)
+/docs/qa/capturas/
+capturas/
+capturas_pia/
+scratch/
+*.log
+*.tmp
+*.temp
+*.bak
