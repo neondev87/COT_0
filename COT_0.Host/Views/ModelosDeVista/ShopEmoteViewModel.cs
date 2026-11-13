@@ -1,4 +1,4 @@
-// Tarjeta de un emote en la TIENDA: imagen, nombre y AGREGAR (carrito) o COMPRAR (uno por uno); COMPRADO si ya es tuyo
+// Tarjeta de un emote en la TIENDA: imagen, nombre, precio de muestra y AGREGAR (carrito) o COMPRAR (uno por uno); COMPRADO si ya es tuyo
 using COT_0.Core.Models;
 using COT_0.Host.Services.Tienda;
 using COT_0.Host.Services.Textos;
@@ -33,6 +33,8 @@ public partial class ShopEmoteViewModel : ObservableObject
         _canBuy = canBuy;
         _isCartMode = isCartMode;
         Thumbnail = EmoteThumbViewModel.Create(EmoteMapping.ThumbnailUrl(emote));
+        Price = EmotePricing.PriceOf(emote.Id);
+        PriceText = EmotePricing.Format(Price);
     }
 
     public RoomEmote Emote { get; }
@@ -40,6 +42,11 @@ public partial class ShopEmoteViewModel : ObservableObject
     public string Name => Emote.Name;
 
     public BitmapImage Thumbnail { get; }
+
+    /// <summary>Precio de muestra en dólares (sale del id: siempre el mismo).</summary>
+    public decimal Price { get; }
+
+    public string PriceText { get; }
 
     public bool IsBuyEnabled => CanBuy && !IsOwned && !IsInCart;
 

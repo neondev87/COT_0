@@ -12,8 +12,8 @@ namespace COT_0.Host.Services.Tienda;
 /// </summary>
 public static class TicketLines
 {
-    // Courier New a 9 pt en 80 mm: caben unos 38 caracteres por renglón
-    private const int MaxNameLength = 30;
+    // Courier New a 9 pt en 80 mm: caben unos 38 caracteres por renglón (nombre + precio de muestra)
+    private const int MaxNameLength = 20;
 
     private static StoreSettings Store => AppConfig.Settings.Store;
 
@@ -35,9 +35,12 @@ public static class TicketLines
             new(string.Empty, TicketLineKind.Rule),
             new(UiText.Get("Text.Ticket.Emotes"), TicketLineKind.Bold),
         };
-        lines.AddRange(ticket.Emotes.Select(e => new TicketLine(string.Format(culture, UiText.Get("Text.Ticket.EmoteLine"), Shorten(e.Name)))));
+        lines.AddRange(ticket.Emotes.Select(e => new TicketLine(string.Format(culture, UiText.Get("Text.Ticket.EmoteLine"),
+            Shorten(e.Name), EmotePricing.Format(EmotePricing.PriceOf(e.Id))))));
         lines.Add(new TicketLine(string.Empty, TicketLineKind.Rule));
         lines.Add(new TicketLine(string.Format(culture, UiText.Get("Text.Ticket.Total"), ticket.Emotes.Count), TicketLineKind.Bold));
+        lines.Add(new TicketLine(string.Format(culture, UiText.Get("Text.Ticket.Amount"),
+            EmotePricing.Format(EmotePricing.TotalOf(ticket.Emotes.Select(e => e.Id)))), TicketLineKind.Bold));
         lines.Add(new TicketLine(string.Format(culture, UiText.Get("Text.Ticket.Remaining"), ticket.Remaining, Store.DailyLimit)));
         lines.Add(new TicketLine(string.Format(culture, UiText.Get("Text.Ticket.Resets"), LocalDate(ticket.ResetsAt))));
         lines.Add(new TicketLine(string.Empty, TicketLineKind.Rule));

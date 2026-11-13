@@ -1,8 +1,6 @@
-// Sección TIENDA: todo 7TV por páginas, buscador, cupo con su temporizador, switch CARRITO | UNO POR UNO y COMPRAR con ticket
+// Sección TIENDA: todo 7TV por páginas con precio de muestra, buscador, cupo con su temporizador, switch CARRITO | UNO POR UNO y COMPRAR con ticket
 using COT_0.Host.Models;
 using COT_0.Host.Services.Almacenamiento;
-using COT_0.Host.Services.Configuracion;
-using COT_0.Host.Services.Dialogos;
 using COT_0.Host.Services.Tienda;
 using COT_0.Host.Services.Usuarios;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -11,8 +9,8 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace COT_0.Host.Views.ModelosDeVista;
 
-/// <summary>Compra para ActiveUser. CARRITO: una compra y un ticket; UNO POR UNO: al instante. Cupo agotado: todo apagado y corre el temporizador. Bought dispara el efecto de la vista.</summary>
-public partial class StoreShopViewModel(PurchaseService purchases, EmoteShopCatalog catalog, ConfirmDialogService dialogs) : ObservableObject
+/// <summary>Compra para ActiveUser sin cobro (precios de muestra). CARRITO: una compra y un ticket; UNO POR UNO: al instante. Cupo agotado: todo apagado y corre el temporizador. Bought dispara el efecto de la vista y Summary el panel COMPRA REALIZADA.</summary>
+public partial class StoreShopViewModel(PurchaseService purchases, EmoteShopCatalog catalog) : ObservableObject
 {
     private readonly HashSet<string> _owned = [];
     private QuotaInfo _quota = new(0, 0, 0, null);
@@ -37,7 +35,9 @@ public partial class StoreShopViewModel(PurchaseService purchases, EmoteShopCata
     public NoticeViewModel Notice { get; } = new();
     public ShopCartViewModel Cart { get; } = new();
     public QuotaTimerViewModel Timer { get; } = new();
+    public PurchaseSummaryViewModel Summary { get; } = new();
     public string RulesText { get; } = StoreTexts.Rules();
+    public string PriceNoteText { get; } = StoreTexts.Format("Text.Store.Shop.PriceNote");
 
     // Switch CARRITO | UNO POR UNO: dos RadioButton enlazados en dos sentidos
     public bool IsCartMode { get => Mode == PurchaseMode.Cart; set { if (value) Mode = PurchaseMode.Cart; } }
@@ -51,6 +51,8 @@ public partial class StoreShopViewModel(PurchaseService purchases, EmoteShopCata
     {
         Timer.Expired -= OnTimerExpired;
         Timer.Expired += OnTimerExpired;
+        Summary.Finished -= OnSummaryFinished;
+        Summary.Finished += OnSummaryFinished;
         await RefreshQuotaAsync();
         if (Items is null) StartSearch(string.Empty);
     }
@@ -120,10 +122,7 @@ public partial class StoreShopViewModel(PurchaseService purchases, EmoteShopCata
         }
         if (fromCart) Cart.Clear();
         Bought?.Invoke(items, fromCart);
-        // Deja ver el efecto de compra antes del diálogo del PDF
-        await Task.Delay(AppConfig.Settings.Store.PurchaseEffectMs);
-        var (message, severity) = await TicketPdfActions.OfferAsync(dialogs, ticket);
-        Notice.Show(message, severity);
+        await Summary.ShowAsync(ticket, items);
     }
 
     private void StartSearch(string query)
@@ -186,6 +185,7 @@ public partial class StoreShopViewModel(PurchaseService purchases, EmoteShopCata
     }
 
     private async void OnTimerExpired() => await RefreshQuotaAsync();
+    private void OnSummaryFinished(string message, InfoBarSeverity severity) => Notice.Show(message, severity);
     private bool CanAdd => !_quota.IsBlocked && !_isBuying && !(IsCartMode && Cart.IsFull);
     private IEnumerable<ShopEmoteViewModel> AllItems => Items ?? Enumerable.Empty<ShopEmoteViewModel>();
 

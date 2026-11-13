@@ -175,6 +175,7 @@
     <x:String x:Key="Text.Store.Shop.Blocked">Ya compraste tus {0} emotes. Podrás comprar más en {1}</x:String>
     <x:String x:Key="Text.Store.Shop.Bought">Compraste {0} emote(s). Tu ticket quedó guardado en TICKETS.</x:String>
     <x:String x:Key="Text.Store.Shop.Rules">Puedes comprar {0} emotes cada {1} horas</x:String>
+    <x:String x:Key="Text.Store.Shop.PriceNote">Precios de muestra en dólares: no hay saldo ni cobro real.</x:String>
     <x:String x:Key="Text.Store.Shop.Add">AGREGAR</x:String>
     <x:String x:Key="Text.Store.Shop.InCart">EN CARRITO</x:String>
     <x:String x:Key="Text.Store.Shop.Done">¡Comprado!</x:String>
@@ -185,14 +186,21 @@
     <x:String x:Key="Text.Store.Cart.Empty">Agrega emotes con AGREGAR.</x:String>
     <x:String x:Key="Text.Store.Cart.Remove">QUITAR</x:String>
     <x:String x:Key="Text.Store.Cart.Buy">COMPRAR</x:String>
+    <x:String x:Key="Text.Store.Cart.Total">Total: {0}</x:String>
     <x:String x:Key="Text.Store.Outcome.LimitReached">Ya no te queda cupo por ahora.</x:String>
     <x:String x:Key="Text.Store.Outcome.NotEnoughQuota">Solo te quedan {0}. Quita emotes del carrito.</x:String>
     <x:String x:Key="Text.Store.Outcome.Empty">El carrito está vacío.</x:String>
     <x:String x:Key="Text.Store.Outcome.AlreadyOwned">Ya tienes esos emotes.</x:String>
     <x:String x:Key="Text.Store.Outcome.NoUser">Vuelve a ENTRAR para comprar.</x:String>
-    <x:String x:Key="Text.Store.PdfDialog.Message">¿Quieres descargar tu ticket en PDF?</x:String>
-    <x:String x:Key="Text.Store.PdfDialog.Confirm">SÍ</x:String>
-    <x:String x:Key="Text.Store.PdfDialog.Cancel">NO</x:String>
+    <x:String x:Key="Text.Store.Summary.Seal">COMPRA REALIZADA</x:String>
+    <x:String x:Key="Text.Store.Summary.Title">COMPRA REALIZADA · TICKET #{0}</x:String>
+    <x:String x:Key="Text.Store.Summary.Subtitle">Tus emotes ya están en tu sala. Los precios son de muestra: no se cobró nada.</x:String>
+    <x:String x:Key="Text.Store.Summary.Total">TOTAL DE MUESTRA: {0}</x:String>
+    <x:String x:Key="Text.Store.Summary.Download">DESCARGAR PDF</x:String>
+    <x:String x:Key="Text.Store.Summary.View">SOLO VER PDF</x:String>
+    <x:String x:Key="Text.Store.Summary.Exit">SALIR</x:String>
+    <x:String x:Key="Text.Store.Summary.Viewed">Abriste el ticket #{0}. También queda en TICKETS.</x:String>
+    <x:String x:Key="Text.Store.Summary.ViewFailed">No se pudo abrir el PDF. Tu ticket queda en TICKETS para descargarlo.</x:String>
     <x:String x:Key="Text.Store.PdfSaved">Ticket guardado en {0}</x:String>
     <x:String x:Key="Text.Store.PdfFailed">No se pudo guardar el PDF en {0}. Revisa que tengas permiso de escribir en el Escritorio.</x:String>
     <x:String x:Key="Text.Store.Tickets.Title">TUS TICKETS</x:String>
@@ -206,11 +214,12 @@
     <x:String x:Key="Text.Ticket.Number">Ticket: #{0}</x:String>
     <x:String x:Key="Text.Ticket.Date">Fecha: {0}</x:String>
     <x:String x:Key="Text.Ticket.Emotes">EMOTES</x:String>
-    <x:String x:Key="Text.Ticket.EmoteLine">1 x {0}</x:String>
+    <x:String x:Key="Text.Ticket.EmoteLine">1 x {0}  {1}</x:String>
     <x:String x:Key="Text.Ticket.Total">Total: {0} emote(s)</x:String>
+    <x:String x:Key="Text.Ticket.Amount">Importe de muestra: {0}</x:String>
     <x:String x:Key="Text.Ticket.Remaining">Cupo restante: {0} de {1}</x:String>
     <x:String x:Key="Text.Ticket.Resets">Se reinicia: {0}</x:String>
-    <x:String x:Key="Text.Ticket.Footer">Gratis: solo gasta cupo. Gracias.</x:String>
+    <x:String x:Key="Text.Ticket.Footer">Precios de muestra: no se cobró nada, solo gasta cupo. Gracias.</x:String>
 
     <!-- Música -->
     <x:String x:Key="Text.Music.ScreenTitle">MÚSICA</x:String>

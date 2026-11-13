@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- TIENDA DE EMOTES (05): encabezado con regreso y UN panel oscuro semitransparente (el video de fondo se intuye detrás)
-     con las pestañas TIENDA | TICKETS (modo ADMIN: PUNTO DE VENTA | ADMINISTRADORES). Encima, con velo, EMOTES Y REPORTES (los comprados en la sala).
+     con las pestañas TIENDA | TICKETS (modo ADMIN: PUNTO DE VENTA | ADMINISTRADORES). Encima, con velo, EMOTES Y REPORTES
+     o el panel COMPRA REALIZADA (antes, el sello de compra).
      Transparente: el fondo lo pinta CapaFondo detrás del Frame. ESC cierra el recuadro o regresa -->
 <Page x:Class="COT_0.Host.Views.Pantallas.EmotesPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -86,8 +87,13 @@
                         <Button Grid.Row="1" Style="{StaticResource TextButton}" HorizontalAlignment="Right"
                                 Content="{StaticResource Text.Store.Close}" Command="{x:Bind ViewModel.CloseOverlayCommand}"/>
                     </Grid>
+                    <tienda:PanelCompra ViewModel="{x:Bind ViewModel.Shop.Summary}"
+                                        Visibility="{x:Bind ViewModel.Shop.Summary.IsOpen, Mode=OneWay}"/>
                 </Grid>
             </Border>
         </Grid>
+
+        <!-- Sello COMPRA REALIZADA (antes del panel, sin velo) -->
+        <tienda:SelloCompra Visibility="{x:Bind ViewModel.Shop.Summary.IsSealVisible, Mode=OneWay}"/>
     </Grid>
 </Page>

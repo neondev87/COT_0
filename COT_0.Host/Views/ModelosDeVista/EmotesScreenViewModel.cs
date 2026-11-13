@@ -8,7 +8,7 @@ namespace COT_0.Host.Views.ModelosDeVista;
 
 /// <summary>
 /// Cada sección carga al mostrarse (así el cupo y los tickets siempre están al día).
-/// ESC cierra el recuadro abierto; si no hay ninguno, regresa como ← INICIO.
+/// ESC cierra el recuadro abierto (en COMPRA REALIZADA es SALIR); si no hay ninguno, regresa como ← INICIO.
 /// </summary>
 public partial class EmotesScreenViewModel : ObservableObject
 {
@@ -27,6 +27,10 @@ public partial class EmotesScreenViewModel : ObservableObject
         Sales = sales;
         Admins = admins;
         tickets.ShopRequested += () => _ = ShowAsync(StoreSection.Shop);
+        shop.Summary.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(PurchaseSummaryViewModel.IsOpen)) OnPropertyChanged(nameof(IsOverlayOpen));
+        };
     }
 
     public StoreShopViewModel Shop { get; }
@@ -67,7 +71,8 @@ public partial class EmotesScreenViewModel : ObservableObject
         set { if (value && Section != StoreSection.Admins) _ = ShowAsync(StoreSection.Admins); }
     }
 
-    public bool IsOverlayOpen => IsSetPanelOpen;
+    /// <summary>Velo encendido: EMOTES Y REPORTES o el panel COMPRA REALIZADA.</summary>
+    public bool IsOverlayOpen => IsSetPanelOpen || Shop.Summary.IsOpen;
 
     public Task LoadAsync() => ShowAsync(Section);
 
@@ -80,12 +85,15 @@ public partial class EmotesScreenViewModel : ObservableObject
     [RelayCommand]
     private void CloseOverlay()
     {
+        if (Shop.Summary.IsOpen) Shop.Summary.ExitCommand.Execute(null);
         IsSetPanelOpen = false;
     }
 
     [RelayCommand]
     private void Escape()
     {
+        // Durante el sello de compra ESC espera al panel (ahí es SALIR)
+        if (Shop.Summary.IsSealVisible) return;
         if (IsOverlayOpen) CloseOverlay();
         else Navigator.GoBack();
     }

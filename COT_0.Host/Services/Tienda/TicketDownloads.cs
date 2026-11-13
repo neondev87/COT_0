@@ -1,11 +1,14 @@
-// Guarda el ticket en PDF en el Escritorio del usuario de Windows, carpeta Store:TicketsFolder (ticket-0001.pdf)
+// Copia el ticket en PDF al Escritorio del usuario de Windows, carpeta Store:TicketsFolder (ticket-0001.pdf)
 using COT_0.Host.Models;
 using COT_0.Host.Services.Almacenamiento;
 using COT_0.Host.Services.Configuracion;
 
 namespace COT_0.Host.Services.Tienda;
 
-/// <summary>Si el PDF de ese ticket ya existe, no lo vuelve a generar; regresa la ruta final para el aviso.</summary>
+/// <summary>
+/// Parte de la copia que genera TicketFiles (la crea si falta). Si el PDF ya está en el Escritorio, no lo vuelve
+/// a copiar; regresa la ruta final para el aviso.
+/// </summary>
 public static class TicketDownloads
 {
     private static StoreSettings Store => AppConfig.Settings.Store;
@@ -19,13 +22,12 @@ public static class TicketDownloads
         var path = PathFor(ticket.Number);
         if (File.Exists(path)) return path;
 
-        // Los textos se leen aquí (hilo de la UI); armar el PDF y escribirlo va aparte
-        var lines = TicketLines.For(ticket);
+        var source = await TicketFiles.EnsureAsync(ticket);
         var folder = Folder;
         await Task.Run(() => Directory.CreateDirectory(folder));
-        using var document = await Task.Run(() => TicketDocument.Render(lines));
-        await using var file = AsyncFiles.Create(path);
-        await document.SaveAsync(file, false);
+        await using var input = AsyncFiles.OpenRead(source);
+        await using var output = AsyncFiles.Create(path);
+        await input.CopyToAsync(output);
         return path;
     }
 

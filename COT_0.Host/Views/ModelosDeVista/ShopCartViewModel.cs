@@ -1,5 +1,6 @@
-// Carrito de la TIENDA: emotes agregados (hasta lo que te queda de cupo), QUITAR y el contador del panel lateral
+// Carrito de la TIENDA: emotes agregados (hasta lo que te queda de cupo), QUITAR, el contador y el total de muestra del panel lateral
 using System.Collections.ObjectModel;
+using COT_0.Host.Services.Tienda;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace COT_0.Host.Views.ModelosDeVista;
@@ -17,6 +18,7 @@ public partial class ShopCartViewModel : ObservableObject
         OnPropertyChanged(nameof(IsEmpty));
         OnPropertyChanged(nameof(HasItems));
         OnPropertyChanged(nameof(CountText));
+        OnPropertyChanged(nameof(TotalText));
     };
 
     public ObservableCollection<ShopEmoteViewModel> Items { get; } = [];
@@ -28,6 +30,8 @@ public partial class ShopCartViewModel : ObservableObject
     public bool HasItems => !IsEmpty;
 
     public string CountText => StoreTexts.Format("Text.Store.Cart.Count", Items.Count, Capacity);
+
+    public string TotalText => StoreTexts.Format("Text.Store.Cart.Total", EmotePricing.Format(Items.Sum(i => i.Price)));
 
     /// <summary>false si ya está o ya no cabe.</summary>
     public bool Add(ShopEmoteViewModel item)
