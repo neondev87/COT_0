@@ -41,6 +41,10 @@ public sealed partial class UsuariosPage : Page
 
     private void OnDeleteClick(object sender, RoutedEventArgs e) => Run(sender, ViewModel.DeleteCommand);
 
+    private void OnInvoicesClick(object sender, RoutedEventArgs e) => Run(sender, ViewModel.ViewInvoicesCommand);
+
+    private void OnEmotesClick(object sender, RoutedEventArgs e) => Run(sender, ViewModel.OpenCommand);
+
     private static void Run(object sender, System.Windows.Input.ICommand command)
     {
         if (sender is FrameworkElement { DataContext: UserCardViewModel card }) command.Execute(card);

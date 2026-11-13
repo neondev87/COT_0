@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- USUARIOS (04): encabezado con regreso y UN panel oscuro semitransparente (el video de fondo sigue detrás) con las tarjetas:
-     foto o inicial con color, nombre y acciones (FOTO, NOMBRE, CONTRASEÑA, ELIMINAR según el modo). Clic en la tarjeta: su stock.
-     Encima, con velo, el stock o el recuadro para cambiar nombre o contraseña. ESC cierra el recuadro o regresa -->
+     foto o inicial con color, nombre y acciones (dueño: FOTO, NOMBRE, CONTRASEÑA; ADMIN: VER FACTURA, VER SUS EMOTES, ELIMINAR USUARIO). Clic en la tarjeta: su stock.
+     Encima, con velo, el stock, la factura (tickets y PDF) o el recuadro para cambiar nombre o contraseña. ESC cierra el recuadro o regresa -->
 <Page x:Class="COT_0.Host.Views.Pantallas.UsuariosPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -87,8 +87,15 @@
                                             <Button Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource ShopActionButton}"
                                                     Content="{StaticResource Text.Users.Password}" Click="OnPasswordClick"/>
                                         </Grid>
-                                        <Button Style="{StaticResource ShopActionButton}" Content="{StaticResource Text.Users.Delete}"
-                                                Visibility="{x:Bind CanDelete}" Click="OnDeleteClick"/>
+                                        <!-- Solo ADMIN: las tres acciones del punto de venta sobre este usuario -->
+                                        <StackPanel Spacing="8" Visibility="{x:Bind CanDelete}">
+                                            <Button Style="{StaticResource ShopActionButton}" HorizontalAlignment="Stretch"
+                                                    Content="{StaticResource Text.Users.Invoices}" Click="OnInvoicesClick"/>
+                                            <Button Style="{StaticResource ShopActionButton}" HorizontalAlignment="Stretch"
+                                                    Content="{StaticResource Text.Users.Emotes}" Click="OnEmotesClick"/>
+                                            <Button Style="{StaticResource ShopActionButton}" HorizontalAlignment="Stretch"
+                                                    Content="{StaticResource Text.Users.DeleteUser}" Click="OnDeleteClick"/>
+                                        </StackPanel>
                                     </StackPanel>
                                 </Border>
                             </DataTemplate>
@@ -114,6 +121,8 @@
                 <Grid>
                     <tienda:RecuadroStock Stock="{x:Bind ViewModel.Stock, Mode=OneWay}" CloseCommand="{x:Bind ViewModel.CloseOverlayCommand}"
                                           Visibility="{x:Bind ViewModel.IsStockOpen, Mode=OneWay}"/>
+                    <tienda:RecuadroFacturas Invoices="{x:Bind ViewModel.Invoices, Mode=OneWay}" CloseCommand="{x:Bind ViewModel.CloseOverlayCommand}"
+                                             Visibility="{x:Bind ViewModel.IsInvoicesOpen, Mode=OneWay}"/>
                     <usuarios:RecuadroCuenta Form="{x:Bind ViewModel.Form, Mode=OneWay}" CloseCommand="{x:Bind ViewModel.CloseOverlayCommand}"
                                              Visibility="{x:Bind ViewModel.IsFormOpen, Mode=OneWay}"/>
                 </Grid>

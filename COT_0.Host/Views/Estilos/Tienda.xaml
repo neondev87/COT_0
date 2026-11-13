@@ -37,6 +37,7 @@
     <x:Double x:Key="ShopEmoteCardWidth">136</x:Double>
     <x:Double x:Key="ShopUserCardWidth">200</x:Double>
     <x:Double x:Key="ShopSearchWidth">320</x:Double>
+    <x:Double x:Key="TicketInfoWidth">200</x:Double>
 
     <Style x:Key="ShopPanel" TargetType="Border">
         <Setter Property="Background" Value="{StaticResource ShopPanelBrush}"/>

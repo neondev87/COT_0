@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- VER FACTURA sobre el velo (modo ADMIN, solo lectura): tickets de un usuario con miniaturas, DESCARGAR PDF y ABRIR PDF,
+     total de muestra en dólares y CERRAR -->
+<UserControl x:Class="COT_0.Host.Views.Componentes.Tienda.RecuadroFacturas"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:tienda="using:COT_0.Host.Views.Componentes.Tienda">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Views/Estilos/Tienda.xaml"/>
+                <ResourceDictionary Source="ms-appx:///Views/Estilos/TiendaControles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid RowSpacing="14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Spacing="6">
+            <Rectangle Width="28" Height="1" HorizontalAlignment="Left" Fill="{StaticResource AccentBrush}"/>
+            <TextBlock Text="{x:Bind Invoices.Title, Mode=OneWay}" Style="{StaticResource ShopTitleText}"/>
+            <TextBlock Text="{x:Bind Invoices.Summary, Mode=OneWay}" Style="{StaticResource InterText}" TextWrapping="WrapWholeWords"/>
+        </StackPanel>
+
+        <InfoBar Grid.Row="1" Title="{StaticResource Text.Invoices.NoticeTitle}" Message="{x:Bind Invoices.Notice.Message, Mode=OneWay}"
+                 Severity="{x:Bind Invoices.Notice.Severity, Mode=OneWay}" IsOpen="{x:Bind Invoices.Notice.IsOpen, Mode=TwoWay}"/>
+
+        <ListView Grid.Row="2" ItemsSource="{x:Bind Invoices.Tickets, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="False"
+                  ItemContainerStyle="{StaticResource FlatListItem}" Visibility="{x:Bind Invoices.HasTickets, Mode=OneWay}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <tienda:TarjetaTicket DownloadClick="OnDownloadClick" ViewClick="OnViewClick"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <TextBlock Grid.Row="2" Text="{StaticResource Text.Invoices.Empty}" Style="{StaticResource ShopEmptyText}" Margin="0,24"
+                   Visibility="{x:Bind Invoices.IsEmpty, Mode=OneWay}"/>
+
+        <Button Grid.Row="3" Style="{StaticResource TextButton}" HorizontalAlignment="Right" Content="{StaticResource Text.Store.Close}"
+                Command="{x:Bind CloseCommand, Mode=OneWay}"/>
+    </Grid>
+</UserControl>

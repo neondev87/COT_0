@@ -1,10 +1,11 @@
+// PUNTO DE VENTA (modo ADMIN): pasa los clics de cada ticket al SalesViewModel
 using COT_0.Host.Views.ModelosDeVista;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace COT_0.Host.Views.Componentes.Tienda;
 
-/// <summary>Punto de venta: la página le pasa su SalesViewModel; DESCARGAR PDF solo llama a su comando</summary>
+/// <summary>Punto de venta: la página le pasa su SalesViewModel; DESCARGAR PDF y ABRIR PDF solo llaman a sus comandos</summary>
 public sealed partial class SeccionVentas : UserControl
 {
     public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
@@ -18,9 +19,14 @@ public sealed partial class SeccionVentas : UserControl
         set => SetValue(ViewModelProperty, value);
     }
 
-    // Cada botón trae su ticket en el DataContext
+    // Cada tarjeta trae su ticket
     private void OnDownloadClick(object sender, RoutedEventArgs e)
     {
-        if (sender is FrameworkElement { DataContext: TicketViewModel item }) ViewModel.DownloadCommand.Execute(item);
+        if (sender is TarjetaTicket { Ticket: { } ticket }) ViewModel.DownloadCommand.Execute(ticket);
+    }
+
+    private void OnViewClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is TarjetaTicket { Ticket: { } ticket }) ViewModel.ViewCommand.Execute(ticket);
     }
 }

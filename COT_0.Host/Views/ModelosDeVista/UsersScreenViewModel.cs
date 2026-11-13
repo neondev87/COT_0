@@ -1,4 +1,4 @@
-// Pantalla USUARIOS (04): tarjetas con foto o inicial, stock de emotes al tocar una, ELIMINAR, CAMBIAR NOMBRE, CONTRASEÑA y FOTO
+// Pantalla USUARIOS (04): tarjetas con foto o inicial; ADMIN: VER FACTURA, VER SUS EMOTES y ELIMINAR USUARIO; dueño: NOMBRE, CONTRASEÑA y FOTO
 using System.Collections.ObjectModel;
 using COT_0.Host.Models;
 using COT_0.Host.Services.Almacenamiento;
@@ -14,7 +14,7 @@ using Microsoft.UI.Xaml.Controls;
 namespace COT_0.Host.Views.ModelosDeVista;
 
 /// <summary>
-/// Modo HOST: solo tu tarjeta (nunca datos de otros). Modo ADMIN: todas, con su stock y ELIMINAR.
+/// Modo HOST: solo tu tarjeta (nunca datos de otros). Modo ADMIN: todas, con sus tickets (solo lectura), su stock y ELIMINAR.
 /// Borrar tu propia cuenta cierra la sala (si hay) y regresa al login. ESC cierra el recuadro o regresa.
 /// </summary>
 public partial class UsersScreenViewModel(PurchaseService purchases, AccountService accounts, ConfirmDialogService confirm)
@@ -29,6 +29,10 @@ public partial class UsersScreenViewModel(PurchaseService purchases, AccountServ
     private AccountFormViewModel? _form;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsInvoicesOpen), nameof(IsOverlayOpen))]
+    private UserInvoicesViewModel? _invoices;
+
+    [ObservableProperty]
     private bool _isEmpty;
 
     public ObservableCollection<UserCardViewModel> Users { get; } = [];
@@ -39,7 +43,9 @@ public partial class UsersScreenViewModel(PurchaseService purchases, AccountServ
 
     public bool IsFormOpen => Form is not null;
 
-    public bool IsOverlayOpen => IsStockOpen || IsFormOpen;
+    public bool IsInvoicesOpen => Invoices is not null;
+
+    public bool IsOverlayOpen => IsStockOpen || IsFormOpen || IsInvoicesOpen;
 
     public string Hint => StoreTexts.Format(ActiveUser.IsAdmin ? "Text.Users.Hint.Admin" : "Text.Users.Hint.Host");
 
@@ -72,6 +78,21 @@ public partial class UsersScreenViewModel(PurchaseService purchases, AccountServ
         {
             var user = await purchases.GetAsync(card.Name);
             Stock = new UserStockViewModel(card, user, QuotaCalculator.For(user, DateTime.UtcNow));
+        }
+        catch (Exception ex) when (JsonStore.IsStorageError(ex))
+        {
+            Notice.Show(StoreTexts.Format("Text.Store.Error.Storage"), InfoBarSeverity.Error);
+        }
+    }
+
+    /// <summary>VER FACTURA: solo ADMIN (el HOST ve sus tickets en la tienda).</summary>
+    [RelayCommand]
+    private async Task ViewInvoicesAsync(UserCardViewModel card)
+    {
+        if (!ActiveUser.IsAdmin) return;
+        try
+        {
+            Invoices = new UserInvoicesViewModel(card.Name, await purchases.GetAsync(card.Name));
         }
         catch (Exception ex) when (JsonStore.IsStorageError(ex))
         {
@@ -124,6 +145,7 @@ public partial class UsersScreenViewModel(PurchaseService purchases, AccountServ
     {
         Stock = null;
         Form = null;
+        Invoices = null;
     }
 
     [RelayCommand]

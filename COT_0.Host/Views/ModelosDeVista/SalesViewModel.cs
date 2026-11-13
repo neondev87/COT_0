@@ -1,4 +1,4 @@
-// PUNTO DE VENTA (modo ADMIN, solo lectura): usuarios, todos los tickets con su dueño, buscador, totales y DESCARGAR PDF
+// PUNTO DE VENTA (modo ADMIN, solo lectura): usuarios, todos los tickets con su dueño, buscador, totales, DESCARGAR PDF y ABRIR PDF
 using System.Collections.ObjectModel;
 using System.Globalization;
 using COT_0.Host.Models;
@@ -60,6 +60,13 @@ public partial class SalesViewModel(PurchaseService purchases) : ObservableObjec
     private async Task DownloadAsync(TicketViewModel item)
     {
         var (message, severity) = await TicketPdfActions.DownloadAsync(item.Ticket);
+        Notice.Show(message, severity);
+    }
+
+    [RelayCommand]
+    private async Task ViewAsync(TicketViewModel item)
+    {
+        var (message, severity) = await TicketPdfActions.ViewAsync(item.Ticket);
         Notice.Show(message, severity);
     }
 

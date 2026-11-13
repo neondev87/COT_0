@@ -209,6 +209,9 @@
     <x:String x:Key="Text.Store.Tickets.Number">TICKET #{0}</x:String>
     <x:String x:Key="Text.Store.Tickets.Detail">{0} emote(s) · te quedaban {1} de {2}</x:String>
     <x:String x:Key="Text.Store.Tickets.Download">DESCARGAR PDF</x:String>
+    <x:String x:Key="Text.Store.Tickets.View">ABRIR PDF</x:String>
+    <x:String x:Key="Text.Store.PdfOpened">Abriste el ticket #{0}.</x:String>
+    <x:String x:Key="Text.Store.PdfOpenFailed">No se pudo abrir el ticket #{0}. Revisa que tengas un visor de PDF o descárgalo.</x:String>
     <x:String x:Key="Text.Ticket.Title">COT_0</x:String>
     <x:String x:Key="Text.Ticket.Subtitle">TICKET DE EMOTES</x:String>
     <x:String x:Key="Text.Ticket.Number">Ticket: #{0}</x:String>
