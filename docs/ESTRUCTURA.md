@@ -65,7 +65,7 @@ COT_0.Web/
 │   ├── Voz/                      VoiceService, VoiceRecorder, AudioSniffer, OpusWavTranscoder + WebmOpusFrames + WavWriter
 │   │                             (WebM/Opus → WAV con Concentus), InMemoryVoiceStore, VoiceFormat y VoiceNote
 │   ├── Emotes/                   RoomEmotes (IRoomEmotes), SevenTvClient + sus DTO (SevenTv*), EmoteSearch, EmoteList,
-│   │                             EmoteActions, EmoteSetId, EmoteSetResult y EmoteRegistration
+│   │                             EmoteActions y EmoteRegistration (sin set: solo comprados)
 │   └── Manual/                   Manual del invitado (/manual): ManualTour, ManualDemo, ManualFocus, ManualTimeline y ManualRegistration
 ├── Views/
 │   ├── Pantallas/                Páginas con ruta: Join (/join), Chat (/chat), Manual (/manual) y Error
@@ -171,7 +171,7 @@ COT_0.Host/
     │   ├── FormularioRecuperacion  Usuario → su pregunta secreta → contraseña nueva, dentro del login
     │   ├── FormularioRegistro    Registrar usuario: nombre, contraseña y repetirla, dentro del login
     │   ├── ListaConectados       Invitados conectados (ListView)
-    │   ├── PanelEmotes           Set de 7TV, reportes y emotes quitados (en EMOTES, botón SET Y REPORTES)
+    │   ├── PanelEmotes           Emotes comprados en la sala, reportes y quitados (botón EMOTES Y REPORTES)
     │   ├── Tienda/               SeccionTienda (carrito, switch, temporizador y efecto de compra), SeccionTickets, SeccionVentas (PUNTO DE VENTA),
     │   │                         SeccionAdministradores y RecuadroStock (pantalla TIENDA DE EMOTES)
     │   ├── Usuarios/             RecuadroCuenta: CAMBIAR NOMBRE / CONTRASEÑA con respuesta secreta (pantalla USUARIOS)
@@ -297,7 +297,7 @@ WinUI muestra un tooltip con la tecla ("Enter", "Esc", flechas) al pasar el mous
 - TIENDA: `EmoteShopCatalog` → `ISevenTvClient.SearchEmotesAsync` (Web, GraphQL v3 `https://7tv.io/v3/gql`, verificado el 09/11) en páginas de `Store:PageSize` = 50; `ShopItemsCollection` (`ISupportIncrementalLoading`) pide la siguiente al llegar al final del scroll. Caché en memoria por búsqueda y página. Si 7TV falla: motivo + REINTENTAR.
 - COMPRAR: `PurchaseService.BuyAsync` para `ActiveUser` (quien hizo ENTRAR; la interfaz no lo muestra). Ventana de 24 h desde la primera compra; al vencer, el cupo vuelve al leerlo. Cada compra = un ticket con número consecutivo global (así no chocan los PDF de varios usuarios).
 - Chat: `RoomSession.OpenAsync` llama a `ChatEmoteImport.ImportAsync` (comprados → `IPurchasedEmotes.SetPurchased`, misma instancia que `IRoomEmotes`); con la sala abierta, cada compra los vuelve a mandar. Al cerrar la sala se vacían. Si un nombre se repite con el set, gana el del set.
-- El set de 7TV, los reportes y los quitados siguen igual (`PanelEmotes`), ahora en el recuadro SET Y REPORTES.
+- Los reportes y los quitados siguen igual (`PanelEmotes`), en el recuadro EMOTES Y REPORTES. Desde el 12/11 ya no hay set de 7TV: la sala solo tiene lo comprado.
 - PDF: PDFsharp 6.2.4 (MIT, todo .NET), 80 mm de ancho, `Store:TicketFont` = Courier New (el resolvedor de fuentes de Windows de PDFsharp no trae Consolas). Se guarda en `Escritorio\COT_0_tickets\ticket-0001.pdf`; si ya existe no se regenera.
 
 ## Modos HOST | ADMIN, USUARIOS y tienda (09/11)

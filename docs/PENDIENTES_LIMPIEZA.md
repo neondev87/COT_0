@@ -25,14 +25,15 @@ Solo lo que sigue pendiente después del cierre (08/11, rama `host-winui`; ya co
 
 - **Tienda de emotes (09/11)**: al probar quedan `%LocalAppData%\COT_0\compras.json` (compras y tickets de prueba) y la carpeta `Escritorio\COT_0_tickets\` con los PDF. Borrarlos si estorban; la app recrea lo que necesite.
 - **Archivos temporales de la tienda (09/11)**: prueba de PDFsharp en el scratchpad de la sesión (`…\scratchpad\pdftest\`, `t.pdf`, `ticket.pdf`), fuera del repo y de `COT_0_P`. Nada temporal en el repo.
+- **Sesión del 12/11 (admins, emotes, panel de compra)**: nada temporal en el repo ni en `COT_0_P`. Se usaron archivos de paso en `%TEMP%` (`global.json` con el set global de 7TV para revisar nombres repetidos, `p.xaml`/`v.xaml`) y ya se borraron o movieron. Al probar quedan los PDF generados en `%LocalAppData%\COT_0\tickets\` (copia de la app de cada ticket); se pueden borrar: SOLO VER y DESCARGAR los vuelven a generar.
 
 ## En el código (no se tocó en el cierre: cambia lógica)
 
 - **`README.md`** (fuera de `COT_0.Host` y `docs`) todavía dice que la música "empieza por `Audio:DefaultFile`": ahora es `Audio:InitialTrack` (Audio_02).
 
 - **SUBIR MÚSICA** no existe en WinUI (necesita `FileOpenPicker` con el HWND de la ventana). Si se quiere, va en `Views/Pantallas/MusicaPage` + `Services/Musica`.
-- **Vista de ejemplo del paso 5 del Manual** (`VistaEjemploEmotes`): sigue dibujando el panel viejo (set + reportes); el texto de Lain ya habla de TIENDA y SET Y REPORTES.
-- **`IPurchasedEmotes`** vive en Web; pedido a Core anotado en `CONTRATO.md`.
+- **Vista de ejemplo del paso 5 del Manual** (`VistaEjemploEmotes`): ya sin set (12/11); revisar a mano que el resaltado siga cayendo sobre el bloque de arriba.
+- **`IPurchasedEmotes`** vive en Web y `IRoomEmotes` todavía trae miembros del set (`SetId`, `UseSetAsync`…) que ya no se usan; pedido a Core anotado en `CONTRATO.md` (12/11).
 - **`FondoImages` también lo usa el manual** (`ManualViewModel`, para las capturas `pasoN.png`): si crece, renombrarlo a algo general (`ImageDecoder`).
 - **Kestrel queda arriba con la sala cerrada** (se apaga al cerrar la ventana). Para apagarlo también al cerrar la sala habría que pedir `IChatService`/`IRoomService` a la web nueva en cada ViewModel (hoy se guardan una vez como Singleton).
 - **`ConnectedUsersViewModel` y `SalaViewModel`** se suscriben a eventos de la web y del reloj sin soltarlos: es intencional (viven lo que la app), pero si se cambian a Transient habría que desuscribir.

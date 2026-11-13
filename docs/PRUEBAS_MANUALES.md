@@ -501,7 +501,7 @@ Ninguna se ejecutó con la app abierta (sin capturas ni computer use): todas que
 | 8 | VER y COPIAR | Diálogo de contraseña |
 | 9 | Portapapeles limpio a los 60 s (si sigue la misma contraseña) | Pega en el Bloc de notas después de 60 s |
 | 10 | Máximo de 5 administradores ("Ya hay 5 administradores") | ADMINISTRADORES |
-| 11 | Crear y regenerar administradores; no se borra el último | ADMINISTRADORES |
+| 11 | Crear y regenerar administradores (eliminar: ver sección 23) | ADMINISTRADORES |
 | 12 | Punto de venta con tickets, búsqueda, totales y DESCARGAR PDF | PUNTO DE VENTA |
 | 13 | ADMIN consulta todo pero no compra (no ve TIENDA) | 05 en modo ADMIN |
 | 14 | HOST ve solo su información | 04 y 05 en modo HOST |
@@ -517,9 +517,55 @@ Ninguna se ejecutó con la app abierta (sin capturas ni computer use): todas que
 | 24 | Reinicio del cupo editando la fecha del JSON | Sección 20 |
 | 25 | Paginación de emotes sin buscar | Sección 19 (TIENDA) |
 | 26 | Emotes comprados entran solos al chat | Sección 19 (Al chat) |
-| 27 | PDF con confirmación Sí y No | Sección 19 |
+| 27 | PDF desde el panel COMPRA REALIZADA (antes Sí/No) | Sección 23 |
 | 28 | PDF en `Escritorio\COT_0_tickets` | Sección 19 (TICKETS) |
 | 29 | Video de fondo visible en pantallas nuevas | Sección 19 (Fondo y panel) |
 | 30 | Panel integrado | Sección 19 (Fondo y panel) |
 | 31 | Despedida de Lain sin video de fondo ni transparencia | Sección 22 |
 | 32 | Respaldo con franjas sin `lain_despedida.mp4` | Sección 22 |
+
+## 23. Admins, emotes solo comprados y panel de compra (12/11)
+
+Ninguna se ejecutó con la app abierta (sin capturas ni computer use): todas quedan por hacer a mano. Para empezar limpio puedes respaldar y borrar `%LocalAppData%\COT_0\admin.json`.
+
+### Administradores
+
+| # | Prueba | Pasos | Esperado |
+|---|---|---|---|
+| A1 | Registrar admins hasta 5 | Entra como ADMIN → 05 → ADMINISTRADORES. Escribe un nombre (tipo "Ana") y presiona CREAR ADMIN (o ENTER). Repite hasta tener 5 en total | Cada vez sale el diálogo de contraseña una sola vez y "Admin X creado."; la lista crece |
+| A2 | Bloqueo del sexto | Con 5 admins | CREAR ADMIN y el campo quedan apagados con "Ya hay 5 administradores". Ni ENTER crea otro |
+| A3 | Pregunta secreta al entrar (admin nuevo) | SALIR → ADMIN → entra con un admin recién creado | Antes del dashboard pide PREGUNTA SECRETA y RESPUESTA (GUARDAR Y ENTRAR); sin elegir pregunta o sin respuesta muestra el error y no entra |
+| A4 | Admin viejo sin pregunta | Con un `admin.json` de antes (sin `SecurityQuestion`) entra con ese admin | No truena: pide configurar la pregunta y luego entra. En `admin.json` aparecen `SecurityQuestion`, `AnswerHash` y `AnswerSalt` (nunca la respuesta en claro) |
+| A5 | Respuesta normalizada | Configura "Mango Verde" y al eliminar escribe "mangoverde" | Coincide (minúsculas y sin espacios) |
+| A6 | Eliminar con las dos confirmaciones | Desde un admin A, ELIMINAR en la fila de B: escribe la respuesta secreta de B y la contraseña de A | "Admin B eliminado."; B ya no está en la lista ni en `admin.json` |
+| A7 | Falla una confirmación | Repite A6 con la respuesta mal, luego con tu contraseña mal | Mensaje genérico "No se pudo confirmar la eliminación…" (no dice cuál falló) y B sigue existiendo |
+| A8 | Admin sin pregunta no se elimina | ELIMINAR a un admin que nunca entró desde el cambio | Aviso de que todavía no configura su pregunta; no se abre el diálogo ni se borra |
+| A9 | Eliminarte a ti mismo | ELIMINAR en tu propia fila "(tú)" con tu respuesta y tu contraseña | Aviso de que se cerrará tu sesión; al confirmar regresas al login y ya no puedes entrar con ese admin |
+| A10 | Eliminar al último admin | Con un solo admin, elimínate (A9) y luego elige ADMIN en el login | Como `admin.json` quedó vacío, vuelve a pedir crear el primer admin |
+| A11 | Nada sensible a la vista | Revisa la sección, los diálogos y `admin.json` | Nunca se ven contraseñas, hashes ni respuestas; los dos campos del diálogo de eliminar están ocultos |
+
+### Emotes de la sala (solo comprados)
+
+| # | Prueba | Pasos | Esperado |
+|---|---|---|---|
+| E1 | Sin compras no hay emotes | Host sin compras: abre la sala y entra desde el celular y la PC | No aparece la carita del picker; `:Clap:` o `EZ` quedan como texto. En EMOTES Y REPORTES: "0 emotes comprados" y "SIN EMOTES…" |
+| E2 | Comprar y que aparezcan en la sala (en vivo) | Con la sala abierta y un invitado dentro, ve a 05 → TIENDA y compra 2 emotes | Sin reiniciar ni recargar, el invitado ve la carita y solo esos 2 emotes (también al escribir `:`); escribirlos los pinta como imagen en celular y PC |
+| E3 | Emote con nombre del set global | Compra uno que se llame como uno del set global de 7TV (ej. "Clap" o "EZ") | En la sala aparece el que compraste (misma imagen que en la tienda) |
+| E4 | Solo los del host de la sala | Host A compra X; SALIR; host B (sin X) abre la sala | En la sala de B no aparece X; solo lo de B |
+| E5 | Dos hosts compran el mismo emote | A y B compran el mismo emote | A los dos se les deja comprar; cada uno lo ve en su sala y en su TICKETS |
+| E6 | Ya no se puede pegar un set | Abre EMOTES Y REPORTES | No hay campo de set ni APLICAR; solo contador, aviso de que salen de la TIENDA, reportes y quitados |
+| E7 | QUITAR no borra la compra | QUITAR un emote reportado y luego RESTAURAR | Se ve como texto mientras está quitado; la compra sigue en TICKETS y en `compras.json` |
+
+### Precio y compra
+
+| # | Prueba | Pasos | Esperado |
+|---|---|---|---|
+| C1 | Precio visible | Abre TIENDA | Cada tarjeta muestra "US$ x.xx": casi todos entre 1 y 5; de vez en cuando alguno entre 7 y 10. Bajo el aviso del cupo dice que son precios de muestra |
+| C2 | Precio estable | Anota 3 precios, sal de la tienda, vuelve a entrar (y reinicia la app) | Los mismos emotes tienen el mismo precio |
+| C3 | Sin dinero | Compra cualquier emote | No hay saldo, mínimo ni cobro; solo baja el cupo (sigue el límite de 10 cada 24 h) |
+| C4 | Total del carrito | Agrega 3 al carrito | Debajo dice "Total: US$ …" igual a la suma |
+| C5 | Animación de compra | Compra (carrito o uno por uno) | El emote vuela al contador y aparece un sello "COMPRA REALIZADA" con degradado que crece y se desvanece (sin desenfoque); luego el panel |
+| C6 | Panel COMPRA REALIZADA | Tras el sello | Velo oscuro semitransparente con ticket #, emotes con precio, total de muestra y DESCARGAR PDF, SOLO VER PDF y SALIR |
+| C7 | DESCARGAR PDF | Presiona DESCARGAR PDF | Se cierra y avisa "Ticket guardado en …\Escritorio\COT_0_tickets\ticket-NNNN.pdf"; el PDF trae precios y "Importe de muestra" |
+| C8 | SOLO VER PDF | Presiona SOLO VER PDF | Se abre el PDF en el visor de Windows y NO aparece en el Escritorio; aviso "Abriste el ticket #NNNN…" |
+| C9 | SALIR y ESC | Compra otra vez y presiona SALIR; en la siguiente, ESC; en otra, clic en el velo | Se cierra sin hacer nada más. El PDF existe igual en `%LocalAppData%\COT_0\tickets\ticket-NNNN.pdf` y el ticket en TICKETS |
