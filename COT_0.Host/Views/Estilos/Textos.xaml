@@ -131,19 +131,11 @@
 
     <!-- Emotes (7TV) -->
     <x:String x:Key="Text.Emotes.ScreenTitle">EMOTES</x:String>
-    <x:String x:Key="Text.Emotes.Title">SET DE 7TV</x:String>
-    <x:String x:Key="Text.Emotes.Placeholder">ID del set de 7TV</x:String>
-    <x:String x:Key="Text.Emotes.Apply">APLICAR</x:String>
-    <x:String x:Key="Text.Emotes.Count">{0} emotes cargados</x:String>
-    <x:String x:Key="Text.Emotes.Status.Off">SIN EMOTES</x:String>
-    <x:String x:Key="Text.Emotes.Status.Loading">CARGANDO… (7TV PUEDE TARDAR HASTA UN MINUTO)</x:String>
-    <x:String x:Key="Text.Emotes.Status.Ready">OK</x:String>
-    <x:String x:Key="Text.Emotes.Status.NotFound">ERROR · NO SE ENCONTRÓ EL SET</x:String>
-    <x:String x:Key="Text.Emotes.Status.Failed">ERROR · NO SE PUDO CARGAR EL SET</x:String>
-    <x:String x:Key="Text.Emotes.Error.TooLong">ERROR · MÁXIMO {0} CARACTERES</x:String>
-    <x:String x:Key="Text.Emotes.Error.InvalidChars">ERROR · SOLO LETRAS Y NÚMEROS, SIN ESPACIOS NI SÍMBOLOS</x:String>
-    <x:String x:Key="Text.Emotes.Error.InvalidId">ERROR · ESE ID NO ES DE UN SET DE 7TV</x:String>
-    <x:String x:Key="Text.Emotes.Error.NotFound">ERROR · 7TV NO TIENE UN SET CON ESE ID (404)</x:String>
+    <x:String x:Key="Text.Emotes.Title">EMOTES DE LA SALA</x:String>
+    <x:String x:Key="Text.Emotes.Source">Solo entran a tu sala los emotes que compraste en la TIENDA. Lo comprado no se devuelve ni se elimina.</x:String>
+    <x:String x:Key="Text.Emotes.Count">{0} emotes comprados</x:String>
+    <x:String x:Key="Text.Emotes.Status.Off">SIN EMOTES · COMPRA EN LA TIENDA PARA TENERLOS EN TU SALA</x:String>
+    <x:String x:Key="Text.Emotes.Status.Ready">EN TU SALA</x:String>
     <x:String x:Key="Text.Emotes.Error.Timeout">ERROR · 7TV TARDÓ DEMASIADO EN RESPONDER, INTÉNTALO DE NUEVO</x:String>
     <x:String x:Key="Text.Emotes.Error.Network">ERROR · SIN CONEXIÓN CON 7TV (REVISA TU INTERNET)</x:String>
     <x:String x:Key="Text.Emotes.Error.HttpError">ERROR · 7TV RESPONDIÓ CON ERROR {0}</x:String>
@@ -161,7 +153,7 @@
     <!-- Emotes: tienda (USUARIOS | TIENDA | TICKETS) -->
     <x:String x:Key="Text.Store.Tab.Shop">TIENDA</x:String>
     <x:String x:Key="Text.Store.Tab.Tickets">TICKETS</x:String>
-    <x:String x:Key="Text.Store.SetPanel">SET Y REPORTES</x:String>
+    <x:String x:Key="Text.Store.SetPanel">EMOTES Y REPORTES</x:String>
     <x:String x:Key="Text.Store.Close">CERRAR</x:String>
     <x:String x:Key="Text.Store.NoticeTitle">Tienda</x:String>
     <x:String x:Key="Text.Store.Error.Storage">No se pudo leer o guardar compras.json. Inténtalo de nuevo.</x:String>
@@ -333,7 +325,7 @@
     <x:String x:Key="Text.Manual.Step4.Notice3">Al terminar, CERRAR SALA saca a todos y apaga el túnel.</x:String>
 
     <x:String x:Key="Text.Manual.Step5.Title">Emotes de 7TV y su tienda</x:String>
-    <x:String x:Key="Text.Manual.Step5.Notice1">En TIENDA compras hasta 10 emotes cada 24 horas; entran solos a tu sala. En SET Y REPORTES pegas el ID de un set de 7TV y tocas APLICAR.</x:String>
+    <x:String x:Key="Text.Manual.Step5.Notice1">En TIENDA compras hasta 10 emotes cada 24 horas; entran solos a tu sala (solo esos). En EMOTES Y REPORTES ves cuántos tienes y atiendes los reportes.</x:String>
     <x:String x:Key="Text.Manual.Step5.Notice2">Si un invitado reporta un emote, aparece en REPORTES. Tú decides: QUITAR o IGNORAR.</x:String>
     <x:String x:Key="Text.Manual.Step5.Notice3">Un emote quitado se ve como texto. RESTAURAR lo regresa.</x:String>
 

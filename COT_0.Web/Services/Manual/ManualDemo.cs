@@ -34,7 +34,7 @@ public sealed class ManualDemo : IManualDemo
     public JoinForm Profile { get; }
     public MessageDraft Draft { get; }
 
-    // Los emotes salen del set de la sala (si 7TV no responde, los mensajes quedan en texto)
+    // Los emotes salen de los comprados por el host de la sala (sin compras, los mensajes quedan en texto)
     public RoomEmote? SampleEmote => _emotes.Active.FirstOrDefault();
 
     public IReadOnlyList<MessageGroup> Groups =>

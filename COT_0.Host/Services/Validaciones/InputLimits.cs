@@ -8,7 +8,5 @@ public static class InputLimits
 {
     public static int MaxCharacters => AppConfig.Settings.Inputs.MaxCaracteres;
 
-    public static int MaxEmoteSetCharacters => AppConfig.Settings.Inputs.MaxEmoteSetCaracteres;
-
     public static bool IsTooLong(string? text) => text?.Length > MaxCharacters;
 }

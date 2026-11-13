@@ -9,8 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 namespace COT_0.Host.Services.Tienda;
 
 /// <summary>
-/// Usa la misma instancia de emotes de la sala (IPurchasedEmotes = IRoomEmotes de la web), así el picker
-/// los muestra y los reportes y QUITAR funcionan igual que con los del set. Sin compras, la sala abre normal.
+/// Usa la misma instancia de emotes de la sala (IPurchasedEmotes = IRoomEmotes de la web): lo comprado es lo único que
+/// ve el chat (picker y mensajes) y los reportes y QUITAR siguen igual. Sin compras, la sala abre sin emotes.
 /// </summary>
 public class ChatEmoteImport
 {

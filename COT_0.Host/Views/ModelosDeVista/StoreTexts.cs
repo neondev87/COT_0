@@ -32,7 +32,7 @@ public static class StoreTexts
     /// <summary>"Ya compraste tus 10 emotes. Podrás comprar más en HH:MM:SS".</summary>
     public static string Blocked(int limit, string wait) => Format("Text.Store.Shop.Blocked", limit, wait);
 
-    /// <summary>Mismo motivo que en el set de 7TV (timeout, red, código HTTP, JSON).</summary>
+    /// <summary>Motivo del fallo al buscar en 7TV (timeout, red, código HTTP, JSON).</summary>
     public static string CatalogError(EmoteSetError error, int? httpCode) =>
         Format($"Text.Emotes.Error.{error}", httpCode ?? 0);
 }

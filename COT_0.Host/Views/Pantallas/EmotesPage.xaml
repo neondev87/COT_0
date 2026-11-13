@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- TIENDA DE EMOTES (05): encabezado con regreso y UN panel oscuro semitransparente (el video de fondo se intuye detrás)
-     con las pestañas TIENDA | TICKETS (modo ADMIN: PUNTO DE VENTA | ADMINISTRADORES). Encima, con velo, el set de 7TV con reportes.
+     con las pestañas TIENDA | TICKETS (modo ADMIN: PUNTO DE VENTA | ADMINISTRADORES). Encima, con velo, EMOTES Y REPORTES (los comprados en la sala).
      Transparente: el fondo lo pinta CapaFondo detrás del Frame. ESC cierra el recuadro o regresa -->
 <Page x:Class="COT_0.Host.Views.Pantallas.EmotesPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -38,7 +38,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Pestañas a la izquierda; a la derecha el set de 7TV y los reportes de siempre (en recuadro) -->
+                    <!-- Pestañas a la izquierda; a la derecha EMOTES Y REPORTES (en recuadro) -->
                     <Grid BorderBrush="{StaticResource RowBorderBrush}" BorderThickness="0,0,0,1">
                         <StackPanel Orientation="Horizontal" Spacing="28">
                             <RadioButton Style="{StaticResource ShopTab}" GroupName="StoreTabs" Content="{StaticResource Text.Store.Tab.Shop}"

@@ -1,18 +1,17 @@
-// Emotes de la sala: set de 7TV, reportes en vivo de los invitados y emotes quitados
+// Emotes de la sala: cuántos compró el host (solo esos entran), reportes en vivo de los invitados y emotes quitados
 using System.Collections.ObjectModel;
 using COT_0.Core.Models;
 using COT_0.Core.Services;
 using COT_0.Host.Services.Textos;
 using COT_0.Host.Services.Tiempo;
-using COT_0.Host.Services.Validaciones;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace COT_0.Host.Views.ModelosDeVista;
 
 /// <summary>
-/// IRoomEmotes sale del contenedor de la web (misma instancia que los chats).
-/// HasReports/NoReports y el color del estado reemplazan a los DataTrigger.
+/// IRoomEmotes sale del contenedor de la web (misma instancia que los chats). Ya no hay set de 7TV que elegir:
+/// la lista la llena ChatEmoteImport con lo comprado. HasReports/NoReports y el color del estado reemplazan a los DataTrigger.
 /// </summary>
 public partial class EmotesViewModel : ObservableObject
 {
@@ -22,9 +21,6 @@ public partial class EmotesViewModel : ObservableObject
 
     // Reportes anteriores a IGNORAR no se cuentan; si llegan nuevos, el emote vuelve a la lista
     private readonly Dictionary<string, DateTime> _ignoredAt = [];
-
-    [ObservableProperty]
-    private string _setInput;
 
     [ObservableProperty]
     private EmoteSetStatus _status;
@@ -46,9 +42,8 @@ public partial class EmotesViewModel : ObservableObject
     public EmotesViewModel(IRoomEmotes emotes)
     {
         _emotes = emotes;
-        _setInput = emotes.SetId ?? string.Empty;
 
-        // Ambos eventos pueden llegar desde otro hilo (carga de 7TV, hub de los invitados)
+        // Ambos eventos pueden llegar desde otro hilo (compra en vivo, hub de los invitados)
         emotes.Changed += () => UiThread.Run(Refresh);
         emotes.Reported += _ => UiThread.Run(RefreshReports);
         Refresh();
@@ -61,28 +56,6 @@ public partial class EmotesViewModel : ObservableObject
     public bool NoReports => !HasReports;
 
     public bool NoRemoved => !HasRemoved;
-
-    // Campo vacío: apaga los emotes. Mientras 7TV responde, el estado dice CARGANDO.
-    // Más largo que Inputs:MaxEmoteSetCaracteres o con espacios/símbolos (también si llegó por código) no se manda a 7TV
-    [RelayCommand]
-    private async Task ApplyAsync()
-    {
-        var input = SetInput;
-        if (input.Length > InputLimits.MaxEmoteSetCharacters)
-        {
-            Status = EmoteSetStatus.Failed;
-            StatusText = string.Format(UiText.Get("Text.Emotes.Error.TooLong"), InputLimits.MaxEmoteSetCharacters);
-            return;
-        }
-        if (!InputRules.IsAllowed(input))
-        {
-            Status = EmoteSetStatus.Failed;
-            StatusText = UiText.Get("Text.Emotes.Error.InvalidChars");
-            return;
-        }
-        await _emotes.UseSetAsync(input.Length == 0 ? null : input);
-        Refresh();
-    }
 
     [RelayCommand]
     private void Remove(EmoteRowViewModel row) => _emotes.Remove(row.Id);
@@ -100,8 +73,8 @@ public partial class EmotesViewModel : ObservableObject
     private void Refresh()
     {
         Status = _emotes.Status;
-        StatusText = StatusMessage();
-        CountText = string.Format(UiText.Get("Text.Emotes.Count"), _emotes.Active.Count);
+        StatusText = UiText.Get($"Text.Emotes.Status.{Status}");
+        CountText = string.Format(UiText.Get("Text.Emotes.Count"), _emotes.Active.Count + _emotes.Removed.Count);
 
         var removedDetail = UiText.Get("Text.Emotes.RemovedDetail");
         Removed.Clear();
@@ -125,15 +98,5 @@ public partial class EmotesViewModel : ObservableObject
         foreach (var group in groups)
             Reports.Add(new EmoteRowViewModel(group.Emote, string.Format(format, group.Count), ThumbnailSize));
         HasReports = Reports.Count > 0;
-    }
-
-    // Si falló, el motivo concreto (404, timeout, red, JSON); si no, el texto del estado
-    private string StatusMessage()
-    {
-        var error = _emotes.Error;
-        if (Status is not (EmoteSetStatus.NotFound or EmoteSetStatus.Failed) || error == EmoteSetError.None)
-            return UiText.Get($"Text.Emotes.Status.{Status}");
-
-        return string.Format(UiText.Get($"Text.Emotes.Error.{error}"), _emotes.ErrorCode);
     }
 }

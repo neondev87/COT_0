@@ -1,74 +1,51 @@
 using COT_0.Core.Models;
 using COT_0.Core.Services;
-using Microsoft.Extensions.Options;
 
 namespace COT_0.Web.Services.Emotes;
 
 /// <summary>
-/// Cachea en memoria la lista del set (Chat:EmoteCacheMinutes); si 7TV falla se queda con la última que tenía.
-/// Los comprados en la tienda del Host se suman al set (si un nombre se repite, gana el del set)
+/// Emotes de la sala: SOLO los que compró en su tienda el host que la abrió (los manda el Host con SetPurchased).
+/// No se pide ningún set a 7TV: sin compras el estado es Off y el chat no muestra emotes.
+/// Si dos comprados se llaman igual, gana el primero (los nombres de 7TV distinguen mayúsculas)
 /// </summary>
-public sealed class RoomEmotes(ISevenTvClient client, IOptions<ChatOptions> options) : IRoomEmotes, IPurchasedEmotes
+public sealed class RoomEmotes : IRoomEmotes, IPurchasedEmotes
 {
     private readonly object _gate = new();
     private readonly HashSet<string> _removedIds = [];
     private readonly List<EmoteReport> _reports = [];
-    private IReadOnlyList<RoomEmote> _all = [];
     private IReadOnlyList<RoomEmote> _purchased = [];
     private EmoteList _list = EmoteList.Empty;
-    private string? _setId = EmoteSetId.Parse(options.Value.EmoteSetId);
-    private DateTime _expiresAt = DateTime.MinValue;
-    private Task<EmoteSetStatus>? _loading;
-    private string? _loadingSetId;
-    private EmoteSetStatus _status;
 
     public event Action? Changed;
     public event Action<EmoteReport>? Reported;
 
-    public string? SetId => _setId;
-    public string? SetName { get; private set; }
-    public int Version { get; private set; }
-    public EmoteSetError Error { get; private set; }
-    public int? ErrorCode { get; private set; }
+    // Del contrato de Core (de cuando había set de 7TV); ya no hay set: siempre vacíos (ver CONTRATO.md)
+    public string? SetId => null;
+    public string? SetName => null;
+    public EmoteSetError Error => EmoteSetError.None;
+    public int? ErrorCode => null;
 
-    // Sin set: Ready si hay comprados; si no, Off, salvo que el host haya pasado un ID inválido (NotFound, para mostrar el aviso)
-    public EmoteSetStatus Status => Fresh(() =>
-        _setId is null ? (_status == EmoteSetStatus.NotFound ? _status : _purchased.Count > 0 ? EmoteSetStatus.Ready : EmoteSetStatus.Off)
-        : _loading is not null && _all.Count == 0 ? EmoteSetStatus.Loading
-        : _status);
-    public IReadOnlyList<RoomEmote> Active => Fresh(() => _list.Active);
-    public IReadOnlyList<RoomEmote> Removed => Fresh(() => _list.Removed);
+    public int Version { get; private set; }
+    public EmoteSetStatus Status { get { lock (_gate) return _purchased.Count > 0 ? EmoteSetStatus.Ready : EmoteSetStatus.Off; } }
+    public IReadOnlyList<RoomEmote> Active { get { lock (_gate) return _list.Active; } }
+    public IReadOnlyList<RoomEmote> Removed { get { lock (_gate) return _list.Removed; } }
     public IReadOnlyList<EmoteReport> Reports { get { lock (_gate) return _reports.ToList(); } }
     public IReadOnlyList<RoomEmote> Purchased { get { lock (_gate) return _purchased; } }
 
     public void SetPurchased(IReadOnlyList<RoomEmote> emotes) => Update(() =>
     {
-        _purchased = emotes.ToList();
+        _purchased = emotes.DistinctBy(e => e.Name, StringComparer.Ordinal).ToList();
+        _reports.RemoveAll(r => _purchased.All(e => e.Id != r.Emote.Id));
         return true;
     });
 
-    public async Task<EmoteSetStatus> UseSetAsync(string? setIdOrUrl)
+    // La fuente de emotes es solo lo comprado: cualquier set que llegue se ignora
+    public Task<EmoteSetStatus> UseSetAsync(string? setIdOrUrl) => Task.FromResult(Status);
+
+    public RoomEmote? Find(string name)
     {
-        Task<EmoteSetStatus>? loading;
-        lock (_gate)
-        {
-            _setId = EmoteSetId.Parse(setIdOrUrl);
-            var invalid = _setId is null && !string.IsNullOrWhiteSpace(setIdOrUrl);
-            _status = invalid ? EmoteSetStatus.NotFound : EmoteSetStatus.Loading;
-            Error = invalid ? EmoteSetError.InvalidId : EmoteSetError.None;
-            ErrorCode = null;
-            _all = [];
-            SetName = null;
-            _expiresAt = DateTime.MinValue;
-            Rebuild();
-            loading = StartLoad();
-        }
-
-        Changed?.Invoke();
-        return loading is null ? Status : await loading;
+        lock (_gate) return _list.ByName.GetValueOrDefault(name);
     }
-
-    public RoomEmote? Find(string name) => Fresh(() => _list.ByName.GetValueOrDefault(name));
 
     public IReadOnlyList<RoomEmote> Search(string? query, int max) => EmoteSearch.Find(Active, query, max);
 
@@ -88,7 +65,7 @@ public sealed class RoomEmotes(ISevenTvClient client, IOptions<ChatOptions> opti
         return true;
     }
 
-    // Al quitarlo se resuelven sus reportes
+    // Al quitarlo se resuelven sus reportes (QUITAR solo lo esconde de la sala: la compra sigue siendo del host)
     public void Remove(string emoteId) => Update(() =>
     {
         _reports.RemoveAll(r => r.Emote.Id == emoteId);
@@ -107,66 +84,10 @@ public sealed class RoomEmotes(ISevenTvClient client, IOptions<ChatOptions> opti
         lock (_gate)
         {
             if (!change()) return;
-            Rebuild();
+            _list = EmoteList.From(_purchased, _removedIds);
+            Version++;
         }
 
         Changed?.Invoke();
-    }
-
-    // Lee el estado y, si la cache venció, pide la lista de nuevo en segundo plano
-    private T Fresh<T>(Func<T> read)
-    {
-        lock (_gate)
-        {
-            if (DateTime.UtcNow >= _expiresAt) StartLoad();
-            return read();
-        }
-    }
-
-    private Task<EmoteSetStatus>? StartLoad()
-    {
-        if (_setId is null) return null;
-        if (_loading is not null && _loadingSetId == _setId) return _loading;
-
-        // Una carga de otro set (ej. el de arranque) no bloquea al set nuevo
-        var setId = _setId;
-        _loadingSetId = setId;
-        return _loading = Task.Run(() => LoadAsync(setId));
-    }
-
-    private async Task<EmoteSetStatus> LoadAsync(string setId)
-    {
-        var result = await client.GetEmoteSetAsync(setId);
-        var o = options.Value;
-
-        lock (_gate)
-        {
-            if (_loadingSetId == setId) _loading = null;
-            if (setId != _setId) return result.Status;
-
-            var ok = result.Status == EmoteSetStatus.Ready;
-            _expiresAt = DateTime.UtcNow + (ok ? TimeSpan.FromMinutes(o.EmoteCacheMinutes) : TimeSpan.FromSeconds(o.EmoteRetrySeconds));
-            if (ok)
-            {
-                _all = result.Emotes;
-                SetName = result.Name;
-            }
-
-            // Si falla un refresco se siguen usando los emotes que ya había
-            _status = ok || _all.Count == 0 ? result.Status : EmoteSetStatus.Ready;
-            Error = _status == EmoteSetStatus.Ready ? EmoteSetError.None : result.Error;
-            ErrorCode = _status == EmoteSetStatus.Ready ? null : result.HttpCode;
-            Rebuild();
-        }
-
-        Changed?.Invoke();
-        return result.Status;
-    }
-
-    private void Rebuild()
-    {
-        var merged = _all.Concat(_purchased).DistinctBy(e => e.Name, StringComparer.Ordinal).ToList();
-        _list = EmoteList.From(merged, _removedIds);
-        Version++;
     }
 }

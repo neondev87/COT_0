@@ -4,7 +4,7 @@ using COT_0.Host.Models;
 
 namespace COT_0.Host.Services.Tienda;
 
-/// <summary>Guarda las URL del CDN tal como llegaron, así el chat lo pinta igual que uno del set.</summary>
+/// <summary>Guarda las URL del CDN tal como llegaron, así el chat lo pinta sin volver a pedirlo a 7TV.</summary>
 public static class EmoteMapping
 {
     public static PurchasedEmote ToPurchased(RoomEmote emote, DateTime purchasedAt) => new()

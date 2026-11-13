@@ -5,13 +5,6 @@ namespace COT_0.Web.Services.Emotes;
 /// <summary>Traduce el JSON de 7TV a RoomEmote usando los nombres de archivo que manda la API (no se arman a mano)</summary>
 internal static class SevenTvMapper
 {
-    public static IReadOnlyList<RoomEmote> Map(SevenTvSet set, ChatOptions options) =>
-        (set.Emotes ?? [])
-            .Select(e => Map(e, options))
-            .OfType<RoomEmote>()
-            .DistinctBy(e => e.Name, StringComparer.Ordinal)
-            .ToList();
-
     // Resultados de búsqueda: varios emotes distintos pueden llamarse igual, así que se separan por ID
     public static IReadOnlyList<RoomEmote> MapMany(IEnumerable<SevenTvActiveEmote> emotes, ChatOptions options) =>
         emotes.Select(e => Map(e, options)).OfType<RoomEmote>().DistinctBy(e => e.Id).ToList();

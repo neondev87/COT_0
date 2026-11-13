@@ -38,7 +38,6 @@ public sealed class ManualDemoViewModel
             .ToList();
         TotalText = Guests.Count.ToString(TotalFormat, CultureInfo.InvariantCulture);
 
-        EmoteSet = demo.EmoteSet;
         EmoteCountText = string.Format(culture, UiText.Get("Text.Emotes.Count"), demo.EmoteCount);
         EmoteStatusText = UiText.Get("Text.Emotes.Status.Ready");
         Reports = demo.Reports
@@ -61,7 +60,6 @@ public sealed class ManualDemoViewModel
     public string JoinUrl { get; }
     public IReadOnlyList<UserRowViewModel> Guests { get; }
     public string TotalText { get; }
-    public string EmoteSet { get; }
     public string EmoteCountText { get; }
     public EmoteSetStatus EmoteStatus => EmoteSetStatus.Ready;
     public string EmoteStatusText { get; }

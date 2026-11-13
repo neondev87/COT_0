@@ -1,4 +1,4 @@
-// TIENDA DE EMOTES (05): pestañas TIENDA | TICKETS (modo ADMIN: PUNTO DE VENTA | ADMINISTRADORES), el set de 7TV encima y ESC
+// TIENDA DE EMOTES (05): pestañas TIENDA | TICKETS (modo ADMIN: PUNTO DE VENTA | ADMINISTRADORES), EMOTES Y REPORTES encima y ESC
 using COT_0.Host.Services.Usuarios;
 using COT_0.Host.Services.Ventana;
 using CommunityToolkit.Mvvm.ComponentModel;

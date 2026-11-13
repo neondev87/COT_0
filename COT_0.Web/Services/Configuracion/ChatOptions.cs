@@ -102,17 +102,14 @@ public class ChatOptions
     public int ImageCacheSeconds { get; set; } = 86400;
 
     // Emotes de 7TV (API pública v3). El navegador baja las imágenes directo del CDN; el servidor solo cachea la lista.
-    // EmoteSetId: ID o URL del set ("global" = set global de 7TV); el Host lo cambia con IRoomEmotes.UseSetAsync
+    // La sala solo usa los emotes que compró el host en su tienda (no hay set por defecto)
     public string SevenTvApiUrl { get; set; } = "https://7tv.io/v3/";
-    public string SevenTvEmoteSetPath { get; set; } = "emote-sets/{0}";
     // Búsqueda en todo el catálogo de 7TV (GraphQL v3, con paginación) para la tienda del Host
     public string SevenTvGqlPath { get; set; } = "gql";
     public string SevenTvCdnHost { get; set; } = "cdn.7tv.app";
     public string SevenTvUserAgent { get; set; } = "COT_0/1.0";
-    public string EmoteSetId { get; set; } = "global";
     public int EmoteCacheMinutes { get; set; } = 10;
-    public int EmoteRetrySeconds { get; set; } = 60;
-    // 7TV suele tardar 15-45 s en responder un set: con menos de eso la carga siempre falla
+    // 7TV suele tardar 15-45 s en responder: con menos de eso la búsqueda de la tienda falla seguido
     public int EmoteRequestTimeoutSeconds { get; set; } = 90;
 
     // Archivos del CDN: tamaño en el texto (~28 px) y grande (solo emotes / vista previa)
