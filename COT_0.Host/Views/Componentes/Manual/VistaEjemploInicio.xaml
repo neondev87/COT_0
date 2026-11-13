@@ -63,7 +63,7 @@
                                              Content="{StaticResource Text.Dashboard.ManualTitle}" Subtitle="{StaticResource Text.Dashboard.ManualSubtitle}"
                                              Icon="{StaticResource MenuIcon.Manual}"/>
                     <componentes:TarjetaMenu Style="{StaticResource DemoCard}" Number="04" Margin="78,0,0,0"
-                                             Content="{StaticResource Text.Dashboard.EmotesTitle}" Subtitle="{StaticResource Text.Dashboard.EmotesSubtitle}"
+                                             Content="{StaticResource Text.Dashboard.StoreTitle}" Subtitle="{StaticResource Text.Dashboard.StoreSubtitle.Host}"
                                              Icon="{StaticResource MenuIcon.Emotes}"/>
                     <componentes:TarjetaMenu Style="{StaticResource DemoCard}" Number="05" Margin="104,0,0,0"
                                              Content="{StaticResource Text.Dashboard.MusicTitle}" Subtitle="{StaticResource Text.Dashboard.MusicSubtitle}"

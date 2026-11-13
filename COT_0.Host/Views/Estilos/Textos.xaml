@@ -64,7 +64,6 @@
     <x:String x:Key="Text.Error.AnswerEmpty">Escribe tu respuesta.</x:String>
     <x:String x:Key="Text.Error.AnswerInvalid">Tu respuesta solo puede tener letras y números, sin espacios ni símbolos.</x:String>
     <x:String x:Key="Text.Error.AnswerTooLong">Respuesta: máximo {0} caracteres.</x:String>
-    <x:String x:Key="Text.Error.WrongAnswer">La respuesta no coincide.</x:String>
     <x:String x:Key="Text.Error.RecoveryFailed">No se pudo recuperar la contraseña con esos datos.</x:String>
     <x:String x:Key="Text.Error.WrongCredentials">Usuario o contraseña incorrectos.</x:String>
     <x:String x:Key="Text.Error.AccountOutdated">Esta cuenta ya no cumple las reglas nuevas. Regístrala de nuevo.</x:String>

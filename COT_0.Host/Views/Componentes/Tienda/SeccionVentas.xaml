@@ -13,6 +13,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///Views/Estilos/Tienda.xaml"/>
                 <ResourceDictionary Source="ms-appx:///Views/Estilos/TiendaControles.xaml"/>
+                <!-- AdminBadge y AdminBadgeText (marca MODO ADMIN) viven aquí; un UserControl no ve los recursos de su página -->
+                <ResourceDictionary Source="ms-appx:///Views/Estilos/Modos.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
