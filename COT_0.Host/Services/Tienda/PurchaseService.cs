@@ -95,8 +95,20 @@ public class PurchaseService(PurchaseStore store)
         return new PurchaseResult(PurchaseOutcome.Bought, quota, ticket);
     }
 
-    /// <summary>ELIMINAR cuenta: se van sus compras y sus tickets (los PDF que ya bajó al Escritorio se quedan).</summary>
-    public Task RemoveUserAsync(string userName) => ChangeAsync(data => data.Users.RemoveAll(u => Same(u.UserName, userName)));
+    /// <summary>
+    /// ELIMINAR cuenta: se van sus compras y sus tickets. Regresa los números de sus tickets para borrar las copias
+    /// de la app (los PDF que ya bajó al Escritorio se quedan).
+    /// </summary>
+    public async Task<IReadOnlyList<int>> RemoveUserAsync(string userName)
+    {
+        List<int> numbers = [];
+        await ChangeAsync(data =>
+        {
+            numbers.AddRange(data.Users.Where(u => Same(u.UserName, userName)).SelectMany(u => u.Tickets).Select(t => t.Number));
+            data.Users.RemoveAll(u => Same(u.UserName, userName));
+        });
+        return numbers;
+    }
 
     /// <summary>CAMBIAR NOMBRE: sus compras siguen siendo suyas con el nombre nuevo.</summary>
     public Task RenameUserAsync(string oldName, string newName) => ChangeAsync(data =>

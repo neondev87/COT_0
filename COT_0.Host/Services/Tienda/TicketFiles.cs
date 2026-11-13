@@ -1,4 +1,4 @@
-// Genera el PDF de un ticket en %LocalAppData%\COT_0\{Store:GeneratedTicketsFolder} (siempre, al comprar)
+// Genera el PDF de un ticket en %LocalAppData%\COT_0\{Store:GeneratedTicketsFolder} (siempre, al comprar) y lo borra con su cuenta
 using COT_0.Host.Models;
 using COT_0.Host.Services.Almacenamiento;
 using COT_0.Host.Services.Configuracion;
@@ -30,4 +30,20 @@ public static class TicketFiles
         await document.SaveAsync(file, false);
         return path;
     }
+
+    /// <summary>Borra las copias de la app de esos tickets (al eliminar una cuenta). Si alguna está abierta, se queda.</summary>
+    public static Task DeleteAsync(IReadOnlyList<int> numbers) => Task.Run(() =>
+    {
+        foreach (var path in numbers.Select(PathFor))
+        {
+            try
+            {
+                File.Delete(path);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                // Abierta en el visor: no detiene la eliminación de la cuenta
+            }
+        }
+    });
 }

@@ -17,5 +17,8 @@ public class PurchasedEmote
     public int Width { get; set; }
     public int Height { get; set; }
     public bool Animated { get; set; }
+
+    /// <summary>Precio de muestra en dólares al comprar (EmotePricing, sale del id): solo visual, no hubo cobro.</summary>
+    public decimal PriceUsd { get; set; }
     public DateTime PurchasedAt { get; set; }
 }

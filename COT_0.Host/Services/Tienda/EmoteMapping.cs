@@ -20,6 +20,7 @@ public static class EmoteMapping
         Width = emote.Width,
         Height = emote.Height,
         Animated = emote.Animated,
+        PriceUsd = EmotePricing.PriceOf(emote.Id),
         PurchasedAt = purchasedAt,
     };
 

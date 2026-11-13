@@ -26,7 +26,7 @@ public class AccountService(PurchaseService purchases)
 
         users.Remove(user);
         await HostAccounts.SaveAsync(users);
-        await purchases.RemoveUserAsync(user.UserName);
+        await TicketFiles.DeleteAsync(await purchases.RemoveUserAsync(user.UserName));
         await ProfilePhotos.DeleteAsync(user.UserName);
         return CredentialError.None;
     }
