@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Modo ADMIN del login: ENTRAR con usuario y contraseña de admin; si no hay ninguno, solo el nombre y CREAR ADMIN
-     (la contraseña la genera la app y se muestra una vez) -->
+     (la contraseña la genera la app y se muestra una vez). Si el admin no tiene pregunta secreta, la configura antes de entrar -->
 <UserControl x:Class="COT_0.Host.Views.Componentes.FormularioAdmin"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,17 +9,29 @@
         <TextBlock Text="{StaticResource Text.Admin.CreateFirst.Hint}" Visibility="{x:Bind ViewModel.IsCreateVisible, Mode=OneWay}"
                    Margin="0,0,0,22" TextWrapping="WrapWholeWords" TextAlignment="Center"
                    FontFamily="{StaticResource FontBarlow}" FontSize="13" Foreground="{StaticResource Light62Brush}"/>
-        <StackPanel Margin="0,0,0,22">
+        <StackPanel Margin="0,0,0,22" Visibility="{x:Bind ViewModel.IsCredentialsVisible, Mode=OneWay}">
             <TextBlock Text="{StaticResource Text.Admin.User}" Style="{StaticResource FieldLabelText}"/>
             <TextBox Style="{StaticResource UserNameTextBox}" PlaceholderText="{StaticResource Text.Admin.UserPlaceholder}"
                      MaxLength="{x:Bind validaciones:InputLimits.MaxCharacters}"
                      Text="{x:Bind ViewModel.UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
-        <StackPanel Visibility="{x:Bind ViewModel.HasAdmins, Mode=OneWay}">
+        <StackPanel Visibility="{x:Bind ViewModel.IsPasswordVisible, Mode=OneWay}">
             <TextBlock Text="{StaticResource Text.Login.Password}" Style="{StaticResource FieldLabelText}"/>
             <PasswordBox Style="{StaticResource LoginPasswordBox}" PlaceholderText="{StaticResource Text.Login.PasswordPlaceholder}"
                          MaxLength="{x:Bind validaciones:InputLimits.MaxCharacters}"
                          Password="{x:Bind ViewModel.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </StackPanel>
+
+        <!-- Primera vez que entra este admin: pregunta secreta y respuesta (se guarda solo su hash) -->
+        <StackPanel Visibility="{x:Bind ViewModel.IsQuestionStep, Mode=OneWay}">
+            <TextBlock Text="{StaticResource Text.Question.Label}" Style="{StaticResource FieldLabelText}"/>
+            <ComboBox Style="{StaticResource LoginComboBox}" PlaceholderText="{StaticResource Text.Question.Placeholder}"
+                      ItemsSource="{x:Bind ViewModel.Question.Questions}" DisplayMemberPath="Text"
+                      SelectedItem="{x:Bind ViewModel.Question.SelectedQuestion, Mode=TwoWay}"/>
+            <TextBlock Text="{StaticResource Text.Question.Answer}" Style="{StaticResource FieldLabelText}" Margin="0,22,0,8"/>
+            <TextBox Style="{StaticResource LoginTextBox}" PlaceholderText="{StaticResource Text.Question.AnswerPlaceholder}"
+                     MaxLength="{x:Bind validaciones:InputLimits.MaxCharacters}"
+                     Text="{x:Bind ViewModel.Question.Answer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
 
         <InfoBar Severity="Error" Margin="0,16,0,0" Title="{StaticResource Text.Login.ErrorTitle}"
@@ -28,6 +40,6 @@
                  Message="{x:Bind ViewModel.SuccessMessage, Mode=OneWay}" IsOpen="{x:Bind ViewModel.IsSuccessOpen, Mode=TwoWay}"/>
 
         <Button Style="{StaticResource LoginButton}" Margin="0,24,0,0" Content="{x:Bind ViewModel.ButtonText, Mode=OneWay}"
-                Command="{x:Bind ViewModel.SubmitCommand}"/>
+                Command="{x:Bind ViewModel.SubmitCommand, Mode=OneWay}"/>
     </StackPanel>
 </UserControl>

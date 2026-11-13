@@ -12,8 +12,10 @@ public enum AdminError
     Full,
     AlreadyCreated,
     NotFound,
-    LastAdmin,
     NotAllowed,
     WrongCredentials,
+    QuestionRequired,
+    QuestionMissing,
+    DeleteRejected,
     Storage,
 }

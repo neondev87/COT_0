@@ -15,6 +15,7 @@
     <x:String x:Key="Text.Admin.CreateFirst.Done">Admin creado. Entra con su nombre y la contraseña que guardaste.</x:String>
     <x:String x:Key="Text.Admin.Recreated">admin.json estaba dañado y se recreó vacío. Crea el primer admin de nuevo.</x:String>
     <x:String x:Key="Text.Admin.Badge">MODO ADMIN</x:String>
+    <x:String x:Key="Text.Admin.Question.Required">Antes de entrar, elige tu pregunta secreta y escribe la respuesta. Se pide para eliminar tu cuenta de admin.</x:String>
 
     <!-- Errores; {0} es el largo máximo o el máximo de admins -->
     <x:String x:Key="Text.Admin.Error.UserEmpty">Escribe el nombre del admin.</x:String>
@@ -24,7 +25,9 @@
     <x:String x:Key="Text.Admin.Error.Full">Ya hay {0} administradores</x:String>
     <x:String x:Key="Text.Admin.Error.AlreadyCreated">Ya existe un admin. Entra con su usuario y contraseña.</x:String>
     <x:String x:Key="Text.Admin.Error.NotFound">Ese admin ya no existe.</x:String>
-    <x:String x:Key="Text.Admin.Error.LastAdmin">No se puede borrar al último admin.</x:String>
+    <x:String x:Key="Text.Admin.Error.QuestionRequired">Configura tu pregunta secreta para entrar.</x:String>
+    <x:String x:Key="Text.Admin.Error.QuestionMissing">Ese admin todavía no configura su pregunta secreta; se le pedirá la próxima vez que entre. Sin ella no se puede eliminar.</x:String>
+    <x:String x:Key="Text.Admin.Error.DeleteRejected">No se pudo confirmar la eliminación. Revisa los datos e inténtalo de nuevo.</x:String>
     <x:String x:Key="Text.Admin.Error.NotAllowed">Solo un admin que ya entró puede hacer esto.</x:String>
     <x:String x:Key="Text.Admin.Error.WrongCredentials">Usuario o contraseña incorrectos.</x:String>
     <x:String x:Key="Text.Admin.Error.Storage">No se pudo leer o guardar admin.json. Inténtalo de nuevo.</x:String>
@@ -55,7 +58,7 @@
 
     <!-- Administradores -->
     <x:String x:Key="Text.Admins.Title">ADMINISTRADORES</x:String>
-    <x:String x:Key="Text.Admins.Hint">Solo se ve el nombre. Cada contraseña la genera la app y se muestra una sola vez; si alguien la pierde, regenérala.</x:String>
+    <x:String x:Key="Text.Admins.Hint">Solo se ve el nombre. Cada contraseña la genera la app y se muestra una sola vez; si alguien la pierde, regenérala. Para eliminar a un admin se piden su respuesta secreta y tu contraseña.</x:String>
     <x:String x:Key="Text.Admins.NoticeTitle">Administradores</x:String>
     <x:String x:Key="Text.Admins.NewPlaceholder">nombre del nuevo admin</x:String>
     <x:String x:Key="Text.Admins.Create">CREAR ADMIN</x:String>
@@ -67,5 +70,11 @@
     <x:String x:Key="Text.Admins.Regenerated">Contraseña de {0} regenerada; la anterior ya no sirve.</x:String>
     <x:String x:Key="Text.Admins.Deleted">Admin {0} eliminado.</x:String>
     <x:String x:Key="Text.Admins.ConfirmRegenerate">¿Generar una contraseña nueva para {0}? La anterior deja de servir.</x:String>
-    <x:String x:Key="Text.Admins.ConfirmDelete">¿Eliminar al admin {0}?</x:String>
+    <x:String x:Key="Text.Admins.DeleteDialog.Title">ELIMINAR AL ADMIN {0}</x:String>
+    <x:String x:Key="Text.Admins.DeleteDialog.Warning">Para eliminarlo hacen falta dos confirmaciones: su respuesta secreta y tu contraseña. No se puede deshacer.</x:String>
+    <x:String x:Key="Text.Admins.DeleteDialog.SelfWarning">Vas a eliminar tu propia cuenta de admin. Se cerrará tu sesión y regresarás al login. No se puede deshacer.</x:String>
+    <x:String x:Key="Text.Admins.DeleteDialog.AnswerLabel">RESPUESTA SECRETA DE {0}</x:String>
+    <x:String x:Key="Text.Admins.DeleteDialog.AnswerPlaceholder">su respuesta</x:String>
+    <x:String x:Key="Text.Admins.DeleteDialog.PasswordLabel">TU CONTRASEÑA</x:String>
+    <x:String x:Key="Text.Admins.DeleteDialog.PasswordPlaceholder">tu contraseña de admin</x:String>
 </ResourceDictionary>

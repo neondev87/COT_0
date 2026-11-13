@@ -38,6 +38,7 @@ public partial class LoginModeViewModel : ObservableObject
     partial void OnIsAdminModeChanged(bool value)
     {
         if (value) _ = Admin.StartAsync();
+        else Admin.LeaveQuestionStep();
     }
 
     private static void OnAdminSignedIn(string adminName)

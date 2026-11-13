@@ -1,4 +1,4 @@
-// Modo ADMIN del login: ENTRAR con usuario y contraseña de admin, o crear el primer admin si todavía no hay ninguno
+// Modo ADMIN del login: ENTRAR con usuario y contraseña de admin, configurar su pregunta secreta la primera vez o crear el primer admin
 using COT_0.Host.Models;
 using COT_0.Host.Services.Administradores;
 using COT_0.Host.Services.Almacenamiento;
@@ -11,7 +11,8 @@ namespace COT_0.Host.Views.ModelosDeVista;
 
 /// <summary>
 /// Primer admin: solo se escribe el nombre; la contraseña la genera la app y se muestra una vez.
-/// Después se entra con ella como cualquier admin. Si falla, el mensaje no dice si el usuario existe.
+/// Si un admin entra sin pregunta secreta (nuevo o de antes), primero la configura y luego entra.
+/// Si falla, el mensaje no dice si el usuario existe.
 /// </summary>
 public partial class AdminLoginViewModel(AdminService admins, AdminPasswordDialogService passwordDialog) : FormViewModel
 {
@@ -22,8 +23,12 @@ public partial class AdminLoginViewModel(AdminService admins, AdminPasswordDialo
     private string _password = string.Empty;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsCreateVisible), nameof(ButtonText))]
+    [NotifyPropertyChangedFor(nameof(IsCreateVisible), nameof(IsPasswordVisible), nameof(ButtonText))]
     private bool _hasAdmins = true;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsCredentialsVisible), nameof(IsPasswordVisible), nameof(ButtonText))]
+    private bool _isQuestionStep;
 
     [ObservableProperty]
     private bool _isSuccessOpen;
@@ -34,15 +39,23 @@ public partial class AdminLoginViewModel(AdminService admins, AdminPasswordDialo
     /// <summary>Entró un admin (su nombre).</summary>
     public event Action<string>? SignedIn;
 
+    public SecurityQuestionViewModel Question { get; } = new();
+
     public bool IsCreateVisible => !HasAdmins;
 
-    public string ButtonText => UiText.Get(HasAdmins ? "Text.Login.Button.SignIn" : "Text.Admin.CreateFirst.Button");
+    public bool IsCredentialsVisible => !IsQuestionStep;
+
+    public bool IsPasswordVisible => HasAdmins && !IsQuestionStep;
+
+    public string ButtonText => UiText.Get(IsQuestionStep ? "Text.Login.Button.SetupQuestion"
+        : HasAdmins ? "Text.Login.Button.SignIn" : "Text.Admin.CreateFirst.Button");
 
     /// <summary>Al elegir ADMIN: revisa si ya hay admins (si admin.json estaba dañado, lo avisa).</summary>
     public async Task StartAsync()
     {
         IsErrorOpen = IsSuccessOpen = false;
         Password = string.Empty;
+        LeaveQuestionStep();
         try
         {
             HasAdmins = await admins.HasAdminsAsync();
@@ -54,13 +67,22 @@ public partial class AdminLoginViewModel(AdminService admins, AdminPasswordDialo
         }
     }
 
+    /// <summary>Al regresar a HOST: si dejó la pregunta a medias, no entra.</summary>
+    public void LeaveQuestionStep()
+    {
+        IsQuestionStep = false;
+        Question.Clear();
+        admins.CancelPendingQuestion();
+    }
+
     [RelayCommand]
     private async Task SubmitAsync()
     {
         IsErrorOpen = IsSuccessOpen = false;
         try
         {
-            if (HasAdmins) await SignInAsync();
+            if (IsQuestionStep) await SaveQuestionAsync();
+            else if (HasAdmins) await SignInAsync();
             else await CreateFirstAsync();
         }
         catch (Exception ex) when (JsonStore.IsStorageError(ex))
@@ -74,7 +96,26 @@ public partial class AdminLoginViewModel(AdminService admins, AdminPasswordDialo
         var error = await admins.LoginAsync(UserName, Password);
         Password = string.Empty;
         if (error == AdminError.None) SignedIn?.Invoke(UserName);
+        else if (error == AdminError.QuestionRequired) EnterQuestionStep();
         else ShowMessage(AdminTexts.Error(error));
+    }
+
+    private void EnterQuestionStep()
+    {
+        Question.Clear();
+        IsQuestionStep = true;
+        SuccessMessage = UiText.Get("Text.Admin.Question.Required");
+        IsSuccessOpen = true;
+    }
+
+    private async Task SaveQuestionAsync()
+    {
+        if (!Check(Question.Validate())) return;
+        if (!Check(await admins.SetQuestionAsync(UserName, Question.QuestionKey, Question.Answer))) return;
+
+        Question.Clear();
+        IsQuestionStep = false;
+        SignedIn?.Invoke(UserName);
     }
 
     private async Task CreateFirstAsync()

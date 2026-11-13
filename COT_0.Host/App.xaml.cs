@@ -69,6 +69,7 @@ public partial class App : Application
             .AddSingleton<ClockService>()
             .AddSingleton<ConfirmDialogService>()
             .AddSingleton<AdminPasswordDialogService>()
+            .AddSingleton<DeleteAdminDialogService>()
             .AddSingleton<AdminStore>()
             .AddSingleton<AdminService>()
             .AddTransient<AdminLoginViewModel>()
