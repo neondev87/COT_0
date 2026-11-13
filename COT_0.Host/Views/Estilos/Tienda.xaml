@@ -35,9 +35,11 @@
     <x:Double x:Key="ShopThumbSize">48</x:Double>
     <x:Double x:Key="ShopSmallThumbSize">32</x:Double>
     <x:Double x:Key="ShopEmoteCardWidth">136</x:Double>
-    <x:Double x:Key="ShopUserCardWidth">200</x:Double>
     <x:Double x:Key="ShopSearchWidth">320</x:Double>
-    <x:Double x:Key="TicketInfoWidth">200</x:Double>
+    <!-- Anchos de columna: ColumnDefinition.Width es GridLength; un x:Double ahí truena al cargar (XamlParseException) -->
+    <GridLength x:Key="ShopUserCardColumn">200</GridLength>
+    <GridLength x:Key="ShopSearchColumn">320</GridLength>
+    <GridLength x:Key="TicketInfoColumn">200</GridLength>
 
     <Style x:Key="ShopPanel" TargetType="Border">
         <Setter Property="Background" Value="{StaticResource ShopPanelBrush}"/>
