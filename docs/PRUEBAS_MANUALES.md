@@ -569,3 +569,32 @@ Ninguna se ejecutó con la app abierta (sin capturas ni computer use): todas que
 | C7 | DESCARGAR PDF | Presiona DESCARGAR PDF | Se cierra y avisa "Ticket guardado en …\Escritorio\COT_0_tickets\ticket-NNNN.pdf"; el PDF trae precios y "Importe de muestra" |
 | C8 | SOLO VER PDF | Presiona SOLO VER PDF | Se abre el PDF en el visor de Windows y NO aparece en el Escritorio; aviso "Abriste el ticket #NNNN…" |
 | C9 | SALIR y ESC | Compra otra vez y presiona SALIR; en la siguiente, ESC; en otra, clic en el velo | Se cierra sin hacer nada más. El PDF existe igual en `%LocalAppData%\COT_0\tickets\ticket-NNNN.pdf` y el ticket en TICKETS |
+
+## 24. Mini punto de venta por usuario, precio guardado y cupo (12/11, segunda sesión)
+
+Tampoco se ejecutaron con la app abierta (sin capturas ni computer use): quedan por hacer a mano. Las de admins (A1–A11), emotes en la sala (E1–E7) y compra (C1–C9) siguen en la sección 23.
+
+### Admin como punto de venta (solo lectura)
+
+| # | Prueba | Pasos | Esperado |
+|---|---|---|---|
+| P1 | Tres acciones por usuario | Entra como ADMIN → 04 USUARIOS | Cada tarjeta trae VER FACTURA, VER SUS EMOTES y ELIMINAR USUARIO; no trae FOTO, NOMBRE ni CONTRASEÑA (esas son del dueño) |
+| P2 | VER FACTURA | VER FACTURA en un usuario con compras | Velo oscuro con "FACTURA DE …", "N ticket(s) · M emote(s) · total de muestra US$ …" y sus tickets (número, fecha, hora, miniaturas). CERRAR, ESC o clic en el velo cierran |
+| P3 | DESCARGAR PDF desde la factura | DESCARGAR PDF en un ticket | Aviso "Ticket guardado en …\Escritorio\COT_0_tickets\ticket-NNNN.pdf" dentro del recuadro |
+| P4 | ABRIR PDF desde la factura | ABRIR PDF en un ticket | Se abre en el visor de Windows (copia de `%LocalAppData%\COT_0\tickets`) sin copiarlo al Escritorio; aviso "Abriste el ticket #NNNN." |
+| P5 | Factura vacía | VER FACTURA en un usuario sin compras | "Este usuario todavía no tiene tickets." y total US$ 0.00 |
+| P6 | VER SUS EMOTES | VER SUS EMOTES (o clic en la tarjeta) | Recuadro con sus emotes comprados y miniaturas, cuántos lleva hoy y cuántos le quedan |
+| P7 | ELIMINAR USUARIO | ELIMINAR USUARIO → confirmar | "Cuenta X eliminada."; desaparece de USUARIOS y del PUNTO DE VENTA; en `compras.json` ya no está, su foto de `perfiles` se borró y sus `ticket-NNNN.pdf` de `%LocalAppData%\COT_0\tickets` también (los del Escritorio se quedan) |
+| P8 | Vista general | 05 → PUNTO DE VENTA | Junto al título se ve la marca MODO ADMIN; arriba "N ticket(s) · M emote(s) comprados"; TODOS lista todos los tickets con su dueño |
+| P9 | Buscador | Escribe parte de un nombre; luego un número de ticket ("12") | Filtra por usuario; con el número muestra solo el #0012 |
+| P10 | ABRIR PDF en el punto de venta | ABRIR PDF en cualquier ticket | Igual que P4 |
+| P11 | El admin no compra | Como ADMIN entra a 05 | Solo PUNTO DE VENTA y ADMINISTRADORES; no hay TIENDA ni TICKETS |
+| P12 | HOST no ve a nadie más | Entra como HOST → 04 USUARIOS | Solo su tarjeta (FOTO, NOMBRE, CONTRASEÑA); sin VER FACTURA ni ELIMINAR USUARIO |
+
+### Precio guardado y cupo de 24 horas
+
+| # | Prueba | Pasos | Esperado |
+|---|---|---|---|
+| C10 | Precio en `compras.json` | Compra un emote y abre `%LocalAppData%\COT_0\compras.json` | El emote trae `Id`, `Name`, `Url`, `PriceUsd` (igual al de la tarjeta) y `PurchasedAt`; compras viejas sin `PriceUsd` se siguen leyendo |
+| C11 | Cupo persistente | Compra hasta llegar a 10, cierra la app y ábrela otra vez | La tienda sigue bloqueada con el temporizador HH:MM:SS contando desde `LimitReachedAt` (no se reinicia al cerrar) |
+| C12 | Cupo por host | Host A llega a 10; SALIR; entra host B | B tiene sus 10 completos |

@@ -27,6 +27,8 @@ Solo lo que sigue pendiente después del cierre (08/11, rama `host-winui`; ya co
 - **Archivos temporales de la tienda (09/11)**: prueba de PDFsharp en el scratchpad de la sesión (`…\scratchpad\pdftest\`, `t.pdf`, `ticket.pdf`), fuera del repo y de `COT_0_P`. Nada temporal en el repo.
 - **Sesión del 12/11 (admins, emotes, panel de compra)**: nada temporal en el repo ni en `COT_0_P`. Se usaron archivos de paso en `%TEMP%` (`global.json` con el set global de 7TV para revisar nombres repetidos, `p.xaml`/`v.xaml`) y ya se borraron o movieron. Al probar quedan los PDF generados en `%LocalAppData%\COT_0\tickets\` (copia de la app de cada ticket); se pueden borrar: SOLO VER y DESCARGAR los vuelven a generar.
 
+- **Sesión del 12/11 (segunda: punto de venta por usuario y precio guardado)**: nada temporal en el repo ni en `COT_0_P`. En el scratchpad de la sesión (`%LocalAppData%\Temp\claude\…\scratchpad\`) quedaron `admintest\` (consola que probó `AdminService` contra una carpeta `%LocalAppData%\COT_0_admintest` que se borra sola al terminar) y los scripts `ed.py`, `ventas.py`, `usuarios.py` y `t2.py`; se pueden borrar.
+
 ## En el código (no se tocó en el cierre: cambia lógica)
 
 - **`README.md`** (fuera de `COT_0.Host` y `docs`) todavía dice que la música "empieza por `Audio:DefaultFile`": ahora es `Audio:InitialTrack` (Audio_02).

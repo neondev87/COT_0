@@ -157,7 +157,7 @@ COT_0.Host/
     │                             CapaFondo, Fondos + FondoRow, LogoNeondev, Manual + ManualStep + ManualNotice + ManualDemo,
     │                             EmotesScreen (pestañas y recuadros) + StoreUsers/StoreShop/StoreTickets, UserCard, UserStock, ShopEmote,
     │                             ShopItemsCollection (carga por partes), ShopCart (carrito), PurchaseMode, QuotaTimer (HH:MM:SS),
-    │                             TicketPdfActions (PDF de TIENDA, TICKETS y PUNTO DE VENTA), Sales + SalesUser, Admins + AdminRow, AdminLogin,
+    │                             TicketPdfActions (DESCARGAR y ABRIR PDF de TIENDA, TICKETS, PUNTO DE VENTA y VER FACTURA), UserInvoices (VER FACTURA), Sales + SalesUser, Admins + AdminRow, AdminLogin,
     │                             GeneratedPassword, AccountForm, UsersScreen, Ticket, EmoteThumb, Notice, StoreTexts, StoreSection
     ├── Componentes/              Piezas reutilizables
     │   ├── CapaFondo             Fondo detrás del Frame: degradado, imagen/cuadro fijo o video, velo y viñeta (Dashboard, Sala, Fondos, Emotes y Manual)
@@ -173,7 +173,8 @@ COT_0.Host/
     │   ├── ListaConectados       Invitados conectados (ListView)
     │   ├── PanelEmotes           Emotes comprados en la sala, reportes y quitados (botón EMOTES Y REPORTES)
     │   ├── Tienda/               SeccionTienda (carrito, switch, temporizador y efecto de compra), SeccionTickets, SeccionVentas (PUNTO DE VENTA),
-    │   │                         SeccionAdministradores y RecuadroStock (pantalla TIENDA DE EMOTES)
+    │   │                         SeccionAdministradores, RecuadroStock, RecuadroFacturas (VER FACTURA en USUARIOS)
+    │   │                         y TarjetaTicket (un ticket en PUNTO DE VENTA y VER FACTURA)
     │   ├── Usuarios/             RecuadroCuenta: CAMBIAR NOMBRE / CONTRASEÑA con respuesta secreta (pantalla USUARIOS)
     │   ├── PuntoPulso            Punto rojo con pulso (sala activa)
     │   ├── TarjetaMenu.cs        Tarjeta inclinada del menú del dashboard
